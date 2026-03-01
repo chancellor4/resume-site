@@ -1,0 +1,46 @@
+/*
+  styles.css — Chance Edwards Resume Site
+  Custom overrides on top of Tailwind CDN.
+  Keep this minimal: Tailwind handles the heavy lifting.
+*/
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better focus rings for accessibility */
+*:focus-visible {
+  outline: 2px solid #111827;
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* Prevent FOUT (flash of unstyled text) on Inter load */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Print styles — clean resume output */
+@media print {
+  nav,
+  footer {
+    display: none;
+  }
+
+  body {
+    font-size: 12pt;
+    color: #000;
+  }
+
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+
+  main {
+    padding: 0;
+    max-width: 100%;
+  }
+}
