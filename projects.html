@@ -19,80 +19,63 @@
   <!-- Canonical -->
   <link rel="canonical" href="https://chancelloredwards.dev/projects.html" />
 
-  <!-- Tailwind CSS (CDN — no build step) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif'],
-          },
-        }
-      }
-    }
-  </script>
-
-  <!-- Google Fonts: Inter -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
 
-  <!-- Custom overrides -->
   <link rel="stylesheet" href="css/styles.css" />
 </head>
-
-<body class="bg-white text-gray-900 font-sans antialiased">
+<body>
 
   <!-- ─── NAV ─────────────────────────────────────────────────── -->
-  <nav class="sticky top-0 z-10 bg-white/90 backdrop-blur border-b border-gray-100">
-    <div class="max-w-3xl mx-auto px-6 py-4 flex justify-between items-center">
-      <a href="index.html" class="font-semibold text-gray-900 tracking-tight hover:text-gray-600 transition-colors">
-        Chancellor Edwards
-      </a>
-      <div class="flex gap-6 text-sm font-medium text-gray-500">
-        <a href="index.html" class="hover:text-gray-900 transition-colors">Resume</a>
-        <a href="projects.html" class="text-gray-900 border-b border-gray-900 pb-0.5">Projects</a>
-      </div>
+  <nav class="site-nav" aria-label="Site navigation">
+    <div class="site-wrap">
+      <a href="index.html" class="nav-brand">Chancellor Edwards</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Resume</a></li>
+        <li><a href="projects.html" class="nav-active">Projects</a></li>
+      </ul>
     </div>
   </nav>
 
-  <!-- ─── HEADER ────────────────────────────────────────────────── -->
-  <header class="max-w-3xl mx-auto px-6 pt-16 pb-10">
-    <h1 class="text-4xl font-bold tracking-tight text-gray-900 mb-3">Projects</h1>
-    <p class="text-gray-500 leading-relaxed max-w-xl">
-      A selection of software I've built — spanning enterprise applications, government systems, and logistics platforms.
-      I favor clean, maintainable solutions that solve real problems without unnecessary complexity.
-    </p>
+  <!-- ─── HEADER ───────────────────────────────────────────────── -->
+  <header class="projects-header">
+    <div class="site-wrap">
+      <p class="hero-eyebrow">Selected Work</p>
+      <h1>Projects</h1>
+      <p>
+        A selection of software I've built — spanning enterprise applications, government systems, and logistics platforms.
+        I favor clean, maintainable solutions that solve real problems without unnecessary complexity.
+      </p>
+    </div>
   </header>
 
-  <main class="max-w-3xl mx-auto px-6 pb-24">
+  <!-- ─── MAIN ──────────────────────────────────────────────────── -->
+  <main>
+    <div class="site-wrap">
 
-    <section aria-label="Coming Soon" class="flex flex-col items-center justify-center text-center py-32">
-      <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Coming Soon</p>
-      <h2 class="text-2xl font-semibold text-gray-900 mb-3">Projects are on the way.</h2>
-      <p class="text-gray-500 text-sm max-w-sm leading-relaxed">
-        This page is under construction. Check back soon, or reach out directly in the meantime.
-      </p>
-      <a href="mailto:chance.edwards9@icloud.com"
-         class="mt-8 inline-flex items-center gap-2 border border-gray-300 text-gray-700 text-sm px-4 py-2 rounded-md font-medium hover:border-gray-500 transition-colors">
-        ✉ chance.edwards9@icloud.com
-      </a>
-    </section>
+      <section class="coming-soon" aria-label="Coming Soon">
+        <p class="coming-soon-label">Coming Soon</p>
+        <h2>Projects are on the way.</h2>
+        <p>This page is under construction. Check back soon, or reach out directly in the meantime.</p>
+        <a href="mailto:chance.edwards9@icloud.com" class="btn-outline">
+          ✉ chance.edwards9@icloud.com
+        </a>
+      </section>
 
+    </div>
   </main>
 
-  <!-- ─── FOOTER ─────────────────────────────────────────────── -->
-  <footer class="border-t border-gray-100">
-    <div class="max-w-3xl mx-auto px-6 py-8 flex justify-between items-center text-sm text-gray-400 flex-wrap gap-4">
-      <span>© 2026 Chancellor Edwards</span>
-      <div class="flex gap-6">
-        <a href="https://github.com/chancellor4" target="_blank" rel="noopener noreferrer"
-           class="hover:text-gray-700 transition-colors">GitHub</a>
-        <a href="https://medium.com/@chancelloredwards" target="_blank" rel="noopener noreferrer"
-           class="hover:text-gray-700 transition-colors">Medium</a>
-        <a href="mailto:chance.edwards9@icloud.com"
-           class="hover:text-gray-700 transition-colors">Email</a>
-      </div>
+  <!-- ─── FOOTER ────────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="site-wrap">
+      <span class="footer-copy">© 2026 Chancellor Edwards</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/chancellor4" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a href="https://medium.com/@chancelloredwards" target="_blank" rel="noopener noreferrer">Medium</a></li>
+        <li><a href="mailto:chance.edwards9@icloud.com">Email</a></li>
+      </ul>
     </div>
   </footer>
 

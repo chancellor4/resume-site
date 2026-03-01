@@ -4,265 +4,207 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Chancellor Edwards — Application Developer & Product Manager</title>
+  <!-- SEO -->
+  <title>Resume — Chancellor Edwards</title>
   <meta name="description" content="Chancellor Edwards — Application Developer and Product Manager based in Houston, TX. Enterprise software, agile delivery, government and logistics environments." />
   <meta name="author" content="Chancellor Edwards" />
   <meta name="robots" content="index, follow" />
 
-  <meta property="og:title" content="Chancellor Edwards — Application Developer & Product Manager" />
-  <meta property="og:description" content="Enterprise software developer and product manager with experience across government, logistics, and private sector environments." />
+  <!-- Open Graph -->
+  <meta property="og:title" content="Resume — Chancellor Edwards" />
+  <meta property="og:description" content="Application Developer and Product Manager based in Houston, TX." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://chancelloredwards.dev" />
+  <meta property="og:url" content="https://chancelloredwards.dev/" />
 
-  <link rel="canonical" href="https://chancelloredwards.dev" />
+  <!-- Canonical -->
+  <link rel="canonical" href="https://chancelloredwards.dev/" />
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
-        }
-      }
-    }
-  </script>
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="css/styles.css" />
 </head>
+<body>
 
-<body class="bg-white text-gray-900 font-sans antialiased">
-
-  <!-- NAV -->
-  <nav class="sticky top-0 z-10 bg-white/90 backdrop-blur border-b border-gray-100">
-    <div class="max-w-3xl mx-auto px-6 py-4 flex justify-between items-center">
-      <span class="font-semibold text-gray-900 tracking-tight">Chancellor Edwards</span>
-      <div class="flex gap-6 text-sm font-medium text-gray-500">
-        <a href="index.html" class="text-gray-900 border-b border-gray-900 pb-0.5">Resume</a>
-        <a href="projects.html" class="hover:text-gray-900 transition-colors">Projects</a>
-      </div>
+  <!-- ─── NAV ─────────────────────────────────────────────────── -->
+  <nav class="site-nav" aria-label="Site navigation">
+    <div class="site-wrap">
+      <a href="index.html" class="nav-brand">Chancellor Edwards</a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-active">Resume</a></li>
+        <li><a href="projects.html">Projects</a></li>
+      </ul>
     </div>
   </nav>
 
-  <!-- HERO -->
-  <header class="max-w-3xl mx-auto px-6 pt-16 pb-12">
-    <h1 class="text-4xl font-bold tracking-tight text-gray-900 mb-1">Chancellor Edwards</h1>
-    <p class="text-lg text-gray-500 font-light mb-1">Application Developer · Product Manager</p>
-    <p class="text-sm text-gray-400 mb-6">Houston, TX</p>
-    <p class="text-gray-600 leading-relaxed max-w-2xl">
-      Well seasoned Application Developer with experience building open and closed source software systems across public and private sector business environments. Strong foundations in hardware, networking, databases, and object-oriented programming.
-    </p>
-    <div class="flex flex-wrap gap-4 mt-8 text-sm">
-      <a href="mailto:chance.edwards9@icloud.com"
-         class="inline-flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-md font-medium hover:bg-gray-700 transition-colors">
-        ✉ chance.edwards9@icloud.com
-      </a>
-      <a href="projects.html"
-         class="inline-flex items-center gap-2 border border-gray-300 text-gray-700 px-4 py-2 rounded-md font-medium hover:border-gray-500 transition-colors">
-        View Projects →
-      </a>
+  <!-- ─── HERO ─────────────────────────────────────────────────── -->
+  <header class="hero">
+    <div class="site-wrap">
+      <p class="hero-eyebrow">Portfolio · Archive</p>
+      <h1>Chancellor Edwards</h1>
+      <p class="hero-subtitle">Application Developer · Product Manager</p>
+      <p class="hero-location">Houston, TX</p>
+      <p class="hero-bio">
+        Well seasoned Application Developer with experience building open and closed source software systems across public and private sector business environments. Strong foundations in hardware, networking, databases, and object-oriented programming.
+      </p>
+      <div class="hero-links">
+        <a href="mailto:chance.edwards9@icloud.com">✉ chance.edwards9@icloud.com</a>
+        <a href="projects.html">View Projects →</a>
+      </div>
     </div>
   </header>
 
-  <main class="max-w-3xl mx-auto px-6 pb-24 space-y-16">
+  <!-- ─── MAIN ──────────────────────────────────────────────────── -->
+  <main>
+    <div class="site-wrap">
 
-    <!-- EXPERIENCE -->
-    <section aria-label="Work Experience">
-      <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-8">Experience</h2>
-      <div class="space-y-12">
+      <!-- Experience -->
+      <section class="resume-section" aria-labelledby="sec-experience">
+        <div class="section-header">
+          <h2 id="sec-experience">Experience</h2>
+          <div class="section-rule" aria-hidden="true"></div>
+        </div>
 
-        <!-- Baca Stein White -->
-        <article>
-          <div class="flex justify-between items-start gap-4 flex-wrap mb-3">
-            <div>
-              <h3 class="font-semibold text-gray-900">Application Developer</h3>
-              <p class="text-sm text-gray-500">Baca Stein White and Associates</p>
-            </div>
-            <time class="text-sm text-gray-400 shrink-0 pt-0.5">Aug 2024 – Present</time>
+        <!-- Baca Stein -->
+        <div class="entry">
+          <div class="entry-header">
+            <div class="entry-title">Application Developer</div>
+            <div class="entry-org">Baca Stein White and Associates</div>
+            <div class="entry-meta">Aug 2024 – Present</div>
           </div>
-          <ul class="space-y-2 text-sm text-gray-600 leading-relaxed">
-            <li>– Developed and maintained an enterprise application, a basic web portal that collects and passes data to Microsoft databases, where it is processed downstream by Windows-based systems.</li>
-            <li>– Collaborated with cross-functional teams to refactor code, resolve bugs, and improve performance.</li>
-            <li>– Contributed to data engineering operations — retrieving, transforming, and surfacing data through custom reporting dashboards.</li>
+          <ul class="entry-bullets">
+            <li>Developed and maintained an enterprise application, a web portal that collects and stores data inside of Microsoft databases.</li>
+            <li>Collaborated with cross-functional teams to refactor code, resolve bugs, and improve performance.</li>
+            <li>Contributed to data engineering operations — retrieving, transforming, and surfacing data to be displayed on custom reporting dashboards.</li>
           </ul>
-        </article>
+        </div>
 
         <!-- Sanmore -->
-        <article>
-          <div class="flex justify-between items-start gap-4 flex-wrap mb-3">
-            <div>
-              <h3 class="font-semibold text-gray-900">Product Manager</h3>
-              <p class="text-sm text-gray-500">Sanmore Investments LLC</p>
-            </div>
-            <time class="text-sm text-gray-400 shrink-0 pt-0.5">May 2024 – Aug 2024</time>
+        <div class="entry">
+          <div class="entry-header">
+            <div class="entry-title">Product Manager</div>
+            <div class="entry-org">Sanmore Investments LLC</div>
+            <div class="entry-meta">May 2024 – Aug 2024</div>
           </div>
-          <ul class="space-y-2 text-sm text-gray-600 leading-relaxed">
-            <li>– Led product strategy and development operations across the full product lifecycle.</li>
-            <li>– Orchestrated cloud engineering, application development, and design teams alongside business stakeholders to deliver focused solutions.</li>
-            <li>– Oversaw feature prioritization and lifecycle management.</li>
+          <ul class="entry-bullets">
+            <li>Led product strategy and development operations across the full product lifecycle.</li>
+            <li>Orchestrated cloud engineering, application development, and design teams alongside business stakeholders to deliver focused solutions.</li>
+            <li>Oversaw feature prioritization and lifecycle management.</li>
           </ul>
-        </article>
-
-        <!-- IBM + assignments -->
-        <article>
-          <div class="flex justify-between items-start gap-4 flex-wrap mb-4">
-            <div>
-              <h3 class="font-semibold text-gray-900">Application Developer</h3>
-              <p class="text-sm text-gray-500">IBM</p>
-            </div>
-            <time class="text-sm text-gray-400 shrink-0 pt-0.5">Jun 2021 – May 2024</time>
-          </div>
-
-          <div class="pl-4 border-l-2 border-gray-100 space-y-8">
-
-            <!-- VA -->
-            <div>
-              <div class="flex justify-between items-start gap-4 flex-wrap mb-3">
-                <div>
-                  <p class="text-sm font-medium text-gray-700">U.S. Department of Veterans Affairs</p>
-                  <p class="text-xs uppercase tracking-wide text-gray-400 mt-0.5">Client Assignment</p>
-                </div>
-                <time class="text-sm text-gray-400 shrink-0 pt-0.5">Sep 2022 – May 2024</time>
-              </div>
-              <ul class="space-y-2 text-sm text-gray-600 leading-relaxed">
-                <li>– Automated a business-critical process, clearing a significant backlog of cases.</li>
-                <li>– Coordinated development across 4 components of a mission-critical application in an agile environment, delivering version upgrades on schedule.</li>
-                <li>– Led sprint planning, retrospectives, and backlog refinement.</li>
-                <li>– Ensured coordination between development teams and individual federal stakeholders.</li>
-              </ul>
-            </div>
-
-            <!-- UPS -->
-            <div>
-              <div class="flex justify-between items-start gap-4 flex-wrap mb-3">
-                <div>
-                  <p class="text-sm font-medium text-gray-700">UPS</p>
-                  <p class="text-xs uppercase tracking-wide text-gray-400 mt-0.5">Client Assignment</p>
-                </div>
-                <time class="text-sm text-gray-400 shrink-0 pt-0.5">Aug 2021 – Sep 2022</time>
-              </div>
-              <ul class="space-y-2 text-sm text-gray-600 leading-relaxed">
-                <li>– Built and enhanced logistics software systems.</li>
-                <li>– Led agile ceremonies and coached teams on Scrum best practices.</li>
-                <li>– Improved sprint velocity and cross-team communication.</li>
-              </ul>
-            </div>
-
-          </div>
-        </article>
-
-      </div>
-    </section>
-
-    <!-- SKILLS -->
-    <section aria-label="Technical Skills">
-      <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-8">Skills</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-y-8 gap-x-6">
-
-        <div>
-          <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Programming &amp; Development</h3>
-          <div class="flex flex-wrap gap-2">
-            <span class="bg-gray-100 text-gray-700 text-xs px-3 py-1.5 rounded-full">Object-Oriented Programming</span>
-            <span class="bg-gray-100 text-gray-700 text-xs px-3 py-1.5 rounded-full">Web Development</span>
-            <span class="bg-gray-100 text-gray-700 text-xs px-3 py-1.5 rounded-full">HTML</span>
-          </div>
         </div>
 
-        <div>
-          <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Systems &amp; Infrastructure</h3>
-          <div class="flex flex-wrap gap-2">
-            <span class="bg-gray-100 text-gray-700 text-xs px-3 py-1.5 rounded-full">Hardware</span>
-            <span class="bg-gray-100 text-gray-700 text-xs px-3 py-1.5 rounded-full">Networking</span>
-            <span class="bg-gray-100 text-gray-700 text-xs px-3 py-1.5 rounded-full">SQL</span>
+        <!-- IBM -->
+        <div class="entry">
+          <div class="entry-header">
+            <div class="entry-title">Application Developer</div>
+            <div class="entry-org">IBM</div>
+            <div class="entry-meta">Jun 2021 – May 2024</div>
+          </div>
+
+          <!-- VA -->
+          <div class="sub-assignment">
+            <div class="entry-org">U.S. Department of Veterans Affairs</div>
+            <div class="entry-meta">Client Assignment · Sep 2022 – May 2024</div>
+            <ul class="entry-bullets">
+              <li>Automated a business-critical process, clearing a significant backlog of cases.</li>
+              <li>Coordinated development across 4 components of a mission-critical application in an agile environment, delivering version upgrades on schedule.</li>
+              <li>Led sprint planning, retrospectives, and backlog refinement.</li>
+              <li>Ensured coordination between development teams and stakeholders.</li>
+            </ul>
+          </div>
+
+          <!-- UPS -->
+          <div class="sub-assignment">
+            <div class="entry-org">UPS</div>
+            <div class="entry-meta">Client Assignment · Aug 2021 – Sep 2022</div>
+            <ul class="entry-bullets">
+              <li>Built and enhanced logistics software systems.</li>
+              <li>Led agile ceremonies and coached teams on Scrum best practices.</li>
+              <li>Improved sprint velocity and cross-team communication.</li>
+            </ul>
           </div>
         </div>
+      </section>
 
-        <div>
-          <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Methodologies</h3>
-          <div class="flex flex-wrap gap-2">
-            <span class="bg-gray-100 text-gray-700 text-xs px-3 py-1.5 rounded-full">Agile</span>
-            <span class="bg-gray-100 text-gray-700 text-xs px-3 py-1.5 rounded-full">Scrum</span>
-            <span class="bg-gray-100 text-gray-700 text-xs px-3 py-1.5 rounded-full">SAFe</span>
+      <!-- Skills -->
+      <section class="resume-section" aria-labelledby="sec-skills">
+        <div class="section-header">
+          <h2 id="sec-skills">Skills</h2>
+          <div class="section-rule" aria-hidden="true"></div>
+        </div>
+        <div class="skills-grid">
+          <div>
+            <div class="skill-group-label">Programming &amp; Development</div>
+            <div class="skill-group-items">Object-Oriented Programming · Web Development · HTML · Javascript</div>
+          </div>
+          <div>
+            <div class="skill-group-label">Systems &amp; Infrastructure</div>
+            <div class="skill-group-items">Hardware · Networking · SQL</div>
+          </div>
+          <div>
+            <div class="skill-group-label">Methodologies</div>
+            <div class="skill-group-items">Agile · Scrum · SAFe</div>
           </div>
         </div>
+      </section>
 
-      </div>
-    </section>
-
-    <!-- CERTIFICATIONS -->
-    <section aria-label="Certifications">
-      <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-6">Certifications</h2>
-      <div class="flex flex-wrap gap-3">
-        <div class="border border-gray-200 rounded-lg px-4 py-3">
-          <p class="text-sm font-medium text-gray-900">SAFe Scrum Master</p>
+      <!-- Certifications -->
+      <section class="resume-section" aria-labelledby="sec-certs">
+        <div class="section-header">
+          <h2 id="sec-certs">Certifications</h2>
+          <div class="section-rule" aria-hidden="true"></div>
         </div>
-        <div class="border border-gray-200 rounded-lg px-4 py-3">
-          <p class="text-sm font-medium text-gray-900">Design Thinking</p>
+        <ul class="cert-list">
+          <li>SAFe Scrum Master</li>
+          <li>Design Thinking</li>
+          <li>HTML Development</li>
+        </ul>
+      </section>
+
+      <!-- Education -->
+      <section class="resume-section" aria-labelledby="sec-education">
+        <div class="section-header">
+          <h2 id="sec-education">Education</h2>
+          <div class="section-rule" aria-hidden="true"></div>
         </div>
-        <div class="border border-gray-200 rounded-lg px-4 py-3">
-          <p class="text-sm font-medium text-gray-900">HTML Development</p>
+
+        <div class="edu-entry">
+          <div class="edu-degree">Bachelor of Science, Information Technology</div>
+          <div class="edu-school">University of the Cumberlands</div>
+          <div class="edu-year">2021</div>
+          <p class="edu-note">Secretary, Cyber Club · Collegiate Basketball</p>
+          <p class="edu-note">Relevant Coursework: Hardware Systems · Networking · Database Management · Object-Oriented Programming · Web Design</p>
         </div>
-      </div>
-    </section>
 
-    <!-- EDUCATION -->
-    <section aria-label="Education">
-      <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-8">Education</h2>
-      <div class="space-y-8">
+        <div class="edu-entry">
+          <div class="edu-degree">General Studies</div>
+          <div class="edu-school">Weatherford College</div>
+          <div class="edu-year">2018</div>
+          <p class="edu-note">Collegiate Basketball</p>
+        </div>
 
-        <article>
-          <div class="flex justify-between items-start gap-4 flex-wrap mb-1">
-            <div>
-              <h3 class="font-semibold text-gray-900">Bachelor of Science, Information Technology</h3>
-              <p class="text-sm text-gray-500">University of the Cumberlands</p>
-            </div>
-            <time class="text-sm text-gray-400 shrink-0 pt-0.5">2021</time>
-          </div>
-          <p class="text-sm text-gray-500 mt-2">Secretary, Cyber Club · Collegiate Basketball</p>
-          <p class="text-xs text-gray-400 mt-1 leading-relaxed">
-            Relevant Coursework: Hardware Systems · Networking · Database Management · Object-Oriented Programming · Web Design
-          </p>
-        </article>
+        <div class="edu-entry">
+          <div class="edu-degree">High School Diploma</div>
+          <div class="edu-school">Clements High School</div>
+          <div class="edu-year">2016</div>
+          <p class="edu-note">Varsity Basketball</p>
+        </div>
+      </section>
 
-        <article>
-          <div class="flex justify-between items-start gap-4 flex-wrap mb-1">
-            <div>
-              <h3 class="font-semibold text-gray-900">General Studies Diploma</h3>
-              <p class="text-sm text-gray-500">Weatherford College</p>
-            </div>
-            <time class="text-sm text-gray-400 shrink-0 pt-0.5">2018</time>
-          </div>
-          <p class="text-sm text-gray-500 mt-2">Collegiate Basketball</p>
-        </article>
-
-        <article>
-          <div class="flex justify-between items-start gap-4 flex-wrap mb-1">
-            <div>
-              <h3 class="font-semibold text-gray-900">High School Diploma</h3>
-              <p class="text-sm text-gray-500">Clements High School</p>
-            </div>
-            <time class="text-sm text-gray-400 shrink-0 pt-0.5">2016</time>
-          </div>
-          <p class="text-sm text-gray-500 mt-2">Varsity Basketball</p>
-        </article>
-
-      </div>
-    </section>
-
+    </div>
   </main>
 
-  <!-- FOOTER -->
-  <footer class="border-t border-gray-100">
-    <div class="max-w-3xl mx-auto px-6 py-8 flex justify-between items-center text-sm text-gray-400 flex-wrap gap-4">
-      <span>© 2026 Chancellor Edwards</span>
-      <div class="flex gap-6">
-        <a href="https://github.com/chancellor4" target="_blank" rel="noopener noreferrer"
-           class="hover:text-gray-700 transition-colors">GitHub</a>
-        <a href="https://medium.com/@chancelloredwards" target="_blank" rel="noopener noreferrer"
-           class="hover:text-gray-700 transition-colors">Medium</a>
-        <a href="mailto:chance.edwards9@icloud.com"
-           class="hover:text-gray-700 transition-colors">Email</a>
-      </div>
+  <!-- ─── FOOTER ────────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="site-wrap">
+      <span class="footer-copy">© 2026 Chancellor Edwards</span>
+      <ul class="footer-links">
+        <li><a href="https://github.com/chancellor4" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a href="https://medium.com/@chancelloredwards" target="_blank" rel="noopener noreferrer">Medium</a></li>
+        <li><a href="mailto:chance.edwards9@icloud.com">Email</a></li>
+      </ul>
     </div>
   </footer>
 
