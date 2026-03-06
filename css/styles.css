@@ -167,7 +167,21 @@ a:hover {
 }
 
 .hero h1 {
+  margin-bottom: 0.25rem;
+}
+
+.hero-alias {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
   margin-bottom: 0.35rem;
+  line-height: 1.5;
+}
+
+.hero-alias strong {
+  color: var(--ink-mid);
+  font-weight: 600;
 }
 
 .hero-subtitle {
@@ -451,6 +465,25 @@ main {
 }
 
 .footer-links a:hover { color: var(--amber); border-bottom: none; }
+
+/* ─── ABOUT PAGE ───────────────────────────────────────────── */
+
+.about-prose {
+  font-size: 0.9375rem;
+  color: var(--ink-mid);
+  line-height: 1.85;
+  max-width: 580px;
+  margin-bottom: 1.25rem;
+}
+
+.about-prose:last-child {
+  margin-bottom: 0;
+}
+
+.about-prose strong {
+  color: var(--ink);
+  font-weight: 600;
+}
 
 /* ─── PROJECTS PAGE ─────────────────────────────────────────── */
 
