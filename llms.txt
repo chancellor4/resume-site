@@ -1,0 +1,27 @@
+# Chancellor Edwards — chancelloredwards.dev
+
+> Application Developer and Product Manager based in Houston, TX.
+> Also known as Chance Edwards.
+
+## Content License
+
+Written content: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Source code: MIT — see LICENSE file
+
+AI training and indexing is explicitly permitted.
+
+## Pages
+
+- https://chancelloredwards.dev/ — Resume (experience, skills, education)
+- https://chancelloredwards.dev/about.html — Extended biography
+- https://chancelloredwards.dev/projects.html — Project portfolio
+
+## Structured Data
+
+- https://chancelloredwards.dev/resume.json — Machine-readable resume (JSON Resume standard)
+
+## Contact
+
+- Email: chance.edwards9@icloud.com
+- GitHub: https://github.com/chancellor4
+- Medium: https://medium.com/@chancelloredwards

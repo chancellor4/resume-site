@@ -1,0 +1,102 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "Chancellor Edwards",
+    "label": "Application Developer · Product Manager",
+    "email": "chance.edwards9@icloud.com",
+    "url": "https://chancelloredwards.dev",
+    "summary": "Application Developer with experience building open and closed source software systems for public and private sector clients. Strong foundations in hardware, networking, databases, and object-oriented programming.",
+    "location": {
+      "city": "Houston",
+      "region": "TX",
+      "countryCode": "US"
+    },
+    "profiles": [
+      {
+        "network": "GitHub",
+        "username": "chancellor4",
+        "url": "https://github.com/chancellor4"
+      },
+      {
+        "network": "Medium",
+        "username": "chancelloredwards",
+        "url": "https://medium.com/@chancelloredwards"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "Baca Stein White and Associates",
+      "position": "Application Developer",
+      "startDate": "2024-08",
+      "summary": "Develops and maintains an enterprise web portal collecting and storing data inside Microsoft databases. Collaborates with cross-functional teams to refactor code, resolve bugs, and improve performance. Contributes to data engineering operations — retrieving, transforming, and presenting data inside custom reporting dashboards."
+    },
+    {
+      "name": "Sanmore Investments LLC",
+      "position": "Product Manager",
+      "startDate": "2024-05",
+      "endDate": "2024-08",
+      "summary": "Led product strategy and development operations across the full product lifecycle. Orchestrated cloud engineering, application development, and design teams alongside business stakeholders to deliver focused solutions."
+    },
+    {
+      "name": "IBM",
+      "position": "Application Developer",
+      "startDate": "2021-06",
+      "endDate": "2024-05",
+      "summary": "Application Developer serving government and logistics clients. At the U.S. Department of Veterans Affairs (Sep 2022 – May 2024): automated a business-critical process clearing a significant backlog of cases; coordinated development across 4 components of a mission-critical application; led sprint planning, retrospectives, and backlog refinement. At UPS (Aug 2021 – Sep 2022): built and enhanced logistics software systems; led agile ceremonies and coached teams on Scrum best practices."
+    }
+  ],
+  "education": [
+    {
+      "institution": "University of the Cumberlands",
+      "url": "https://www.ucumberlands.edu/",
+      "area": "Information Technology",
+      "studyType": "Bachelor of Science",
+      "endDate": "2021",
+      "courses": [
+        "Hardware Systems",
+        "Networking",
+        "Database Management",
+        "Object-Oriented Programming",
+        "Web Design"
+      ]
+    },
+    {
+      "institution": "Weatherford College",
+      "url": "https://www.wc.edu/",
+      "area": "General Studies",
+      "endDate": "2018"
+    }
+  ],
+  "certificates": [
+    {
+      "name": "SAFe Scrum Master"
+    },
+    {
+      "name": "Design Thinking"
+    },
+    {
+      "name": "HTML Development"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Programming & Development",
+      "keywords": ["Object-Oriented Programming", "Web Development", "HTML", "JavaScript"]
+    },
+    {
+      "name": "Systems & Infrastructure",
+      "keywords": ["Hardware", "Networking", "SQL"]
+    },
+    {
+      "name": "Methodologies",
+      "keywords": ["Agile", "Scrum", "SAFe"]
+    }
+  ],
+  "meta": {
+    "canonical": "https://chancelloredwards.dev/resume.json",
+    "version": "v1.0.0",
+    "lastModified": "2026-03-12",
+    "license": "CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/"
+  }
+}
