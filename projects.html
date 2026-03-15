@@ -100,13 +100,84 @@
   <main>
     <div class="site-wrap">
 
-      <section class="coming-soon" aria-label="Coming Soon">
-        <p class="coming-soon-label">Coming Soon</p>
-        <h2>Projects are on the way.</h2>
-        <p>This page is under construction. Check back soon, or reach out directly in the meantime.</p>
-        <a href="mailto:chance.edwards9@icloud.com" class="btn-outline">
-          ✉ chance.edwards9@icloud.com
-        </a>
+      <!-- GitHub Profile Section -->
+      <section class="resume-section" aria-labelledby="sec-github">
+        <div class="section-header">
+          <h2 id="sec-github">GitHub</h2>
+          <div class="section-rule" aria-hidden="true"></div>
+        </div>
+
+        <!-- Profile Card -->
+        <div class="gh-profile" id="gh-profile" aria-label="GitHub profile">
+          <div class="gh-profile-inner">
+            <div class="gh-avatar-wrap">
+              <img id="gh-avatar" class="gh-avatar" src="" alt="Chancellor Edwards on GitHub" width="80" height="80" loading="lazy" />
+            </div>
+            <div class="gh-profile-info">
+              <div class="gh-profile-name" id="gh-name">Chancellor Edwards</div>
+              <a class="gh-profile-handle" id="gh-handle" href="https://github.com/chancellor4" target="_blank" rel="noopener noreferrer">@chancellor4</a>
+              <p class="gh-profile-bio" id="gh-bio"></p>
+              <div class="gh-profile-meta">
+                <span id="gh-location" class="gh-meta-item"></span>
+                <span id="gh-repos-count" class="gh-meta-item"></span>
+                <span id="gh-followers" class="gh-meta-item"></span>
+                <span id="gh-following" class="gh-meta-item"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rate Limit Notice (hidden by default) -->
+        <p class="gh-rate-notice" id="gh-rate-notice" hidden>
+          GitHub API limit reached. Data shown may be cached. <a href="https://github.com/chancellor4" target="_blank" rel="noopener noreferrer">View live profile →</a>
+        </p>
+      </section>
+
+      <!-- Repositories Section -->
+      <section class="resume-section" aria-labelledby="sec-repos">
+        <div class="section-header">
+          <h2 id="sec-repos">Repositories</h2>
+          <div class="section-rule" aria-hidden="true"></div>
+        </div>
+
+        <!-- Loading State -->
+        <div class="gh-loading" id="gh-loading" aria-live="polite">
+          <p class="gh-loading-text">Fetching repositories...</p>
+        </div>
+
+        <!-- Error State (hidden by default) -->
+        <div class="gh-error" id="gh-error" hidden>
+          <p>Unable to load repositories right now.</p>
+          <a href="https://github.com/chancellor4?tab=repositories" class="btn-outline" target="_blank" rel="noopener noreferrer">View on GitHub →</a>
+        </div>
+
+        <!-- Repo List (populated by JS) -->
+        <div class="gh-repo-list" id="gh-repo-list" aria-label="Repository list"></div>
+
+        <!-- View All Link -->
+        <div class="gh-view-all" id="gh-view-all" hidden>
+          <a href="https://github.com/chancellor4?tab=repositories" class="btn-outline" target="_blank" rel="noopener noreferrer">
+            View all repositories on GitHub →
+          </a>
+        </div>
+      </section>
+
+      <!-- Recent Activity Section -->
+      <section class="resume-section" aria-labelledby="sec-activity">
+        <div class="section-header">
+          <h2 id="sec-activity">Recent Activity</h2>
+          <div class="section-rule" aria-hidden="true"></div>
+        </div>
+
+        <div class="gh-loading" id="gh-activity-loading" aria-live="polite">
+          <p class="gh-loading-text">Fetching activity...</p>
+        </div>
+
+        <div class="gh-activity-list" id="gh-activity-list" aria-label="Recent GitHub activity"></div>
+
+        <div class="gh-activity-empty" id="gh-activity-empty" hidden>
+          <p>No recent public activity to show.</p>
+        </div>
       </section>
 
     </div>
@@ -115,7 +186,7 @@
   <!-- ─── FOOTER ────────────────────────────────────────────────── -->
   <footer class="site-footer">
     <div class="site-wrap">
-      <span class="footer-copy">© 2026 Chancellor Edwards · Content licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer license">CC BY 4.0</a></span>
+      <span class="footer-copy">&copy; 2026 Chancellor Edwards · Content licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer license">CC BY 4.0</a></span>
       <ul class="footer-links">
         <li><a href="https://github.com/chancellor4" target="_blank" rel="noopener noreferrer">GitHub</a></li>
         <li><a href="https://medium.com/@chancelloredwards" target="_blank" rel="noopener noreferrer">Medium</a></li>
@@ -123,6 +194,300 @@
       </ul>
     </div>
   </footer>
+
+  <!-- ─── GITHUB INTEGRATION ──────────────────────────────────── -->
+  <script>
+  (function () {
+    'use strict';
+
+    /* ── Config ───────────────────────────────────────────────── */
+    const GITHUB_USER = 'chancellor4';
+    const API_BASE    = 'https://api.github.com';
+    const CACHE_TTL   = 10 * 60 * 1000; // 10 minutes (sessionStorage)
+    const MAX_REPOS   = 12;             // repos to display
+    const MAX_EVENTS  = 8;              // activity events to display
+
+    /* ── Cache helpers (sessionStorage) ───────────────────────── */
+    function cacheGet(key) {
+      try {
+        const raw = sessionStorage.getItem(key);
+        if (!raw) return null;
+        const { data, ts } = JSON.parse(raw);
+        if (Date.now() - ts > CACHE_TTL) {
+          sessionStorage.removeItem(key);
+          return null;
+        }
+        return data;
+      } catch { return null; }
+    }
+
+    function cacheSet(key, data) {
+      try {
+        sessionStorage.setItem(key, JSON.stringify({ data, ts: Date.now() }));
+      } catch { /* quota exceeded — silently skip */ }
+    }
+
+    /* ── Fetch with cache + rate-limit awareness ──────────────── */
+    async function ghFetch(endpoint) {
+      const cacheKey = 'gh_' + endpoint;
+      const cached = cacheGet(cacheKey);
+      if (cached) return { data: cached, fromCache: true };
+
+      const res = await fetch(API_BASE + endpoint, {
+        headers: { 'Accept': 'application/vnd.github.v3+json' }
+      });
+
+      // Rate limit check
+      const remaining = parseInt(res.headers.get('X-RateLimit-Remaining'), 10);
+      if (remaining !== null && remaining <= 5) {
+        document.getElementById('gh-rate-notice').hidden = false;
+      }
+
+      if (!res.ok) {
+        if (res.status === 403) {
+          document.getElementById('gh-rate-notice').hidden = false;
+        }
+        throw new Error('GitHub API ' + res.status);
+      }
+
+      const data = await res.json();
+      cacheSet(cacheKey, data);
+      return { data, fromCache: false };
+    }
+
+    /* ── Utilities ────────────────────────────────────────────── */
+    function esc(str) {
+      const el = document.createElement('span');
+      el.textContent = str || '';
+      return el.innerHTML;
+    }
+
+    function timeAgo(dateStr) {
+      const diff = Date.now() - new Date(dateStr).getTime();
+      const mins  = Math.floor(diff / 60000);
+      const hours = Math.floor(diff / 3600000);
+      const days  = Math.floor(diff / 86400000);
+      const weeks = Math.floor(days / 7);
+      const months = Math.floor(days / 30);
+      if (mins < 1) return 'just now';
+      if (mins < 60) return mins + 'm ago';
+      if (hours < 24) return hours + 'h ago';
+      if (days < 7) return days + 'd ago';
+      if (weeks < 5) return weeks + 'w ago';
+      return months + 'mo ago';
+    }
+
+    // Map GitHub language to a warm-palette color
+    const LANG_COLORS = {
+      'JavaScript':  '#b8834a',
+      'TypeScript':  '#4f3a25',
+      'Python':      '#6b5a3e',
+      'HTML':        '#a06428',
+      'CSS':         '#8c7558',
+      'Java':        '#5a3e1b',
+      'C#':          '#4f3a25',
+      'Ruby':        '#7a4422',
+      'Go':          '#5a6e4e',
+      'Shell':       '#6b5a3e',
+      'Swift':       '#a06428',
+      'Kotlin':      '#6b5a3e',
+      'Rust':        '#5a3e1b',
+      'Vue':         '#5a6e4e',
+      'PHP':         '#6b5a3e',
+    };
+
+    function langColor(lang) {
+      return LANG_COLORS[lang] || 'var(--ink-muted)';
+    }
+
+    /* ── Render: Profile ──────────────────────────────────────── */
+    function renderProfile(profile) {
+      const avatar = document.getElementById('gh-avatar');
+      const name   = document.getElementById('gh-name');
+      const handle = document.getElementById('gh-handle');
+      const bio    = document.getElementById('gh-bio');
+      const loc    = document.getElementById('gh-location');
+      const repos  = document.getElementById('gh-repos-count');
+      const followers = document.getElementById('gh-followers');
+      const following = document.getElementById('gh-following');
+
+      if (profile.avatar_url) {
+        avatar.src = profile.avatar_url + '&s=160';
+        avatar.style.display = 'block';
+      }
+      if (profile.name) name.textContent = profile.name;
+      if (profile.bio) bio.textContent = profile.bio;
+      if (profile.location) loc.textContent = profile.location;
+      if (profile.public_repos != null) repos.textContent = profile.public_repos + ' repos';
+      if (profile.followers != null) followers.textContent = profile.followers + ' followers';
+      if (profile.following != null) following.textContent = profile.following + ' following';
+
+      document.getElementById('gh-profile').classList.add('gh-loaded');
+    }
+
+    /* ── Render: Repositories ─────────────────────────────────── */
+    function renderRepos(repos) {
+      const container = document.getElementById('gh-repo-list');
+      document.getElementById('gh-loading').hidden = true;
+
+      // Filter out forks, sort by most recently updated
+      const ownRepos = repos
+        .filter(function(r) { return !r.fork; })
+        .sort(function(a, b) { return new Date(b.updated_at) - new Date(a.updated_at); })
+        .slice(0, MAX_REPOS);
+
+      if (ownRepos.length === 0) {
+        container.innerHTML = '<p class="gh-empty-msg">No public repositories yet.</p>';
+        return;
+      }
+
+      container.innerHTML = ownRepos.map(function(repo) {
+        var lang = repo.language
+          ? '<span class="gh-repo-lang"><span class="gh-lang-dot" style="background:' + langColor(repo.language) + '"></span>' + esc(repo.language) + '</span>'
+          : '';
+
+        var stars = repo.stargazers_count > 0
+          ? '<span class="gh-repo-stat">&#9734; ' + repo.stargazers_count + '</span>'
+          : '';
+
+        var forks = repo.forks_count > 0
+          ? '<span class="gh-repo-stat">&#9588; ' + repo.forks_count + '</span>'
+          : '';
+
+        var topics = (repo.topics || []).slice(0, 3).map(function(t) {
+          return '<span class="gh-topic">' + esc(t) + '</span>';
+        }).join('');
+
+        return ''
+          + '<article class="gh-repo-card">'
+          + '  <div class="gh-repo-card-header">'
+          + '    <a href="' + esc(repo.html_url) + '" class="gh-repo-name" target="_blank" rel="noopener noreferrer">' + esc(repo.name) + '</a>'
+          + '    <span class="gh-repo-visibility">' + (repo.private ? 'Private' : 'Public') + '</span>'
+          + '  </div>'
+          + (repo.description ? '<p class="gh-repo-desc">' + esc(repo.description) + '</p>' : '')
+          + (topics ? '<div class="gh-topics">' + topics + '</div>' : '')
+          + '  <div class="gh-repo-footer">'
+          + '    ' + lang + stars + forks
+          + '    <span class="gh-repo-updated">Updated ' + timeAgo(repo.updated_at) + '</span>'
+          + '  </div>'
+          + '</article>';
+      }).join('');
+
+      // Show "view all" link if there are more repos
+      if (repos.filter(function(r) { return !r.fork; }).length > MAX_REPOS) {
+        document.getElementById('gh-view-all').hidden = false;
+      }
+    }
+
+    /* ── Render: Activity ─────────────────────────────────────── */
+    function renderActivity(events) {
+      document.getElementById('gh-activity-loading').hidden = true;
+      var container = document.getElementById('gh-activity-list');
+
+      // Filter to meaningful event types
+      var meaningful = events.filter(function(e) {
+        return ['PushEvent','CreateEvent','PullRequestEvent','IssuesEvent',
+                'WatchEvent','ForkEvent','ReleaseEvent','IssueCommentEvent',
+                'PullRequestReviewEvent','DeleteEvent'].indexOf(e.type) !== -1;
+      }).slice(0, MAX_EVENTS);
+
+      if (meaningful.length === 0) {
+        document.getElementById('gh-activity-empty').hidden = false;
+        return;
+      }
+
+      container.innerHTML = meaningful.map(function(ev) {
+        var desc = describeEvent(ev);
+        if (!desc) return '';
+        return ''
+          + '<div class="gh-activity-item">'
+          + '  <span class="gh-activity-icon">' + desc.icon + '</span>'
+          + '  <div class="gh-activity-body">'
+          + '    <p class="gh-activity-text">' + desc.text + '</p>'
+          + '    <span class="gh-activity-time">' + timeAgo(ev.created_at) + '</span>'
+          + '  </div>'
+          + '</div>';
+      }).join('');
+    }
+
+    function describeEvent(ev) {
+      var repo = '<a href="https://github.com/' + esc(ev.repo.name) + '" target="_blank" rel="noopener noreferrer">' + esc(ev.repo.name.split('/')[1]) + '</a>';
+      switch (ev.type) {
+        case 'PushEvent':
+          var count = (ev.payload.commits || []).length;
+          return { icon: '&#8593;', text: 'Pushed ' + count + ' commit' + (count !== 1 ? 's' : '') + ' to ' + repo };
+        case 'CreateEvent':
+          var what = ev.payload.ref_type;
+          var ref  = ev.payload.ref ? ' <strong>' + esc(ev.payload.ref) + '</strong>' : '';
+          return { icon: '&#43;', text: 'Created ' + what + ref + ' in ' + repo };
+        case 'DeleteEvent':
+          return { icon: '&#8722;', text: 'Deleted ' + ev.payload.ref_type + ' <strong>' + esc(ev.payload.ref) + '</strong> in ' + repo };
+        case 'PullRequestEvent':
+          return { icon: '&#8634;', text: ev.payload.action.charAt(0).toUpperCase() + ev.payload.action.slice(1) + ' pull request in ' + repo };
+        case 'IssuesEvent':
+          return { icon: '&#9675;', text: ev.payload.action.charAt(0).toUpperCase() + ev.payload.action.slice(1) + ' issue in ' + repo };
+        case 'IssueCommentEvent':
+          return { icon: '&#9993;', text: 'Commented on issue in ' + repo };
+        case 'WatchEvent':
+          return { icon: '&#9734;', text: 'Starred ' + repo };
+        case 'ForkEvent':
+          return { icon: '&#9588;', text: 'Forked ' + repo };
+        case 'ReleaseEvent':
+          return { icon: '&#9670;', text: 'Published release in ' + repo };
+        case 'PullRequestReviewEvent':
+          return { icon: '&#10003;', text: 'Reviewed pull request in ' + repo };
+        default:
+          return null;
+      }
+    }
+
+    /* ── Init ─────────────────────────────────────────────────── */
+    async function init() {
+      try {
+        // Fetch profile + repos + events in parallel
+        var results = await Promise.allSettled([
+          ghFetch('/users/' + GITHUB_USER),
+          ghFetch('/users/' + GITHUB_USER + '/repos?sort=updated&per_page=30'),
+          ghFetch('/users/' + GITHUB_USER + '/events/public?per_page=30')
+        ]);
+
+        // Profile
+        if (results[0].status === 'fulfilled') {
+          renderProfile(results[0].value.data);
+        }
+
+        // Repos
+        if (results[1].status === 'fulfilled') {
+          renderRepos(results[1].value.data);
+        } else {
+          document.getElementById('gh-loading').hidden = true;
+          document.getElementById('gh-error').hidden = false;
+        }
+
+        // Activity
+        if (results[2].status === 'fulfilled') {
+          renderActivity(results[2].value.data);
+        } else {
+          document.getElementById('gh-activity-loading').hidden = true;
+          document.getElementById('gh-activity-empty').hidden = false;
+        }
+
+      } catch (err) {
+        console.error('GitHub integration error:', err);
+        document.getElementById('gh-loading').hidden = true;
+        document.getElementById('gh-error').hidden = false;
+        document.getElementById('gh-activity-loading').hidden = true;
+      }
+    }
+
+    // Run on DOMContentLoaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+  </script>
 
 </body>
 </html>
