@@ -254,45 +254,6 @@
         </div>
       </section>
 
-      <!-- ── Recent Activity ─────────────────────────────────────── -->
-      <section class="resume-section" aria-labelledby="sec-activity">
-        <div class="section-header">
-          <h2 id="sec-activity">Recent Activity</h2>
-          <div class="section-rule" aria-hidden="true"></div>
-        </div>
-
-        <!-- Skeleton -->
-        <div id="gh-activity-loading" aria-live="polite">
-          <div class="gh-activity-item">
-            <span class="gh-activity-icon gh-skeleton" style="width:1.5rem;height:1rem;border-radius:2px"></span>
-            <div class="gh-activity-body">
-              <div class="gh-skeleton gh-skeleton-text" style="width:75%"></div>
-              <div class="gh-skeleton gh-skeleton-text" style="width:40%;margin-top:0.25rem"></div>
-            </div>
-          </div>
-          <div class="gh-activity-item">
-            <span class="gh-activity-icon gh-skeleton" style="width:1.5rem;height:1rem;border-radius:2px"></span>
-            <div class="gh-activity-body">
-              <div class="gh-skeleton gh-skeleton-text" style="width:65%"></div>
-              <div class="gh-skeleton gh-skeleton-text" style="width:35%;margin-top:0.25rem"></div>
-            </div>
-          </div>
-          <div class="gh-activity-item" style="border-bottom:none">
-            <span class="gh-activity-icon gh-skeleton" style="width:1.5rem;height:1rem;border-radius:2px"></span>
-            <div class="gh-activity-body">
-              <div class="gh-skeleton gh-skeleton-text" style="width:70%"></div>
-              <div class="gh-skeleton gh-skeleton-text" style="width:30%;margin-top:0.25rem"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="gh-activity-list" id="gh-activity-list" aria-label="Recent GitHub activity" hidden></div>
-
-        <div class="gh-activity-empty" id="gh-activity-empty" hidden>
-          <p>No recent public activity to show.</p>
-        </div>
-      </section>
-
       <!-- ── Data Freshness ──────────────────────────────────────── -->
       <div class="gh-freshness" id="gh-freshness" hidden>
         <span id="gh-freshness-text"></span>
@@ -325,7 +286,6 @@
     var CACHE_TTL    = 10 * 60 * 1000;  // 10 min sessionStorage cache
     var FETCH_TIMEOUT = 8000;            // 8s — fail fast, show fallback
     var MAX_REPOS    = 16;
-    var MAX_EVENTS   = 10;
 
     /* ── State ────────────────────────────────────────────────── */
     var allRepos       = [];
@@ -787,12 +747,24 @@
           ? '<span class="gh-repo-stat">&#9741; ' + repo.forks_count + '</span>'
           : '';
 
-        var topics = Array.isArray(repo.topics) ? repo.topics.slice(0, 4).map(function(t) {
-          return '<span class="gh-topic">' + esc(t) + '</span>';
-        }).join('') : '';
+        var topics = Array.isArray(repo.topics) && repo.topics.length > 0
+          ? repo.topics.slice(0, 4).map(function(t) {
+              return '<span class="gh-topic">' + esc(t) + '</span>';
+            }).join('')
+          : '';
 
         var homepage = repo.homepage
           ? '<a href="' + esc(repo.homepage) + '" class="gh-repo-link" target="_blank" rel="noopener noreferrer">Live site &#8599;</a>'
+          : '';
+
+        var updatedStr = timeAgo(repo.updated_at || '');
+        var hasFooterContent = lang || stars || forks || updatedStr;
+
+        var footer = hasFooterContent
+          ? '<div class="gh-repo-footer">'
+            + lang + stars + forks
+            + (updatedStr ? '<span class="gh-repo-updated">Updated ' + updatedStr + '</span>' : '')
+            + '</div>'
           : '';
 
         return ''
@@ -804,125 +776,12 @@
           + (repo.description ? '<p class="gh-repo-desc">' + esc(repo.description) + '</p>' : '')
           + (topics ? '<div class="gh-topics">' + topics + '</div>' : '')
           + (homepage ? '<div class="gh-repo-homepage">' + homepage + '</div>' : '')
-          + '  <div class="gh-repo-footer">'
-          + '    ' + lang + stars + forks
-          + '    <span class="gh-repo-updated">Updated ' + timeAgo(repo.updated_at || '') + '</span>'
-          + '  </div>'
+          + footer
           + '</article>';
       }).join('');
 
       var viewAll = $('gh-view-all');
       if (viewAll) viewAll.hidden = filtered.length <= MAX_REPOS;
-    }
-
-    /* ── Render: Activity ─────────────────────────────────────── */
-    function renderActivity(events) {
-      hide('gh-activity-loading');
-      var container = $('gh-activity-list');
-      if (!container) return;
-      container.hidden = false;
-
-      var VALID_TYPES = ['PushEvent','CreateEvent','PullRequestEvent','IssuesEvent',
-        'WatchEvent','ForkEvent','ReleaseEvent','IssueCommentEvent',
-        'PullRequestReviewEvent','DeleteEvent'];
-
-      var meaningful = events.filter(function(e) {
-        return e && e.type && VALID_TYPES.indexOf(e.type) !== -1;
-      }).slice(0, MAX_EVENTS);
-
-      if (meaningful.length === 0) {
-        show('gh-activity-empty');
-        return;
-      }
-
-      container.innerHTML = meaningful.map(function(ev) {
-        var desc = describeEvent(ev);
-        if (!desc) return '';
-
-        // Commit details for PushEvents
-        var commitDetail = '';
-        if (ev.type === 'PushEvent' && ev.payload && Array.isArray(ev.payload.commits) && ev.payload.commits.length > 0) {
-          var latestCommits = ev.payload.commits.slice(-2);
-          commitDetail = '<div class="gh-commit-list">' + latestCommits.map(function(c) {
-            if (!c || !c.sha) return '';
-            var sha = String(c.sha).slice(0, 7);
-            var rawMsg = (c.message || '').split('\n')[0];
-            var msg = esc(rawMsg);
-            if (msg.length > 72) msg = msg.slice(0, 69) + '...';
-            return '<div class="gh-commit-item">'
-              + '<code class="gh-commit-sha">' + sha + '</code>'
-              + '<span class="gh-commit-msg">' + msg + '</span>'
-              + '</div>';
-          }).join('') + '</div>';
-        }
-
-        return ''
-          + '<div class="gh-activity-item">'
-          + '  <span class="gh-activity-icon" aria-hidden="true">' + desc.icon + '</span>'
-          + '  <div class="gh-activity-body">'
-          + '    <p class="gh-activity-text">' + desc.text + '</p>'
-          + commitDetail
-          + '    <span class="gh-activity-time">' + timeAgo(ev.created_at || '') + '</span>'
-          + '  </div>'
-          + '</div>';
-      }).join('');
-    }
-
-    function describeEvent(ev) {
-      // Safe access — bail if required fields are missing
-      if (!ev || !ev.repo || !ev.repo.name || !ev.payload) return null;
-
-      var fullName = String(ev.repo.name);
-      var repoName = fullName.indexOf('/') !== -1 ? fullName.split('/')[1] : fullName;
-      var repo = '<a href="https://github.com/' + esc(fullName) + '" target="_blank" rel="noopener noreferrer">' + esc(repoName) + '</a>';
-
-      var payload = ev.payload;
-      var action = safeStr(payload.action);
-      var actionCap = action ? action.charAt(0).toUpperCase() + action.slice(1) : '';
-
-      switch (ev.type) {
-        case 'PushEvent':
-          var commits = Array.isArray(payload.commits) ? payload.commits : [];
-          var count = commits.length;
-          var branch = safeStr(payload.ref).replace('refs/heads/', '');
-          var branchStr = branch ? ' to <strong>' + esc(branch) + '</strong> in ' : ' to ';
-          return { icon: '&#8593;', text: 'Pushed ' + count + ' commit' + (count !== 1 ? 's' : '') + branchStr + repo };
-
-        case 'CreateEvent':
-          var refType = safeStr(payload.ref_type);
-          var ref = payload.ref ? ' <strong>' + esc(payload.ref) + '</strong>' : '';
-          return { icon: '&#43;', text: 'Created ' + refType + ref + ' in ' + repo };
-
-        case 'DeleteEvent':
-          return { icon: '&#8722;', text: 'Deleted ' + safeStr(payload.ref_type) + ' <strong>' + esc(safeStr(payload.ref)) + '</strong> in ' + repo };
-
-        case 'PullRequestEvent':
-          var prTitle = (payload.pull_request && payload.pull_request.title) ? payload.pull_request.title : '';
-          return { icon: '&#8634;', text: actionCap + ' PR' + (prTitle ? ' <em>"' + esc(String(prTitle).slice(0, 60)) + '"</em>' : '') + ' in ' + repo };
-
-        case 'IssuesEvent':
-          var issueTitle = (payload.issue && payload.issue.title) ? payload.issue.title : '';
-          return { icon: '&#9675;', text: actionCap + ' issue' + (issueTitle ? ' <em>"' + esc(String(issueTitle).slice(0, 60)) + '"</em>' : '') + ' in ' + repo };
-
-        case 'IssueCommentEvent':
-          return { icon: '&#9993;', text: 'Commented on issue in ' + repo };
-
-        case 'WatchEvent':
-          return { icon: '&#9734;', text: 'Starred ' + repo };
-
-        case 'ForkEvent':
-          return { icon: '&#9741;', text: 'Forked ' + repo };
-
-        case 'ReleaseEvent':
-          var tag = (payload.release && payload.release.tag_name) ? payload.release.tag_name : '';
-          return { icon: '&#9670;', text: 'Published release' + (tag ? ' <strong>' + esc(tag) + '</strong>' : '') + ' in ' + repo };
-
-        case 'PullRequestReviewEvent':
-          return { icon: '&#10003;', text: 'Reviewed pull request in ' + repo };
-
-        default:
-          return null;
-      }
     }
 
     /* ── Data Freshness ───────────────────────────────────────── */
@@ -977,13 +836,9 @@
           clearAllSkeletons();
         }
 
-        // Activity + Heatmap
+        // Heatmap (from events data)
         if (results[2].status === 'fulfilled' && isEventArray(results[2].value.data)) {
-          renderActivity(results[2].value.data);
           renderHeatmap(results[2].value.data);
-        } else {
-          hide('gh-activity-loading');
-          show('gh-activity-empty');
         }
 
         showFreshness();
@@ -993,8 +848,6 @@
         showProfileFallback();
         hide('gh-loading');
         show('gh-error');
-        hide('gh-activity-loading');
-        show('gh-activity-empty');
         clearAllSkeletons();
         showFreshness();
       }

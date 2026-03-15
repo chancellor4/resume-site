@@ -1051,104 +1051,6 @@ main {
   text-align: center;
 }
 
-/* ─── GITHUB: ACTIVITY ─────────────────────────────────────── */
-
-.gh-activity-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.gh-activity-item {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--sp-md);
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--border-lt);
-}
-
-.gh-activity-item:last-child {
-  border-bottom: none;
-}
-
-.gh-activity-icon {
-  flex-shrink: 0;
-  width: 1.5rem;
-  text-align: center;
-  font-size: 0.875rem;
-  color: var(--amber);
-  padding-top: 0.0625rem;
-}
-
-.gh-activity-body {
-  flex: 1;
-  min-width: 0;
-}
-
-.gh-activity-text {
-  font-size: 0.875rem;
-  color: var(--ink-mid);
-  line-height: 1.6;
-}
-
-.gh-activity-text a {
-  font-weight: 600;
-}
-
-.gh-activity-text strong {
-  color: var(--ink);
-  font-weight: 600;
-}
-
-.gh-activity-text em {
-  font-style: italic;
-  color: var(--ink-muted);
-}
-
-.gh-activity-time {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: var(--ls-tight);
-  color: var(--ink-muted);
-}
-
-.gh-activity-empty p {
-  font-size: 0.9rem;
-  color: var(--ink-muted);
-  font-style: italic;
-}
-
-/* ─── GITHUB: COMMIT DETAILS ──────────────────────────────── */
-
-.gh-commit-list {
-  margin-top: 0.375rem;
-  margin-bottom: 0.25rem;
-  padding-left: 0;
-}
-
-.gh-commit-item {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  padding: 0.125rem 0;
-}
-
-.gh-commit-sha {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--amber);
-  flex-shrink: 0;
-}
-
-.gh-commit-msg {
-  font-size: 0.8rem;
-  color: var(--ink-muted);
-  line-height: 1.5;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 /* ─── GITHUB: DATA FRESHNESS ──────────────────────────────── */
 
 .gh-freshness {
@@ -1244,6 +1146,4 @@ main {
   .gh-stats-grid { grid-template-columns: repeat(2, 1fr); }
   .gh-controls { flex-direction: column; align-items: flex-start; }
   .gh-heatmap-cell { max-width: 12px; }
-  .gh-commit-item { flex-direction: column; gap: 0.125rem; }
-  .gh-commit-msg { white-space: normal; }
 }
