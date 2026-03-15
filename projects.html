@@ -100,25 +100,31 @@
   <main>
     <div class="site-wrap">
 
-      <!-- GitHub Profile Section -->
+      <!-- ── GitHub Profile ──────────────────────────────────────── -->
       <section class="resume-section" aria-labelledby="sec-github">
         <div class="section-header">
           <h2 id="sec-github">GitHub</h2>
           <div class="section-rule" aria-hidden="true"></div>
         </div>
 
-        <!-- Profile Card -->
         <div class="gh-profile" id="gh-profile" aria-label="GitHub profile">
           <div class="gh-profile-inner">
             <div class="gh-avatar-wrap">
+              <!-- Skeleton placeholder, replaced on load -->
+              <div class="gh-avatar-skeleton gh-skeleton" id="gh-avatar-skeleton"></div>
               <img id="gh-avatar" class="gh-avatar" src="" alt="Chancellor Edwards on GitHub" width="80" height="80" loading="lazy" />
             </div>
             <div class="gh-profile-info">
-              <div class="gh-profile-name" id="gh-name">Chancellor Edwards</div>
+              <div class="gh-profile-name" id="gh-name">
+                <span class="gh-skeleton gh-skeleton-text" style="width:160px" id="gh-name-skeleton"></span>
+              </div>
               <a class="gh-profile-handle" id="gh-handle" href="https://github.com/chancellor4" target="_blank" rel="noopener noreferrer">@chancellor4</a>
-              <p class="gh-profile-bio" id="gh-bio"></p>
+              <p class="gh-profile-bio" id="gh-bio">
+                <span class="gh-skeleton gh-skeleton-text" style="width:280px" id="gh-bio-skeleton"></span>
+              </p>
               <div class="gh-profile-meta">
                 <span id="gh-location" class="gh-meta-item"></span>
+                <span id="gh-member-since" class="gh-meta-item"></span>
                 <span id="gh-repos-count" class="gh-meta-item"></span>
                 <span id="gh-followers" class="gh-meta-item"></span>
                 <span id="gh-following" class="gh-meta-item"></span>
@@ -133,26 +139,112 @@
         </p>
       </section>
 
-      <!-- Repositories Section -->
+      <!-- ── Stats Overview ──────────────────────────────────────── -->
+      <section class="resume-section" aria-labelledby="sec-stats">
+        <div class="section-header">
+          <h2 id="sec-stats">Overview</h2>
+          <div class="section-rule" aria-hidden="true"></div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="gh-stats-grid" id="gh-stats-grid">
+          <div class="gh-stat-card">
+            <span class="gh-stat-value gh-skeleton gh-skeleton-text" style="width:32px" id="stat-repos">—</span>
+            <span class="gh-stat-label">Repositories</span>
+          </div>
+          <div class="gh-stat-card">
+            <span class="gh-stat-value gh-skeleton gh-skeleton-text" style="width:32px" id="stat-stars">—</span>
+            <span class="gh-stat-label">Stars Earned</span>
+          </div>
+          <div class="gh-stat-card">
+            <span class="gh-stat-value gh-skeleton gh-skeleton-text" style="width:32px" id="stat-forks">—</span>
+            <span class="gh-stat-label">Forks</span>
+          </div>
+          <div class="gh-stat-card">
+            <span class="gh-stat-value gh-skeleton gh-skeleton-text" style="width:32px" id="stat-languages">—</span>
+            <span class="gh-stat-label">Languages</span>
+          </div>
+        </div>
+
+        <!-- Language Breakdown Bar -->
+        <div class="gh-lang-bar-wrap" id="gh-lang-bar-wrap" hidden>
+          <div class="gh-lang-bar" id="gh-lang-bar" role="img" aria-label="Language breakdown"></div>
+          <div class="gh-lang-legend" id="gh-lang-legend"></div>
+        </div>
+      </section>
+
+      <!-- ── Contribution Activity ──────────────────────────────── -->
+      <section class="resume-section" aria-labelledby="sec-contributions">
+        <div class="section-header">
+          <h2 id="sec-contributions">Contributions</h2>
+          <div class="section-rule" aria-hidden="true"></div>
+        </div>
+
+        <div class="gh-heatmap-wrap" id="gh-heatmap-wrap">
+          <div class="gh-heatmap-months" id="gh-heatmap-months"></div>
+          <div class="gh-heatmap" id="gh-heatmap" role="img" aria-label="Contribution activity over the last 90 days"></div>
+          <div class="gh-heatmap-legend">
+            <span class="gh-heatmap-legend-label">Less</span>
+            <span class="gh-heatmap-cell" data-level="0"></span>
+            <span class="gh-heatmap-cell" data-level="1"></span>
+            <span class="gh-heatmap-cell" data-level="2"></span>
+            <span class="gh-heatmap-cell" data-level="3"></span>
+            <span class="gh-heatmap-cell" data-level="4"></span>
+            <span class="gh-heatmap-legend-label">More</span>
+          </div>
+          <p class="gh-heatmap-summary" id="gh-heatmap-summary"></p>
+        </div>
+      </section>
+
+      <!-- ── Repositories ────────────────────────────────────────── -->
       <section class="resume-section" aria-labelledby="sec-repos">
         <div class="section-header">
           <h2 id="sec-repos">Repositories</h2>
           <div class="section-rule" aria-hidden="true"></div>
         </div>
 
-        <!-- Loading State -->
-        <div class="gh-loading" id="gh-loading" aria-live="polite">
-          <p class="gh-loading-text">Fetching repositories...</p>
+        <!-- Filter + Sort Controls -->
+        <div class="gh-controls" id="gh-controls" hidden>
+          <div class="gh-filter-pills" id="gh-filter-pills" role="radiogroup" aria-label="Filter by language">
+            <button class="gh-pill gh-pill-active" data-lang="all" aria-pressed="true">All</button>
+          </div>
+          <div class="gh-sort-wrap">
+            <label for="gh-sort" class="gh-sort-label">Sort</label>
+            <select id="gh-sort" class="gh-sort-select">
+              <option value="updated">Recently updated</option>
+              <option value="stars">Most stars</option>
+              <option value="name">Name A–Z</option>
+            </select>
+          </div>
         </div>
 
-        <!-- Error State (hidden by default) -->
+        <!-- Skeleton Loading -->
+        <div class="gh-repo-list" id="gh-loading" aria-live="polite">
+          <div class="gh-repo-card gh-repo-skeleton">
+            <div class="gh-skeleton gh-skeleton-text" style="width:60%"></div>
+            <div class="gh-skeleton gh-skeleton-text" style="width:90%;margin-top:0.5rem"></div>
+            <div class="gh-skeleton gh-skeleton-text" style="width:40%;margin-top:auto;padding-top:0.75rem"></div>
+          </div>
+          <div class="gh-repo-card gh-repo-skeleton">
+            <div class="gh-skeleton gh-skeleton-text" style="width:50%"></div>
+            <div class="gh-skeleton gh-skeleton-text" style="width:80%;margin-top:0.5rem"></div>
+            <div class="gh-skeleton gh-skeleton-text" style="width:35%;margin-top:auto;padding-top:0.75rem"></div>
+          </div>
+          <div class="gh-repo-card gh-repo-skeleton">
+            <div class="gh-skeleton gh-skeleton-text" style="width:70%"></div>
+            <div class="gh-skeleton gh-skeleton-text" style="width:85%;margin-top:0.5rem"></div>
+            <div class="gh-skeleton gh-skeleton-text" style="width:45%;margin-top:auto;padding-top:0.75rem"></div>
+          </div>
+        </div>
+
+        <!-- Error State -->
         <div class="gh-error" id="gh-error" hidden>
           <p>Unable to load repositories right now.</p>
           <a href="https://github.com/chancellor4?tab=repositories" class="btn-outline" target="_blank" rel="noopener noreferrer">View on GitHub →</a>
         </div>
 
         <!-- Repo List (populated by JS) -->
-        <div class="gh-repo-list" id="gh-repo-list" aria-label="Repository list"></div>
+        <div class="gh-repo-list" id="gh-repo-list" aria-label="Repository list" hidden></div>
 
         <!-- View All Link -->
         <div class="gh-view-all" id="gh-view-all" hidden>
@@ -162,23 +254,50 @@
         </div>
       </section>
 
-      <!-- Recent Activity Section -->
+      <!-- ── Recent Activity ─────────────────────────────────────── -->
       <section class="resume-section" aria-labelledby="sec-activity">
         <div class="section-header">
           <h2 id="sec-activity">Recent Activity</h2>
           <div class="section-rule" aria-hidden="true"></div>
         </div>
 
-        <div class="gh-loading" id="gh-activity-loading" aria-live="polite">
-          <p class="gh-loading-text">Fetching activity...</p>
+        <!-- Skeleton -->
+        <div id="gh-activity-loading" aria-live="polite">
+          <div class="gh-activity-item">
+            <span class="gh-activity-icon gh-skeleton" style="width:1.5rem;height:1rem;border-radius:2px"></span>
+            <div class="gh-activity-body">
+              <div class="gh-skeleton gh-skeleton-text" style="width:75%"></div>
+              <div class="gh-skeleton gh-skeleton-text" style="width:40%;margin-top:0.25rem"></div>
+            </div>
+          </div>
+          <div class="gh-activity-item">
+            <span class="gh-activity-icon gh-skeleton" style="width:1.5rem;height:1rem;border-radius:2px"></span>
+            <div class="gh-activity-body">
+              <div class="gh-skeleton gh-skeleton-text" style="width:65%"></div>
+              <div class="gh-skeleton gh-skeleton-text" style="width:35%;margin-top:0.25rem"></div>
+            </div>
+          </div>
+          <div class="gh-activity-item" style="border-bottom:none">
+            <span class="gh-activity-icon gh-skeleton" style="width:1.5rem;height:1rem;border-radius:2px"></span>
+            <div class="gh-activity-body">
+              <div class="gh-skeleton gh-skeleton-text" style="width:70%"></div>
+              <div class="gh-skeleton gh-skeleton-text" style="width:30%;margin-top:0.25rem"></div>
+            </div>
+          </div>
         </div>
 
-        <div class="gh-activity-list" id="gh-activity-list" aria-label="Recent GitHub activity"></div>
+        <div class="gh-activity-list" id="gh-activity-list" aria-label="Recent GitHub activity" hidden></div>
 
         <div class="gh-activity-empty" id="gh-activity-empty" hidden>
           <p>No recent public activity to show.</p>
         </div>
       </section>
+
+      <!-- ── Data Freshness ──────────────────────────────────────── -->
+      <div class="gh-freshness" id="gh-freshness" hidden>
+        <span id="gh-freshness-text"></span>
+        <button class="gh-refresh-btn" id="gh-refresh-btn" aria-label="Refresh GitHub data">Refresh</button>
+      </div>
 
     </div>
   </main>
@@ -201,84 +320,103 @@
     'use strict';
 
     /* ── Config ───────────────────────────────────────────────── */
-    const GITHUB_USER = 'chancellor4';
-    const API_BASE    = 'https://api.github.com';
-    const CACHE_TTL   = 10 * 60 * 1000; // 10 minutes (sessionStorage)
-    const MAX_REPOS   = 12;             // repos to display
-    const MAX_EVENTS  = 8;              // activity events to display
+    var GITHUB_USER = 'chancellor4';
+    var API_BASE    = 'https://api.github.com';
+    var CACHE_TTL   = 10 * 60 * 1000;
+    var MAX_REPOS   = 16;
+    var MAX_EVENTS  = 10;
 
-    /* ── Cache helpers (sessionStorage) ───────────────────────── */
+    /* ── State ────────────────────────────────────────────────── */
+    var allRepos     = [];
+    var activeLang   = 'all';
+    var activeSort   = 'updated';
+    var fetchedAt    = null;
+
+    /* ── Cache ────────────────────────────────────────────────── */
     function cacheGet(key) {
       try {
-        const raw = sessionStorage.getItem(key);
+        var raw = sessionStorage.getItem(key);
         if (!raw) return null;
-        const { data, ts } = JSON.parse(raw);
-        if (Date.now() - ts > CACHE_TTL) {
+        var parsed = JSON.parse(raw);
+        if (Date.now() - parsed.ts > CACHE_TTL) {
           sessionStorage.removeItem(key);
           return null;
         }
-        return data;
-      } catch { return null; }
+        return parsed.data;
+      } catch (e) { return null; }
     }
 
     function cacheSet(key, data) {
       try {
-        sessionStorage.setItem(key, JSON.stringify({ data, ts: Date.now() }));
-      } catch { /* quota exceeded — silently skip */ }
+        sessionStorage.setItem(key, JSON.stringify({ data: data, ts: Date.now() }));
+      } catch (e) { /* quota exceeded */ }
     }
 
-    /* ── Fetch with cache + rate-limit awareness ──────────────── */
+    function cacheClear() {
+      try {
+        var keys = [];
+        for (var i = 0; i < sessionStorage.length; i++) {
+          var k = sessionStorage.key(i);
+          if (k && k.indexOf('gh_') === 0) keys.push(k);
+        }
+        keys.forEach(function(k) { sessionStorage.removeItem(k); });
+      } catch (e) {}
+    }
+
+    /* ── Fetch ────────────────────────────────────────────────── */
     async function ghFetch(endpoint) {
-      const cacheKey = 'gh_' + endpoint;
-      const cached = cacheGet(cacheKey);
+      var cacheKey = 'gh_' + endpoint;
+      var cached = cacheGet(cacheKey);
       if (cached) return { data: cached, fromCache: true };
 
-      const res = await fetch(API_BASE + endpoint, {
+      var res = await fetch(API_BASE + endpoint, {
         headers: { 'Accept': 'application/vnd.github.v3+json' }
       });
 
-      // Rate limit check
-      const remaining = parseInt(res.headers.get('X-RateLimit-Remaining'), 10);
-      if (remaining !== null && remaining <= 5) {
+      var remaining = parseInt(res.headers.get('X-RateLimit-Remaining'), 10);
+      if (!isNaN(remaining) && remaining <= 5) {
         document.getElementById('gh-rate-notice').hidden = false;
       }
 
       if (!res.ok) {
-        if (res.status === 403) {
-          document.getElementById('gh-rate-notice').hidden = false;
-        }
+        if (res.status === 403) document.getElementById('gh-rate-notice').hidden = false;
         throw new Error('GitHub API ' + res.status);
       }
 
-      const data = await res.json();
+      var data = await res.json();
       cacheSet(cacheKey, data);
-      return { data, fromCache: false };
+      return { data: data, fromCache: false };
     }
 
     /* ── Utilities ────────────────────────────────────────────── */
     function esc(str) {
-      const el = document.createElement('span');
+      var el = document.createElement('span');
       el.textContent = str || '';
       return el.innerHTML;
     }
 
     function timeAgo(dateStr) {
-      const diff = Date.now() - new Date(dateStr).getTime();
-      const mins  = Math.floor(diff / 60000);
-      const hours = Math.floor(diff / 3600000);
-      const days  = Math.floor(diff / 86400000);
-      const weeks = Math.floor(days / 7);
-      const months = Math.floor(days / 30);
-      if (mins < 1) return 'just now';
-      if (mins < 60) return mins + 'm ago';
+      var diff = Date.now() - new Date(dateStr).getTime();
+      var mins   = Math.floor(diff / 60000);
+      var hours  = Math.floor(diff / 3600000);
+      var days   = Math.floor(diff / 86400000);
+      var weeks  = Math.floor(days / 7);
+      var months = Math.floor(days / 30);
+      if (mins < 1)   return 'just now';
+      if (mins < 60)  return mins + 'm ago';
       if (hours < 24) return hours + 'h ago';
-      if (days < 7) return days + 'd ago';
-      if (weeks < 5) return weeks + 'w ago';
+      if (days < 7)   return days + 'd ago';
+      if (weeks < 5)  return weeks + 'w ago';
       return months + 'mo ago';
     }
 
-    // Map GitHub language to a warm-palette color
-    const LANG_COLORS = {
+    function formatDate(dateStr) {
+      var d = new Date(dateStr);
+      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+    }
+
+    var LANG_COLORS = {
       'JavaScript':  '#b8834a',
       'TypeScript':  '#4f3a25',
       'Python':      '#6b5a3e',
@@ -294,54 +432,247 @@
       'Rust':        '#5a3e1b',
       'Vue':         '#5a6e4e',
       'PHP':         '#6b5a3e',
+      'Jupyter Notebook': '#8c6538',
+      'Dockerfile':  '#7a6548',
+      'SCSS':        '#8c7558',
+      'Makefile':    '#6b5a3e'
     };
 
     function langColor(lang) {
-      return LANG_COLORS[lang] || 'var(--ink-muted)';
+      return LANG_COLORS[lang] || '#8c7558';
+    }
+
+    function removeSkeleton(el) {
+      if (!el) return;
+      el.classList.remove('gh-skeleton', 'gh-skeleton-text');
+      el.style.removeProperty('width');
     }
 
     /* ── Render: Profile ──────────────────────────────────────── */
     function renderProfile(profile) {
-      const avatar = document.getElementById('gh-avatar');
-      const name   = document.getElementById('gh-name');
-      const handle = document.getElementById('gh-handle');
-      const bio    = document.getElementById('gh-bio');
-      const loc    = document.getElementById('gh-location');
-      const repos  = document.getElementById('gh-repos-count');
-      const followers = document.getElementById('gh-followers');
-      const following = document.getElementById('gh-following');
+      var avatar = document.getElementById('gh-avatar');
+      var avatarSkel = document.getElementById('gh-avatar-skeleton');
+      var nameSkel = document.getElementById('gh-name-skeleton');
+      var bioSkel  = document.getElementById('gh-bio-skeleton');
 
       if (profile.avatar_url) {
         avatar.src = profile.avatar_url + '&s=160';
         avatar.style.display = 'block';
+        if (avatarSkel) avatarSkel.style.display = 'none';
       }
-      if (profile.name) name.textContent = profile.name;
-      if (profile.bio) bio.textContent = profile.bio;
-      if (profile.location) loc.textContent = profile.location;
-      if (profile.public_repos != null) repos.textContent = profile.public_repos + ' repos';
-      if (profile.followers != null) followers.textContent = profile.followers + ' followers';
-      if (profile.following != null) following.textContent = profile.following + ' following';
+
+      var nameEl = document.getElementById('gh-name');
+      if (profile.name) {
+        nameEl.textContent = profile.name;
+      }
+      if (nameSkel) nameSkel.remove();
+      if (bioSkel)  bioSkel.remove();
+
+      if (profile.bio) document.getElementById('gh-bio').textContent = profile.bio;
+      if (profile.location) document.getElementById('gh-location').textContent = profile.location;
+      if (profile.created_at) {
+        document.getElementById('gh-member-since').textContent = 'Joined ' + formatDate(profile.created_at);
+      }
+      if (profile.public_repos != null) document.getElementById('gh-repos-count').textContent = profile.public_repos + ' repos';
+      if (profile.followers != null) document.getElementById('gh-followers').textContent = profile.followers + ' followers';
+      if (profile.following != null) document.getElementById('gh-following').textContent = profile.following + ' following';
 
       document.getElementById('gh-profile').classList.add('gh-loaded');
     }
 
+    /* ── Render: Stats ────────────────────────────────────────── */
+    function renderStats(repos) {
+      var ownRepos = repos.filter(function(r) { return !r.fork; });
+
+      var totalStars = 0;
+      var totalForks = 0;
+      var langCounts = {};
+
+      ownRepos.forEach(function(r) {
+        totalStars += r.stargazers_count || 0;
+        totalForks += r.forks_count || 0;
+        if (r.language) {
+          langCounts[r.language] = (langCounts[r.language] || 0) + (r.size || 1);
+        }
+      });
+
+      var uniqueLangs = Object.keys(langCounts);
+
+      // Stat cards
+      var statRepos = document.getElementById('stat-repos');
+      var statStars = document.getElementById('stat-stars');
+      var statForks = document.getElementById('stat-forks');
+      var statLangs = document.getElementById('stat-languages');
+
+      statRepos.textContent = ownRepos.length;
+      statStars.textContent = totalStars;
+      statForks.textContent = totalForks;
+      statLangs.textContent = uniqueLangs.length;
+
+      [statRepos, statStars, statForks, statLangs].forEach(removeSkeleton);
+
+      // Language breakdown bar
+      if (uniqueLangs.length > 0) {
+        var totalSize = 0;
+        uniqueLangs.forEach(function(l) { totalSize += langCounts[l]; });
+
+        // Sort by size descending
+        uniqueLangs.sort(function(a, b) { return langCounts[b] - langCounts[a]; });
+
+        var barEl = document.getElementById('gh-lang-bar');
+        var legendEl = document.getElementById('gh-lang-legend');
+
+        barEl.innerHTML = uniqueLangs.map(function(lang) {
+          var pct = ((langCounts[lang] / totalSize) * 100).toFixed(1);
+          return '<div class="gh-lang-segment" style="width:' + pct + '%;background:' + langColor(lang) + '" title="' + esc(lang) + ' ' + pct + '%"></div>';
+        }).join('');
+
+        // Legend (top 6)
+        legendEl.innerHTML = uniqueLangs.slice(0, 6).map(function(lang) {
+          var pct = ((langCounts[lang] / totalSize) * 100).toFixed(1);
+          return '<span class="gh-lang-legend-item">'
+            + '<span class="gh-lang-dot" style="background:' + langColor(lang) + '"></span>'
+            + esc(lang) + ' <span class="gh-lang-pct">' + pct + '%</span></span>';
+        }).join('');
+
+        document.getElementById('gh-lang-bar-wrap').hidden = false;
+      }
+    }
+
+    /* ── Render: Contribution Heatmap ─────────────────────────── */
+    function renderHeatmap(events) {
+      var dayCounts = {};
+      var totalContributions = 0;
+
+      events.forEach(function(ev) {
+        if (['PushEvent','CreateEvent','PullRequestEvent','IssuesEvent',
+             'IssueCommentEvent','PullRequestReviewEvent','ReleaseEvent'].indexOf(ev.type) === -1) return;
+
+        var date = ev.created_at.slice(0, 10); // YYYY-MM-DD
+        var count = ev.type === 'PushEvent' ? (ev.payload.commits || []).length : 1;
+        dayCounts[date] = (dayCounts[date] || 0) + count;
+        totalContributions += count;
+      });
+
+      // Build grid: 13 weeks × 7 days (91 days back from today)
+      var today = new Date();
+      today.setHours(0, 0, 0, 0);
+      var cells = [];
+      var WEEKS = 13;
+
+      // Start from the Sunday (WEEKS) weeks ago
+      var startDate = new Date(today);
+      startDate.setDate(startDate.getDate() - (WEEKS * 7) + 1);
+      // Align to Sunday
+      startDate.setDate(startDate.getDate() - startDate.getDay());
+
+      var monthLabels = [];
+      var lastMonth = -1;
+
+      for (var w = 0; w < WEEKS; w++) {
+        for (var d = 0; d < 7; d++) {
+          var date = new Date(startDate);
+          date.setDate(startDate.getDate() + w * 7 + d);
+          var key = date.toISOString().slice(0, 10);
+          var count = dayCounts[key] || 0;
+
+          var level = 0;
+          if (count >= 8) level = 4;
+          else if (count >= 5) level = 3;
+          else if (count >= 2) level = 2;
+          else if (count >= 1) level = 1;
+
+          var isFuture = date > today;
+          cells.push('<span class="gh-heatmap-cell' + (isFuture ? ' gh-heatmap-future' : '') + '" data-level="' + (isFuture ? 0 : level) + '" title="' + (isFuture ? '' : count + ' contributions on ' + key) + '" style="grid-row:' + (d + 1) + ';grid-column:' + (w + 1) + '"></span>');
+
+          // Month labels (first row only)
+          if (d === 0 && date.getMonth() !== lastMonth) {
+            var mNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            monthLabels.push('<span style="grid-column:' + (w + 1) + '">' + mNames[date.getMonth()] + '</span>');
+            lastMonth = date.getMonth();
+          }
+        }
+      }
+
+      document.getElementById('gh-heatmap').innerHTML = cells.join('');
+      document.getElementById('gh-heatmap-months').innerHTML = monthLabels.join('');
+
+      // Count active days
+      var activeDays = Object.keys(dayCounts).length;
+      var summaryEl = document.getElementById('gh-heatmap-summary');
+      summaryEl.textContent = totalContributions + ' contributions in the last 90 days across ' + activeDays + ' active day' + (activeDays !== 1 ? 's' : '');
+    }
+
     /* ── Render: Repositories ─────────────────────────────────── */
     function renderRepos(repos) {
-      const container = document.getElementById('gh-repo-list');
+      allRepos = repos.filter(function(r) { return !r.fork; });
+
       document.getElementById('gh-loading').hidden = true;
+      document.getElementById('gh-repo-list').hidden = false;
 
-      // Filter out forks, sort by most recently updated
-      const ownRepos = repos
-        .filter(function(r) { return !r.fork; })
-        .sort(function(a, b) { return new Date(b.updated_at) - new Date(a.updated_at); })
-        .slice(0, MAX_REPOS);
+      // Build language filter pills
+      var langs = {};
+      allRepos.forEach(function(r) {
+        if (r.language) langs[r.language] = (langs[r.language] || 0) + 1;
+      });
+      var sortedLangs = Object.keys(langs).sort(function(a, b) { return langs[b] - langs[a]; });
 
-      if (ownRepos.length === 0) {
-        container.innerHTML = '<p class="gh-empty-msg">No public repositories yet.</p>';
+      var pillsEl = document.getElementById('gh-filter-pills');
+      pillsEl.innerHTML = '<button class="gh-pill gh-pill-active" data-lang="all" aria-pressed="true">All</button>'
+        + sortedLangs.slice(0, 5).map(function(l) {
+          return '<button class="gh-pill" data-lang="' + esc(l) + '" aria-pressed="false">' + esc(l) + '</button>';
+        }).join('');
+
+      // Bind filter events
+      pillsEl.addEventListener('click', function(e) {
+        var btn = e.target.closest('.gh-pill');
+        if (!btn) return;
+        activeLang = btn.dataset.lang;
+        pillsEl.querySelectorAll('.gh-pill').forEach(function(p) {
+          p.classList.remove('gh-pill-active');
+          p.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('gh-pill-active');
+        btn.setAttribute('aria-pressed', 'true');
+        applyRepoView();
+      });
+
+      // Sort control
+      document.getElementById('gh-sort').addEventListener('change', function(e) {
+        activeSort = e.target.value;
+        applyRepoView();
+      });
+
+      document.getElementById('gh-controls').hidden = false;
+      applyRepoView();
+    }
+
+    function applyRepoView() {
+      var filtered = allRepos;
+
+      if (activeLang !== 'all') {
+        filtered = filtered.filter(function(r) { return r.language === activeLang; });
+      }
+
+      // Sort
+      if (activeSort === 'stars') {
+        filtered.sort(function(a, b) { return (b.stargazers_count || 0) - (a.stargazers_count || 0); });
+      } else if (activeSort === 'name') {
+        filtered.sort(function(a, b) { return a.name.localeCompare(b.name); });
+      } else {
+        filtered.sort(function(a, b) { return new Date(b.updated_at) - new Date(a.updated_at); });
+      }
+
+      var display = filtered.slice(0, MAX_REPOS);
+      var container = document.getElementById('gh-repo-list');
+
+      if (display.length === 0) {
+        container.innerHTML = '<p class="gh-empty-msg">No repositories match this filter.</p>';
+        document.getElementById('gh-view-all').hidden = true;
         return;
       }
 
-      container.innerHTML = ownRepos.map(function(repo) {
+      container.innerHTML = display.map(function(repo) {
         var lang = repo.language
           ? '<span class="gh-repo-lang"><span class="gh-lang-dot" style="background:' + langColor(repo.language) + '"></span>' + esc(repo.language) + '</span>'
           : '';
@@ -351,12 +682,16 @@
           : '';
 
         var forks = repo.forks_count > 0
-          ? '<span class="gh-repo-stat">&#9588; ' + repo.forks_count + '</span>'
+          ? '<span class="gh-repo-stat">&#9741; ' + repo.forks_count + '</span>'
           : '';
 
-        var topics = (repo.topics || []).slice(0, 3).map(function(t) {
+        var topics = (repo.topics || []).slice(0, 4).map(function(t) {
           return '<span class="gh-topic">' + esc(t) + '</span>';
         }).join('');
+
+        var homepage = repo.homepage
+          ? '<a href="' + esc(repo.homepage) + '" class="gh-repo-link" target="_blank" rel="noopener noreferrer">Live site &#8599;</a>'
+          : '';
 
         return ''
           + '<article class="gh-repo-card">'
@@ -366,6 +701,7 @@
           + '  </div>'
           + (repo.description ? '<p class="gh-repo-desc">' + esc(repo.description) + '</p>' : '')
           + (topics ? '<div class="gh-topics">' + topics + '</div>' : '')
+          + (homepage ? '<div class="gh-repo-homepage">' + homepage + '</div>' : '')
           + '  <div class="gh-repo-footer">'
           + '    ' + lang + stars + forks
           + '    <span class="gh-repo-updated">Updated ' + timeAgo(repo.updated_at) + '</span>'
@@ -373,18 +709,15 @@
           + '</article>';
       }).join('');
 
-      // Show "view all" link if there are more repos
-      if (repos.filter(function(r) { return !r.fork; }).length > MAX_REPOS) {
-        document.getElementById('gh-view-all').hidden = false;
-      }
+      document.getElementById('gh-view-all').hidden = filtered.length <= MAX_REPOS;
     }
 
     /* ── Render: Activity ─────────────────────────────────────── */
     function renderActivity(events) {
       document.getElementById('gh-activity-loading').hidden = true;
       var container = document.getElementById('gh-activity-list');
+      container.hidden = false;
 
-      // Filter to meaningful event types
       var meaningful = events.filter(function(e) {
         return ['PushEvent','CreateEvent','PullRequestEvent','IssuesEvent',
                 'WatchEvent','ForkEvent','ReleaseEvent','IssueCommentEvent',
@@ -399,11 +732,28 @@
       container.innerHTML = meaningful.map(function(ev) {
         var desc = describeEvent(ev);
         if (!desc) return '';
+
+        // Commit details for PushEvents
+        var commitDetail = '';
+        if (ev.type === 'PushEvent' && ev.payload.commits && ev.payload.commits.length > 0) {
+          var latestCommits = ev.payload.commits.slice(-2);
+          commitDetail = '<div class="gh-commit-list">' + latestCommits.map(function(c) {
+            var sha = c.sha.slice(0, 7);
+            var msg = esc(c.message.split('\n')[0]);
+            if (msg.length > 72) msg = msg.slice(0, 69) + '...';
+            return '<div class="gh-commit-item">'
+              + '<code class="gh-commit-sha">' + sha + '</code>'
+              + '<span class="gh-commit-msg">' + msg + '</span>'
+              + '</div>';
+          }).join('') + '</div>';
+        }
+
         return ''
           + '<div class="gh-activity-item">'
-          + '  <span class="gh-activity-icon">' + desc.icon + '</span>'
+          + '  <span class="gh-activity-icon" aria-hidden="true">' + desc.icon + '</span>'
           + '  <div class="gh-activity-body">'
           + '    <p class="gh-activity-text">' + desc.text + '</p>'
+          + commitDetail
           + '    <span class="gh-activity-time">' + timeAgo(ev.created_at) + '</span>'
           + '  </div>'
           + '</div>';
@@ -411,11 +761,15 @@
     }
 
     function describeEvent(ev) {
-      var repo = '<a href="https://github.com/' + esc(ev.repo.name) + '" target="_blank" rel="noopener noreferrer">' + esc(ev.repo.name.split('/')[1]) + '</a>';
+      var repoName = ev.repo.name.split('/')[1];
+      var repo = '<a href="https://github.com/' + esc(ev.repo.name) + '" target="_blank" rel="noopener noreferrer">' + esc(repoName) + '</a>';
+
       switch (ev.type) {
         case 'PushEvent':
           var count = (ev.payload.commits || []).length;
-          return { icon: '&#8593;', text: 'Pushed ' + count + ' commit' + (count !== 1 ? 's' : '') + ' to ' + repo };
+          var branch = (ev.payload.ref || '').replace('refs/heads/', '');
+          var branchStr = branch ? ' to <strong>' + esc(branch) + '</strong> in ' : ' to ';
+          return { icon: '&#8593;', text: 'Pushed ' + count + ' commit' + (count !== 1 ? 's' : '') + branchStr + repo };
         case 'CreateEvent':
           var what = ev.payload.ref_type;
           var ref  = ev.payload.ref ? ' <strong>' + esc(ev.payload.ref) + '</strong>' : '';
@@ -423,17 +777,21 @@
         case 'DeleteEvent':
           return { icon: '&#8722;', text: 'Deleted ' + ev.payload.ref_type + ' <strong>' + esc(ev.payload.ref) + '</strong> in ' + repo };
         case 'PullRequestEvent':
-          return { icon: '&#8634;', text: ev.payload.action.charAt(0).toUpperCase() + ev.payload.action.slice(1) + ' pull request in ' + repo };
+          var prTitle = ev.payload.pull_request ? ev.payload.pull_request.title : '';
+          var action = ev.payload.action.charAt(0).toUpperCase() + ev.payload.action.slice(1);
+          return { icon: '&#8634;', text: action + ' PR' + (prTitle ? ' <em>"' + esc(prTitle.slice(0, 60)) + '"</em>' : '') + ' in ' + repo };
         case 'IssuesEvent':
-          return { icon: '&#9675;', text: ev.payload.action.charAt(0).toUpperCase() + ev.payload.action.slice(1) + ' issue in ' + repo };
+          var issueTitle = ev.payload.issue ? ev.payload.issue.title : '';
+          return { icon: '&#9675;', text: ev.payload.action.charAt(0).toUpperCase() + ev.payload.action.slice(1) + ' issue' + (issueTitle ? ' <em>"' + esc(issueTitle.slice(0, 60)) + '"</em>' : '') + ' in ' + repo };
         case 'IssueCommentEvent':
           return { icon: '&#9993;', text: 'Commented on issue in ' + repo };
         case 'WatchEvent':
           return { icon: '&#9734;', text: 'Starred ' + repo };
         case 'ForkEvent':
-          return { icon: '&#9588;', text: 'Forked ' + repo };
+          return { icon: '&#9741;', text: 'Forked ' + repo };
         case 'ReleaseEvent':
-          return { icon: '&#9670;', text: 'Published release in ' + repo };
+          var tag = ev.payload.release ? ev.payload.release.tag_name : '';
+          return { icon: '&#9670;', text: 'Published release' + (tag ? ' <strong>' + esc(tag) + '</strong>' : '') + ' in ' + repo };
         case 'PullRequestReviewEvent':
           return { icon: '&#10003;', text: 'Reviewed pull request in ' + repo };
         default:
@@ -441,14 +799,36 @@
       }
     }
 
+    /* ── Data Freshness ───────────────────────────────────────── */
+    function showFreshness() {
+      fetchedAt = new Date();
+      var el = document.getElementById('gh-freshness');
+      el.hidden = false;
+      updateFreshnessText();
+    }
+
+    function updateFreshnessText() {
+      if (!fetchedAt) return;
+      var el = document.getElementById('gh-freshness-text');
+      el.textContent = 'Data loaded ' + timeAgo(fetchedAt.toISOString());
+    }
+
+    // Update freshness text every 30s
+    setInterval(updateFreshnessText, 30000);
+
+    // Refresh button
+    document.getElementById('gh-refresh-btn').addEventListener('click', function() {
+      cacheClear();
+      location.reload();
+    });
+
     /* ── Init ─────────────────────────────────────────────────── */
     async function init() {
       try {
-        // Fetch profile + repos + events in parallel
         var results = await Promise.allSettled([
           ghFetch('/users/' + GITHUB_USER),
-          ghFetch('/users/' + GITHUB_USER + '/repos?sort=updated&per_page=30'),
-          ghFetch('/users/' + GITHUB_USER + '/events/public?per_page=30')
+          ghFetch('/users/' + GITHUB_USER + '/repos?sort=updated&per_page=100'),
+          ghFetch('/users/' + GITHUB_USER + '/events/public?per_page=100')
         ]);
 
         // Profile
@@ -456,21 +836,25 @@
           renderProfile(results[0].value.data);
         }
 
-        // Repos
+        // Repos + Stats
         if (results[1].status === 'fulfilled') {
+          renderStats(results[1].value.data);
           renderRepos(results[1].value.data);
         } else {
           document.getElementById('gh-loading').hidden = true;
           document.getElementById('gh-error').hidden = false;
         }
 
-        // Activity
+        // Activity + Heatmap
         if (results[2].status === 'fulfilled') {
           renderActivity(results[2].value.data);
+          renderHeatmap(results[2].value.data);
         } else {
           document.getElementById('gh-activity-loading').hidden = true;
           document.getElementById('gh-activity-empty').hidden = false;
         }
+
+        showFreshness();
 
       } catch (err) {
         console.error('GitHub integration error:', err);
@@ -480,7 +864,6 @@
       }
     }
 
-    // Run on DOMContentLoaded
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
     } else {
