@@ -320,17 +320,39 @@
     'use strict';
 
     /* ── Config ───────────────────────────────────────────────── */
-    var GITHUB_USER = 'chancellor4';
-    var API_BASE    = 'https://api.github.com';
-    var CACHE_TTL   = 10 * 60 * 1000;
-    var MAX_REPOS   = 16;
-    var MAX_EVENTS  = 10;
+    var GITHUB_USER  = 'chancellor4';
+    var API_BASE     = 'https://api.github.com';
+    var CACHE_TTL    = 10 * 60 * 1000;  // 10 min sessionStorage cache
+    var FETCH_TIMEOUT = 8000;            // 8s — fail fast, show fallback
+    var MAX_REPOS    = 16;
+    var MAX_EVENTS   = 10;
 
     /* ── State ────────────────────────────────────────────────── */
-    var allRepos     = [];
-    var activeLang   = 'all';
-    var activeSort   = 'updated';
-    var fetchedAt    = null;
+    var allRepos       = [];
+    var activeLang     = 'all';
+    var activeSort     = 'updated';
+    var fetchedAt      = null;
+    var listenersBound = false;          // guard against duplicate bindings
+    var freshnessTimer = null;
+
+    /* ── DOM helpers ──────────────────────────────────────────── */
+    function $(id) { return document.getElementById(id); }
+
+    function show(id)  { var el = $(id); if (el) el.hidden = false; }
+    function hide(id)  { var el = $(id); if (el) el.hidden = true; }
+
+    function removeSkeleton(el) {
+      if (!el) return;
+      el.classList.remove('gh-skeleton', 'gh-skeleton-text');
+      el.style.removeProperty('width');
+    }
+
+    function clearAllSkeletons() {
+      document.querySelectorAll('.gh-skeleton').forEach(function(el) {
+        el.classList.remove('gh-skeleton', 'gh-skeleton-text');
+        el.style.removeProperty('width');
+      });
+    }
 
     /* ── Cache ────────────────────────────────────────────────── */
     function cacheGet(key) {
@@ -338,6 +360,7 @@
         var raw = sessionStorage.getItem(key);
         if (!raw) return null;
         var parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed.ts !== 'number') return null;
         if (Date.now() - parsed.ts > CACHE_TTL) {
           sessionStorage.removeItem(key);
           return null;
@@ -349,7 +372,7 @@
     function cacheSet(key, data) {
       try {
         sessionStorage.setItem(key, JSON.stringify({ data: data, ts: Date.now() }));
-      } catch (e) { /* quota exceeded */ }
+      } catch (e) { /* quota exceeded — silently skip */ }
     }
 
     function cacheClear() {
@@ -359,44 +382,79 @@
           var k = sessionStorage.key(i);
           if (k && k.indexOf('gh_') === 0) keys.push(k);
         }
-        keys.forEach(function(k) { sessionStorage.removeItem(k); });
+        for (var j = 0; j < keys.length; j++) {
+          sessionStorage.removeItem(keys[j]);
+        }
       } catch (e) {}
     }
 
-    /* ── Fetch ────────────────────────────────────────────────── */
+    /* ── Fetch with timeout + cache ───────────────────────────── */
     async function ghFetch(endpoint) {
       var cacheKey = 'gh_' + endpoint;
       var cached = cacheGet(cacheKey);
       if (cached) return { data: cached, fromCache: true };
 
-      var res = await fetch(API_BASE + endpoint, {
-        headers: { 'Accept': 'application/vnd.github.v3+json' }
-      });
+      var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      var timeoutId = null;
 
-      var remaining = parseInt(res.headers.get('X-RateLimit-Remaining'), 10);
-      if (!isNaN(remaining) && remaining <= 5) {
-        document.getElementById('gh-rate-notice').hidden = false;
+      if (controller) {
+        timeoutId = setTimeout(function() { controller.abort(); }, FETCH_TIMEOUT);
       }
 
-      if (!res.ok) {
-        if (res.status === 403) document.getElementById('gh-rate-notice').hidden = false;
-        throw new Error('GitHub API ' + res.status);
-      }
+      try {
+        var fetchOpts = { headers: { 'Accept': 'application/vnd.github.v3+json' } };
+        if (controller) fetchOpts.signal = controller.signal;
 
-      var data = await res.json();
-      cacheSet(cacheKey, data);
-      return { data: data, fromCache: false };
+        var res = await fetch(API_BASE + endpoint, fetchOpts);
+
+        if (timeoutId) clearTimeout(timeoutId);
+
+        // Rate limit awareness
+        var remaining = parseInt(res.headers.get('X-RateLimit-Remaining'), 10);
+        if (!isNaN(remaining) && remaining <= 5) {
+          show('gh-rate-notice');
+        }
+
+        if (!res.ok) {
+          if (res.status === 403) show('gh-rate-notice');
+          throw new Error('GitHub API ' + res.status);
+        }
+
+        var data = await res.json();
+        cacheSet(cacheKey, data);
+        return { data: data, fromCache: false };
+
+      } catch (err) {
+        if (timeoutId) clearTimeout(timeoutId);
+        throw err;
+      }
     }
 
     /* ── Utilities ────────────────────────────────────────────── */
     function esc(str) {
+      if (!str) return '';
       var el = document.createElement('span');
-      el.textContent = str || '';
+      el.textContent = String(str);
       return el.innerHTML;
     }
 
+    function safeStr(val) {
+      return (val != null && typeof val !== 'object') ? String(val) : '';
+    }
+
+    // Local YYYY-MM-DD (avoids UTC timezone shift from toISOString)
+    function localDateKey(d) {
+      var y = d.getFullYear();
+      var m = String(d.getMonth() + 1).padStart(2, '0');
+      var day = String(d.getDate()).padStart(2, '0');
+      return y + '-' + m + '-' + day;
+    }
+
     function timeAgo(dateStr) {
-      var diff = Date.now() - new Date(dateStr).getTime();
+      var ts = new Date(dateStr).getTime();
+      if (isNaN(ts)) return '';
+      var diff = Date.now() - ts;
+      if (diff < 0) return 'just now';  // future date guard
       var mins   = Math.floor(diff / 60000);
       var hours  = Math.floor(diff / 3600000);
       var days   = Math.floor(diff / 86400000);
@@ -412,48 +470,42 @@
 
     function formatDate(dateStr) {
       var d = new Date(dateStr);
-      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+      if (isNaN(d.getTime())) return '';
+      var mNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return mNames[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
     }
 
     var LANG_COLORS = {
-      'JavaScript':  '#b8834a',
-      'TypeScript':  '#4f3a25',
-      'Python':      '#6b5a3e',
-      'HTML':        '#a06428',
-      'CSS':         '#8c7558',
-      'Java':        '#5a3e1b',
-      'C#':          '#4f3a25',
-      'Ruby':        '#7a4422',
-      'Go':          '#5a6e4e',
-      'Shell':       '#6b5a3e',
-      'Swift':       '#a06428',
-      'Kotlin':      '#6b5a3e',
-      'Rust':        '#5a3e1b',
-      'Vue':         '#5a6e4e',
-      'PHP':         '#6b5a3e',
-      'Jupyter Notebook': '#8c6538',
-      'Dockerfile':  '#7a6548',
-      'SCSS':        '#8c7558',
-      'Makefile':    '#6b5a3e'
+      'JavaScript':  '#b8834a', 'TypeScript':  '#4f3a25', 'Python':      '#6b5a3e',
+      'HTML':        '#a06428', 'CSS':         '#8c7558', 'Java':        '#5a3e1b',
+      'C#':          '#4f3a25', 'Ruby':        '#7a4422', 'Go':          '#5a6e4e',
+      'Shell':       '#6b5a3e', 'Swift':       '#a06428', 'Kotlin':      '#6b5a3e',
+      'Rust':        '#5a3e1b', 'Vue':         '#5a6e4e', 'PHP':         '#6b5a3e',
+      'Jupyter Notebook': '#8c6538', 'Dockerfile': '#7a6548',
+      'SCSS':        '#8c7558', 'Makefile':    '#6b5a3e'
     };
 
     function langColor(lang) {
       return LANG_COLORS[lang] || '#8c7558';
     }
 
-    function removeSkeleton(el) {
-      if (!el) return;
-      el.classList.remove('gh-skeleton', 'gh-skeleton-text');
-      el.style.removeProperty('width');
+    // Validate that data is an array of objects
+    function isRepoArray(data) {
+      return Array.isArray(data) && (data.length === 0 || (data[0] && typeof data[0].name === 'string'));
+    }
+
+    function isEventArray(data) {
+      return Array.isArray(data) && (data.length === 0 || (data[0] && typeof data[0].type === 'string'));
     }
 
     /* ── Render: Profile ──────────────────────────────────────── */
     function renderProfile(profile) {
-      var avatar = document.getElementById('gh-avatar');
-      var avatarSkel = document.getElementById('gh-avatar-skeleton');
-      var nameSkel = document.getElementById('gh-name-skeleton');
-      var bioSkel  = document.getElementById('gh-bio-skeleton');
+      if (!profile || typeof profile !== 'object') return;
+
+      var avatar     = $('gh-avatar');
+      var avatarSkel = $('gh-avatar-skeleton');
+      var nameSkel   = $('gh-name-skeleton');
+      var bioSkel    = $('gh-bio-skeleton');
 
       if (profile.avatar_url) {
         avatar.src = profile.avatar_url + '&s=160';
@@ -461,23 +513,44 @@
         if (avatarSkel) avatarSkel.style.display = 'none';
       }
 
-      var nameEl = document.getElementById('gh-name');
-      if (profile.name) {
-        nameEl.textContent = profile.name;
-      }
+      var nameEl = $('gh-name');
+      if (profile.name && nameEl) nameEl.textContent = profile.name;
       if (nameSkel) nameSkel.remove();
       if (bioSkel)  bioSkel.remove();
 
-      if (profile.bio) document.getElementById('gh-bio').textContent = profile.bio;
-      if (profile.location) document.getElementById('gh-location').textContent = profile.location;
-      if (profile.created_at) {
-        document.getElementById('gh-member-since').textContent = 'Joined ' + formatDate(profile.created_at);
-      }
-      if (profile.public_repos != null) document.getElementById('gh-repos-count').textContent = profile.public_repos + ' repos';
-      if (profile.followers != null) document.getElementById('gh-followers').textContent = profile.followers + ' followers';
-      if (profile.following != null) document.getElementById('gh-following').textContent = profile.following + ' following';
+      var bioEl = $('gh-bio');
+      if (profile.bio && bioEl) bioEl.textContent = profile.bio;
 
-      document.getElementById('gh-profile').classList.add('gh-loaded');
+      var locEl = $('gh-location');
+      if (profile.location && locEl) locEl.textContent = profile.location;
+
+      var sinceEl = $('gh-member-since');
+      if (profile.created_at && sinceEl) {
+        var joined = formatDate(profile.created_at);
+        if (joined) sinceEl.textContent = 'Joined ' + joined;
+      }
+
+      var reposEl = $('gh-repos-count');
+      if (profile.public_repos != null && reposEl) reposEl.textContent = profile.public_repos + ' repos';
+
+      var followersEl = $('gh-followers');
+      if (profile.followers != null && followersEl) followersEl.textContent = profile.followers + ' followers';
+
+      var followingEl = $('gh-following');
+      if (profile.following != null && followingEl) followingEl.textContent = profile.following + ' following';
+
+      $('gh-profile').classList.add('gh-loaded');
+    }
+
+    function showProfileFallback() {
+      // Remove skeletons so the static fallback content is visible
+      var avatarSkel = $('gh-avatar-skeleton');
+      var nameSkel   = $('gh-name-skeleton');
+      var bioSkel    = $('gh-bio-skeleton');
+      if (avatarSkel) avatarSkel.style.display = 'none';
+      if (nameSkel) nameSkel.remove();
+      if (bioSkel)  bioSkel.remove();
+      $('gh-profile').classList.add('gh-loaded');
     }
 
     /* ── Render: Stats ────────────────────────────────────────── */
@@ -489,8 +562,8 @@
       var langCounts = {};
 
       ownRepos.forEach(function(r) {
-        totalStars += r.stargazers_count || 0;
-        totalForks += r.forks_count || 0;
+        totalStars += (typeof r.stargazers_count === 'number') ? r.stargazers_count : 0;
+        totalForks += (typeof r.forks_count === 'number') ? r.forks_count : 0;
         if (r.language) {
           langCounts[r.language] = (langCounts[r.language] || 0) + (r.size || 1);
         }
@@ -498,16 +571,15 @@
 
       var uniqueLangs = Object.keys(langCounts);
 
-      // Stat cards
-      var statRepos = document.getElementById('stat-repos');
-      var statStars = document.getElementById('stat-stars');
-      var statForks = document.getElementById('stat-forks');
-      var statLangs = document.getElementById('stat-languages');
+      var statRepos = $('stat-repos');
+      var statStars = $('stat-stars');
+      var statForks = $('stat-forks');
+      var statLangs = $('stat-languages');
 
-      statRepos.textContent = ownRepos.length;
-      statStars.textContent = totalStars;
-      statForks.textContent = totalForks;
-      statLangs.textContent = uniqueLangs.length;
+      if (statRepos) statRepos.textContent = ownRepos.length;
+      if (statStars) statStars.textContent = totalStars;
+      if (statForks) statForks.textContent = totalForks;
+      if (statLangs) statLangs.textContent = uniqueLangs.length;
 
       [statRepos, statStars, statForks, statLangs].forEach(removeSkeleton);
 
@@ -515,19 +587,19 @@
       if (uniqueLangs.length > 0) {
         var totalSize = 0;
         uniqueLangs.forEach(function(l) { totalSize += langCounts[l]; });
+        if (totalSize === 0) return;
 
-        // Sort by size descending
         uniqueLangs.sort(function(a, b) { return langCounts[b] - langCounts[a]; });
 
-        var barEl = document.getElementById('gh-lang-bar');
-        var legendEl = document.getElementById('gh-lang-legend');
+        var barEl = $('gh-lang-bar');
+        var legendEl = $('gh-lang-legend');
+        if (!barEl || !legendEl) return;
 
         barEl.innerHTML = uniqueLangs.map(function(lang) {
           var pct = ((langCounts[lang] / totalSize) * 100).toFixed(1);
           return '<div class="gh-lang-segment" style="width:' + pct + '%;background:' + langColor(lang) + '" title="' + esc(lang) + ' ' + pct + '%"></div>';
         }).join('');
 
-        // Legend (top 6)
         legendEl.innerHTML = uniqueLangs.slice(0, 6).map(function(lang) {
           var pct = ((langCounts[lang] / totalSize) * 100).toFixed(1);
           return '<span class="gh-lang-legend-item">'
@@ -535,45 +607,51 @@
             + esc(lang) + ' <span class="gh-lang-pct">' + pct + '%</span></span>';
         }).join('');
 
-        document.getElementById('gh-lang-bar-wrap').hidden = false;
+        show('gh-lang-bar-wrap');
       }
     }
 
     /* ── Render: Contribution Heatmap ─────────────────────────── */
     function renderHeatmap(events) {
+      var CONTRIBUTION_TYPES = ['PushEvent','CreateEvent','PullRequestEvent',
+        'IssuesEvent','IssueCommentEvent','PullRequestReviewEvent','ReleaseEvent'];
+
       var dayCounts = {};
       var totalContributions = 0;
 
       events.forEach(function(ev) {
-        if (['PushEvent','CreateEvent','PullRequestEvent','IssuesEvent',
-             'IssueCommentEvent','PullRequestReviewEvent','ReleaseEvent'].indexOf(ev.type) === -1) return;
+        if (!ev || !ev.type || !ev.created_at) return;
+        if (CONTRIBUTION_TYPES.indexOf(ev.type) === -1) return;
 
-        var date = ev.created_at.slice(0, 10); // YYYY-MM-DD
-        var count = ev.type === 'PushEvent' ? (ev.payload.commits || []).length : 1;
+        var date = ev.created_at.slice(0, 10);
+        var count = 1;
+        if (ev.type === 'PushEvent' && ev.payload && Array.isArray(ev.payload.commits)) {
+          count = ev.payload.commits.length || 1;
+        }
         dayCounts[date] = (dayCounts[date] || 0) + count;
         totalContributions += count;
       });
 
-      // Build grid: 13 weeks × 7 days (91 days back from today)
       var today = new Date();
       today.setHours(0, 0, 0, 0);
-      var cells = [];
       var WEEKS = 13;
+      var cells = [];
 
-      // Start from the Sunday (WEEKS) weeks ago
       var startDate = new Date(today);
       startDate.setDate(startDate.getDate() - (WEEKS * 7) + 1);
-      // Align to Sunday
-      startDate.setDate(startDate.getDate() - startDate.getDay());
+      startDate.setDate(startDate.getDate() - startDate.getDay()); // align to Sunday
 
       var monthLabels = [];
       var lastMonth = -1;
+      var mNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
       for (var w = 0; w < WEEKS; w++) {
         for (var d = 0; d < 7; d++) {
-          var date = new Date(startDate);
-          date.setDate(startDate.getDate() + w * 7 + d);
-          var key = date.toISOString().slice(0, 10);
+          var cellDate = new Date(startDate);
+          cellDate.setDate(startDate.getDate() + w * 7 + d);
+
+          // Use local date key — matches event dates correctly
+          var key = localDateKey(cellDate);
           var count = dayCounts[key] || 0;
 
           var level = 0;
@@ -582,33 +660,44 @@
           else if (count >= 2) level = 2;
           else if (count >= 1) level = 1;
 
-          var isFuture = date > today;
-          cells.push('<span class="gh-heatmap-cell' + (isFuture ? ' gh-heatmap-future' : '') + '" data-level="' + (isFuture ? 0 : level) + '" title="' + (isFuture ? '' : count + ' contributions on ' + key) + '" style="grid-row:' + (d + 1) + ';grid-column:' + (w + 1) + '"></span>');
+          var isFuture = cellDate > today;
+          var title = isFuture ? '' : count + ' contribution' + (count !== 1 ? 's' : '') + ' on ' + key;
 
-          // Month labels (first row only)
-          if (d === 0 && date.getMonth() !== lastMonth) {
-            var mNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-            monthLabels.push('<span style="grid-column:' + (w + 1) + '">' + mNames[date.getMonth()] + '</span>');
-            lastMonth = date.getMonth();
+          cells.push(
+            '<span class="gh-heatmap-cell' + (isFuture ? ' gh-heatmap-future' : '') + '"'
+            + ' data-level="' + (isFuture ? 0 : level) + '"'
+            + ' title="' + title + '"'
+            + ' style="grid-row:' + (d + 1) + ';grid-column:' + (w + 1) + '"'
+            + '></span>'
+          );
+
+          if (d === 0 && cellDate.getMonth() !== lastMonth) {
+            monthLabels.push('<span style="grid-column:' + (w + 1) + '">' + mNames[cellDate.getMonth()] + '</span>');
+            lastMonth = cellDate.getMonth();
           }
         }
       }
 
-      document.getElementById('gh-heatmap').innerHTML = cells.join('');
-      document.getElementById('gh-heatmap-months').innerHTML = monthLabels.join('');
+      var heatmapEl = $('gh-heatmap');
+      var monthsEl  = $('gh-heatmap-months');
+      var summaryEl = $('gh-heatmap-summary');
 
-      // Count active days
+      if (heatmapEl) heatmapEl.innerHTML = cells.join('');
+      if (monthsEl)  monthsEl.innerHTML = monthLabels.join('');
+
       var activeDays = Object.keys(dayCounts).length;
-      var summaryEl = document.getElementById('gh-heatmap-summary');
-      summaryEl.textContent = totalContributions + ' contributions in the last 90 days across ' + activeDays + ' active day' + (activeDays !== 1 ? 's' : '');
+      if (summaryEl) {
+        summaryEl.textContent = totalContributions + ' contribution' + (totalContributions !== 1 ? 's' : '')
+          + ' in the last 90 days across ' + activeDays + ' active day' + (activeDays !== 1 ? 's' : '');
+      }
     }
 
     /* ── Render: Repositories ─────────────────────────────────── */
     function renderRepos(repos) {
-      allRepos = repos.filter(function(r) { return !r.fork; });
+      allRepos = repos.filter(function(r) { return r && !r.fork && typeof r.name === 'string'; });
 
-      document.getElementById('gh-loading').hidden = true;
-      document.getElementById('gh-repo-list').hidden = false;
+      hide('gh-loading');
+      show('gh-repo-list');
 
       // Build language filter pills
       var langs = {};
@@ -617,58 +706,71 @@
       });
       var sortedLangs = Object.keys(langs).sort(function(a, b) { return langs[b] - langs[a]; });
 
-      var pillsEl = document.getElementById('gh-filter-pills');
-      pillsEl.innerHTML = '<button class="gh-pill gh-pill-active" data-lang="all" aria-pressed="true">All</button>'
-        + sortedLangs.slice(0, 5).map(function(l) {
-          return '<button class="gh-pill" data-lang="' + esc(l) + '" aria-pressed="false">' + esc(l) + '</button>';
-        }).join('');
+      var pillsEl = $('gh-filter-pills');
+      if (pillsEl) {
+        pillsEl.innerHTML = '<button class="gh-pill gh-pill-active" data-lang="all" aria-pressed="true">All</button>'
+          + sortedLangs.slice(0, 5).map(function(l) {
+            return '<button class="gh-pill" data-lang="' + esc(l) + '" aria-pressed="false">' + esc(l) + '</button>';
+          }).join('');
+      }
 
-      // Bind filter events
-      pillsEl.addEventListener('click', function(e) {
-        var btn = e.target.closest('.gh-pill');
-        if (!btn) return;
-        activeLang = btn.dataset.lang;
-        pillsEl.querySelectorAll('.gh-pill').forEach(function(p) {
-          p.classList.remove('gh-pill-active');
-          p.setAttribute('aria-pressed', 'false');
-        });
-        btn.classList.add('gh-pill-active');
-        btn.setAttribute('aria-pressed', 'true');
-        applyRepoView();
-      });
+      // Bind event listeners exactly once
+      if (!listenersBound) {
+        listenersBound = true;
 
-      // Sort control
-      document.getElementById('gh-sort').addEventListener('change', function(e) {
-        activeSort = e.target.value;
-        applyRepoView();
-      });
+        if (pillsEl) {
+          pillsEl.addEventListener('click', function(e) {
+            var btn = e.target.closest('.gh-pill');
+            if (!btn) return;
+            activeLang = btn.dataset.lang || 'all';
+            pillsEl.querySelectorAll('.gh-pill').forEach(function(p) {
+              p.classList.remove('gh-pill-active');
+              p.setAttribute('aria-pressed', 'false');
+            });
+            btn.classList.add('gh-pill-active');
+            btn.setAttribute('aria-pressed', 'true');
+            applyRepoView();
+          });
+        }
 
-      document.getElementById('gh-controls').hidden = false;
+        var sortEl = $('gh-sort');
+        if (sortEl) {
+          sortEl.addEventListener('change', function(e) {
+            activeSort = e.target.value;
+            applyRepoView();
+          });
+        }
+      }
+
+      show('gh-controls');
       applyRepoView();
     }
 
     function applyRepoView() {
-      var filtered = allRepos;
-
+      // Always copy the array — never sort the master list in place
+      var filtered;
       if (activeLang !== 'all') {
-        filtered = filtered.filter(function(r) { return r.language === activeLang; });
+        filtered = allRepos.filter(function(r) { return r.language === activeLang; });
+      } else {
+        filtered = allRepos.slice();
       }
 
-      // Sort
+      // Sort the copy
       if (activeSort === 'stars') {
         filtered.sort(function(a, b) { return (b.stargazers_count || 0) - (a.stargazers_count || 0); });
       } else if (activeSort === 'name') {
-        filtered.sort(function(a, b) { return a.name.localeCompare(b.name); });
+        filtered.sort(function(a, b) { return (a.name || '').localeCompare(b.name || ''); });
       } else {
-        filtered.sort(function(a, b) { return new Date(b.updated_at) - new Date(a.updated_at); });
+        filtered.sort(function(a, b) { return new Date(b.updated_at || 0) - new Date(a.updated_at || 0); });
       }
 
       var display = filtered.slice(0, MAX_REPOS);
-      var container = document.getElementById('gh-repo-list');
+      var container = $('gh-repo-list');
+      if (!container) return;
 
       if (display.length === 0) {
         container.innerHTML = '<p class="gh-empty-msg">No repositories match this filter.</p>';
-        document.getElementById('gh-view-all').hidden = true;
+        hide('gh-view-all');
         return;
       }
 
@@ -677,17 +779,17 @@
           ? '<span class="gh-repo-lang"><span class="gh-lang-dot" style="background:' + langColor(repo.language) + '"></span>' + esc(repo.language) + '</span>'
           : '';
 
-        var stars = repo.stargazers_count > 0
+        var stars = (repo.stargazers_count || 0) > 0
           ? '<span class="gh-repo-stat">&#9734; ' + repo.stargazers_count + '</span>'
           : '';
 
-        var forks = repo.forks_count > 0
+        var forks = (repo.forks_count || 0) > 0
           ? '<span class="gh-repo-stat">&#9741; ' + repo.forks_count + '</span>'
           : '';
 
-        var topics = (repo.topics || []).slice(0, 4).map(function(t) {
+        var topics = Array.isArray(repo.topics) ? repo.topics.slice(0, 4).map(function(t) {
           return '<span class="gh-topic">' + esc(t) + '</span>';
-        }).join('');
+        }).join('') : '';
 
         var homepage = repo.homepage
           ? '<a href="' + esc(repo.homepage) + '" class="gh-repo-link" target="_blank" rel="noopener noreferrer">Live site &#8599;</a>'
@@ -696,7 +798,7 @@
         return ''
           + '<article class="gh-repo-card">'
           + '  <div class="gh-repo-card-header">'
-          + '    <a href="' + esc(repo.html_url) + '" class="gh-repo-name" target="_blank" rel="noopener noreferrer">' + esc(repo.name) + '</a>'
+          + '    <a href="' + esc(repo.html_url || '') + '" class="gh-repo-name" target="_blank" rel="noopener noreferrer">' + esc(repo.name) + '</a>'
           + '    <span class="gh-repo-visibility">' + (repo.private ? 'Private' : 'Public') + '</span>'
           + '  </div>'
           + (repo.description ? '<p class="gh-repo-desc">' + esc(repo.description) + '</p>' : '')
@@ -704,28 +806,32 @@
           + (homepage ? '<div class="gh-repo-homepage">' + homepage + '</div>' : '')
           + '  <div class="gh-repo-footer">'
           + '    ' + lang + stars + forks
-          + '    <span class="gh-repo-updated">Updated ' + timeAgo(repo.updated_at) + '</span>'
+          + '    <span class="gh-repo-updated">Updated ' + timeAgo(repo.updated_at || '') + '</span>'
           + '  </div>'
           + '</article>';
       }).join('');
 
-      document.getElementById('gh-view-all').hidden = filtered.length <= MAX_REPOS;
+      var viewAll = $('gh-view-all');
+      if (viewAll) viewAll.hidden = filtered.length <= MAX_REPOS;
     }
 
     /* ── Render: Activity ─────────────────────────────────────── */
     function renderActivity(events) {
-      document.getElementById('gh-activity-loading').hidden = true;
-      var container = document.getElementById('gh-activity-list');
+      hide('gh-activity-loading');
+      var container = $('gh-activity-list');
+      if (!container) return;
       container.hidden = false;
 
+      var VALID_TYPES = ['PushEvent','CreateEvent','PullRequestEvent','IssuesEvent',
+        'WatchEvent','ForkEvent','ReleaseEvent','IssueCommentEvent',
+        'PullRequestReviewEvent','DeleteEvent'];
+
       var meaningful = events.filter(function(e) {
-        return ['PushEvent','CreateEvent','PullRequestEvent','IssuesEvent',
-                'WatchEvent','ForkEvent','ReleaseEvent','IssueCommentEvent',
-                'PullRequestReviewEvent','DeleteEvent'].indexOf(e.type) !== -1;
+        return e && e.type && VALID_TYPES.indexOf(e.type) !== -1;
       }).slice(0, MAX_EVENTS);
 
       if (meaningful.length === 0) {
-        document.getElementById('gh-activity-empty').hidden = false;
+        show('gh-activity-empty');
         return;
       }
 
@@ -735,11 +841,13 @@
 
         // Commit details for PushEvents
         var commitDetail = '';
-        if (ev.type === 'PushEvent' && ev.payload.commits && ev.payload.commits.length > 0) {
+        if (ev.type === 'PushEvent' && ev.payload && Array.isArray(ev.payload.commits) && ev.payload.commits.length > 0) {
           var latestCommits = ev.payload.commits.slice(-2);
           commitDetail = '<div class="gh-commit-list">' + latestCommits.map(function(c) {
-            var sha = c.sha.slice(0, 7);
-            var msg = esc(c.message.split('\n')[0]);
+            if (!c || !c.sha) return '';
+            var sha = String(c.sha).slice(0, 7);
+            var rawMsg = (c.message || '').split('\n')[0];
+            var msg = esc(rawMsg);
             if (msg.length > 72) msg = msg.slice(0, 69) + '...';
             return '<div class="gh-commit-item">'
               + '<code class="gh-commit-sha">' + sha + '</code>'
@@ -754,46 +862,64 @@
           + '  <div class="gh-activity-body">'
           + '    <p class="gh-activity-text">' + desc.text + '</p>'
           + commitDetail
-          + '    <span class="gh-activity-time">' + timeAgo(ev.created_at) + '</span>'
+          + '    <span class="gh-activity-time">' + timeAgo(ev.created_at || '') + '</span>'
           + '  </div>'
           + '</div>';
       }).join('');
     }
 
     function describeEvent(ev) {
-      var repoName = ev.repo.name.split('/')[1];
-      var repo = '<a href="https://github.com/' + esc(ev.repo.name) + '" target="_blank" rel="noopener noreferrer">' + esc(repoName) + '</a>';
+      // Safe access — bail if required fields are missing
+      if (!ev || !ev.repo || !ev.repo.name || !ev.payload) return null;
+
+      var fullName = String(ev.repo.name);
+      var repoName = fullName.indexOf('/') !== -1 ? fullName.split('/')[1] : fullName;
+      var repo = '<a href="https://github.com/' + esc(fullName) + '" target="_blank" rel="noopener noreferrer">' + esc(repoName) + '</a>';
+
+      var payload = ev.payload;
+      var action = safeStr(payload.action);
+      var actionCap = action ? action.charAt(0).toUpperCase() + action.slice(1) : '';
 
       switch (ev.type) {
         case 'PushEvent':
-          var count = (ev.payload.commits || []).length;
-          var branch = (ev.payload.ref || '').replace('refs/heads/', '');
+          var commits = Array.isArray(payload.commits) ? payload.commits : [];
+          var count = commits.length;
+          var branch = safeStr(payload.ref).replace('refs/heads/', '');
           var branchStr = branch ? ' to <strong>' + esc(branch) + '</strong> in ' : ' to ';
           return { icon: '&#8593;', text: 'Pushed ' + count + ' commit' + (count !== 1 ? 's' : '') + branchStr + repo };
+
         case 'CreateEvent':
-          var what = ev.payload.ref_type;
-          var ref  = ev.payload.ref ? ' <strong>' + esc(ev.payload.ref) + '</strong>' : '';
-          return { icon: '&#43;', text: 'Created ' + what + ref + ' in ' + repo };
+          var refType = safeStr(payload.ref_type);
+          var ref = payload.ref ? ' <strong>' + esc(payload.ref) + '</strong>' : '';
+          return { icon: '&#43;', text: 'Created ' + refType + ref + ' in ' + repo };
+
         case 'DeleteEvent':
-          return { icon: '&#8722;', text: 'Deleted ' + ev.payload.ref_type + ' <strong>' + esc(ev.payload.ref) + '</strong> in ' + repo };
+          return { icon: '&#8722;', text: 'Deleted ' + safeStr(payload.ref_type) + ' <strong>' + esc(safeStr(payload.ref)) + '</strong> in ' + repo };
+
         case 'PullRequestEvent':
-          var prTitle = ev.payload.pull_request ? ev.payload.pull_request.title : '';
-          var action = ev.payload.action.charAt(0).toUpperCase() + ev.payload.action.slice(1);
-          return { icon: '&#8634;', text: action + ' PR' + (prTitle ? ' <em>"' + esc(prTitle.slice(0, 60)) + '"</em>' : '') + ' in ' + repo };
+          var prTitle = (payload.pull_request && payload.pull_request.title) ? payload.pull_request.title : '';
+          return { icon: '&#8634;', text: actionCap + ' PR' + (prTitle ? ' <em>"' + esc(String(prTitle).slice(0, 60)) + '"</em>' : '') + ' in ' + repo };
+
         case 'IssuesEvent':
-          var issueTitle = ev.payload.issue ? ev.payload.issue.title : '';
-          return { icon: '&#9675;', text: ev.payload.action.charAt(0).toUpperCase() + ev.payload.action.slice(1) + ' issue' + (issueTitle ? ' <em>"' + esc(issueTitle.slice(0, 60)) + '"</em>' : '') + ' in ' + repo };
+          var issueTitle = (payload.issue && payload.issue.title) ? payload.issue.title : '';
+          return { icon: '&#9675;', text: actionCap + ' issue' + (issueTitle ? ' <em>"' + esc(String(issueTitle).slice(0, 60)) + '"</em>' : '') + ' in ' + repo };
+
         case 'IssueCommentEvent':
           return { icon: '&#9993;', text: 'Commented on issue in ' + repo };
+
         case 'WatchEvent':
           return { icon: '&#9734;', text: 'Starred ' + repo };
+
         case 'ForkEvent':
           return { icon: '&#9741;', text: 'Forked ' + repo };
+
         case 'ReleaseEvent':
-          var tag = ev.payload.release ? ev.payload.release.tag_name : '';
+          var tag = (payload.release && payload.release.tag_name) ? payload.release.tag_name : '';
           return { icon: '&#9670;', text: 'Published release' + (tag ? ' <strong>' + esc(tag) + '</strong>' : '') + ' in ' + repo };
+
         case 'PullRequestReviewEvent':
           return { icon: '&#10003;', text: 'Reviewed pull request in ' + repo };
+
         default:
           return null;
       }
@@ -802,25 +928,28 @@
     /* ── Data Freshness ───────────────────────────────────────── */
     function showFreshness() {
       fetchedAt = new Date();
-      var el = document.getElementById('gh-freshness');
-      el.hidden = false;
+      show('gh-freshness');
       updateFreshnessText();
+
+      // Start periodic update (clear any prior interval)
+      if (freshnessTimer) clearInterval(freshnessTimer);
+      freshnessTimer = setInterval(updateFreshnessText, 30000);
     }
 
     function updateFreshnessText() {
       if (!fetchedAt) return;
-      var el = document.getElementById('gh-freshness-text');
-      el.textContent = 'Data loaded ' + timeAgo(fetchedAt.toISOString());
+      var el = $('gh-freshness-text');
+      if (el) el.textContent = 'Data loaded ' + timeAgo(fetchedAt.toISOString());
     }
 
-    // Update freshness text every 30s
-    setInterval(updateFreshnessText, 30000);
-
-    // Refresh button
-    document.getElementById('gh-refresh-btn').addEventListener('click', function() {
-      cacheClear();
-      location.reload();
-    });
+    // Refresh button — bind once, guard exists
+    var refreshBtn = $('gh-refresh-btn');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', function() {
+        cacheClear();
+        location.reload();
+      });
+    }
 
     /* ── Init ─────────────────────────────────────────────────── */
     async function init() {
@@ -832,35 +961,42 @@
         ]);
 
         // Profile
-        if (results[0].status === 'fulfilled') {
+        if (results[0].status === 'fulfilled' && results[0].value.data && typeof results[0].value.data === 'object') {
           renderProfile(results[0].value.data);
+        } else {
+          showProfileFallback();
         }
 
         // Repos + Stats
-        if (results[1].status === 'fulfilled') {
+        if (results[1].status === 'fulfilled' && isRepoArray(results[1].value.data)) {
           renderStats(results[1].value.data);
           renderRepos(results[1].value.data);
         } else {
-          document.getElementById('gh-loading').hidden = true;
-          document.getElementById('gh-error').hidden = false;
+          hide('gh-loading');
+          show('gh-error');
+          clearAllSkeletons();
         }
 
         // Activity + Heatmap
-        if (results[2].status === 'fulfilled') {
+        if (results[2].status === 'fulfilled' && isEventArray(results[2].value.data)) {
           renderActivity(results[2].value.data);
           renderHeatmap(results[2].value.data);
         } else {
-          document.getElementById('gh-activity-loading').hidden = true;
-          document.getElementById('gh-activity-empty').hidden = false;
+          hide('gh-activity-loading');
+          show('gh-activity-empty');
         }
 
         showFreshness();
 
       } catch (err) {
         console.error('GitHub integration error:', err);
-        document.getElementById('gh-loading').hidden = true;
-        document.getElementById('gh-error').hidden = false;
-        document.getElementById('gh-activity-loading').hidden = true;
+        showProfileFallback();
+        hide('gh-loading');
+        show('gh-error');
+        hide('gh-activity-loading');
+        show('gh-activity-empty');
+        clearAllSkeletons();
+        showFreshness();
       }
     }
 
