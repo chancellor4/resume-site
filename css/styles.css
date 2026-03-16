@@ -980,7 +980,7 @@ main {
   .skills-grid { grid-template-columns: 1fr; }
   .hero { padding-top: 2.5rem; padding-bottom: 2rem; }
   .hero-links { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
-  .site-nav .site-wrap { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+  .site-nav .site-wrap { padding-top: 0.75rem; padding-bottom: 0.75rem; flex-wrap: wrap; }
   .nav-links { gap: var(--sp-md); }
   .entry-bullets li { padding-left: 1rem; }
   .gh-repo-list { grid-template-columns: 1fr; }
@@ -1030,18 +1030,28 @@ body,
     color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-h1, h2, h3, p, li, a, span,
-.nav-brand, .nav-links a,
+h1, h2, h3, p, li, span,
+.nav-brand,
 .hero-eyebrow, .hero-alias, .hero-alias strong,
 .hero-subtitle, .hero-location, .hero-bio,
 .about-prose, .about-prose strong,
 .entry-title, .entry-org, .entry-meta,
 .edu-degree, .edu-school, .edu-year, .edu-note,
 .skill-group-label, .skill-group-items,
-.footer-copy, .footer-links a,
+.footer-copy,
 .gh-stat-value, .gh-stat-label,
-.gh-repo-name, .gh-repo-desc {
+.gh-repo-desc {
   transition: color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Links get theme color transition PLUS their existing border-color transition */
+a,
+.nav-links a,
+.footer-links a,
+.gh-repo-name {
+  transition:
+    color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color var(--ease);
 }
 
 /* ─── REFINED: NAV GLASS TINT ────────────────────────────────── */

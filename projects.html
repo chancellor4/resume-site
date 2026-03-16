@@ -354,6 +354,14 @@
       return el.innerHTML;
     }
 
+    // Only allow http(s) URLs — prevents javascript: and data: URIs
+    function safeUrl(url) {
+      if (!url || typeof url !== 'string') return '';
+      var trimmed = url.trim().toLowerCase();
+      if (trimmed.indexOf('https://') === 0 || trimmed.indexOf('http://') === 0) return url;
+      return '';
+    }
+
     function timeAgo(dateStr) {
       var ts = new Date(dateStr).getTime();
       if (isNaN(ts)) return '';
@@ -550,8 +558,9 @@
             }).join('')
           : '';
 
-        var homepage = repo.homepage
-          ? '<a href="' + esc(repo.homepage) + '" class="gh-repo-link" target="_blank" rel="noopener noreferrer">Live site &#8599;</a>'
+        var safeHome = safeUrl(repo.homepage);
+        var homepage = safeHome
+          ? '<a href="' + esc(safeHome) + '" class="gh-repo-link" target="_blank" rel="noopener noreferrer">Live site &#8599;</a>'
           : '';
 
         var updatedStr = timeAgo(repo.updated_at || '');
@@ -567,7 +576,7 @@
         return ''
           + '<article class="gh-repo-card">'
           + '  <div class="gh-repo-card-header">'
-          + '    <a href="' + esc(repo.html_url || '') + '" class="gh-repo-name" target="_blank" rel="noopener noreferrer">' + esc(repo.name) + '</a>'
+          + '    <a href="' + esc(safeUrl(repo.html_url) || '#') + '" class="gh-repo-name" target="_blank" rel="noopener noreferrer">' + esc(repo.name) + '</a>'
           + '    <span class="gh-repo-visibility">' + (repo.private ? 'Private' : 'Public') + '</span>'
           + '  </div>'
           + '<p class="gh-repo-desc">' + (repo.description ? esc(repo.description) : '<span class="gh-no-desc">No description provided.</span>') + '</p>'
@@ -617,6 +626,8 @@
           renderRepos(result.data);
         } else {
           hide('gh-loading');
+          hide('gh-stats-grid');
+          hide('gh-lang-bar-wrap');
           show('gh-error');
           clearAllSkeletons();
         }
@@ -626,9 +637,10 @@
       } catch (err) {
         console.error('GitHub integration error:', err);
         hide('gh-loading');
+        hide('gh-stats-grid');
+        hide('gh-lang-bar-wrap');
         show('gh-error');
         clearAllSkeletons();
-        showFreshness();
       }
     }
 
