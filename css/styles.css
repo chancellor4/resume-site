@@ -1212,22 +1212,6 @@ html[data-theme="refined"] .mood-toggle-track {
   border-color: var(--amber);
 }
 
-/* ─── RAIN CANVAS ────────────────────────────────────────────── */
-
-#rain-canvas {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 9998; /* below grain (9999), above content */
-  opacity: 0;
-  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-html[data-theme="refined"] #rain-canvas {
-  opacity: 1;
-}
 
 /* ─── RESPONSIVE: TOGGLE ─────────────────────────────────────── */
 
@@ -1245,15 +1229,12 @@ html[data-theme="refined"] #rain-canvas {
 /* ─── PRINT: REFINED ELEMENTS ────────────────────────────────── */
 
 @media print {
-  .mood-toggle,
-  #rain-canvas { display: none; }
+  .mood-toggle { display: none; }
 }
 
 /* ─── REDUCED MOTION: RESPECT PREFERENCES ────────────────────── */
 
 @media (prefers-reduced-motion: reduce) {
-  #rain-canvas { display: none; }
-
   body, .site-nav, .site-footer, .hero, .projects-header,
   .section-rule, .entry, .edu-entry, .gh-stat-card, .gh-repo-card,
   .hero-links a, .mood-toggle-thumb, .mood-toggle-track,
