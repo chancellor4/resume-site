@@ -385,6 +385,39 @@
     </div>
   </footer>
 
+  <!-- ─── VINYL PLAYER (Allure mode only) ──────────────────── -->
+  <div class="vinyl" id="vinyl" aria-label="Music player" role="region" aria-hidden="true">
+    <iframe id="vinylSource" allow="autoplay" title="SoundCloud player"
+      style="position:absolute;width:0;height:0;border:0;overflow:hidden"
+      aria-hidden="true"></iframe>
+
+    <div class="vinyl-sleeve">
+      <div class="vinyl-marquee">
+        <span class="vinyl-title" id="vinylTitle">Loading&#8230;</span>
+      </div>
+
+      <div class="vinyl-deck">
+        <button class="vinyl-btn" id="vinylSpin" type="button" aria-label="Play" title="Play">
+          <svg class="vinyl-icon vinyl-icon-spin" viewBox="0 0 16 16" fill="currentColor" width="16" height="16"><polygon points="3,1 13,8 3,15"/></svg>
+          <svg class="vinyl-icon vinyl-icon-lift" viewBox="0 0 16 16" fill="currentColor" width="16" height="16" hidden><rect x="2" y="1" width="4" height="14"/><rect x="10" y="1" width="4" height="14"/></svg>
+        </button>
+        <button class="vinyl-btn" id="vinylHush" type="button" aria-label="Mute" title="Mute">
+          <svg class="vinyl-icon vinyl-icon-loud" viewBox="0 0 16 16" fill="currentColor" width="16" height="16"><path d="M2,5 L5,5 L9,1 L9,15 L5,11 L2,11 Z"/><path class="vinyl-wave" d="M11,4 Q14,8 11,12" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          <svg class="vinyl-icon vinyl-icon-hushed" viewBox="0 0 16 16" fill="currentColor" width="16" height="16" hidden><path d="M2,5 L5,5 L9,1 L9,15 L5,11 L2,11 Z"/><line x1="11" y1="5" x2="15" y2="11" stroke="currentColor" stroke-width="1.5"/><line x1="15" y1="5" x2="11" y2="11" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+        <input class="vinyl-dial" id="vinylDial" type="range" min="0" max="100" value="40" step="1" aria-label="Volume"/>
+      </div>
+
+      <div class="vinyl-crate-wrap">
+        <button class="vinyl-btn vinyl-crate-latch" id="vinylLatch" type="button" aria-expanded="false" aria-label="Show playlist">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><rect x="1" y="2" width="14" height="1.5" rx="0.5"/><rect x="1" y="7" width="10" height="1.5" rx="0.5"/><rect x="1" y="12" width="14" height="1.5" rx="0.5"/></svg>
+        </button>
+        <ul class="vinyl-crate" id="vinylCrate" role="listbox" aria-label="Playlist" hidden></ul>
+      </div>
+    </div>
+  </div>
+
   <script src="js/refined.js"></script>
+  <script src="js/vinyl.js" defer></script>
 </body>
 </html>

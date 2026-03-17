@@ -1142,6 +1142,241 @@ html[data-theme="refined"] .gh-repo-card:hover {
   box-shadow: 0 2px 8px rgba(30, 21, 32, 0.06);
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   VINYL PLAYER — Allure mode only
+   Naming theme: vinyl record setup (see js/vinyl.js header)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── STAGE (root container) ───────────────────────────────── */
+
+.vinyl {
+  position: fixed;
+  bottom: 1.25rem;
+  right: clamp(1rem, 3vw, 2rem);
+  z-index: 900;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: var(--ls-tight);
+  text-transform: uppercase;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Raise the stage only in Allure mode */
+html[data-theme="refined"] .vinyl.vinyl--live {
+  pointer-events: auto;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── SLEEVE (frosted-glass bar) ───────────────────────────── */
+
+.vinyl-sleeve {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  padding: var(--sp-xs) var(--sp-sm);
+  background: rgba(245, 241, 244, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-lt);
+  border-radius: 6px;
+  box-shadow: 0 2px 12px rgba(30, 21, 32, 0.06);
+}
+
+/* ─── MARQUEE (now-playing display) ────────────────────────── */
+
+.vinyl-marquee {
+  max-width: 160px;
+  overflow: hidden;
+}
+
+.vinyl-title {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--ink-mid);
+  line-height: 1.4;
+}
+
+/* ─── DECK (control group) ─────────────────────────────────── */
+
+.vinyl-deck {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-xs);
+}
+
+.vinyl-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink-mid);
+  cursor: pointer;
+  transition: color var(--ease), border-color var(--ease);
+}
+
+.vinyl-btn:hover {
+  color: var(--amber);
+  border-color: var(--amber);
+}
+
+.vinyl-btn:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+/* ─── DIAL (volume slider) ─────────────────────────────────── */
+
+.vinyl-dial {
+  width: 56px;
+  height: 3px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.vinyl-dial::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--amber);
+  border: none;
+  cursor: pointer;
+}
+
+.vinyl-dial::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--amber);
+  border: none;
+  cursor: pointer;
+}
+
+/* ─── CRATE (playlist dropdown) ────────────────────────────── */
+
+.vinyl-crate-wrap {
+  position: relative;
+}
+
+.vinyl-crate {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  right: 0;
+  width: 220px;
+  max-height: 180px;
+  overflow-y: auto;
+  list-style: none;
+  padding: var(--sp-xs) 0;
+  margin: 0;
+  background: rgba(245, 241, 244, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-lt);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(30, 21, 32, 0.08);
+  font-size: 0.6rem;
+  z-index: 910;
+  scrollbar-width: thin;                             /* Firefox */
+  scrollbar-color: var(--border) transparent;         /* Firefox */
+}
+
+.vinyl-crate li {
+  padding: var(--sp-xs) var(--sp-sm);
+  cursor: pointer;
+  color: var(--ink-mid);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background var(--ease), color var(--ease);
+}
+
+.vinyl-crate li:hover {
+  background: rgba(123, 94, 123, 0.08);
+  color: var(--ink);
+}
+
+.vinyl-crate li[aria-selected="true"] {
+  color: var(--amber);
+  font-weight: 600;
+}
+
+/* Thin scrollbar — WebKit */
+.vinyl-crate::-webkit-scrollbar { width: 4px; }
+.vinyl-crate::-webkit-scrollbar-track { background: transparent; }
+.vinyl-crate::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+/* ─── VINYL: RESPONSIVE ────────────────────────────────────── */
+
+@media (max-width: 520px) {
+  .vinyl {
+    bottom: 0.75rem;
+    right: 0.75rem;
+    left: 0.75rem;
+  }
+
+  .vinyl-sleeve {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .vinyl-marquee { max-width: 100px; }
+  .vinyl-dial { width: 40px; }
+
+  .vinyl-crate {
+    width: calc(100vw - 1.5rem);
+    right: 0;
+  }
+}
+
+/* ─── VINYL: PRINT ─────────────────────────────────────────── */
+
+@media print {
+  .vinyl { display: none !important; }
+}
+
+/* ─── VINYL: REDUCED MOTION ────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .vinyl,
+  .vinyl-sleeve,
+  .vinyl-btn,
+  .vinyl-title,
+  .vinyl-crate li {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── VINYL: SMOOTH THEME TRANSITION ───────────────────────── */
+
+.vinyl-sleeve,
+.vinyl-title {
+  transition:
+    background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* ─── TOGGLE BUTTON ──────────────────────────────────────────── */
 
 .mood-toggle {
