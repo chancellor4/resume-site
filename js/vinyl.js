@@ -1,7 +1,7 @@
 /*
   vinyl.js — Chancellor Edwards
   Lightweight SoundCloud player, themed as a vinyl record setup.
-  Active only in Allure (refined) mode. Lazy-loads the SC Widget SDK.
+  Active only in DND (refined) mode. Lazy-loads the SC Widget SDK.
 
   ── Naming theme: "Vinyl" ──────────────────────────────────────
   The player is a vinyl record setup that lives on a *stage*.
@@ -75,7 +75,7 @@
   /* ── Helpers ─────────────────────────────────────────────── */
 
   function $(id)       { return document.getElementById(id); }
-  function isAllure()  { return document.documentElement.getAttribute('data-theme') === 'refined'; }
+  function isDND()  { return document.documentElement.getAttribute('data-theme') === 'refined'; }
 
   /* ── Shelf: session-cache for record metadata ────────────── */
 
@@ -329,7 +329,7 @@
     reflectVolume();
   }
 
-  /* ── Stage: raise / lower based on Allure mode ───────────── */
+  /* ── Stage: raise / lower based on DND mode ────────────── */
 
   function raiseStage() {
     warmSource();
@@ -347,7 +347,7 @@
   }
 
   function onMoodShift() {
-    isAllure() ? raiseStage() : lowerStage();
+    isDND() ? raiseStage() : lowerStage();
   }
 
   /* ── Overture: boot sequence ─────────────────────────────── */
@@ -385,7 +385,7 @@
       if (e.key === 'Escape' && !el.crate.hidden) toggleCrate(false);
     });
 
-    /* Watch data-theme for Allure mood shifts */
+    /* Watch data-theme for DND mood shifts */
     var obs = new MutationObserver(function (muts) {
       for (var i = 0; i < muts.length; i++) {
         if (muts[i].attributeName === 'data-theme') { onMoodShift(); break; }
@@ -393,8 +393,8 @@
     });
     obs.observe(document.documentElement, { attributes: true });
 
-    /* If Allure was already saved, raise immediately */
-    if (isAllure()) raiseStage();
+    /* If DND was already saved, raise immediately */
+    if (isDND()) raiseStage();
   }
 
   /* Wait for DOM */

@@ -1,6 +1,6 @@
 /*
   refined.js — Chancellor Edwards
-  Toggle for Allure viewing mode (plum palette).
+  Toggle for DND viewing mode (plum palette).
   Persists preference to localStorage and syncs aria-checked state.
 */
 

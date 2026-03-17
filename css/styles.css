@@ -1143,7 +1143,7 @@ html[data-theme="refined"] .gh-repo-card:hover {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   VINYL PLAYER — Allure mode only
+   VINYL PLAYER — DND mode only
    Naming theme: vinyl record setup (see js/vinyl.js header)
    ═══════════════════════════════════════════════════════════════ */
 
@@ -1166,7 +1166,7 @@ html[data-theme="refined"] .gh-repo-card:hover {
     transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Raise the stage only in Allure mode */
+/* Raise the stage only in DND mode */
 html[data-theme="refined"] .vinyl.vinyl--live {
   pointer-events: auto;
   opacity: 1;
