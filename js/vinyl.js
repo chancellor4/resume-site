@@ -27,6 +27,7 @@
     source   — hidden SoundCloud iframe
     glyph.*  — SVG icon elements
     el.*     — DOM element references
+    phase    — lifecycle state (dormant/loading/ready/playing/paused/errored)
 
   Function verb families:
     fetch*     — load a resource from network
@@ -40,6 +41,7 @@
     safe*      — guarded wrapper (e.g. safePlay catches autoplay rejection)
     save/restore — persist / resume playback state across pages
     raise/lower — show / hide the stage
+    transition — validated lifecycle phase change
     overture   — boot sequence
 */
 
@@ -56,6 +58,45 @@
   var SILENCE_MS     = 10000;                        // "Unavailable" timeout
   var CONT_KEY       = 'ce-vinyl-cont';              // cross-page continuity
   var CONT_TTL       = 30000;                        // 30 s — stale after navigation
+
+  /* ── Feature gates (v1.1.0) ────────────────────────────── */
+  /*    Flip to false to disable all resilience enhancements   */
+  /*    and restore original behaviour. Zero-regression path.  */
+
+  var FEATURE_RESILIENCE = true;
+  var SDK_MAX_RETRIES    = 2;                        // additional attempts after first failure
+  var SDK_RETRY_BASE     = 2000;                     // ms — doubles each attempt (2s, 4s)
+
+  /* ── Feature gates (v1.2.0) ────────────────────────────── */
+  /*    Structured logging + performance marks. Zero output    */
+  /*    at LOG_LEVEL 0. Set LOG_LEVEL via URL param for debug: */
+  /*      ?vinyl-log=3  (0=silent, 1=warn, 2=info, 3=debug)   */
+
+  var FEATURE_OBSERVABILITY = true;
+
+  /* ── Feature gates (v1.3.0) ────────────────────────────── */
+  /*    Enhanced persistence: schemaed continuity payloads     */
+  /*    and versioned shelf cache. Flip to false to restore    */
+  /*    original save/restore and unversioned shelf.           */
+
+  var FEATURE_ENHANCED_PERSISTENCE = true;
+  var SHELF_VERSION = 1;                               // bump to invalidate all cached shelves
+  var CONT_SCHEMA   = 1;                               // continuity payload schema version
+
+  /* ── Feature gates (v1.4.0) ────────────────────────────── */
+  /*    Explicit lifecycle state machine. Governs loading,     */
+  /*    ready, playing, paused, and errored transitions.       */
+  /*    Flip to false to restore implicit boolean governance.  */
+
+  var FEATURE_STATE_MACHINE = true;
+
+  var LOG_LEVEL = (function () {
+    if (!FEATURE_OBSERVABILITY) return 0;
+    try {
+      var m = location.search.match(/[?&]vinyl-log=(\d)/);
+      return m ? parseInt(m[1], 10) : 0;
+    } catch (e) { return 0; }
+  })();
 
   /* ── State ───────────────────────────────────────────────── */
 
@@ -82,6 +123,62 @@
   function $(id)       { return document.getElementById(id); }
   function isDND()  { return document.documentElement.getAttribute('data-theme') === 'refined'; }
 
+  /* ── Observability primitives (v1.2.0) ──────────────────── */
+  /*    vlog(level, event, data?)  — structured console output  */
+  /*    vmark(name)               — Performance Timeline marks  */
+  /*    Both are noops when FEATURE_OBSERVABILITY is false or   */
+  /*    LOG_LEVEL is 0, preserving zero default-mode cost.      */
+
+  function vlog(level, event, data) {
+    if (!FEATURE_OBSERVABILITY || level > LOG_LEVEL) return;
+    var tag = '[vinyl] ' + event;
+    if (level <= 1) console.warn(tag, data !== undefined ? data : '');
+    else if (level <= 2) console.log(tag, data !== undefined ? data : '');
+    else console.debug(tag, data !== undefined ? data : '');
+  }
+
+  function vmark(name) {
+    if (!FEATURE_OBSERVABILITY || !LOG_LEVEL) return;
+    if (window.performance && performance.mark) performance.mark('vinyl:' + name);
+  }
+
+  /* ── Lifecycle state machine (v1.4.0) ───────────────────── */
+  /*    `phase` is the single source of truth for operational   */
+  /*    lifecycle. `transition(to)` validates legal moves and   */
+  /*    logs rejected attempts at warn level for triage.        */
+  /*    Stage visibility is orthogonal — lowerStage hides the   */
+  /*    UI without altering the phase.                          */
+
+  var phase = 'dormant';
+
+  var LEGAL_MOVES = {
+    dormant:  ['loading'],
+    loading:  ['ready', 'errored'],
+    ready:    ['playing', 'errored'],
+    playing:  ['paused', 'ready', 'errored'],
+    paused:   ['playing', 'ready', 'errored'],
+    errored:  []
+  };
+
+  function transition(to, reason) {
+    if (!FEATURE_STATE_MACHINE) return true;
+    var from = phase;
+    if (from === to) return true;
+    var legal = LEGAL_MOVES[from];
+    if (!legal || legal.indexOf(to) === -1) {
+      vlog(1, 'phase:rejected', { from: from, to: to, reason: reason });
+      return false;
+    }
+    phase = to;
+    vlog(3, 'phase:' + to, { from: from, reason: reason });
+    vmark('phase:' + to);
+    return true;
+  }
+
+  function phaseAllowsInteraction() {
+    return !FEATURE_STATE_MACHINE || phase === 'ready' || phase === 'playing' || phase === 'paused';
+  }
+
   /* ── Shelf: session-cache for record metadata ────────────── */
 
   function shelfRead() {
@@ -89,6 +186,11 @@
       var raw = sessionStorage.getItem(SHELF_KEY);
       if (!raw) return null;
       var obj = JSON.parse(raw);
+      /* v1.3.0: reject cache if shelf schema version doesn't match */
+      if (FEATURE_ENHANCED_PERSISTENCE && obj.v !== SHELF_VERSION) {
+        vlog(3, 'shelf:version-mismatch', { cached: obj.v, expected: SHELF_VERSION });
+        return null;
+      }
       if (Date.now() - obj.ts > SHELF_TTL) return null;
       return obj.data;
     } catch (e) { return null; }
@@ -96,7 +198,9 @@
 
   function shelfWrite(data) {
     try {
-      sessionStorage.setItem(SHELF_KEY, JSON.stringify({ ts: Date.now(), data: data }));
+      var payload = { ts: Date.now(), data: data };
+      if (FEATURE_ENHANCED_PERSISTENCE) payload.v = SHELF_VERSION;
+      sessionStorage.setItem(SHELF_KEY, JSON.stringify(payload));
     } catch (e) { /* quota exceeded or private mode — safe to ignore */ }
   }
 
@@ -105,12 +209,20 @@
   function saveState() {
     if (!sourceReady) return;
     try {
-      sessionStorage.setItem(CONT_KEY, JSON.stringify({
+      var payload = {
         side: currentSide,
         spinning: spinning,
         pos: lastPosition || 0,
         ts: Date.now()
-      }));
+      };
+      /* v1.3.0: enrich payload with schema version and audio state */
+      if (FEATURE_ENHANCED_PERSISTENCE) {
+        payload.v = CONT_SCHEMA;
+        payload.vol = parseInt(el.dial.value, 10) || DEFAULT_VOLUME;
+        payload.hushed = hushed;
+      }
+      sessionStorage.setItem(CONT_KEY, JSON.stringify(payload));
+      vlog(3, 'continuity:saved', { side: payload.side, pos: payload.pos, vol: payload.vol, hushed: payload.hushed });
     } catch (e) {}
   }
 
@@ -120,35 +232,76 @@
       if (!raw) return;
       var state = JSON.parse(raw);
       sessionStorage.removeItem(CONT_KEY);
-      if (Date.now() - state.ts > CONT_TTL) return;  // stale — discard
+      if (Date.now() - state.ts > CONT_TTL) {
+        vlog(3, 'continuity:stale', { age: Date.now() - state.ts });
+        return;                                      // stale — discard
+      }
       if (typeof state.side === 'number' && state.side !== currentSide) {
         currentSide = state.side;
         needle.skip(state.side);
       }
       if (state.pos > 0) needle.seekTo(state.pos);
+
+      /* v1.3.0: restore volume and mute state from schemaed payloads */
+      if (FEATURE_ENHANCED_PERSISTENCE && state.v >= CONT_SCHEMA) {
+        if (typeof state.vol === 'number') {
+          needle.setVolume(state.hushed ? 0 : state.vol);
+          el.dial.value = state.hushed ? 0 : state.vol;
+          savedVolume = state.vol;
+        }
+        if (state.hushed) {
+          hushed = true;
+          reflectVolume();
+        }
+      } else if (FEATURE_ENHANCED_PERSISTENCE && !state.v) {
+        /* Pre-v1.3.0 payload — no schema version present */
+        vlog(3, 'continuity:schema-fallback', { v: state.v || 0 });
+      }
+
       if (state.spinning) safePlay();
+      vlog(2, 'continuity:restored', {
+        side: state.side, pos: state.pos, spinning: state.spinning,
+        vol: state.vol, hushed: state.hushed
+      });
+      vmark('continuity:restored');
       reflectTitle();
       reflectCrate();
     } catch (e) {}
   }
 
   /* ── Fetch SoundCloud Widget SDK (lazy) ──────────────────── */
+  /*    v1.1.0: optional retry with exponential backoff.       */
+  /*    The `attempt` parameter is internal — callers still    */
+  /*    invoke fetchSDK(cb) with the same signature.           */
 
-  function fetchSDK(cb) {
+  function fetchSDK(cb, attempt) {
     if (sdkReady) return cb();
     if (sdkPending) return;                          // already in flight
-    sdkPending = true;
+    sdkPending = true;                               // reset in onerror before retry delay;
+                                                     // single-caller guarantee via needleDropped
+                                                     // prevents concurrent attempts during backoff
+    attempt = (FEATURE_RESILIENCE && typeof attempt === 'number') ? attempt : 0;
+
     var s    = document.createElement('script');
     s.src    = SDK_URL;
     s.onload = function () {
       sdkReady   = true;
       sdkPending = false;
+      vlog(2, 'sdk:loaded', attempt > 0 ? { attempts: attempt + 1 } : undefined);
+      vmark('sdk:loaded');
       cb();
     };
     s.onerror = function () {
       sdkPending = false;
-      console.warn('[vinyl] SoundCloud Widget SDK failed to load.');
-      el.title.textContent = 'Unavailable';
+      if (FEATURE_RESILIENCE && attempt < SDK_MAX_RETRIES) {
+        var delay = SDK_RETRY_BASE * Math.pow(2, attempt);
+        console.warn('[vinyl] SDK load failed, retrying in ' + delay + 'ms (attempt ' + (attempt + 1) + '/' + SDK_MAX_RETRIES + ').');
+        setTimeout(function () { fetchSDK(cb, attempt + 1); }, delay);
+      } else {
+        console.warn('[vinyl] SoundCloud Widget SDK failed to load.');
+        el.title.textContent = 'Unavailable';
+        transition('errored', 'sdk-failed');
+      }
     };
     document.head.appendChild(s);
   }
@@ -176,13 +329,17 @@
       var result = needle.play();
       if (result && typeof result.catch === 'function') {
         result.catch(function () {
-          /* Autoplay blocked — needle stays lifted, no error shown */
+          /* Autoplay blocked — needle stays lifted, no error shown.
+             v1.4.0: revert phase if PLAY event already promoted us. */
+          if (phase === 'playing') transition('ready', 'autoplay-blocked');
           spinning = false;
           reflectSpin();
         });
       }
     } catch (e) {
-      /* Defensive: older SC Widget versions may not return a Promise */
+      /* Defensive: older SC Widget versions may not return a Promise.
+         v1.4.0: revert phase if PLAY event preceded the exception. */
+      if (phase === 'playing') transition('ready', 'autoplay-blocked');
       spinning = false;
       reflectSpin();
     }
@@ -192,8 +349,17 @@
 
   function dropNeedle() {
     if (needleDropped) return;                       // guard: one init only
-    if (!window.SC || !window.SC.Widget) {
+    /* v1.1.0: strict interface validation — verify SC.Widget is callable   */
+    /*         and exposes the Events map we depend on. Catches SDK shape   */
+    /*         changes before they surface as cryptic runtime errors.       */
+    var valid = window.SC && window.SC.Widget &&
+      (FEATURE_RESILIENCE
+        ? typeof SC.Widget === 'function' && SC.Widget.Events && SC.Widget.Events.READY
+        : true);
+    if (!valid) {
       el.title.textContent = 'Unavailable';
+      console.warn('[vinyl] SC.Widget interface validation failed.');
+      transition('errored', 'widget-invalid');
       return;
     }
 
@@ -202,22 +368,27 @@
 
     needle.bind(SC.Widget.Events.READY, function () {
       sourceReady = true;
+      vlog(2, 'widget:ready');
+      vmark('widget:ready');
       needle.setVolume(DEFAULT_VOLUME);
       catalogRecords();
     });
 
     needle.bind(SC.Widget.Events.PLAY, function () {
+      if (FEATURE_STATE_MACHINE && !transition('playing', 'play-event')) return;
       spinning = true;
       reflectSpin();
     });
 
     needle.bind(SC.Widget.Events.PAUSE, function () {
+      if (FEATURE_STATE_MACHINE && !transition('paused', 'pause-event')) return;
       spinning = false;
       reflectSpin();
       saveState();
     });
 
     needle.bind(SC.Widget.Events.FINISH, function () {
+      transition('ready', 'track-finished');
       spinning = false;
       reflectSpin();
     });
@@ -242,6 +413,7 @@
 
     /* Error event: bad URL, geo-blocked track, or network failure */
     needle.bind(SC.Widget.Events.ERROR, function () {
+      transition('errored', 'widget-error');
       spinning = false;
       reflectSpin();
       el.title.textContent = 'Unavailable';
@@ -252,6 +424,7 @@
     setTimeout(function () {
       if (!sourceReady && el.title.textContent === 'Loading\u2026') {
         el.title.textContent = 'Unavailable';
+        transition('errored', 'ready-timeout');
       }
     }, SILENCE_MS);
   }
@@ -262,23 +435,30 @@
     var cached = shelfRead();
     if (cached && cached.length) {
       records = cached;
+      vlog(3, 'catalog:shelf-hit', { tracks: cached.length });
       fillCrate();
       reflectTitle();
+      transition('ready', 'catalog-shelf');
       restoreState();
       return;
     }
 
     needle.getSounds(function (sounds) {
       if (!sounds || !sounds.length) {
+        vlog(1, 'catalog:empty');
         el.title.textContent = 'Empty playlist';
+        transition('errored', 'catalog-empty');
         return;
       }
       records = sounds.map(function (s, i) {
         return { title: s.title || 'Track ' + (i + 1), index: i };
       });
+      vlog(2, 'catalog:fetched', { tracks: records.length });
+      vmark('catalog:done');
       shelfWrite(records);
       fillCrate();
       reflectTitle();
+      transition('ready', 'catalog-fetched');
       restoreState();
     });
   }
@@ -343,12 +523,12 @@
   /* ── Event handlers ──────────────────────────────────────── */
 
   function onSpin() {
-    if (!needle) return;
+    if (!needle || !phaseAllowsInteraction()) return;
     spinning ? needle.pause() : safePlay();
   }
 
   function onHush() {
-    if (!needle) return;
+    if (!needle || !phaseAllowsInteraction()) return;
     if (hushed) {
       needle.setVolume(savedVolume);
       el.dial.value = savedVolume;
@@ -363,7 +543,7 @@
   }
 
   function onDial() {
-    if (!needle) return;
+    if (!needle || !phaseAllowsInteraction()) return;
     var v = parseInt(el.dial.value, 10);
     needle.setVolume(v);
     hushed = v === 0;
@@ -374,6 +554,9 @@
   /* ── Stage: raise / lower based on DND mode ────────────── */
 
   function raiseStage() {
+    vlog(2, 'stage:raise');
+    vmark('stage:raise');
+    if (phase === 'dormant') transition('loading', 'sdk-bootstrap');
     warmSource();
     if (!needleDropped) fetchSDK(dropNeedle);        // only bootstrap once
     el.stage.removeAttribute('aria-hidden');
@@ -382,6 +565,7 @@
   }
 
   function lowerStage() {
+    vlog(2, 'stage:lower');
     el.stage.classList.remove('vinyl--live');
     el.stage.setAttribute('aria-hidden', 'true');
     if (needle && spinning) needle.pause();
@@ -436,9 +620,12 @@
     obs.observe(document.documentElement, { attributes: true });
 
     /* Save playback state on page unload for cross-page continuity */
-    window.addEventListener('beforeunload', function () {
-      if (sourceReady && isDND()) saveState();
-    });
+    var onExit = function () { if (sourceReady && isDND()) saveState(); };
+    window.addEventListener('beforeunload', onExit);
+    /* v1.1.0: pagehide fires on mobile Safari and bfcache navigations    */
+    /*         where beforeunload is often suppressed. Additive listener  */
+    /*         — saveState is idempotent so double-fire is harmless.      */
+    if (FEATURE_RESILIENCE) window.addEventListener('pagehide', onExit);
 
     /* If DND was already saved, raise immediately */
     if (isDND()) raiseStage();
