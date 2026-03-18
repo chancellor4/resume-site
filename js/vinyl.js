@@ -23,6 +23,7 @@
     needle   — SC.Widget instance (the stylus reading the groove)
     records  — array of track metadata
     shelf    — sessionStorage cache (records on a shelf)
+    cont     — cross-page continuity state (sessionStorage)
     source   — hidden SoundCloud iframe
     glyph.*  — SVG icon elements
     el.*     — DOM element references
@@ -37,6 +38,7 @@
     toggle*    — flip a boolean UI state
     on*        — event handler
     safe*      — guarded wrapper (e.g. safePlay catches autoplay rejection)
+    save/restore — persist / resume playback state across pages
     raise/lower — show / hide the stage
     overture   — boot sequence
 */
@@ -52,6 +54,8 @@
   var SHELF_TTL      = 30 * 60 * 1000;              // 30 min
   var SDK_URL        = 'https://w.soundcloud.com/player/api.js';
   var SILENCE_MS     = 10000;                        // "Unavailable" timeout
+  var CONT_KEY       = 'ce-vinyl-cont';              // cross-page continuity
+  var CONT_TTL       = 30000;                        // 30 s — stale after navigation
 
   /* ── State ───────────────────────────────────────────────── */
 
@@ -66,6 +70,7 @@
   var sourceReady   = false;
   var needleDropped = false;                         // prevents double init
   var lastSidePoll  = 0;                             // throttle for progress events
+  var lastPosition  = 0;                             // ms, from PLAY_PROGRESS
 
   /* ── DOM refs (resolved once in overture) ────────────────── */
 
@@ -93,6 +98,38 @@
     try {
       sessionStorage.setItem(SHELF_KEY, JSON.stringify({ ts: Date.now(), data: data }));
     } catch (e) { /* quota exceeded or private mode — safe to ignore */ }
+  }
+
+  /* ── Continuity: persist playback across page navigation ─── */
+
+  function saveState() {
+    if (!sourceReady) return;
+    try {
+      sessionStorage.setItem(CONT_KEY, JSON.stringify({
+        side: currentSide,
+        spinning: spinning,
+        pos: lastPosition || 0,
+        ts: Date.now()
+      }));
+    } catch (e) {}
+  }
+
+  function restoreState() {
+    try {
+      var raw = sessionStorage.getItem(CONT_KEY);
+      if (!raw) return;
+      var state = JSON.parse(raw);
+      sessionStorage.removeItem(CONT_KEY);
+      if (Date.now() - state.ts > CONT_TTL) return;  // stale — discard
+      if (typeof state.side === 'number' && state.side !== currentSide) {
+        currentSide = state.side;
+        needle.skip(state.side);
+      }
+      if (state.pos > 0) needle.seekTo(state.pos);
+      if (state.spinning) safePlay();
+      reflectTitle();
+      reflectCrate();
+    } catch (e) {}
   }
 
   /* ── Fetch SoundCloud Widget SDK (lazy) ──────────────────── */
@@ -177,6 +214,7 @@
     needle.bind(SC.Widget.Events.PAUSE, function () {
       spinning = false;
       reflectSpin();
+      saveState();
     });
 
     needle.bind(SC.Widget.Events.FINISH, function () {
@@ -187,7 +225,8 @@
     /* Track change detection via progress events.
        Throttled: polls getCurrentSoundIndex at most once per second,
        and only when there are multiple records to track. */
-    needle.bind(SC.Widget.Events.PLAY_PROGRESS, function () {
+    needle.bind(SC.Widget.Events.PLAY_PROGRESS, function (data) {
+      if (data && data.currentPosition) lastPosition = data.currentPosition;
       if (records.length < 2) return;                // single track — nothing to detect
       var now = Date.now();
       if (now - lastSidePoll < 1000) return;         // throttle: 1 s
@@ -225,6 +264,7 @@
       records = cached;
       fillCrate();
       reflectTitle();
+      restoreState();
       return;
     }
 
@@ -239,6 +279,7 @@
       shelfWrite(records);
       fillCrate();
       reflectTitle();
+      restoreState();
     });
   }
 
@@ -268,6 +309,7 @@
     glyph.lift.hidden = !spinning;
     el.spin.setAttribute('aria-label', spinning ? 'Pause' : 'Play');
     el.spin.title = spinning ? 'Pause' : 'Play';
+    el.stage.classList.toggle('vinyl--spinning', spinning);
   }
 
   function reflectVolume() {
@@ -392,6 +434,11 @@
       }
     });
     obs.observe(document.documentElement, { attributes: true });
+
+    /* Save playback state on page unload for cross-page continuity */
+    window.addEventListener('beforeunload', function () {
+      if (sourceReady && isDND()) saveState();
+    });
 
     /* If DND was already saved, raise immediately */
     if (isDND()) raiseStage();

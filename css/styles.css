@@ -1173,6 +1173,12 @@ html[data-theme="refined"] .vinyl.vinyl--live {
   transform: translateY(0);
 }
 
+/* Playing state — subtle sleeve warmth */
+.vinyl.vinyl--spinning .vinyl-sleeve {
+  border-color: var(--amber-lt);
+  box-shadow: 0 2px 12px rgba(160, 100, 40, 0.08);
+}
+
 /* ─── SLEEVE (frosted-glass bar) ───────────────────────────── */
 
 .vinyl-sleeve {
@@ -1316,6 +1322,18 @@ html[data-theme="refined"] .vinyl.vinyl--live {
 .vinyl-crate li[aria-selected="true"] {
   color: var(--amber);
   font-weight: 600;
+  border-left: 2px solid var(--amber);
+  padding-left: calc(var(--sp-sm) - 2px);
+}
+
+/* Crate entrance */
+.vinyl-crate:not([hidden]) {
+  animation: vinyl-crate-in 0.15s ease-out;
+}
+
+@keyframes vinyl-crate-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* Thin scrollbar — WebKit */
@@ -1362,8 +1380,10 @@ html[data-theme="refined"] .vinyl.vinyl--live {
   .vinyl-sleeve,
   .vinyl-btn,
   .vinyl-title,
-  .vinyl-crate li {
+  .vinyl-crate li,
+  .vinyl-crate:not([hidden]) {
     transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
   }
 }
 
