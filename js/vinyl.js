@@ -132,12 +132,26 @@
 
   /* ── Feature gates (v3.1.0) ────────────────────────────── */
   /*    Sleeve visual refresh: "future nostalgia" aesthetic    */
-  /*    with glassmorphism depth, right-aligned crate text,   */
+  /*    with glassmorphism depth, left-aligned crate text,    */
   /*    and numerical index removal. Pure CSS + minor label    */
   /*    changes — no behavioral or state machine changes.      */
   /*    Flip to false to restore v2 crate/sleeve appearance.   */
 
   var FEATURE_SLEEVE_V3 = true;
+
+  /* ── Feature gates (v4.0.0) ────────────────────────────── */
+  /*    Cross-page continuity hardening. Detects same-tab      */
+  /*    navigation via a sessionStorage marker and suppresses  */
+  /*    the ownership yield on page exit, sending an early     */
+  /*    reclaim on the new page's boot instead. This closes    */
+  /*    the window where other tabs might think the owner is   */
+  /*    gone during a same-tab page transition.                */
+  /*    Layers on FEATURE_BROADCAST + FEATURE_OWNERSHIP_V3.    */
+  /*    Flip to false to restore v3.0 yield-on-exit behavior.  */
+
+  var FEATURE_CONTINUITY_V4 = true;
+  var NAV_MARKER_KEY         = 'ce-vinyl-nav';   // sessionStorage: '1' during page transition
+  var V4_YIELD_GRACE_MS      = 3000;             // wider grace window for slower connections
 
   var LOG_LEVEL = (function () {
     if (!FEATURE_OBSERVABILITY) return 0;
@@ -311,6 +325,25 @@
       channel.onmessage = onChannelMessage;
       vlog(3, 'broadcast:init', { tabId: tabId, epoch: claimEpoch, stableId: FEATURE_OWNERSHIP_V3 });
       vmark('broadcast:init');
+
+      /* v4.0.0: detect same-tab navigation via the nav marker.
+         If present, this page load is a continuation of a previous
+         owner session (same tab navigated between pages). Reclaim
+         ownership immediately — before the widget loads — so other
+         tabs never see an ownership gap.                            */
+      if (FEATURE_CONTINUITY_V4) {
+        try {
+          var navMarker = sessionStorage.getItem(NAV_MARKER_KEY);
+          if (navMarker) {
+            sessionStorage.removeItem(NAV_MARKER_KEY);
+            vlog(2, 'continuity:nav-detected', { tabId: tabId });
+            vmark('continuity:nav-reclaim');
+            broadcastClaim();                          // early reclaim — pre-widget
+            return;                                    // skip ping — we ARE the owner
+          }
+        } catch (e) { /* private mode — fall through to normal boot */ }
+      }
+
       sendPing();                                    // v2.1.0: discover existing owner
     } catch (e) {
       /* BroadcastChannel throws on opaque origins (file://, sandboxed iframes).
@@ -471,6 +504,8 @@
           if (FEATURE_OWNERSHIP_V3) {
             cancelYieldGrace();
             var yieldFrom = msg.tabId;
+            /* v4.0.0: use wider grace window when continuity hardening is on */
+            var graceMs = FEATURE_CONTINUITY_V4 ? V4_YIELD_GRACE_MS : YIELD_GRACE_MS;
             yieldGraceTimer = setTimeout(function () {
               yieldGraceTimer = null;
               if (ownerTabId === yieldFrom) {
@@ -479,8 +514,8 @@
                 remoteState = null;
                 reflectRemoteState();
               }
-            }, YIELD_GRACE_MS);
-            vlog(3, 'yield-grace:started', { from: yieldFrom, grace: YIELD_GRACE_MS });
+            }, graceMs);
+            vlog(3, 'yield-grace:started', { from: yieldFrom, grace: graceMs });
           } else {
             ownerTabId = '';
             remoteState = null;
@@ -1128,7 +1163,21 @@
     var onExit = function () {
       if (sourceReady && isDND()) saveState();
       stopHeartbeat();                                   // v2.1.0: clean timer teardown
-      broadcastYield('tab-exit');                         // clean ownership release on tab close
+
+      /* v4.0.0: navigation-aware exit. When the owner is in DND mode,
+         assume this unload is a same-tab navigation (Resume → Projects)
+         rather than a tab close. Set a nav marker so the new page can
+         reclaim immediately, and suppress the yield to avoid an
+         ownership gap. If the tab is actually closing, the nav marker
+         persists in sessionStorage but is harmless — the next session
+         in this tab slot will consume and discard it, and other tabs
+         detect the stale owner via heartbeat timeout.                 */
+      if (FEATURE_CONTINUITY_V4 && isDND() && isOwner) {
+        try { sessionStorage.setItem(NAV_MARKER_KEY, '1'); } catch (e) {}
+        vlog(3, 'continuity:nav-exit', { tabId: tabId });
+      } else {
+        broadcastYield('tab-exit');                       // clean ownership release
+      }
     };
     window.addEventListener('beforeunload', onExit);
     /* v1.1.0: pagehide fires on mobile Safari and bfcache navigations    */

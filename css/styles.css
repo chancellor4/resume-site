@@ -1338,7 +1338,7 @@ html[data-theme="refined"] .vinyl.vinyl--live {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-align: right;
+  text-align: left;
   transition:
     background 0.2s ease,
     color 0.2s ease,
@@ -1353,7 +1353,7 @@ html[data-theme="refined"] .vinyl.vinyl--live {
 .vinyl-crate li[aria-selected="true"] {
   color: var(--amber);
   font-weight: 600;
-  border-right: 2px solid var(--amber);
+  border-left: 2px solid var(--amber);
   padding-right: calc(var(--sp-sm) - 2px);
 }
 
