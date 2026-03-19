@@ -102,6 +102,7 @@
   var FEATURE_BROADCAST = true;
   var CHANNEL_NAME      = 'ce-vinyl';
   var SYNC_THROTTLE     = 5000;                      // ms between broadcast syncs
+  var OWNER_STALE       = 15000;                     // ms — presume owner gone after silence
 
   var FEATURE_CRATE_V2 = true;
 
@@ -131,6 +132,9 @@
   var tabId         = '';                             // unique per page load (set in initChannel)
   var isOwner       = false;                         // playback ownership flag
   var lastSync      = 0;                             // throttle for broadcastSync
+  var ownerTabId    = '';                             // tabId of current playback owner
+  var lastOwnerSeen = 0;                             // timestamp of last owner message
+  var remoteState   = null;                          // { side, title, pos, spinning }
 
   /* ── DOM refs (resolved once in overture) ────────────────── */
 
@@ -207,9 +211,22 @@
   }
 
   /* ── Cross-tab coordination (v2.0.0) ──────────────────── */
-  /*    BroadcastChannel-based leader model: last tab to       */
-  /*    play claims ownership; other tabs yield. Messages      */
-  /*    are hints — no tab takes remote control of playback.   */
+  /*    Single-owner model via BroadcastChannel: last tab to   */
+  /*    play claims ownership; other tabs pause and enter      */
+  /*    observer mode, reflecting the owner's playback state.  */
+  /*    Messages are coordination hints — no tab takes remote  */
+  /*    control of another's playback.                         */
+  /*                                                           */
+  /*    Message vocabulary:                                     */
+  /*      claim — "I am now playing"                           */
+  /*      yield — "I have stopped playing"                     */
+  /*      sync  — periodic owner state (doubles as heartbeat)  */
+  /*                                                           */
+  /*    Resilience:                                            */
+  /*      - safeBroadcast wraps postMessage in try/catch       */
+  /*      - stale messages (>OWNER_STALE ms old) are dropped   */
+  /*      - owner yields on pagehide for clean tab-close       */
+  /*      - observers detect stale owners via lastOwnerSeen    */
 
   function initChannel() {
     if (!FEATURE_BROADCAST || typeof BroadcastChannel === 'undefined') return;
@@ -224,17 +241,37 @@
     }
   }
 
+  function safeBroadcast(msg) {
+    if (!channel) return false;
+    try {
+      channel.postMessage(msg);
+      return true;
+    } catch (e) {
+      vlog(1, 'broadcast:send-error', { type: msg.type, error: e.message });
+      return false;
+    }
+  }
+
   function broadcastClaim() {
     if (!channel) return;
+    /* Clear stale remote owner tracking before claiming */
+    if (ownerTabId && ownerTabId !== tabId && isOwnerStale()) {
+      vlog(2, 'broadcast:stale-owner-cleared', { previous: ownerTabId });
+    }
     isOwner = true;
-    channel.postMessage({ type: 'claim', tabId: tabId, ts: Date.now() });
+    ownerTabId = tabId;
+    lastOwnerSeen = Date.now();
+    remoteState = null;
+    safeBroadcast({ type: 'claim', tabId: tabId, ts: Date.now() });
     vlog(3, 'broadcast:claim', { tabId: tabId });
   }
 
   function broadcastYield() {
     if (!channel || !isOwner) return;
     isOwner = false;
-    channel.postMessage({ type: 'yield', tabId: tabId, ts: Date.now() });
+    ownerTabId = '';
+    remoteState = null;
+    safeBroadcast({ type: 'yield', tabId: tabId, ts: Date.now() });
     vlog(3, 'broadcast:yield', { tabId: tabId });
   }
 
@@ -243,13 +280,15 @@
     var now = Date.now();
     if (now - lastSync < SYNC_THROTTLE) return;
     lastSync = now;
-    channel.postMessage({
+    var title = records[currentSide] ? records[currentSide].title : '';
+    safeBroadcast({
       type: 'sync',
       tabId: tabId,
       payload: {
         side: currentSide,
         spinning: spinning,
         pos: lastPosition,
+        title: title,
         ts: now
       }
     });
@@ -259,18 +298,57 @@
   function onChannelMessage(e) {
     var msg = e.data;
     if (!msg || msg.tabId === tabId) return;
+
+    /* Stale message protection — drop messages older than OWNER_STALE */
+    if (msg.ts && Date.now() - msg.ts > OWNER_STALE) {
+      vlog(3, 'broadcast:stale', { type: msg.type, age: Date.now() - msg.ts });
+      return;
+    }
+
     switch (msg.type) {
       case 'claim':
         vlog(2, 'broadcast:remote-claim', { from: msg.tabId });
-        if (spinning && needle) needle.pause();
-        isOwner = false;
+        ownerTabId = msg.tabId;
+        lastOwnerSeen = msg.ts || Date.now();
+        if (isOwner) isOwner = false;
+        if (spinning && needle) {
+          needle.pause();
+          spinning = false;                            // reflect immediately; PAUSE event is async
+          reflectSpin();
+        }
+        remoteState = null;                            // populated by first sync
         break;
       case 'yield':
         vlog(3, 'broadcast:remote-yield', { from: msg.tabId });
+        if (ownerTabId === msg.tabId) {
+          ownerTabId = '';
+          remoteState = null;
+          reflectRemoteState();
+        }
         break;
       case 'sync':
+        if (msg.tabId !== ownerTabId) break;           // ignore syncs from non-owner
+        lastOwnerSeen = (msg.payload && msg.payload.ts) || Date.now();
+        remoteState = msg.payload || null;
         vlog(3, 'broadcast:remote-sync', msg.payload);
+        if (!isOwner) reflectRemoteState();
         break;
+    }
+  }
+
+  function isOwnerStale() {
+    if (!ownerTabId || ownerTabId === tabId) return false;
+    return Date.now() - lastOwnerSeen > OWNER_STALE;
+  }
+
+  function reflectRemoteState() {
+    if (!FEATURE_CRATE_V2 || !el.upnext) return;
+    if (!isOwner && !spinning && remoteState && remoteState.title) {
+      el.upnext.textContent = 'Playing elsewhere \u2014 ' + remoteState.title;
+      el.upnext.hidden = false;
+    } else if (!remoteState && !spinning) {
+      /* Remote owner gone — revert to normal "Up next" display */
+      reflectNowPlaying();
     }
   }
 
@@ -623,6 +701,8 @@
 
   function reflectNowPlaying() {
     if (!FEATURE_CRATE_V2 || !el.upnext) return;
+    /* If observing remote playback and not playing locally, defer to reflectRemoteState */
+    if (!spinning && remoteState && remoteState.title && !isOwner) return;
     var next = currentSide + 1;
     if (next < records.length && records[next]) {
       el.upnext.textContent = 'Up next \u2014 ' + records[next].title;
@@ -739,7 +819,10 @@
     obs.observe(document.documentElement, { attributes: true });
 
     /* Save playback state on page unload for cross-page continuity */
-    var onExit = function () { if (sourceReady && isDND()) saveState(); };
+    var onExit = function () {
+      if (sourceReady && isDND()) saveState();
+      broadcastYield();                                // clean ownership release on tab close
+    };
     window.addEventListener('beforeunload', onExit);
     /* v1.1.0: pagehide fires on mobile Safari and bfcache navigations    */
     /*         where beforeunload is often suppressed. Additive listener  */

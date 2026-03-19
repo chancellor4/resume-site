@@ -1484,6 +1484,236 @@ suite('v2.0.0 — Duration in Shelf (LOG_LEVEL=3)');
 }
 
 // ═══════════════════════════════════════════════════════════════
+//  SUITE 44: v2.0.0 — safeBroadcast Error Handling
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — safeBroadcast Error Handling (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+
+  // Close the channel to make postMessage throw
+  const ch = env.bc.instances[0];
+  const origPost = ch.postMessage.bind(ch);
+  ch.postMessage = function () { throw new Error('channel closed'); };
+
+  // Play should still succeed without crashing — safeBroadcast catches the error
+  w._fire('play');
+  assert('broadcast:send-error logged', findCaptured(env.cons.captured, 'warn', 'broadcast:send-error').length > 0);
+
+  // Widget is still in playing state (claim failed but play event still processed)
+  const phases = extractPhases(env.cons.captured);
+  assert('playing phase reached despite send error', phases.includes('playing'));
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 45: v2.0.0 — Stale Message Rejection
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Stale Message Rejection (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  // Simulate a remote claim with a very old timestamp (>15s ago)
+  const staleTs = Date.now() - 20000;
+  env.bc.simulateRemote({ type: 'claim', tabId: 'stale-tab', ts: staleTs });
+
+  // The stale claim should be dropped — no remote-claim log
+  assert('stale claim dropped', findCaptured(env.cons.captured, 'log', 'broadcast:remote-claim').length === 0);
+  assert('broadcast:stale logged', findCaptured(env.cons.captured, 'debug', 'broadcast:stale').length > 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 46: v2.0.0 — Yield on Exit (pagehide)
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Yield on Exit via pagehide (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+
+  // Capture addEventListener calls on window
+  const winListeners = {};
+  env.win.addEventListener = function (type, fn) {
+    if (!winListeners[type]) winListeners[type] = [];
+    winListeners[type].push(fn);
+  };
+
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  const ch = env.bc.instances[0];
+  const yieldsBeforeExit = ch._messages.filter(m => m.type === 'yield').length;
+
+  // Simulate pagehide — should trigger broadcastYield
+  if (winListeners.pagehide) {
+    winListeners.pagehide.forEach(fn => fn());
+  }
+
+  const yieldsAfterExit = ch._messages.filter(m => m.type === 'yield').length;
+  assert('yield posted on pagehide', yieldsAfterExit > yieldsBeforeExit);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 47: v2.0.0 — Observer Tracks Remote State via Sync
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Observer Remote State Tracking (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  // Tab receives remote claim — enters observer mode
+  env.bc.simulateRemote({ type: 'claim', tabId: 'owner-tab', ts: Date.now() });
+
+  // Owner sends sync with track info
+  env.bc.simulateRemote({
+    type: 'sync',
+    tabId: 'owner-tab',
+    payload: { side: 1, spinning: true, pos: 42000, title: 'Remote Track X', ts: Date.now() }
+  });
+
+  assert('remote-sync logged', findCaptured(env.cons.captured, 'debug', 'broadcast:remote-sync').length > 0);
+
+  // Check upnext reflects remote state
+  const stage = env.doc._elements['vinyl'];
+  const marquee = stage.children.find(c => c.classList.contains('vinyl-marquee'));
+  const upnext = marquee ? marquee.children.find(c => c.className === 'vinyl-upnext') : null;
+  if (upnext) {
+    assert('upnext shows remote track', upnext.textContent.includes('Playing elsewhere'));
+    assert('upnext shows remote title', upnext.textContent.includes('Remote Track X'));
+  } else {
+    assert('upnext element exists for observer', false);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 48: v2.0.0 — Remote Yield Clears Observer State
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Remote Yield Clears Observer State (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  // Remote claim + sync
+  env.bc.simulateRemote({ type: 'claim', tabId: 'owner-tab', ts: Date.now() });
+  env.bc.simulateRemote({
+    type: 'sync',
+    tabId: 'owner-tab',
+    payload: { side: 0, spinning: true, pos: 10000, title: 'Some Track', ts: Date.now() }
+  });
+
+  // Verify observer state is set
+  const stage = env.doc._elements['vinyl'];
+  const marquee = stage.children.find(c => c.classList.contains('vinyl-marquee'));
+  const upnext = marquee ? marquee.children.find(c => c.className === 'vinyl-upnext') : null;
+  assert('upnext shows remote state before yield', upnext && upnext.textContent.includes('Playing elsewhere'));
+
+  // Remote yield — should clear remote state
+  env.bc.simulateRemote({ type: 'yield', tabId: 'owner-tab', ts: Date.now() });
+
+  assert('remote-yield logged', findCaptured(env.cons.captured, 'debug', 'broadcast:remote-yield').length > 0);
+  // After yield, upnext should revert to normal "Up next" display (Track B)
+  assert('upnext reverts after remote yield', upnext && !upnext.textContent.includes('Playing elsewhere'));
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 49: v2.0.0 — Sync from Non-Owner Ignored
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Sync from Non-Owner Ignored (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  // Remote claim from tab A
+  env.bc.simulateRemote({ type: 'claim', tabId: 'tab-A', ts: Date.now() });
+
+  // Sync from tab B (not the owner) — should be ignored
+  env.bc.simulateRemote({
+    type: 'sync',
+    tabId: 'tab-B',
+    payload: { side: 2, spinning: true, pos: 99000, title: 'Imposter Track', ts: Date.now() }
+  });
+
+  // remote-sync should NOT be logged for the tab-B message
+  const syncLogs = findCaptured(env.cons.captured, 'debug', 'broadcast:remote-sync');
+  assert('sync from non-owner ignored', syncLogs.length === 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 50: v2.0.0 — Rapid Claim Resolution (Last Writer Wins)
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Rapid Claim Resolution (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  const ch = env.bc.instances[0];
+
+  // Rapid successive remote claims from different tabs
+  env.bc.simulateRemote({ type: 'claim', tabId: 'tab-X', ts: Date.now() });
+  env.bc.simulateRemote({ type: 'claim', tabId: 'tab-Y', ts: Date.now() });
+  env.bc.simulateRemote({ type: 'claim', tabId: 'tab-Z', ts: Date.now() });
+
+  const claimLogs = findCaptured(env.cons.captured, 'log', 'broadcast:remote-claim');
+  assert('all three remote claims logged', claimLogs.length === 3);
+
+  // No yield should be posted — local tab had isOwner set to false by first claim
+  const yields = ch._messages.filter(m => m.type === 'yield');
+  assert('no yield posted (isOwner was false after first remote claim)', yields.length === 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 51: v2.0.0 — Sync Payload Includes Title
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Sync Payload Includes Title (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  w._fire('playProgress', { currentPosition: 5000 });
+
+  const ch = env.bc.instances[0];
+  const syncs = ch._messages.filter(m => m.type === 'sync');
+  assert('sync has title field', syncs.length > 0 && typeof syncs[0].payload.title === 'string');
+  assert('sync title matches Track A', syncs[0].payload.title === 'Track A');
+}
+
+// ═══════════════════════════════════════════════════════════════
 //  SUMMARY
 // ═══════════════════════════════════════════════════════════════
 
