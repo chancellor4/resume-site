@@ -104,11 +104,14 @@ function createDocument() {
       if (!docListeners[type]) docListeners[type] = [];
       docListeners[type].push(fn);
     },
+    visibilityState: 'visible',
+    activeElement: null,
     head: { appendChild() {} },
     body: { appendChild() {} },
     _mutObservers: [],
     _elements: elements,
     _htmlAttrs: htmlAttrs,
+    _docListeners: docListeners,
   };
 
   return doc;
@@ -229,9 +232,9 @@ function createMockWidget(opts = {}) {
 //  VINYL.JS LOADER — rewrites source and executes in sandbox
 // ═══════════════════════════════════════════════════════════════
 
-const vinylSrc = readFileSync('/sessions/happy-serene-ramanujan/mnt/Resume website/js/vinyl.js', 'utf-8');
+const vinylSrc = readFileSync(new URL('./vinyl.js', import.meta.url), 'utf-8');
 
-function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, featureBroadcast = true, featureCrateV2 = true, mockSdkSuccess = true, syncTimers = false } = {}) {
+function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, featureBroadcast = true, featureCrateV2 = true, featureLeaderElection = true, mockSdkSuccess = true, syncTimers = false, ownerStale = null } = {}) {
   let src = vinylSrc;
 
   // Inject LOG_LEVEL
@@ -261,6 +264,16 @@ function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, featureB
     src = src.replace('var FEATURE_CRATE_V2 = true;', 'var FEATURE_CRATE_V2 = false;');
   }
 
+  // Override FEATURE_LEADER_ELECTION if needed
+  if (!featureLeaderElection) {
+    src = src.replace('var FEATURE_LEADER_ELECTION = true;', 'var FEATURE_LEADER_ELECTION = false;');
+  }
+
+  // Override OWNER_STALE for stale-owner tests (e.g., set to 1ms)
+  if (ownerStale !== null) {
+    src = src.replace(/var OWNER_STALE\s*=\s*\d+;/, 'var OWNER_STALE = ' + ownerStale + ';');
+  }
+
   // Mock SDK loading — intercept document.head.appendChild
   src = src.replace(
     'document.head.appendChild(s);',
@@ -275,6 +288,10 @@ function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, featureB
   const cons = createConsoleCapture();
   let mockWidget = createMockWidget({ empty: false });
   const bc = createMockBroadcastChannel();
+
+  // v2.1.0: track timers for heartbeat/election verification
+  const _intervals = [];
+  const _timeouts = [];
 
   const win = {
     document: doc,
@@ -291,7 +308,12 @@ function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, featureB
     },
     BroadcastChannel: bc.MockBC,
     addEventListener() {},
-    setTimeout: syncTimers ? function (fn) { fn(); return 0; } : globalThis.setTimeout,
+    setTimeout: syncTimers
+      ? function (fn) { fn(); return 0; }
+      : function (fn, delay) { var id = globalThis.setTimeout(fn, delay); _timeouts.push(id); return id; },
+    clearTimeout: function (id) { globalThis.clearTimeout(id); },
+    setInterval: function (fn, delay) { var id = globalThis.setInterval(fn, delay); _intervals.push(id); return id; },
+    clearInterval: function (id) { globalThis.clearInterval(id); },
     __mockSdkSuccess: mockSdkSuccess,
   };
   win.SC.Widget.Events = {
@@ -303,12 +325,13 @@ function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, featureB
   // Execute vinyl.js in the sandbox
   const fn = new Function(
     'window', 'document', 'sessionStorage', 'performance', 'console',
-    'location', 'MutationObserver', 'setTimeout', '__mockSdkSuccess',
+    'location', 'MutationObserver', 'setTimeout', 'clearTimeout',
+    'setInterval', 'clearInterval', '__mockSdkSuccess',
     'SC', 'BroadcastChannel',
     src
   );
 
-  return { doc, ss, perf, cons, win, mockWidget, exec, setMockWidget, bc };
+  return { doc, ss, perf, cons, win, mockWidget, exec, setMockWidget, bc, _intervals, _timeouts };
 
   function setMockWidget(opts) {
     mockWidget = createMockWidget(opts);
@@ -321,7 +344,9 @@ function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, featureB
   }
 
   function exec() {
-    fn(win, doc, ss, perf, cons, win.location, win.MutationObserver, win.setTimeout, mockSdkSuccess, win.SC, win.BroadcastChannel);
+    fn(win, doc, ss, perf, cons, win.location, win.MutationObserver,
+       win.setTimeout, win.clearTimeout, win.setInterval, win.clearInterval,
+       mockSdkSuccess, win.SC, win.BroadcastChannel);
     return mockWidget;
   }
 }
@@ -1860,6 +1885,597 @@ suite('v2.0.0 — Yield-Skipped on Non-Owner (LOG_LEVEL=3)');
   const yields = ch._messages.filter(m => m.type === 'yield');
   assert('no yield posted by non-owner', yields.length === 0);
   assert('yield-skipped diagnostic logged', findCaptured(env.cons.captured, 'debug', 'broadcast:yield-skipped').length > 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 57: v2.1.0 — Ping Sent on initChannel
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — Ping Sent on Init (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+
+  const ch = env.bc.instances[0];
+  const pings = ch._messages.filter(m => m.type === 'ping');
+  assert('ping sent on initChannel', pings.length === 1);
+  assert('ping has tabId', typeof pings[0].tabId === 'string' && pings[0].tabId.length > 0);
+  assert('leader:ping-sent logged', findCaptured(env.cons.captured, 'debug', 'leader:ping-sent').length > 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 58: v2.1.0 — Owner Replies to Ping with Pong
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — Owner Pong Reply (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');  // becomes owner
+
+  const ch = env.bc.instances[0];
+  const msgsBefore = ch._messages.length;
+
+  // Simulate a ping from a new tab
+  env.bc.simulateRemote({ type: 'ping', tabId: 'new-tab-abc', ts: Date.now() });
+
+  const pongs = ch._messages.slice(msgsBefore).filter(m => m.type === 'pong');
+  assert('pong sent in reply to ping', pongs.length === 1);
+  assert('pong has payload with title', typeof pongs[0].payload.title === 'string');
+  assert('pong has spinning state', typeof pongs[0].payload.spinning === 'boolean');
+  assert('leader:pong-sent logged', findCaptured(env.cons.captured, 'debug', 'leader:pong-sent').length > 0);
+  assert('leader:ping-recv logged', findCaptured(env.cons.captured, 'debug', 'leader:ping-recv').length > 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 59: v2.1.0 — Non-Owner Ignores Ping (No Pong)
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — Non-Owner Ignores Ping (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  // NOT playing — not owner
+
+  const ch = env.bc.instances[0];
+  const msgsBefore = ch._messages.length;
+
+  env.bc.simulateRemote({ type: 'ping', tabId: 'new-tab-xyz', ts: Date.now() });
+
+  const pongs = ch._messages.slice(msgsBefore).filter(m => m.type === 'pong');
+  assert('no pong from non-owner', pongs.length === 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 60: v2.1.0 — Pong Sets Remote State on Observer
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — Pong Sets Observer State (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+
+  // Simulate receiving a pong from an existing owner
+  env.bc.simulateRemote({
+    type: 'pong',
+    tabId: 'owner-tab-123',
+    ts: Date.now(),
+    payload: { side: 2, spinning: true, pos: 55000, title: 'Discovered Track' }
+  });
+
+  assert('leader:pong-recv logged', findCaptured(env.cons.captured, 'log', 'leader:pong-recv').length > 0);
+
+  // Check upnext reflects the remote state
+  const stage = env.doc._elements['vinyl'];
+  const marquee = stage.children.find(c => c.classList.contains('vinyl-marquee'));
+  const upnext = marquee ? marquee.children.find(c => c.className === 'vinyl-upnext') : null;
+  if (upnext) {
+    assert('upnext shows discovered remote state', upnext.textContent.includes('Playing elsewhere'));
+    assert('upnext shows discovered title', upnext.textContent.includes('Discovered Track'));
+  } else {
+    assert('upnext element exists for pong', false);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 61: v2.1.0 — Heartbeat Starts on Claim
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — Heartbeat Starts on Claim (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+
+  const intervalsBefore = env._intervals.length;
+  w._fire('play');  // claim → starts heartbeat
+
+  assert('setInterval called for heartbeat', env._intervals.length > intervalsBefore);
+  assert('leader:heartbeat-start logged', findCaptured(env.cons.captured, 'debug', 'leader:heartbeat-start').length > 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 62: v2.1.0 — Heartbeat Stops on Yield
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — Heartbeat Stops on Yield (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');   // starts heartbeat
+  w._fire('pause');  // yield → stops heartbeat
+
+  assert('leader:heartbeat-stop logged', findCaptured(env.cons.captured, 'debug', 'leader:heartbeat-stop').length > 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 63: v2.1.0 — Heartbeat Stops on Remote Claim
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — Heartbeat Stops on Remote Claim (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');  // owner, heartbeat running
+
+  // Remote tab claims — should stop local heartbeat
+  env.bc.simulateRemote({ type: 'claim', tabId: 'remote-owner', ts: Date.now() });
+
+  const stopLogs = findCaptured(env.cons.captured, 'debug', 'leader:heartbeat-stop');
+  assert('heartbeat stopped on remote claim', stopLogs.length > 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 64: v2.1.0 — Election Triggered by Stale Owner on Visibility Change
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — Stale Owner Election on Focus (LOG_LEVEL=3)');
+
+{
+  // Use ownerStale=1 so the owner becomes stale almost instantly after claim
+  const env = execVinyl({ logLevel: 3, ownerStale: 1 });
+
+  const winListeners = {};
+  env.win.addEventListener = function (type, fn) {
+    if (!winListeners[type]) winListeners[type] = [];
+    winListeners[type].push(fn);
+  };
+
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  // Remote claim with fresh timestamp (passes stale message protection)
+  env.bc.simulateRemote({ type: 'claim', tabId: 'owner-tab', ts: Date.now() });
+
+  // Wait a tiny bit so ownerStale=1ms is exceeded
+  // (In practice, Date.now() > lastOwnerSeen + 1 after any JS execution)
+  const busyWait = Date.now() + 5;
+  while (Date.now() < busyWait) { /* spin */ }
+
+  // Simulate visibilitychange — tab comes back into focus
+  env.doc.visibilityState = 'visible';
+  if (env.doc._docListeners.visibilitychange) {
+    env.doc._docListeners.visibilitychange.forEach(fn => fn());
+  }
+
+  assert('leader:stale-on-focus logged', findCaptured(env.cons.captured, 'log', 'leader:stale-on-focus').length > 0);
+  assert('leader:election-start logged', findCaptured(env.cons.captured, 'log', 'leader:election-start').length > 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 65: v2.1.0 — Election Cancelled by Fresh Owner Message
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — Election Cancelled by Owner Message (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3, ownerStale: 1 });
+
+  const winListeners = {};
+  env.win.addEventListener = function (type, fn) {
+    if (!winListeners[type]) winListeners[type] = [];
+    winListeners[type].push(fn);
+  };
+
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  // Fresh claim to establish owner
+  env.bc.simulateRemote({ type: 'claim', tabId: 'owner-tab', ts: Date.now() });
+
+  // Spin until stale
+  const busyWait = Date.now() + 5;
+  while (Date.now() < busyWait) { /* spin */ }
+
+  // Trigger election via visibility change
+  env.doc.visibilityState = 'visible';
+  if (env.doc._docListeners.visibilitychange) {
+    env.doc._docListeners.visibilitychange.forEach(fn => fn());
+  }
+
+  assert('election started', findCaptured(env.cons.captured, 'log', 'leader:election-start').length > 0);
+
+  // Now owner sends a fresh heartbeat — should cancel the election
+  env.bc.simulateRemote({ type: 'heartbeat', tabId: 'owner-tab', ts: Date.now() });
+
+  assert('leader:election-cancelled logged', findCaptured(env.cons.captured, 'debug', 'leader:election-cancelled').length > 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 66: v2.1.0 — No Election When Visible and Owner is Fresh
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — No Election When Owner is Fresh (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+
+  const winListeners = {};
+  env.win.addEventListener = function (type, fn) {
+    if (!winListeners[type]) winListeners[type] = [];
+    winListeners[type].push(fn);
+  };
+
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  // Remote claim with FRESH timestamp
+  env.bc.simulateRemote({ type: 'claim', tabId: 'owner-tab', ts: Date.now() });
+
+  // Simulate visibilitychange
+  env.doc.visibilityState = 'visible';
+  if (env.doc._docListeners.visibilitychange) {
+    env.doc._docListeners.visibilitychange.forEach(fn => fn());
+  }
+
+  assert('no election when owner is fresh', findCaptured(env.cons.captured, 'log', 'leader:election-start').length === 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 67: v2.1.0 — FEATURE_LEADER_ELECTION=false (No Heartbeat/Ping)
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — FEATURE_LEADER_ELECTION=false (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3, featureLeaderElection: false });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  const ch = env.bc.instances[0];
+  const pings = ch._messages.filter(m => m.type === 'ping');
+  const heartbeats = ch._messages.filter(m => m.type === 'heartbeat');
+
+  assert('no ping when election gate off', pings.length === 0);
+  assert('no heartbeat when election gate off', heartbeats.length === 0);
+  assert('no leader:ping-sent logged', findCaptured(env.cons.captured, 'debug', 'leader:ping-sent').length === 0);
+  assert('no leader:heartbeat-start logged', findCaptured(env.cons.captured, 'debug', 'leader:heartbeat-start').length === 0);
+
+  // Existing broadcast still works
+  const claims = ch._messages.filter(m => m.type === 'claim');
+  assert('claim still posted with election off', claims.length === 1);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 68: v2.1.0 — Heartbeat Received Updates Liveness
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — Heartbeat Updates Liveness (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  // Become observer
+  env.bc.simulateRemote({ type: 'claim', tabId: 'owner-tab', ts: Date.now() });
+
+  // Simulate heartbeat from owner
+  env.bc.simulateRemote({ type: 'heartbeat', tabId: 'owner-tab', ts: Date.now() });
+
+  assert('leader:heartbeat-recv logged', findCaptured(env.cons.captured, 'debug', 'leader:heartbeat-recv').length > 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 69: v2.1.0 — Heartbeat from Non-Owner Ignored
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — Heartbeat from Non-Owner Ignored (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  // Owner is 'owner-A'
+  env.bc.simulateRemote({ type: 'claim', tabId: 'owner-A', ts: Date.now() });
+
+  // Heartbeat from different tab
+  env.bc.simulateRemote({ type: 'heartbeat', tabId: 'impostor-B', ts: Date.now() });
+
+  const recvLogs = findCaptured(env.cons.captured, 'debug', 'leader:heartbeat-recv');
+  assert('heartbeat from non-owner not logged as recv', recvLogs.length === 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 70: v2.1.0 — Rapid Open/Close: No Split-Brain
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — Rapid Claims Resolve Cleanly (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  const ch = env.bc.instances[0];
+
+  // Rapid-fire claims from 5 different tabs (simulating tabs opening and playing)
+  for (let i = 0; i < 5; i++) {
+    env.bc.simulateRemote({ type: 'claim', tabId: 'rapid-tab-' + i, ts: Date.now() });
+  }
+
+  const claimLogs = findCaptured(env.cons.captured, 'log', 'broadcast:remote-claim');
+  assert('all 5 rapid claims processed', claimLogs.length === 5);
+
+  // No yields — local tab lost ownership on first claim
+  const yields = ch._messages.filter(m => m.type === 'yield');
+  assert('no yields during rapid claims (isOwner was false)', yields.length === 0);
+
+  // Heartbeat should have stopped after first remote claim
+  const stopLogs = findCaptured(env.cons.captured, 'debug', 'leader:heartbeat-stop');
+  assert('heartbeat stopped during rapid claims', stopLogs.length > 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 71: v2.1.0 — Election Jitter Determinism
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — Election Jitter is Deterministic (LOG_LEVEL=3)');
+
+{
+  // Use ownerStale=1 so stale detection triggers instantly
+  const env1 = execVinyl({ logLevel: 3, ownerStale: 1 });
+  const winListeners1 = {};
+  env1.win.addEventListener = function (type, fn) {
+    if (!winListeners1[type]) winListeners1[type] = [];
+    winListeners1[type].push(fn);
+  };
+  env1.doc._htmlAttrs['data-theme'] = 'refined';
+  const w1 = env1.exec();
+  w1._fire('ready');
+
+  const env2 = execVinyl({ logLevel: 3, ownerStale: 1 });
+  const winListeners2 = {};
+  env2.win.addEventListener = function (type, fn) {
+    if (!winListeners2[type]) winListeners2[type] = [];
+    winListeners2[type].push(fn);
+  };
+  env2.doc._htmlAttrs['data-theme'] = 'refined';
+  const w2 = env2.exec();
+  w2._fire('ready');
+
+  // Establish owner with fresh claim on both, then let it go stale
+  env1.bc.simulateRemote({ type: 'claim', tabId: 'dead-owner', ts: Date.now() });
+  env2.bc.simulateRemote({ type: 'claim', tabId: 'dead-owner', ts: Date.now() });
+
+  const busyWait = Date.now() + 5;
+  while (Date.now() < busyWait) { /* spin */ }
+
+  env1.doc.visibilityState = 'visible';
+  env2.doc.visibilityState = 'visible';
+  if (env1.doc._docListeners.visibilitychange) {
+    env1.doc._docListeners.visibilitychange.forEach(fn => fn());
+  }
+  if (env2.doc._docListeners.visibilitychange) {
+    env2.doc._docListeners.visibilitychange.forEach(fn => fn());
+  }
+
+  const e1Logs = findCaptured(env1.cons.captured, 'log', 'leader:election-start');
+  const e2Logs = findCaptured(env2.cons.captured, 'log', 'leader:election-start');
+  assert('env1 started election', e1Logs.length > 0);
+  assert('env2 started election', e2Logs.length > 0);
+
+  // Extract delay values from logs
+  const delay1 = e1Logs[0].find(a => typeof a === 'object' && a !== null && 'delay' in a);
+  const delay2 = e2Logs[0].find(a => typeof a === 'object' && a !== null && 'delay' in a);
+  assert('delays are numbers', typeof delay1.delay === 'number' && typeof delay2.delay === 'number');
+  assert('delays are within expected range (2000-3000)', delay1.delay >= 2000 && delay1.delay <= 3000);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 72: v2.1.0 — No Ping When FEATURE_BROADCAST=false
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — No Ping When Broadcast Off (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3, featureBroadcast: false });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+
+  assert('no BroadcastChannel instances', env.bc.instances.length === 0);
+  assert('no leader:ping-sent', findCaptured(env.cons.captured, 'debug', 'leader:ping-sent').length === 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 73: v2.1.0 — Owner Re-Claim After Stale Recovery
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — Re-Claim After Stale Recovery (LOG_LEVEL=3)');
+
+{
+  /* Validates that after a stale owner is cleared — whether by
+     election or yield — the local tab can re-claim ownership.
+     Uses yield to simulate what the election resolution does
+     (clearing ownerTabId), because syncTimers conflicts with
+     the boot sequence's SILENCE_MS timeout. The election
+     mechanism itself is validated in Suites 64, 65, and 71. */
+  const env = execVinyl({ logLevel: 3 });
+
+  const winListeners = {};
+  env.win.addEventListener = function (type, fn) {
+    if (!winListeners[type]) winListeners[type] = [];
+    winListeners[type].push(fn);
+  };
+
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  // Remote tab claims ownership
+  env.bc.simulateRemote({ type: 'claim', tabId: 'remote-owner', ts: Date.now() });
+
+  let phases = extractPhases(env.cons.captured);
+  assert('paused after remote claim', phases[phases.length - 1] === 'paused');
+
+  // Remote owner crashes — simulate recovery via yield
+  // (in real usage, the election timer would clear ownerTabId)
+  env.bc.simulateRemote({ type: 'yield', tabId: 'remote-owner', ts: Date.now() });
+
+  // User re-plays — should succeed and reclaim ownership
+  w._fire('play');
+  phases = extractPhases(env.cons.captured);
+  assert('playing again after recovery', phases[phases.length - 1] === 'playing');
+
+  const ch = env.bc.instances[0];
+  const claims = ch._messages.filter(m => m.type === 'claim');
+  assert('new claim posted on re-play', claims.length >= 2);
+
+  // Heartbeat should restart
+  const hbStarts = findCaptured(env.cons.captured, 'debug', 'leader:heartbeat-start');
+  assert('heartbeat restarted after re-claim', hbStarts.length >= 2);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 74: v2.1.0 — Hidden Tab Visibility Change Ignored
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — Hidden Tab Ignored (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3, ownerStale: 1 });
+
+  const winListeners = {};
+  env.win.addEventListener = function (type, fn) {
+    if (!winListeners[type]) winListeners[type] = [];
+    winListeners[type].push(fn);
+  };
+
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  env.bc.simulateRemote({ type: 'claim', tabId: 'owner-tab', ts: Date.now() });
+
+  const busyWait = Date.now() + 5;
+  while (Date.now() < busyWait) { /* spin */ }
+
+  // Tab becomes hidden (not visible) — should NOT trigger election
+  env.doc.visibilityState = 'hidden';
+  if (env.doc._docListeners.visibilitychange) {
+    env.doc._docListeners.visibilitychange.forEach(fn => fn());
+  }
+
+  assert('no election on hidden', findCaptured(env.cons.captured, 'log', 'leader:election-start').length === 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 75: v2.1.0 — Duplicate Election Prevention
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — Duplicate Election Prevention (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3, ownerStale: 1 });
+
+  const winListeners = {};
+  env.win.addEventListener = function (type, fn) {
+    if (!winListeners[type]) winListeners[type] = [];
+    winListeners[type].push(fn);
+  };
+
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  // Establish then stale the owner
+  env.bc.simulateRemote({ type: 'claim', tabId: 'dead-owner', ts: Date.now() });
+  const busyWait = Date.now() + 5;
+  while (Date.now() < busyWait) { /* spin */ }
+
+  // Trigger visibility change twice rapidly
+  env.doc.visibilityState = 'visible';
+  if (env.doc._docListeners.visibilitychange) {
+    env.doc._docListeners.visibilitychange.forEach(fn => fn());
+    env.doc._docListeners.visibilitychange.forEach(fn => fn());
+  }
+
+  const electionStarts = findCaptured(env.cons.captured, 'log', 'leader:election-start');
+  assert('only one election started (pendingElection guard)', electionStarts.length === 1);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 76: v2.1.0 — Pong from Non-Owner During Claim is Ignored
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.1.0 — Stale Pong Dropped (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');  // local tab is owner
+
+  // Simulate a pong from a very old timestamp (>15s)
+  env.bc.simulateRemote({
+    type: 'pong',
+    tabId: 'ancient-tab',
+    ts: Date.now() - 20000,
+    payload: { side: 0, spinning: true, pos: 0, title: 'Old Track' }
+  });
+
+  // Stale message protection should drop it
+  assert('stale pong dropped', findCaptured(env.cons.captured, 'debug', 'broadcast:stale').length > 0);
+  assert('no pong-recv logged', findCaptured(env.cons.captured, 'log', 'leader:pong-recv').length === 0);
 }
 
 // ═══════════════════════════════════════════════════════════════

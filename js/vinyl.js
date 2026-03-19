@@ -106,6 +106,39 @@
 
   var FEATURE_CRATE_V2 = true;
 
+  /* ── Feature gates (v2.1.0) ────────────────────────────── */
+  /*    Leadership election: formal ownership discovery,       */
+  /*    heartbeat liveness, and stale-owner recovery.          */
+  /*    Layers on FEATURE_BROADCAST — noop if broadcast off.   */
+  /*    Flip to false to restore basic claim/yield model.      */
+
+  var FEATURE_LEADER_ELECTION = true;
+  var HEARTBEAT_MS   = 4000;                      // owner heartbeat interval
+  var ELECTION_DELAY = 2000;                      // base wait before stale-owner cleanup
+
+  /* ── Feature gates (v3.0.0) ────────────────────────────── */
+  /*    Ownership hardening: stable session identity across    */
+  /*    same-tab navigations, graceful yield semantics that    */
+  /*    distinguish pause from tab-close, yield-grace window   */
+  /*    to absorb same-tab navigation transients, and claim    */
+  /*    epoch ordering for deterministic conflict resolution.  */
+  /*    Layers on FEATURE_BROADCAST + FEATURE_LEADER_ELECTION. */
+  /*    Flip to false to restore v2.1 coordination model.      */
+
+  var FEATURE_OWNERSHIP_V3  = true;
+  var TAB_ID_KEY            = 'ce-vinyl-tab';     // sessionStorage key for stable identity
+  var YIELD_GRACE_MS        = 800;                // ms — grace period before clearing yielded owner
+  var CLAIM_EPOCH_KEY       = 'ce-vinyl-epoch';   // sessionStorage key for monotonic claim counter
+
+  /* ── Feature gates (v3.1.0) ────────────────────────────── */
+  /*    Sleeve visual refresh: "future nostalgia" aesthetic    */
+  /*    with glassmorphism depth, right-aligned crate text,   */
+  /*    and numerical index removal. Pure CSS + minor label    */
+  /*    changes — no behavioral or state machine changes.      */
+  /*    Flip to false to restore v2 crate/sleeve appearance.   */
+
+  var FEATURE_SLEEVE_V3 = true;
+
   var LOG_LEVEL = (function () {
     if (!FEATURE_OBSERVABILITY) return 0;
     try {
@@ -135,6 +168,11 @@
   var ownerTabId    = '';                             // tabId of current playback owner
   var lastOwnerSeen = 0;                             // timestamp of last owner message
   var remoteState   = null;                          // { side, title, pos, spinning }
+  var heartbeatTimer  = null;                         // setInterval: owner heartbeat
+  var electionTimer   = null;                         // setTimeout: stale-owner recovery
+  var pendingElection = false;                        // true while election timer runs
+  var yieldGraceTimer = null;                         // v3.0.0: setTimeout for yield grace window
+  var claimEpoch      = 0;                            // v3.0.0: monotonic claim counter (per session)
 
   /* ── DOM refs (resolved once in overture) ────────────────── */
 
@@ -228,14 +266,52 @@
   /*      - owner yields on pagehide for clean tab-close       */
   /*      - observers detect stale owners via lastOwnerSeen    */
 
+  /* v3.0.0: stable session identity — persists tabId across same-tab navigations
+     via sessionStorage so the user's "tab" keeps a single identity as they move
+     between index → projects → about. Different tabs get different sessionStorage
+     instances, providing natural isolation without coordination.                  */
+
+  function initTabId() {
+    if (FEATURE_OWNERSHIP_V3) {
+      try {
+        var stored = sessionStorage.getItem(TAB_ID_KEY);
+        if (stored) {
+          vlog(3, 'identity:restored', { tabId: stored });
+          return stored;
+        }
+      } catch (e) { /* private mode — fall through to fresh id */ }
+    }
+    var fresh = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    if (FEATURE_OWNERSHIP_V3) {
+      try { sessionStorage.setItem(TAB_ID_KEY, fresh); } catch (e) {}
+    }
+    vlog(3, 'identity:created', { tabId: fresh });
+    return fresh;
+  }
+
+  function initClaimEpoch() {
+    if (!FEATURE_OWNERSHIP_V3) return 0;
+    try {
+      var stored = sessionStorage.getItem(CLAIM_EPOCH_KEY);
+      return stored ? parseInt(stored, 10) || 0 : 0;
+    } catch (e) { return 0; }
+  }
+
+  function persistClaimEpoch() {
+    if (!FEATURE_OWNERSHIP_V3) return;
+    try { sessionStorage.setItem(CLAIM_EPOCH_KEY, String(claimEpoch)); } catch (e) {}
+  }
+
   function initChannel() {
     if (!FEATURE_BROADCAST || typeof BroadcastChannel === 'undefined') return;
     try {
-      tabId = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+      tabId = initTabId();
+      claimEpoch = initClaimEpoch();
       channel = new BroadcastChannel(CHANNEL_NAME);
       channel.onmessage = onChannelMessage;
-      vlog(3, 'broadcast:init', { tabId: tabId });
+      vlog(3, 'broadcast:init', { tabId: tabId, epoch: claimEpoch, stableId: FEATURE_OWNERSHIP_V3 });
       vmark('broadcast:init');
+      sendPing();                                    // v2.1.0: discover existing owner
     } catch (e) {
       /* BroadcastChannel throws on opaque origins (file://, sandboxed iframes).
          Emit an operational warn so this is visible even at LOG_LEVEL=0.       */
@@ -265,11 +341,21 @@
     ownerTabId = tabId;
     lastOwnerSeen = Date.now();
     remoteState = null;
-    safeBroadcast({ type: 'claim', tabId: tabId, ts: Date.now() });
-    vlog(3, 'broadcast:claim', { tabId: tabId });
+    cancelElection();                                  // v2.1.0: cancel any pending election
+    cancelYieldGrace();                                // v3.0.0: cancel any pending yield grace
+
+    /* v3.0.0: increment claim epoch for deterministic ordering */
+    if (FEATURE_OWNERSHIP_V3) {
+      claimEpoch++;
+      persistClaimEpoch();
+    }
+
+    safeBroadcast({ type: 'claim', tabId: tabId, ts: Date.now(), epoch: claimEpoch });
+    startHeartbeat();                                  // v2.1.0: begin liveness signals
+    vlog(3, 'broadcast:claim', { tabId: tabId, epoch: claimEpoch });
   }
 
-  function broadcastYield() {
+  function broadcastYield(reason) {
     if (!channel) return;
     if (!isOwner) {
       vlog(3, 'broadcast:yield-skipped', { reason: 'not-owner' });
@@ -278,8 +364,46 @@
     isOwner = false;
     ownerTabId = '';
     remoteState = null;
-    safeBroadcast({ type: 'yield', tabId: tabId, ts: Date.now() });
-    vlog(3, 'broadcast:yield', { tabId: tabId });
+    stopHeartbeat();                                   // v2.1.0: stop liveness signals
+    safeBroadcast({ type: 'yield', tabId: tabId, ts: Date.now(), reason: reason || 'explicit' });
+    vlog(3, 'broadcast:yield', { tabId: tabId, reason: reason || 'explicit' });
+  }
+
+  /* v3.0.0: broadcast a pause-state sync instead of yielding ownership.
+     When the user pauses playback, the tab retains conceptual ownership —
+     other tabs see "Paused" rather than "no owner". Yield only fires on
+     tab close or DND deactivation.                                        */
+
+  function broadcastPauseRetain() {
+    if (!FEATURE_OWNERSHIP_V3 || !channel || !isOwner) return;
+    var title = records[currentSide] ? records[currentSide].title : '';
+    lastSync = Date.now();
+    safeBroadcast({
+      type: 'sync',
+      tabId: tabId,
+      payload: {
+        side: currentSide,
+        spinning: false,
+        pos: lastPosition,
+        title: title,
+        ts: Date.now()
+      }
+    });
+    vlog(3, 'broadcast:pause-retain', { side: currentSide });
+  }
+
+  /* v3.0.0: yield-grace window management.
+     When a yield is received from the current owner's tabId, start a
+     grace timer instead of clearing immediately. If the same tabId
+     reclaims within YIELD_GRACE_MS (same-tab navigation), the yield
+     is absorbed transparently. If the timer expires, process the yield. */
+
+  function cancelYieldGrace() {
+    if (yieldGraceTimer) {
+      clearTimeout(yieldGraceTimer);
+      yieldGraceTimer = null;
+      vlog(3, 'yield-grace:cancelled');
+    }
   }
 
   function broadcastSync() {
@@ -312,12 +436,24 @@
       return;
     }
 
+    /* v2.1.0: any fresh message from the current owner resets liveness
+       tracking and cancels any pending stale-owner recovery. */
+    if (FEATURE_LEADER_ELECTION && msg.tabId === ownerTabId) {
+      lastOwnerSeen = msg.ts || Date.now();
+      cancelElection();
+    }
+
     switch (msg.type) {
       case 'claim':
-        vlog(2, 'broadcast:remote-claim', { from: msg.tabId });
+        vlog(2, 'broadcast:remote-claim', { from: msg.tabId, epoch: msg.epoch });
+        cancelYieldGrace();                            // v3.0.0: incoming claim supersedes grace
         ownerTabId = msg.tabId;
         lastOwnerSeen = msg.ts || Date.now();
-        if (isOwner) isOwner = false;
+        cancelElection();                              // v2.1.0: new owner supersedes election
+        if (isOwner) {
+          isOwner = false;
+          stopHeartbeat();                             // v2.1.0: relinquish heartbeat
+        }
         if (spinning && needle) {
           needle.pause();
           spinning = false;                            // reflect immediately; PAUSE event is async
@@ -327,11 +463,29 @@
         remoteState = null;                            // populated by first sync
         break;
       case 'yield':
-        vlog(3, 'broadcast:remote-yield', { from: msg.tabId });
+        vlog(3, 'broadcast:remote-yield', { from: msg.tabId, reason: msg.reason });
         if (ownerTabId === msg.tabId) {
-          ownerTabId = '';
-          remoteState = null;
-          reflectRemoteState();
+          /* v3.0.0: yield-grace window — delay clearing to absorb same-tab navigation.
+             If the same tabId reclaims within YIELD_GRACE_MS, the yield is transparent.
+             When v3 is off, yield clears immediately (v2.1 behavior).                  */
+          if (FEATURE_OWNERSHIP_V3) {
+            cancelYieldGrace();
+            var yieldFrom = msg.tabId;
+            yieldGraceTimer = setTimeout(function () {
+              yieldGraceTimer = null;
+              if (ownerTabId === yieldFrom) {
+                vlog(2, 'yield-grace:expired', { from: yieldFrom });
+                ownerTabId = '';
+                remoteState = null;
+                reflectRemoteState();
+              }
+            }, YIELD_GRACE_MS);
+            vlog(3, 'yield-grace:started', { from: yieldFrom, grace: YIELD_GRACE_MS });
+          } else {
+            ownerTabId = '';
+            remoteState = null;
+            reflectRemoteState();
+          }
         }
         break;
       case 'sync':
@@ -339,6 +493,29 @@
         lastOwnerSeen = (msg.payload && msg.payload.ts) || Date.now();
         remoteState = msg.payload || null;
         vlog(3, 'broadcast:remote-sync', msg.payload);
+        if (!isOwner) reflectRemoteState();
+        break;
+
+      /* v2.1.0: leadership election messages */
+      case 'heartbeat':
+        if (!FEATURE_LEADER_ELECTION) break;
+        if (msg.tabId === ownerTabId) {
+          lastOwnerSeen = msg.ts || Date.now();
+          vlog(3, 'leader:heartbeat-recv', { from: msg.tabId });
+        }
+        break;
+      case 'ping':
+        if (!FEATURE_LEADER_ELECTION) break;
+        vlog(3, 'leader:ping-recv', { from: msg.tabId });
+        if (isOwner) sendPong(msg.tabId);
+        break;
+      case 'pong':
+        if (!FEATURE_LEADER_ELECTION) break;
+        vlog(2, 'leader:pong-recv', { from: msg.tabId });
+        ownerTabId = msg.tabId;
+        lastOwnerSeen = msg.ts || Date.now();
+        remoteState = msg.payload || null;
+        cancelElection();
         if (!isOwner) reflectRemoteState();
         break;
     }
@@ -352,12 +529,114 @@
   function reflectRemoteState() {
     if (!FEATURE_CRATE_V2 || !el.upnext) return;
     if (!isOwner && !spinning && remoteState && remoteState.title) {
-      el.upnext.textContent = 'Playing elsewhere \u2014 ' + remoteState.title;
+      /* v3.0.0: distinguish playing vs paused remote state */
+      var prefix = (FEATURE_OWNERSHIP_V3 && remoteState.spinning === false)
+        ? 'Paused elsewhere'
+        : 'Playing elsewhere';
+      el.upnext.textContent = prefix + ' \u2014 ' + remoteState.title;
       el.upnext.hidden = false;
     } else if (!remoteState && !spinning) {
       /* Remote owner gone — revert to normal "Up next" display */
       reflectNowPlaying();
     }
+  }
+
+  /* ── Leadership election (v2.1.0) ────────────────────────
+     Heartbeat: owner sends periodic liveness signals so
+     observers can detect a dead owner (closed tab, crash).
+     Discovery: new tabs send a `ping`; the owner replies
+     with a `pong` carrying current playback state.
+     Recovery: when no heartbeat arrives for OWNER_STALE ms,
+     observers clear stale ownership and update UI.
+     Election jitter prevents simultaneous claims.
+     ────────────────────────────────────────────────────── */
+
+  function leaderElectionActive() {
+    return FEATURE_LEADER_ELECTION && FEATURE_BROADCAST && !!channel;
+  }
+
+  function startHeartbeat() {
+    stopHeartbeat();
+    if (!leaderElectionActive()) return;
+    heartbeatTimer = setInterval(function () {
+      safeBroadcast({ type: 'heartbeat', tabId: tabId, ts: Date.now() });
+      vlog(3, 'leader:heartbeat-sent');
+    }, HEARTBEAT_MS);
+    vlog(3, 'leader:heartbeat-start');
+  }
+
+  function stopHeartbeat() {
+    if (heartbeatTimer) {
+      clearInterval(heartbeatTimer);
+      heartbeatTimer = null;
+      vlog(3, 'leader:heartbeat-stop');
+    }
+  }
+
+  function electionJitter() {
+    /* Deterministic jitter from tabId so concurrent observers
+       stagger their recovery, avoiding simultaneous claims. */
+    var hash = 0;
+    for (var i = 0; i < tabId.length; i++) {
+      hash = ((hash << 5) - hash + tabId.charCodeAt(i)) | 0;
+    }
+    return ELECTION_DELAY + (Math.abs(hash) % 1000);
+  }
+
+  function startElection(reason) {
+    if (!leaderElectionActive() || pendingElection) return;
+    pendingElection = true;
+    var delay = electionJitter();
+    vlog(2, 'leader:election-start', { reason: reason, delay: delay });
+    vmark('leader:election-start');
+    electionTimer = setTimeout(function () {
+      pendingElection = false;
+      electionTimer = null;
+      if (!isOwnerStale()) {
+        vlog(3, 'leader:election-aborted', { reason: 'owner-alive' });
+        return;
+      }
+      vlog(2, 'leader:election-resolved', { previousOwner: ownerTabId });
+      vmark('leader:election-resolved');
+      ownerTabId = '';
+      remoteState = null;
+      reflectRemoteState();
+      /* Don't auto-claim — let the user initiate play.
+         This avoids unwanted audio and respects user intent. */
+    }, delay);
+  }
+
+  function cancelElection() {
+    if (electionTimer) {
+      clearTimeout(electionTimer);
+      electionTimer = null;
+      pendingElection = false;
+      vlog(3, 'leader:election-cancelled');
+    }
+  }
+
+  function sendPing() {
+    if (!leaderElectionActive()) return;
+    safeBroadcast({ type: 'ping', tabId: tabId, ts: Date.now() });
+    vlog(3, 'leader:ping-sent');
+    vmark('leader:ping');
+  }
+
+  function sendPong(toTabId) {
+    if (!leaderElectionActive() || !isOwner) return;
+    var title = records[currentSide] ? records[currentSide].title : '';
+    safeBroadcast({
+      type: 'pong',
+      tabId: tabId,
+      ts: Date.now(),
+      payload: {
+        side: currentSide,
+        spinning: spinning,
+        pos: lastPosition,
+        title: title
+      }
+    });
+    vlog(3, 'leader:pong-sent', { to: toTabId });
   }
 
   /* ── Shelf: session-cache for record metadata ────────────── */
@@ -567,7 +846,15 @@
       spinning = false;
       reflectSpin();
       saveState();
-      broadcastYield();
+      /* v3.0.0: retain ownership on pause — broadcast paused state instead of
+         yielding. Other tabs see "Paused — Track Name" rather than losing the
+         owner entirely. Yield only fires on tab close or DND deactivation.
+         When v3 is off, fall back to v2.1 yield-on-pause behavior.            */
+      if (FEATURE_OWNERSHIP_V3) {
+        broadcastPauseRetain();
+      } else {
+        broadcastYield();
+      }
     });
 
     needle.bind(SC.Widget.Events.FINISH, function () {
@@ -657,9 +944,16 @@
       var li = document.createElement('li');
       var label = rec.title;
       if (FEATURE_CRATE_V2) {
-        var num = String(i + 1).padStart(2, '0');
-        label = num + ' \u00b7 ' + rec.title;
-        if (rec.duration) label += '  (' + formatDuration(rec.duration) + ')';
+        /* v3.1.0: drop numerical index — title only, with optional duration.
+           When FEATURE_SLEEVE_V3 is off, retain the "01 · Title" format.    */
+        if (FEATURE_SLEEVE_V3) {
+          label = rec.title;
+          if (rec.duration) label += '  ' + formatDuration(rec.duration);
+        } else {
+          var num = String(i + 1).padStart(2, '0');
+          label = num + ' \u00b7 ' + rec.title;
+          if (rec.duration) label += '  (' + formatDuration(rec.duration) + ')';
+        }
         li.setAttribute('tabindex', '0');
       }
       li.textContent = label;
@@ -776,6 +1070,10 @@
     el.stage.classList.remove('vinyl--live');
     el.stage.setAttribute('aria-hidden', 'true');
     if (needle && spinning) needle.pause();
+    /* v3.0.0: explicitly yield on DND deactivation (not just pause).
+       When v3 is on, the PAUSE handler retains ownership, so we need
+       a direct yield here to release it when the stage goes down.     */
+    if (FEATURE_OWNERSHIP_V3 && isOwner) broadcastYield('dnd-off');
     toggleCrate(false);
   }
 
@@ -829,7 +1127,8 @@
     /* Save playback state on page unload for cross-page continuity */
     var onExit = function () {
       if (sourceReady && isDND()) saveState();
-      broadcastYield();                                // clean ownership release on tab close
+      stopHeartbeat();                                   // v2.1.0: clean timer teardown
+      broadcastYield('tab-exit');                         // clean ownership release on tab close
     };
     window.addEventListener('beforeunload', onExit);
     /* v1.1.0: pagehide fires on mobile Safari and bfcache navigations    */
@@ -839,6 +1138,19 @@
 
     /* v2.0.0: initialise cross-tab coordination channel */
     initChannel();
+
+    /* v2.1.0: detect stale owner when tab regains focus.
+       If the user switches back to a tab whose owner has gone
+       silent, trigger election to clear stale ownership. */
+    if (FEATURE_LEADER_ELECTION) {
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState !== 'visible') return;
+        if (!isOwner && ownerTabId && isOwnerStale()) {
+          vlog(2, 'leader:stale-on-focus', { owner: ownerTabId, age: Date.now() - lastOwnerSeen });
+          startElection('visibility-change');
+        }
+      });
+    }
 
     /* v2.0.0: enhanced crate — "Up Next" display + marquee click + keyboard nav */
     if (FEATURE_CRATE_V2) {
