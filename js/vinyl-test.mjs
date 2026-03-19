@@ -1714,6 +1714,155 @@ suite('v2.0.0 — Sync Payload Includes Title (LOG_LEVEL=3)');
 }
 
 // ═══════════════════════════════════════════════════════════════
+//  SUITE 52: v2.0.0 — Remote Claim Transitions Phase to Paused
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Remote Claim Phase Transition (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  let phases = extractPhases(env.cons.captured);
+  assert('local tab in playing phase', phases.includes('playing'));
+
+  // Simulate remote claim — should transition phase to paused
+  env.bc.simulateRemote({ type: 'claim', tabId: 'remote-tab', ts: Date.now() });
+
+  phases = extractPhases(env.cons.captured);
+  assert('phase:paused emitted with reason remote-claim', phases.includes('paused'));
+
+  // Verify the reason is 'remote-claim'
+  const pausedLogs = findCaptured(env.cons.captured, 'debug', 'phase:paused');
+  const hasRemoteReason = pausedLogs.some(args =>
+    args.some(a => typeof a === 'object' && a !== null && a.reason === 'remote-claim')
+  );
+  assert('paused reason is remote-claim', hasRemoteReason);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 53: v2.0.0 — Cross-Tab Play→Claim→Re-Play Lifecycle
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Cross-Tab Play→Claim→Re-Play (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  let phases = extractPhases(env.cons.captured);
+  assert('initial play: phase=playing', phases[phases.length - 1] === 'playing');
+
+  // Remote tab claims — local tab is paused
+  env.bc.simulateRemote({ type: 'claim', tabId: 'tab-B', ts: Date.now() });
+  phases = extractPhases(env.cons.captured);
+  assert('after remote claim: phase=paused', phases[phases.length - 1] === 'paused');
+
+  // Remote tab yields (user paused or tab closed)
+  env.bc.simulateRemote({ type: 'yield', tabId: 'tab-B', ts: Date.now() });
+
+  // User re-plays on local tab — should succeed
+  w._fire('play');
+  phases = extractPhases(env.cons.captured);
+  assert('after re-play: phase=playing', phases[phases.length - 1] === 'playing');
+
+  // Claim should be posted again
+  const ch = env.bc.instances[0];
+  const claims = ch._messages.filter(m => m.type === 'claim');
+  assert('second claim posted on re-play', claims.length === 2);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 54: v2.0.0 — Non-Playing Tab Receives Claim (No Crash)
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Non-Playing Tab Receives Claim (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+
+  // Tab is in ready phase, not playing — receive a remote claim
+  env.bc.simulateRemote({ type: 'claim', tabId: 'tab-X', ts: Date.now() });
+
+  let phases = extractPhases(env.cons.captured);
+  assert('phase stays ready (no spurious paused)', phases[phases.length - 1] === 'ready');
+  assert('remote-claim logged', findCaptured(env.cons.captured, 'log', 'broadcast:remote-claim').length > 0);
+
+  // Now local tab can still play
+  w._fire('play');
+  phases = extractPhases(env.cons.captured);
+  assert('local tab can play after non-playing claim', phases[phases.length - 1] === 'playing');
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 55: v2.0.0 — BroadcastChannel Constructor Failure
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — BroadcastChannel Constructor Failure (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  // Make BroadcastChannel throw (simulates file:// or opaque origin)
+  env.win.BroadcastChannel = function () { throw new DOMException('opaque origin'); };
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+
+  // broadcast:failed should be logged at warn level
+  assert('broadcast:failed logged', findCaptured(env.cons.captured, 'warn', 'broadcast:failed').length > 0);
+
+  // Operational warn should fire unconditionally
+  const opWarn = env.cons.captured.warn.filter(args =>
+    args.some(a => typeof a === 'string' && a.includes('Cross-tab sync unavailable'))
+  );
+  assert('operational warn emitted for init failure', opWarn.length > 0);
+
+  // Player should still function normally
+  w._fire('play');
+  const phases = extractPhases(env.cons.captured);
+  assert('playing phase reached despite no channel', phases.includes('playing'));
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 56: v2.0.0 — Yield-Skipped Diagnostic on Non-Owner Exit
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Yield-Skipped on Non-Owner (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+
+  const winListeners = {};
+  env.win.addEventListener = function (type, fn) {
+    if (!winListeners[type]) winListeners[type] = [];
+    winListeners[type].push(fn);
+  };
+
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+
+  // Tab never played — isOwner=false. Trigger pagehide.
+  if (winListeners.pagehide) {
+    winListeners.pagehide.forEach(fn => fn());
+  }
+
+  const ch = env.bc.instances[0];
+  const yields = ch._messages.filter(m => m.type === 'yield');
+  assert('no yield posted by non-owner', yields.length === 0);
+  assert('yield-skipped diagnostic logged', findCaptured(env.cons.captured, 'debug', 'broadcast:yield-skipped').length > 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
 //  SUMMARY
 // ═══════════════════════════════════════════════════════════════
 

@@ -237,6 +237,9 @@
       vlog(3, 'broadcast:init', { tabId: tabId });
       vmark('broadcast:init');
     } catch (e) {
+      /* BroadcastChannel throws on opaque origins (file://, sandboxed iframes).
+         Emit an operational warn so this is visible even at LOG_LEVEL=0.       */
+      console.warn('[vinyl] Cross-tab sync unavailable (' + e.message + ').');
       vlog(1, 'broadcast:failed', { error: e.message });
     }
   }
@@ -267,7 +270,11 @@
   }
 
   function broadcastYield() {
-    if (!channel || !isOwner) return;
+    if (!channel) return;
+    if (!isOwner) {
+      vlog(3, 'broadcast:yield-skipped', { reason: 'not-owner' });
+      return;
+    }
     isOwner = false;
     ownerTabId = '';
     remoteState = null;
@@ -314,6 +321,7 @@
         if (spinning && needle) {
           needle.pause();
           spinning = false;                            // reflect immediately; PAUSE event is async
+          transition('paused', 'remote-claim');         // keep phase consistent with spinning
           reflectSpin();
         }
         remoteState = null;                            // populated by first sync
