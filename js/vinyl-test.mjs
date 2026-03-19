@@ -1,8 +1,8 @@
 /**
- * vinyl-test.mjs — Headless validation for vinyl.js v1.4.0
+ * vinyl-test.mjs — Headless validation for vinyl.js v2.0.0
  *
- * Exercises vlog/vmark, persistence, and phase-machine pathways
- * via a minimal DOM shim.
+ * Exercises vlog/vmark, persistence, phase-machine, broadcast,
+ * and crate-v2 pathways via a minimal DOM shim.
  * No external dependencies — runs on bare Node.js.
  *
  * Usage: node vinyl-test.mjs
@@ -27,6 +27,8 @@ class Element {
     this.innerHTML = '';
     this.classList = new ClassList();
     this.title = '';
+    this.style = {};
+    this.className = '';
     this._listeners = {};
   }
   setAttribute(k, v) { this.attributes[k] = v; }
@@ -37,13 +39,28 @@ class Element {
     this._listeners[type].push(fn);
   }
   querySelector(sel) {
-    // Minimal — return a stub element for icon queries
+    // Search children by class name
+    if (sel.startsWith('.')) {
+      var cls = sel.slice(1);
+      for (var i = 0; i < this.children.length; i++) {
+        if (this.children[i].classList && this.children[i].classList.contains(cls)) {
+          return this.children[i];
+        }
+      }
+    }
+    // Fallback stub for icon queries
     return new Element('svg');
   }
   querySelectorAll() { return []; }
   contains() { return false; }
   scrollIntoView() {}
   remove() {}
+  focus() {}
+  click() {
+    if (this._listeners.click) {
+      this._listeners.click.forEach(fn => fn({ stopPropagation() {}, preventDefault() {} }));
+    }
+  }
   appendChild(child) { this.children.push(child); }
   get offsetHeight() { return 0; }
 }
@@ -106,6 +123,10 @@ function buildStage(doc) {
     if (id === 'vinylCrate') el.hidden = true;
     doc._elements[id] = el;
   });
+  // Add marquee as child of stage for querySelector('.vinyl-marquee')
+  const marquee = new Element('div');
+  marquee.classList.add('vinyl-marquee');
+  doc._elements['vinyl'].children.push(marquee);
 }
 
 function createSessionStorage() {
@@ -147,6 +168,38 @@ function findCaptured(captured, channel, substr) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+//  MOCK BroadcastChannel
+// ═══════════════════════════════════════════════════════════════
+
+function createMockBroadcastChannel() {
+  const instances = [];
+
+  function MockBC(name) {
+    this.name = name;
+    this.onmessage = null;
+    this._messages = [];
+    this._closed = false;
+    instances.push(this);
+  }
+  MockBC.prototype.postMessage = function (msg) {
+    if (this._closed) return;
+    this._messages.push(JSON.parse(JSON.stringify(msg)));
+  };
+  MockBC.prototype.close = function () {
+    this._closed = true;
+  };
+
+  // Simulate a message arriving from "another tab"
+  function simulateRemote(msg) {
+    instances.forEach(ch => {
+      if (ch.onmessage && !ch._closed) ch.onmessage({ data: msg });
+    });
+  }
+
+  return { MockBC, instances, simulateRemote };
+}
+
+// ═══════════════════════════════════════════════════════════════
 //  MOCK SC.Widget
 // ═══════════════════════════════════════════════════════════════
 
@@ -161,7 +214,11 @@ function createMockWidget(opts = {}) {
     setVolume() {},
     getSounds(cb) {
       if (opts.empty) return cb([]);
-      cb([{ title: 'Track A' }, { title: 'Track B' }, { title: 'Track C' }]);
+      cb([
+        { title: 'Track A', duration: 180000 },
+        { title: 'Track B', duration: 210000 },
+        { title: 'Track C', duration: 195000 },
+      ]);
     },
     getCurrentSoundIndex(cb) { cb(0); },
     _fire(event, data) { if (handlers[event]) handlers[event](data); },
@@ -174,7 +231,7 @@ function createMockWidget(opts = {}) {
 
 const vinylSrc = readFileSync('/sessions/happy-serene-ramanujan/mnt/Resume website/js/vinyl.js', 'utf-8');
 
-function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, mockSdkSuccess = true, syncTimers = false } = {}) {
+function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, featureBroadcast = true, featureCrateV2 = true, mockSdkSuccess = true, syncTimers = false } = {}) {
   let src = vinylSrc;
 
   // Inject LOG_LEVEL
@@ -194,6 +251,16 @@ function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, mockSdkS
     src = src.replace('var FEATURE_STATE_MACHINE = true;', 'var FEATURE_STATE_MACHINE = false;');
   }
 
+  // Override FEATURE_BROADCAST if needed
+  if (!featureBroadcast) {
+    src = src.replace('var FEATURE_BROADCAST = true;', 'var FEATURE_BROADCAST = false;');
+  }
+
+  // Override FEATURE_CRATE_V2 if needed
+  if (!featureCrateV2) {
+    src = src.replace('var FEATURE_CRATE_V2 = true;', 'var FEATURE_CRATE_V2 = false;');
+  }
+
   // Mock SDK loading — intercept document.head.appendChild
   src = src.replace(
     'document.head.appendChild(s);',
@@ -207,6 +274,7 @@ function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, mockSdkS
   const perf = createPerformance();
   const cons = createConsoleCapture();
   let mockWidget = createMockWidget({ empty: false });
+  const bc = createMockBroadcastChannel();
 
   const win = {
     document: doc,
@@ -221,6 +289,7 @@ function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, mockSdkS
       constructor(cb) { this._cb = cb; }
       observe() { doc._mutObservers.push({ cb: this._cb }); }
     },
+    BroadcastChannel: bc.MockBC,
     addEventListener() {},
     setTimeout: syncTimers ? function (fn) { fn(); return 0; } : globalThis.setTimeout,
     __mockSdkSuccess: mockSdkSuccess,
@@ -235,11 +304,11 @@ function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, mockSdkS
   const fn = new Function(
     'window', 'document', 'sessionStorage', 'performance', 'console',
     'location', 'MutationObserver', 'setTimeout', '__mockSdkSuccess',
-    'SC',
+    'SC', 'BroadcastChannel',
     src
   );
 
-  return { doc, ss, perf, cons, win, mockWidget, exec, setMockWidget };
+  return { doc, ss, perf, cons, win, mockWidget, exec, setMockWidget, bc };
 
   function setMockWidget(opts) {
     mockWidget = createMockWidget(opts);
@@ -252,7 +321,7 @@ function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, mockSdkS
   }
 
   function exec() {
-    fn(win, doc, ss, perf, cons, win.location, win.MutationObserver, win.setTimeout, mockSdkSuccess, win.SC);
+    fn(win, doc, ss, perf, cons, win.location, win.MutationObserver, win.setTimeout, mockSdkSuccess, win.SC, win.BroadcastChannel);
     return mockWidget;
   }
 }
@@ -1157,6 +1226,261 @@ suite('v1.4.0 — Empty Catalog → Errored Phase (LOG_LEVEL=3)');
   // Verify catalog:empty was also logged at warn level
   const { captured } = env.cons;
   assert('catalog:empty warn emitted', findCaptured(captured, 'warn', 'catalog:empty').length > 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 34: v2.0.0 — Broadcast Init + Claim on Play
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Broadcast Init + Claim on Play (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+
+  // Channel should have been created during overture → initChannel
+  assert('BroadcastChannel instance created', env.bc.instances.length === 1);
+  const ch = env.bc.instances[0];
+  assert('channel name is ce-vinyl', ch.name === 'ce-vinyl');
+  assert('broadcast:init logged', findCaptured(env.cons.captured, 'debug', 'broadcast:init').length > 0);
+
+  // Play → should broadcast claim
+  w._fire('ready');
+  w._fire('play');
+  const claims = ch._messages.filter(m => m.type === 'claim');
+  assert('claim message posted on play', claims.length === 1);
+  assert('claim has tabId', typeof claims[0].tabId === 'string' && claims[0].tabId.length > 0);
+  assert('broadcast:claim logged', findCaptured(env.cons.captured, 'debug', 'broadcast:claim').length > 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 35: v2.0.0 — Remote Claim Pauses Local Playback
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Remote Claim Pauses Local (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  // Verify we're in playing phase
+  let phases = extractPhases(env.cons.captured);
+  assert('local tab is playing', phases.includes('playing'));
+
+  // Simulate remote tab claiming ownership
+  env.bc.simulateRemote({ type: 'claim', tabId: 'remote-tab-xyz', ts: Date.now() });
+
+  // The onChannelMessage handler calls needle.pause()
+  // In our mock, pause() doesn't fire the PAUSE event handler automatically,
+  // but the remote-claim log should appear
+  assert('broadcast:remote-claim logged', findCaptured(env.cons.captured, 'log', 'broadcast:remote-claim').length > 0);
+
+  // Yield should NOT have been posted (only owner yields, and remote-claim sets isOwner=false)
+  const ch = env.bc.instances[0];
+  const yields = ch._messages.filter(m => m.type === 'yield');
+  // The pause will fire a yield via the PAUSE handler ONLY if needle.pause() triggers
+  // the PAUSE event. In our mock, pause() is a no-op, so no yield is posted here.
+  // But the broadcastYield guard checks isOwner — since remote-claim set it to false, yield won't fire.
+  assert('no yield posted after remote claim (isOwner=false)', yields.length === 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 36: v2.0.0 — Broadcast Yield on Pause
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Broadcast Yield on Pause (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');   // sets isOwner=true via broadcastClaim
+  w._fire('pause');  // should broadcastYield
+
+  const ch = env.bc.instances[0];
+  const yields = ch._messages.filter(m => m.type === 'yield');
+  assert('yield message posted on pause', yields.length === 1);
+  assert('broadcast:yield logged', findCaptured(env.cons.captured, 'debug', 'broadcast:yield').length > 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 37: v2.0.0 — Broadcast Sync Throttled via PLAY_PROGRESS
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Broadcast Sync on Progress (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');  // isOwner=true
+
+  // Fire progress events — sync is throttled to SYNC_THROTTLE (5000ms)
+  // First progress fires broadcastSync, but lastSync starts at 0 and
+  // Date.now() > 0 + 5000 is true, so the first call should post
+  w._fire('playProgress', { currentPosition: 5000 });
+
+  const ch = env.bc.instances[0];
+  const syncs = ch._messages.filter(m => m.type === 'sync');
+  assert('sync message posted on first progress', syncs.length === 1);
+  assert('sync payload has side', typeof syncs[0].payload.side === 'number');
+  assert('sync payload has pos', syncs[0].payload.pos === 5000);
+
+  // Second immediate progress — should be throttled (same millisecond)
+  w._fire('playProgress', { currentPosition: 5500 });
+  const syncs2 = ch._messages.filter(m => m.type === 'sync');
+  assert('sync throttled on rapid progress', syncs2.length === 1);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 38: v2.0.0 — Broadcast Gate Off
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — FEATURE_BROADCAST=false (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3, featureBroadcast: false });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  assert('no BroadcastChannel instances', env.bc.instances.length === 0);
+  assert('no broadcast:init logged', findCaptured(env.cons.captured, 'debug', 'broadcast:init').length === 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 39: v2.0.0 — BroadcastChannel Absent (Graceful Fallback)
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — BroadcastChannel Absent (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  // Remove BroadcastChannel from the window before exec
+  delete env.win.BroadcastChannel;
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  // initChannel should have bailed (typeof BroadcastChannel === 'undefined')
+  assert('no channel instances created', env.bc.instances.length === 0);
+  assert('no broadcast:init', findCaptured(env.cons.captured, 'debug', 'broadcast:init').length === 0);
+  // But everything else works normally
+  assert('widget:ready still emitted', findCaptured(env.cons.captured, 'log', 'widget:ready').length > 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 40: v2.0.0 — Up Next Reflects Correctly
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Up Next Display (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+
+  // After catalogRecords + reflectTitle, upnext should show Track B
+  const stage = env.doc._elements['vinyl'];
+  const marquee = stage.children.find(c => c.classList.contains('vinyl-marquee'));
+  assert('marquee found on stage', marquee !== undefined);
+
+  const upnext = marquee.children.find(c => c.className === 'vinyl-upnext');
+  assert('upnext element created', upnext !== undefined);
+  assert('upnext shows Track B', upnext.textContent.includes('Track B'));
+  assert('upnext is visible', upnext.hidden === false);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 41: v2.0.0 — Crate V2 Track Numbering + Duration
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Crate V2 Numbering & Duration (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+
+  // Crate items are appended as children of el.crate
+  const crate = env.doc._elements['vinylCrate'];
+  assert('crate has 3 children', crate.children.length === 3);
+
+  const first = crate.children[0];
+  assert('first item starts with 01', first.textContent.startsWith('01'));
+  assert('first item contains Track A', first.textContent.includes('Track A'));
+  assert('first item contains duration (3:00)', first.textContent.includes('3:00'));
+  assert('first item has tabindex=0', first.attributes.tabindex === '0');
+
+  const second = crate.children[1];
+  assert('second item starts with 02', second.textContent.startsWith('02'));
+  assert('second item contains duration (3:30)', second.textContent.includes('3:30'));
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 42: v2.0.0 — FEATURE_CRATE_V2=false (Original Behavior)
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — FEATURE_CRATE_V2=false (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3, featureCrateV2: false });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+
+  // No upnext element should exist
+  const stage = env.doc._elements['vinyl'];
+  const marquee = stage.children.find(c => c.classList.contains('vinyl-marquee'));
+  const upnext = marquee ? marquee.children.find(c => c.className === 'vinyl-upnext') : null;
+  assert('no upnext element when gate off', upnext === undefined || upnext === null);
+
+  // Crate items should NOT have track numbers
+  const crate = env.doc._elements['vinylCrate'];
+  if (crate.children.length > 0) {
+    assert('crate item has plain title (no numbering)', crate.children[0].textContent === 'Track A');
+    assert('no tabindex on crate items', crate.children[0].attributes.tabindex === undefined);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE 43: v2.0.0 — Duration Captured in Records
+// ═══════════════════════════════════════════════════════════════
+
+suite('v2.0.0 — Duration in Shelf (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+
+  // Read the shelf — records should include duration
+  const raw = env.ss.getItem('ce-vinyl-shelf');
+  assert('shelf written', raw !== null);
+  const shelf = JSON.parse(raw);
+  assert('shelf has 3 tracks', shelf.data.length === 3);
+  assert('shelf track has duration', shelf.data[0].duration === 180000);
+
+  // Second boot reads from shelf — duration preserved
+  const env2 = execVinyl({ logLevel: 3 });
+  env2.ss.setItem('ce-vinyl-shelf', raw);
+  env2.doc._htmlAttrs['data-theme'] = 'refined';
+  const w2 = env2.exec();
+  w2._fire('ready');
+
+  const crate2 = env2.doc._elements['vinylCrate'];
+  assert('shelf-cached crate shows duration', crate2.children[0].textContent.includes('3:00'));
 }
 
 // ═══════════════════════════════════════════════════════════════

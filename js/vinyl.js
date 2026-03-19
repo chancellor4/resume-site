@@ -28,6 +28,8 @@
     glyph.*  — SVG icon elements
     el.*     — DOM element references
     phase    — lifecycle state (dormant/loading/ready/playing/paused/errored)
+    channel  — BroadcastChannel instance for cross-tab sync
+    upnext   — "Up Next" subtitle element in marquee
 
   Function verb families:
     fetch*     — load a resource from network
@@ -42,6 +44,8 @@
     save/restore — persist / resume playback state across pages
     raise/lower — show / hide the stage
     transition — validated lifecycle phase change
+    broadcast* — send cross-tab coordination messages
+    format*    — convert raw values to display strings
     overture   — boot sequence
 */
 
@@ -90,6 +94,17 @@
 
   var FEATURE_STATE_MACHINE = true;
 
+  /* ── Feature gates (v2.0.0) ────────────────────────────── */
+  /*    Cross-tab coordination via BroadcastChannel +          */
+  /*    enhanced crate UX with "Up Next" display.              */
+  /*    Flip individually to false for surgical rollback.      */
+
+  var FEATURE_BROADCAST = true;
+  var CHANNEL_NAME      = 'ce-vinyl';
+  var SYNC_THROTTLE     = 5000;                      // ms between broadcast syncs
+
+  var FEATURE_CRATE_V2 = true;
+
   var LOG_LEVEL = (function () {
     if (!FEATURE_OBSERVABILITY) return 0;
     try {
@@ -112,6 +127,10 @@
   var needleDropped = false;                         // prevents double init
   var lastSidePoll  = 0;                             // throttle for progress events
   var lastPosition  = 0;                             // ms, from PLAY_PROGRESS
+  var channel       = null;                          // BroadcastChannel instance
+  var tabId         = '';                             // unique per page load (set in initChannel)
+  var isOwner       = false;                         // playback ownership flag
+  var lastSync      = 0;                             // throttle for broadcastSync
 
   /* ── DOM refs (resolved once in overture) ────────────────── */
 
@@ -122,6 +141,14 @@
 
   function $(id)       { return document.getElementById(id); }
   function isDND()  { return document.documentElement.getAttribute('data-theme') === 'refined'; }
+
+  function formatDuration(ms) {
+    if (!ms || ms <= 0) return '';
+    var s = Math.round(ms / 1000);
+    var m = Math.floor(s / 60);
+    s = s % 60;
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
 
   /* ── Observability primitives (v1.2.0) ──────────────────── */
   /*    vlog(level, event, data?)  — structured console output  */
@@ -177,6 +204,74 @@
 
   function phaseAllowsInteraction() {
     return !FEATURE_STATE_MACHINE || phase === 'ready' || phase === 'playing' || phase === 'paused';
+  }
+
+  /* ── Cross-tab coordination (v2.0.0) ──────────────────── */
+  /*    BroadcastChannel-based leader model: last tab to       */
+  /*    play claims ownership; other tabs yield. Messages      */
+  /*    are hints — no tab takes remote control of playback.   */
+
+  function initChannel() {
+    if (!FEATURE_BROADCAST || typeof BroadcastChannel === 'undefined') return;
+    try {
+      tabId = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+      channel = new BroadcastChannel(CHANNEL_NAME);
+      channel.onmessage = onChannelMessage;
+      vlog(3, 'broadcast:init', { tabId: tabId });
+      vmark('broadcast:init');
+    } catch (e) {
+      vlog(1, 'broadcast:failed', { error: e.message });
+    }
+  }
+
+  function broadcastClaim() {
+    if (!channel) return;
+    isOwner = true;
+    channel.postMessage({ type: 'claim', tabId: tabId, ts: Date.now() });
+    vlog(3, 'broadcast:claim', { tabId: tabId });
+  }
+
+  function broadcastYield() {
+    if (!channel || !isOwner) return;
+    isOwner = false;
+    channel.postMessage({ type: 'yield', tabId: tabId, ts: Date.now() });
+    vlog(3, 'broadcast:yield', { tabId: tabId });
+  }
+
+  function broadcastSync() {
+    if (!channel || !isOwner) return;
+    var now = Date.now();
+    if (now - lastSync < SYNC_THROTTLE) return;
+    lastSync = now;
+    channel.postMessage({
+      type: 'sync',
+      tabId: tabId,
+      payload: {
+        side: currentSide,
+        spinning: spinning,
+        pos: lastPosition,
+        ts: now
+      }
+    });
+    vlog(3, 'broadcast:sync', { side: currentSide, pos: lastPosition });
+  }
+
+  function onChannelMessage(e) {
+    var msg = e.data;
+    if (!msg || msg.tabId === tabId) return;
+    switch (msg.type) {
+      case 'claim':
+        vlog(2, 'broadcast:remote-claim', { from: msg.tabId });
+        if (spinning && needle) needle.pause();
+        isOwner = false;
+        break;
+      case 'yield':
+        vlog(3, 'broadcast:remote-yield', { from: msg.tabId });
+        break;
+      case 'sync':
+        vlog(3, 'broadcast:remote-sync', msg.payload);
+        break;
+    }
   }
 
   /* ── Shelf: session-cache for record metadata ────────────── */
@@ -378,6 +473,7 @@
       if (FEATURE_STATE_MACHINE && !transition('playing', 'play-event')) return;
       spinning = true;
       reflectSpin();
+      broadcastClaim();
     });
 
     needle.bind(SC.Widget.Events.PAUSE, function () {
@@ -385,6 +481,7 @@
       spinning = false;
       reflectSpin();
       saveState();
+      broadcastYield();
     });
 
     needle.bind(SC.Widget.Events.FINISH, function () {
@@ -398,6 +495,7 @@
        and only when there are multiple records to track. */
     needle.bind(SC.Widget.Events.PLAY_PROGRESS, function (data) {
       if (data && data.currentPosition) lastPosition = data.currentPosition;
+      broadcastSync();
       if (records.length < 2) return;                // single track — nothing to detect
       var now = Date.now();
       if (now - lastSidePoll < 1000) return;         // throttle: 1 s
@@ -451,7 +549,9 @@
         return;
       }
       records = sounds.map(function (s, i) {
-        return { title: s.title || 'Track ' + (i + 1), index: i };
+        var rec = { title: s.title || 'Track ' + (i + 1), index: i };
+        if (FEATURE_CRATE_V2 && s.duration) rec.duration = s.duration;
+        return rec;
       });
       vlog(2, 'catalog:fetched', { tracks: records.length });
       vmark('catalog:done');
@@ -467,9 +567,16 @@
 
   function fillCrate() {
     el.crate.innerHTML = '';
-    records.forEach(function (rec) {
+    records.forEach(function (rec, i) {
       var li = document.createElement('li');
-      li.textContent = rec.title;
+      var label = rec.title;
+      if (FEATURE_CRATE_V2) {
+        var num = String(i + 1).padStart(2, '0');
+        label = num + ' \u00b7 ' + rec.title;
+        if (rec.duration) label += '  (' + formatDuration(rec.duration) + ')';
+        li.setAttribute('tabindex', '0');
+      }
+      li.textContent = label;
       li.setAttribute('role', 'option');
       li.setAttribute('data-index', rec.index);
       if (rec.index === currentSide) li.setAttribute('aria-selected', 'true');
@@ -501,6 +608,7 @@
 
   function reflectTitle() {
     if (records[currentSide]) el.title.textContent = records[currentSide].title;
+    reflectNowPlaying();
   }
 
   function reflectCrate() {
@@ -511,6 +619,17 @@
     }
     var active = el.crate.querySelector('[aria-selected="true"]');
     if (active && !el.crate.hidden) active.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+
+  function reflectNowPlaying() {
+    if (!FEATURE_CRATE_V2 || !el.upnext) return;
+    var next = currentSide + 1;
+    if (next < records.length && records[next]) {
+      el.upnext.textContent = 'Up next \u2014 ' + records[next].title;
+      el.upnext.hidden = false;
+    } else {
+      el.upnext.hidden = true;
+    }
   }
 
   function toggleCrate(open) {
@@ -626,6 +745,55 @@
     /*         where beforeunload is often suppressed. Additive listener  */
     /*         — saveState is idempotent so double-fire is harmless.      */
     if (FEATURE_RESILIENCE) window.addEventListener('pagehide', onExit);
+
+    /* v2.0.0: initialise cross-tab coordination channel */
+    initChannel();
+
+    /* v2.0.0: enhanced crate — "Up Next" display + marquee click + keyboard nav */
+    if (FEATURE_CRATE_V2) {
+      var marquee = el.stage.querySelector('.vinyl-marquee');
+      if (marquee) {
+        el.upnext = document.createElement('span');
+        el.upnext.className = 'vinyl-upnext';
+        el.upnext.hidden = true;
+        marquee.appendChild(el.upnext);
+        marquee.style.cursor = 'pointer';
+        marquee.addEventListener('click', function (e) {
+          e.stopPropagation();
+          toggleCrate();
+        });
+      }
+
+      /* Keyboard navigation in crate */
+      el.crate.addEventListener('keydown', function (e) {
+        if (el.crate.hidden) return;
+        var items = el.crate.querySelectorAll('li');
+        if (!items.length) return;
+        var active = document.activeElement;
+        var idx = -1;
+        for (var j = 0; j < items.length; j++) {
+          if (items[j] === active) { idx = j; break; }
+        }
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          var nxt = items[Math.min(idx + 1, items.length - 1)];
+          if (nxt && nxt.focus) nxt.focus();
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          var prv = items[Math.max(idx - 1, 0)];
+          if (prv && prv.focus) prv.focus();
+        } else if (e.key === 'Enter' && idx >= 0) {
+          items[idx].click();
+        }
+      });
+
+      /* Inject v2.0 styles — zero CSS cost when gate is off */
+      var v2css = document.createElement('style');
+      v2css.textContent =
+        '.vinyl-upnext{display:block;font-size:0.55rem;color:var(--ink-lt,#999);' +
+        'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0.7;line-height:1.2}';
+      document.head.appendChild(v2css);
+    }
 
     /* If DND was already saved, raise immediately */
     if (isDND()) raiseStage();
