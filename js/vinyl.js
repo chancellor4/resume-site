@@ -20,7 +20,8 @@
     dial     — volume slider (like a receiver knob)
     crate    — playlist dropdown (a crate of records)
     latch    — button that opens / closes the crate
-    needle   — SC.Widget instance (the stylus reading the groove)
+    needle   — SC.Widget instance (now encapsulated in adapter)
+    groove   — canvas waveform progress visualization
     records  — array of track metadata
     shelf    — sessionStorage cache (records on a shelf)
     cont     — cross-page continuity state (sessionStorage)
@@ -47,6 +48,14 @@
     broadcast* — send cross-tab coordination messages
     format*    — convert raw values to display strings
     overture   — boot sequence
+
+  v5.0.0-rc — Release candidate
+    Phase 1: Persistence Engine extracted (store closure)
+    Phase 2: Media Adapter extracted (adapter closure)
+    Phase 3: Groove visualization added (groove closure)
+    Phase 4-5: Controller, Sync, UI extracted for modular decomposition
+    All SC.Widget access confined to adapter. Zero direct widget
+    touchpoints outside the adapter boundary.
 */
 
 (function () {
@@ -153,6 +162,19 @@
   var NAV_MARKER_KEY         = 'ce-vinyl-nav';   // sessionStorage: '1' during page transition
   var V4_YIELD_GRACE_MS      = 3000;             // wider grace window for slower connections
 
+  /* ── Feature gates (v5.0.0) ────────────────────────────── */
+  /*    Groove: canvas-based waveform progress visualization.  */
+  /*    Renders a seeded pseudo-random waveform per track      */
+  /*    with progress fill driven by PLAY_PROGRESS events.     */
+  /*    Pure visual addition — no behavioral or state changes. */
+  /*    Flip to false to hide the waveform entirely.           */
+
+  var FEATURE_GROOVE     = true;
+  var GROOVE_BARS        = 48;                   // number of waveform bars
+  var GROOVE_BAR_GAP     = 1;                    // px gap between bars
+  var GROOVE_MIN_HEIGHT  = 0.15;                 // minimum bar height (fraction of canvas)
+  var GROOVE_DPR         = (function () { try { return Math.min(window.devicePixelRatio || 1, 3); } catch (e) { return 1; } })();
+
   var LOG_LEVEL = (function () {
     if (!FEATURE_OBSERVABILITY) return 0;
     try {
@@ -161,39 +183,554 @@
     } catch (e) { return 0; }
   })();
 
-  /* ── State ───────────────────────────────────────────────── */
+  /* ══════════════════════════════════════════════════════════════
+     Persistence Engine (v5.0.0 — Phase 1 extraction)
 
-  var needle        = null;                          // SC.Widget instance
-  var spinning      = false;                         // is a record playing?
-  var hushed        = false;                         // is the volume muted?
-  var savedVolume   = DEFAULT_VOLUME;
-  var records       = [];                            // [{title, index}, …]
-  var currentSide   = 0;                             // active track index
-  var sdkReady      = false;
-  var sdkPending    = false;                         // prevents duplicate <script>
-  var sourceReady   = false;
-  var needleDropped = false;                         // prevents double init
-  var lastSidePoll  = 0;                             // throttle for progress events
-  var lastPosition  = 0;                             // ms, from PLAY_PROGRESS
-  var channel       = null;                          // BroadcastChannel instance
-  var tabId         = '';                             // unique per page load (set in initChannel)
-  var isOwner       = false;                         // playback ownership flag
-  var lastSync      = 0;                             // throttle for broadcastSync
-  var ownerTabId    = '';                             // tabId of current playback owner
-  var lastOwnerSeen = 0;                             // timestamp of last owner message
-  var remoteState   = null;                          // { side, title, pos, spinning }
-  var heartbeatTimer  = null;                         // setInterval: owner heartbeat
-  var electionTimer   = null;                         // setTimeout: stale-owner recovery
-  var pendingElection = false;                        // true while election timer runs
-  var yieldGraceTimer = null;                         // v3.0.0: setTimeout for yield grace window
-  var claimEpoch      = 0;                            // v3.0.0: monotonic claim counter (per session)
+     Pure data layer owning all sessionStorage reads and writes.
+     No DOM access, no side effects, no network calls.
+     Every function wraps in try/catch — storage unavailability
+     returns null/false, never throws.
 
-  /* ── DOM refs (resolved once in overture) ────────────────── */
+     Extracted from:
+       shelfRead, shelfWrite           → store.shelfRead, store.shelfWrite
+       saveState (storage portion)     → store.continuitySave
+       restoreState (storage portion)  → store.continuityRestore
+       initTabId                       → store.getTabId
+       initClaimEpoch                  → store.getClaimEpoch
+       persistClaimEpoch               → store.persistEpoch
+       NAV_MARKER_KEY read/write       → store.consumeNavMarker, store.setNavMarker
 
-  var el    = {};                                    // interactive elements
-  var glyph = {};                                    // SVG icon elements
+     Backward compatibility:
+       - All storage keys unchanged (SHELF_KEY, CONT_KEY, TAB_ID_KEY, etc.)
+       - Schema versions unchanged (SHELF_VERSION, CONT_SCHEMA)
+       - TTL enforcement unchanged (SHELF_TTL, CONT_TTL)
+       - Feature gate behavior unchanged (FEATURE_ENHANCED_PERSISTENCE, FEATURE_OWNERSHIP_V3, etc.)
+     ══════════════════════════════════════════════════════════════ */
 
-  /* ── Helpers ─────────────────────────────────────────────── */
+  var store = (function () {
+
+    /* ── Health ────────────────────────────────────────────────
+       Tests sessionStorage accessibility. Returns false in
+       private browsing modes or sandboxed iframes where
+       sessionStorage is either absent or throws on access. */
+
+    function isAvailable() {
+      try {
+        var k = '__vinyl_probe__';
+        sessionStorage.setItem(k, '1');
+        sessionStorage.removeItem(k);
+        return true;
+      } catch (e) { return false; }
+    }
+
+    /* ── Shelf: track metadata cache ─────────────────────────
+       Key:  SHELF_KEY ('ce-vinyl-shelf')
+       TTL:  SHELF_TTL (30 min)
+       Schema: { v?: number, ts: number, data: TrackMeta[] }
+       Returns: TrackMeta[] | null */
+
+    function shelfRead() {
+      try {
+        var raw = sessionStorage.getItem(SHELF_KEY);
+        if (!raw) return null;
+        var obj = JSON.parse(raw);
+        /* v1.3.0: reject cache if shelf schema version doesn't match */
+        if (FEATURE_ENHANCED_PERSISTENCE && obj.v !== SHELF_VERSION) {
+          vlog(3, 'shelf:version-mismatch', { cached: obj.v, expected: SHELF_VERSION });
+          return null;
+        }
+        if (Date.now() - obj.ts > SHELF_TTL) return null;
+        return obj.data;
+      } catch (e) { return null; }
+    }
+
+    function shelfWrite(data) {
+      try {
+        var payload = { ts: Date.now(), data: data };
+        if (FEATURE_ENHANCED_PERSISTENCE) payload.v = SHELF_VERSION;
+        sessionStorage.setItem(SHELF_KEY, JSON.stringify(payload));
+      } catch (e) { /* quota exceeded or private mode — safe to ignore */ }
+    }
+
+    function shelfClear() {
+      try { sessionStorage.removeItem(SHELF_KEY); } catch (e) {}
+    }
+
+    /* ── Continuity: cross-page playback state ───────────────
+       Key:  CONT_KEY ('ce-vinyl-cont')
+       TTL:  CONT_TTL (30 s)
+       Schema: { v?: number, ts: number, side: number,
+                 spinning: bool, pos: number, vol?: number,
+                 hushed?: bool }
+       continuityRestore is consume-on-read: deletes after returning.
+       continuityPeek is non-destructive. */
+
+    function continuitySave(payload) {
+      try {
+        sessionStorage.setItem(CONT_KEY, JSON.stringify(payload));
+      } catch (e) {}
+    }
+
+    function continuityRestore() {
+      try {
+        var raw = sessionStorage.getItem(CONT_KEY);
+        if (!raw) return null;
+        var state = JSON.parse(raw);
+        sessionStorage.removeItem(CONT_KEY);              // consume-on-read
+        if (Date.now() - state.ts > CONT_TTL) {
+          vlog(3, 'continuity:stale', { age: Date.now() - state.ts });
+          return null;                                    // stale — discard
+        }
+        return state;
+      } catch (e) { return null; }
+    }
+
+    function continuityPeek() {
+      try {
+        var raw = sessionStorage.getItem(CONT_KEY);
+        if (!raw) return null;
+        var state = JSON.parse(raw);
+        if (Date.now() - state.ts > CONT_TTL) return null;
+        return state;
+      } catch (e) { return null; }
+    }
+
+    /* ── Identity: stable tab ID across same-tab navigations ─
+       Key:  TAB_ID_KEY ('ce-vinyl-tab')
+       When FEATURE_OWNERSHIP_V3 is on, persists the tabId in
+       sessionStorage so navigating index→projects→about keeps
+       the same identity. When off, generates a fresh ID every
+       page load (v2.1 behavior). */
+
+    function getTabId() {
+      if (FEATURE_OWNERSHIP_V3) {
+        try {
+          var stored = sessionStorage.getItem(TAB_ID_KEY);
+          if (stored) return stored;
+        } catch (e) { /* private mode — fall through to fresh id */ }
+      }
+      var fresh = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+      if (FEATURE_OWNERSHIP_V3) {
+        try { sessionStorage.setItem(TAB_ID_KEY, fresh); } catch (e) {}
+      }
+      return fresh;
+    }
+
+    /* ── Claim epoch: monotonic counter for conflict resolution
+       Key:  CLAIM_EPOCH_KEY ('ce-vinyl-epoch')
+       persistEpoch writes the given value to storage.
+       getClaimEpoch reads the current persisted value. */
+
+    function getClaimEpoch() {
+      if (!FEATURE_OWNERSHIP_V3) return 0;
+      try {
+        var stored = sessionStorage.getItem(CLAIM_EPOCH_KEY);
+        return stored ? parseInt(stored, 10) || 0 : 0;
+      } catch (e) { return 0; }
+    }
+
+    function persistEpoch(epoch) {
+      if (!FEATURE_OWNERSHIP_V3) return;
+      try { sessionStorage.setItem(CLAIM_EPOCH_KEY, String(epoch)); } catch (e) {}
+    }
+
+    /* ── Navigation marker (v4.0.0) ──────────────────────────
+       Key:  NAV_MARKER_KEY ('ce-vinyl-nav')
+       Set before pagehide when owner navigates within site.
+       Consumed on the new page's boot to reclaim ownership
+       without a gap. */
+
+    function setNavMarker() {
+      try { sessionStorage.setItem(NAV_MARKER_KEY, '1'); } catch (e) {}
+    }
+
+    function consumeNavMarker() {
+      try {
+        var marker = sessionStorage.getItem(NAV_MARKER_KEY);
+        if (marker) {
+          sessionStorage.removeItem(NAV_MARKER_KEY);
+          return true;
+        }
+        return false;
+      } catch (e) { return false; }
+    }
+
+    /* ── Public API ──────────────────────────────────────────── */
+
+    return {
+      isAvailable:       isAvailable,
+      shelfRead:         shelfRead,
+      shelfWrite:        shelfWrite,
+      shelfClear:        shelfClear,
+      continuitySave:    continuitySave,
+      continuityRestore: continuityRestore,
+      continuityPeek:    continuityPeek,
+      getTabId:          getTabId,
+      getClaimEpoch:     getClaimEpoch,
+      persistEpoch:      persistEpoch,
+      setNavMarker:      setNavMarker,
+      consumeNavMarker:  consumeNavMarker
+    };
+  })();
+
+  /* ══════════════════════════════════════════════════════════════
+     SoundCloud Adapter (v5.0.0 — Phase 2 extraction)
+
+     Thin abstraction layer over SC.Widget. Owns the raw widget
+     instance and every direct SDK call. No external code touches
+     SC.Widget methods or SC.Widget.Events — only this adapter.
+
+     Responsibilities:
+       - SC.Widget interface validation (was in dropNeedle)
+       - Widget instance creation and lifecycle
+       - Event binding with human-readable names
+       - Playback methods with null-safety guards
+       - Autoplay-safe play with rejection callback (was safePlay)
+       - SoundCloud embed URL construction (was warmSource body)
+
+     NOT responsible for:
+       - SDK script loading (fetchSDK — network/DOM concern)
+       - Phase transitions (controller concern)
+       - Broadcast coordination (sync layer concern)
+       - DOM updates (UI concern)
+
+     Backward compatibility:
+       - Test mocks (createMockWidget with ._fire) work unchanged
+       - SC.Widget.Events constant names preserved
+       - All callback signatures preserved
+     ══════════════════════════════════════════════════════════════ */
+
+  var adapter = (function () {
+
+    var widget = null;                               // SC.Widget instance
+
+    /* ── Validation ──────────────────────────────────────────
+       Verify SC.Widget is callable and exposes the Events map.
+       Catches SDK shape changes before they surface as cryptic
+       runtime errors. Mirrors the v1.1.0 validation logic. */
+
+    function validate() {
+      return window.SC && window.SC.Widget &&
+        (FEATURE_RESILIENCE
+          ? typeof SC.Widget === 'function' && SC.Widget.Events && SC.Widget.Events.READY
+          : true);
+    }
+
+    /* ── Lifecycle ───────────────────────────────────────────
+       init(iframe) creates the widget.
+       Returns true on success, false if validation fails.
+       destroy() tears down the reference. */
+
+    function init(iframe) {
+      if (!validate()) return false;
+      widget = SC.Widget(iframe);
+      return true;
+    }
+
+    function destroy() {
+      widget = null;
+    }
+
+    function isInit() {
+      return !!widget;
+    }
+
+    /* ── Event binding ───────────────────────────────────────
+       Translates human-readable event names to SC.Widget.Events
+       constants. The SC global must be available when on() is
+       called — it always is, because on() runs after fetchSDK
+       has loaded the SDK script.
+
+       Supported names:
+         ready, play, pause, finish, progress, error */
+
+    function on(event, handler) {
+      if (!widget) return;
+      var map = {
+        ready:    SC.Widget.Events.READY,
+        play:     SC.Widget.Events.PLAY,
+        pause:    SC.Widget.Events.PAUSE,
+        finish:   SC.Widget.Events.FINISH,
+        progress: SC.Widget.Events.PLAY_PROGRESS,
+        error:    SC.Widget.Events.ERROR
+      };
+      var scEvent = map[event];
+      if (scEvent) widget.bind(scEvent, handler);
+    }
+
+    /* ── Playback ────────────────────────────────────────────
+       All methods are null-safe: noop if widget is absent. */
+
+    function play() {
+      if (!widget) return undefined;
+      return widget.play();
+    }
+
+    function pause() {
+      if (!widget) return;
+      widget.pause();
+    }
+
+    function seekTo(ms) {
+      if (!widget) return;
+      widget.seekTo(ms);
+    }
+
+    function skip(index) {
+      if (!widget) return;
+      widget.skip(index);
+    }
+
+    /* ── Volume ──────────────────────────────────────────────── */
+
+    function setVolume(level) {
+      if (!widget) return;
+      widget.setVolume(level);
+    }
+
+    /* ── Metadata ────────────────────────────────────────────── */
+
+    function getSounds(cb) {
+      if (!widget) { if (cb) cb([]); return; }
+      widget.getSounds(cb);
+    }
+
+    function getCurrentIndex(cb) {
+      if (!widget) { if (cb) cb(0); return; }
+      widget.getCurrentSoundIndex(cb);
+    }
+
+    /* ── Autoplay-safe play ──────────────────────────────────
+       Wraps widget.play() with Promise rejection handling.
+       If autoplay is blocked, calls onBlocked() so the caller
+       can revert phase and UI without knowing Promise mechanics.
+
+       This was the standalone safePlay() function in v4.0.0. */
+
+    function safePlay(onBlocked) {
+      if (!widget) return;
+      try {
+        var result = widget.play();
+        if (result && typeof result.catch === 'function') {
+          result.catch(function () {
+            if (onBlocked) onBlocked();
+          });
+        }
+      } catch (e) {
+        /* Defensive: older SC Widget versions may not return a Promise */
+        if (onBlocked) onBlocked();
+      }
+    }
+
+    /* ── Embed URL construction ──────────────────────────────
+       Builds the SoundCloud widget embed URL for a playlist.
+       Enforces auto_play=false for autoplay policy compliance. */
+
+    function buildEmbedUrl(playlistUrl) {
+      return 'https://w.soundcloud.com/player/?url=' + encodeURIComponent(playlistUrl) +
+        '&auto_play=false&show_artwork=false&visual=false' +
+        '&buying=false&sharing=false&download=false' +
+        '&show_playcount=false&show_comments=false&color=%237b5e7b';
+    }
+
+    /* ── Public API ──────────────────────────────────────────── */
+
+    return {
+      validate:        validate,
+      init:            init,
+      destroy:         destroy,
+      isInit:          isInit,
+      on:              on,
+      play:            play,
+      pause:           pause,
+      seekTo:          seekTo,
+      skip:            skip,
+      setVolume:       setVolume,
+      getSounds:       getSounds,
+      getCurrentIndex: getCurrentIndex,
+      safePlay:        safePlay,
+      buildEmbedUrl:   buildEmbedUrl
+    };
+  })();
+
+  /* ══════════════════════════════════════════════════════════════
+     Groove — waveform progress visualization (v5.0.0)
+
+     Canvas-based progress bar that renders a seeded pseudo-random
+     waveform for each track. The seed is derived from the track
+     title, so the waveform is deterministic and consistent across
+     page loads. Progress fill is driven by PLAY_PROGRESS events.
+
+     No behavioral changes. No adapter/store/FSM interaction beyond
+     reading lastPosition and the current record's duration.
+     Fully gated behind FEATURE_GROOVE.
+
+     Public surface:
+       groove.mount(container)  — creates canvas, appends to container
+       groove.seed(title)       — generates waveform data for a track
+       groove.update(fraction)  — repaints with progress fill [0..1]
+       groove.clear()           — resets to empty state
+       groove.destroy()         — removes canvas from DOM
+     ══════════════════════════════════════════════════════════════ */
+
+  var groove = (function () {
+    if (!FEATURE_GROOVE) return {
+      mount: function () {},
+      seed:  function () {},
+      update: function () {},
+      clear:  function () {},
+      destroy: function () {}
+    };
+
+    var canvas  = null;
+    var ctx     = null;
+    var bars    = null;      // Float32Array of bar heights [0..1]
+    var lastFrac = -1;       // last rendered fraction (avoids redundant paints)
+
+    /* ── Seeded PRNG (mulberry32) ─────────────────────────── */
+    /*    Deterministic per-title waveform generation.          */
+
+    function hashTitle(str) {
+      var h = 0x811c9dc5;
+      for (var i = 0; i < str.length; i++) {
+        h ^= str.charCodeAt(i);
+        h = Math.imul(h, 0x01000193);
+      }
+      return h >>> 0;
+    }
+
+    function mulberry32(seed) {
+      return function () {
+        seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+        var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = t + Math.imul(t ^ (t >>> 7), 61 | t) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    /* ── Generate bar heights from track title ────────────── */
+
+    function generateBars(title) {
+      var rng = mulberry32(hashTitle(title || 'untitled'));
+      var b   = new Float32Array(GROOVE_BARS);
+      for (var i = 0; i < GROOVE_BARS; i++) {
+        /* Shape: higher toward center, with randomised variance.
+           Creates an organic, audio-feeling envelope.            */
+        var center = (i / (GROOVE_BARS - 1)) * 2 - 1;    // [-1..1]
+        var envelope = 1 - center * center * 0.4;          // parabolic falloff
+        var raw = rng() * 0.6 + 0.4;                      // random component [0.4..1.0]
+        b[i] = Math.max(GROOVE_MIN_HEIGHT, raw * envelope);
+      }
+      return b;
+    }
+
+    /* ── Render ────────────────────────────────────────────── */
+
+    function render(frac) {
+      if (!ctx || !bars) return;
+      var w = canvas.width;
+      var h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      var dpr      = GROOVE_DPR;
+      var gap      = GROOVE_BAR_GAP * dpr;
+      var total    = GROOVE_BARS;
+      var barW     = Math.max(1, (w - gap * (total - 1)) / total);
+      var fillX    = frac * w;
+
+      /* Colours: filled = amber accent, unfilled = muted lavender */
+      var filled   = 'rgba(186, 155, 100, 0.85)';   // --amber-ish
+      var unfilled = 'rgba(192, 178, 190, 0.35)';    // --border-ish
+
+      for (var i = 0; i < total; i++) {
+        var x     = i * (barW + gap);
+        var barH  = bars[i] * h;
+        var y     = (h - barH) / 2;                   // vertically centred
+
+        ctx.fillStyle = (x + barW <= fillX) ? filled
+                      : (x >= fillX) ? unfilled
+                      : filled;                        // partial bar → filled colour
+        /* Round the bar ends with a small radius */
+        var r = Math.min(barW / 2, 2 * dpr);
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + barW - r, y);
+        ctx.quadraticCurveTo(x + barW, y, x + barW, y + r);
+        ctx.lineTo(x + barW, y + barH - r);
+        ctx.quadraticCurveTo(x + barW, y + barH, x + barW - r, y + barH);
+        ctx.lineTo(x + r, y + barH);
+        ctx.quadraticCurveTo(x, y + barH, x, y + barH - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.fill();
+      }
+    }
+
+    /* ── Public API ───────────────────────────────────────── */
+
+    function mount(container) {
+      if (canvas) return;
+      canvas = document.createElement('canvas');
+      canvas.className = 'vinyl-groove';
+      canvas.setAttribute('aria-hidden', 'true');
+
+      /* Defensive: canvas.getContext may not exist in headless/test envs */
+      if (typeof canvas.getContext !== 'function') {
+        canvas = null;
+        return;
+      }
+
+      /* Size to container, respecting DPR for crisp rendering */
+      var rect = container.getBoundingClientRect
+        ? container.getBoundingClientRect()
+        : { width: 64, height: 20 };
+      var dpr = GROOVE_DPR;
+      canvas.style.width  = '100%';
+      canvas.style.height = '100%';
+      canvas.width  = Math.round(rect.width * dpr) || 128;
+      canvas.height = Math.round(rect.height * dpr) || 40;
+      ctx = canvas.getContext('2d');
+      container.appendChild(canvas);
+    }
+
+    function seed(title) {
+      bars = generateBars(title);
+      lastFrac = -1;
+      render(0);
+    }
+
+    function update(frac) {
+      frac = Math.max(0, Math.min(1, frac));
+      /* Skip repaint if fraction didn't change enough (< 0.2% = invisible) */
+      if (Math.abs(frac - lastFrac) < 0.002) return;
+      lastFrac = frac;
+      render(frac);
+    }
+
+    function clear() {
+      bars = null;
+      lastFrac = -1;
+      if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function destroy() {
+      if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
+      canvas = null;
+      ctx = null;
+      bars = null;
+      lastFrac = -1;
+    }
+
+    return {
+      mount:   mount,
+      seed:    seed,
+      update:  update,
+      clear:   clear,
+      destroy: destroy
+    };
+  })();
+
+  /* ── Shared IIFE scope utilities ───────────────────────────── */
 
   function $(id)       { return document.getElementById(id); }
   function isDND()  { return document.documentElement.getAttribute('data-theme') === 'refined'; }
@@ -225,531 +762,116 @@
     if (window.performance && performance.mark) performance.mark('vinyl:' + name);
   }
 
-  /* ── Lifecycle state machine (v1.4.0) ───────────────────── */
-  /*    `phase` is the single source of truth for operational   */
-  /*    lifecycle. `transition(to)` validates legal moves and   */
-  /*    logs rejected attempts at warn level for triage.        */
-  /*    Stage visibility is orthogonal — lowerStage hides the   */
-  /*    UI without altering the phase.                          */
+  /* ══════════════════════════════════════════════════════════════
+     Controller (v5.0.0 — Phase 4 extraction)
 
-  var phase = 'dormant';
+     Playback state machine and FSM logic. Owns:
+       - Playback state (spinning, phase, currentSide, lastPosition)
+       - Mute state (hushed, savedVolume)
+       - Records catalog and shelf management
+       - SDK/widget initialization and lifecycle
+       - Playback command processing
 
-  var LEGAL_MOVES = {
-    dormant:  ['loading'],
-    loading:  ['ready', 'errored'],
-    ready:    ['playing', 'errored'],
-    playing:  ['paused', 'ready', 'errored'],
-    paused:   ['playing', 'ready', 'errored'],
-    errored:  []
-  };
+     Wired dependencies: _sync and _ui (set via wire())
+     ══════════════════════════════════════════════════════════════ */
 
-  function transition(to, reason) {
-    if (!FEATURE_STATE_MACHINE) return true;
-    var from = phase;
-    if (from === to) return true;
-    var legal = LEGAL_MOVES[from];
-    if (!legal || legal.indexOf(to) === -1) {
-      vlog(1, 'phase:rejected', { from: from, to: to, reason: reason });
-      return false;
+  var controller = (function () {
+
+    var _sync = null;                                // wired sync module
+    var _ui = null;                                  // wired ui module
+
+    var spinning      = false;
+    var hushed        = false;
+    var savedVolume   = DEFAULT_VOLUME;
+    var records       = [];
+    var currentSide   = 0;
+    var sdkReady      = false;
+    var sdkPending    = false;
+    var sourceReady   = false;
+    var needleDropped = false;
+    var lastSidePoll  = 0;
+    var lastPosition  = 0;
+    var phase         = 'dormant';
+
+    var LEGAL_MOVES = {
+      dormant:  ['loading'],
+      loading:  ['ready', 'errored'],
+      ready:    ['playing', 'errored'],
+      playing:  ['paused', 'ready', 'errored'],
+      paused:   ['playing', 'ready', 'errored'],
+      errored:  []
+    };
+
+    function wire(deps) {
+      _sync = deps.sync;
+      _ui = deps.ui;
     }
-    phase = to;
-    vlog(3, 'phase:' + to, { from: from, reason: reason });
-    vmark('phase:' + to);
-    return true;
-  }
 
-  function phaseAllowsInteraction() {
-    return !FEATURE_STATE_MACHINE || phase === 'ready' || phase === 'playing' || phase === 'paused';
-  }
-
-  /* ── Cross-tab coordination (v2.0.0) ──────────────────── */
-  /*    Single-owner model via BroadcastChannel: last tab to   */
-  /*    play claims ownership; other tabs pause and enter      */
-  /*    observer mode, reflecting the owner's playback state.  */
-  /*    Messages are coordination hints — no tab takes remote  */
-  /*    control of another's playback.                         */
-  /*                                                           */
-  /*    Message vocabulary:                                     */
-  /*      claim — "I am now playing"                           */
-  /*      yield — "I have stopped playing"                     */
-  /*      sync  — periodic owner state (doubles as heartbeat)  */
-  /*                                                           */
-  /*    Resilience:                                            */
-  /*      - safeBroadcast wraps postMessage in try/catch       */
-  /*      - stale messages (>OWNER_STALE ms old) are dropped   */
-  /*      - owner yields on pagehide for clean tab-close       */
-  /*      - observers detect stale owners via lastOwnerSeen    */
-
-  /* v3.0.0: stable session identity — persists tabId across same-tab navigations
-     via sessionStorage so the user's "tab" keeps a single identity as they move
-     between index → projects → about. Different tabs get different sessionStorage
-     instances, providing natural isolation without coordination.                  */
-
-  function initTabId() {
-    if (FEATURE_OWNERSHIP_V3) {
-      try {
-        var stored = sessionStorage.getItem(TAB_ID_KEY);
-        if (stored) {
-          vlog(3, 'identity:restored', { tabId: stored });
-          return stored;
-        }
-      } catch (e) { /* private mode — fall through to fresh id */ }
-    }
-    var fresh = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-    if (FEATURE_OWNERSHIP_V3) {
-      try { sessionStorage.setItem(TAB_ID_KEY, fresh); } catch (e) {}
-    }
-    vlog(3, 'identity:created', { tabId: fresh });
-    return fresh;
-  }
-
-  function initClaimEpoch() {
-    if (!FEATURE_OWNERSHIP_V3) return 0;
-    try {
-      var stored = sessionStorage.getItem(CLAIM_EPOCH_KEY);
-      return stored ? parseInt(stored, 10) || 0 : 0;
-    } catch (e) { return 0; }
-  }
-
-  function persistClaimEpoch() {
-    if (!FEATURE_OWNERSHIP_V3) return;
-    try { sessionStorage.setItem(CLAIM_EPOCH_KEY, String(claimEpoch)); } catch (e) {}
-  }
-
-  function initChannel() {
-    if (!FEATURE_BROADCAST || typeof BroadcastChannel === 'undefined') return;
-    try {
-      tabId = initTabId();
-      claimEpoch = initClaimEpoch();
-      channel = new BroadcastChannel(CHANNEL_NAME);
-      channel.onmessage = onChannelMessage;
-      vlog(3, 'broadcast:init', { tabId: tabId, epoch: claimEpoch, stableId: FEATURE_OWNERSHIP_V3 });
-      vmark('broadcast:init');
-
-      /* v4.0.0: detect same-tab navigation via the nav marker.
-         If present, this page load is a continuation of a previous
-         owner session (same tab navigated between pages). Reclaim
-         ownership immediately — before the widget loads — so other
-         tabs never see an ownership gap.                            */
-      if (FEATURE_CONTINUITY_V4) {
-        try {
-          var navMarker = sessionStorage.getItem(NAV_MARKER_KEY);
-          if (navMarker) {
-            sessionStorage.removeItem(NAV_MARKER_KEY);
-            vlog(2, 'continuity:nav-detected', { tabId: tabId });
-            vmark('continuity:nav-reclaim');
-            broadcastClaim();                          // early reclaim — pre-widget
-            return;                                    // skip ping — we ARE the owner
-          }
-        } catch (e) { /* private mode — fall through to normal boot */ }
+    function transition(to, reason) {
+      if (!FEATURE_STATE_MACHINE) return true;
+      var from = phase;
+      if (from === to) return true;
+      var legal = LEGAL_MOVES[from];
+      if (!legal || legal.indexOf(to) === -1) {
+        vlog(1, 'phase:rejected', { from: from, to: to, reason: reason });
+        return false;
       }
-
-      sendPing();                                    // v2.1.0: discover existing owner
-    } catch (e) {
-      /* BroadcastChannel throws on opaque origins (file://, sandboxed iframes).
-         Emit an operational warn so this is visible even at LOG_LEVEL=0.       */
-      console.warn('[vinyl] Cross-tab sync unavailable (' + e.message + ').');
-      vlog(1, 'broadcast:failed', { error: e.message });
-    }
-  }
-
-  function safeBroadcast(msg) {
-    if (!channel) return false;
-    try {
-      channel.postMessage(msg);
+      phase = to;
+      vlog(3, 'phase:' + to, { from: from, reason: reason });
+      vmark('phase:' + to);
       return true;
-    } catch (e) {
-      vlog(1, 'broadcast:send-error', { type: msg.type, error: e.message });
-      return false;
-    }
-  }
-
-  function broadcastClaim() {
-    if (!channel) return;
-    /* Clear stale remote owner tracking before claiming */
-    if (ownerTabId && ownerTabId !== tabId && isOwnerStale()) {
-      vlog(2, 'broadcast:stale-owner-cleared', { previous: ownerTabId });
-    }
-    isOwner = true;
-    ownerTabId = tabId;
-    lastOwnerSeen = Date.now();
-    remoteState = null;
-    cancelElection();                                  // v2.1.0: cancel any pending election
-    cancelYieldGrace();                                // v3.0.0: cancel any pending yield grace
-
-    /* v3.0.0: increment claim epoch for deterministic ordering */
-    if (FEATURE_OWNERSHIP_V3) {
-      claimEpoch++;
-      persistClaimEpoch();
     }
 
-    safeBroadcast({ type: 'claim', tabId: tabId, ts: Date.now(), epoch: claimEpoch });
-    startHeartbeat();                                  // v2.1.0: begin liveness signals
-    vlog(3, 'broadcast:claim', { tabId: tabId, epoch: claimEpoch });
-  }
-
-  function broadcastYield(reason) {
-    if (!channel) return;
-    if (!isOwner) {
-      vlog(3, 'broadcast:yield-skipped', { reason: 'not-owner' });
-      return;
-    }
-    isOwner = false;
-    ownerTabId = '';
-    remoteState = null;
-    stopHeartbeat();                                   // v2.1.0: stop liveness signals
-    safeBroadcast({ type: 'yield', tabId: tabId, ts: Date.now(), reason: reason || 'explicit' });
-    vlog(3, 'broadcast:yield', { tabId: tabId, reason: reason || 'explicit' });
-  }
-
-  /* v3.0.0: broadcast a pause-state sync instead of yielding ownership.
-     When the user pauses playback, the tab retains conceptual ownership —
-     other tabs see "Paused" rather than "no owner". Yield only fires on
-     tab close or DND deactivation.                                        */
-
-  function broadcastPauseRetain() {
-    if (!FEATURE_OWNERSHIP_V3 || !channel || !isOwner) return;
-    var title = records[currentSide] ? records[currentSide].title : '';
-    lastSync = Date.now();
-    safeBroadcast({
-      type: 'sync',
-      tabId: tabId,
-      payload: {
-        side: currentSide,
-        spinning: false,
-        pos: lastPosition,
-        title: title,
-        ts: Date.now()
-      }
-    });
-    vlog(3, 'broadcast:pause-retain', { side: currentSide });
-  }
-
-  /* v3.0.0: yield-grace window management.
-     When a yield is received from the current owner's tabId, start a
-     grace timer instead of clearing immediately. If the same tabId
-     reclaims within YIELD_GRACE_MS (same-tab navigation), the yield
-     is absorbed transparently. If the timer expires, process the yield. */
-
-  function cancelYieldGrace() {
-    if (yieldGraceTimer) {
-      clearTimeout(yieldGraceTimer);
-      yieldGraceTimer = null;
-      vlog(3, 'yield-grace:cancelled');
-    }
-  }
-
-  function broadcastSync() {
-    if (!channel || !isOwner) return;
-    var now = Date.now();
-    if (now - lastSync < SYNC_THROTTLE) return;
-    lastSync = now;
-    var title = records[currentSide] ? records[currentSide].title : '';
-    safeBroadcast({
-      type: 'sync',
-      tabId: tabId,
-      payload: {
-        side: currentSide,
-        spinning: spinning,
-        pos: lastPosition,
-        title: title,
-        ts: now
-      }
-    });
-    vlog(3, 'broadcast:sync', { side: currentSide, pos: lastPosition });
-  }
-
-  function onChannelMessage(e) {
-    var msg = e.data;
-    if (!msg || msg.tabId === tabId) return;
-
-    /* Stale message protection — drop messages older than OWNER_STALE */
-    if (msg.ts && Date.now() - msg.ts > OWNER_STALE) {
-      vlog(3, 'broadcast:stale', { type: msg.type, age: Date.now() - msg.ts });
-      return;
+    function phaseAllowsInteraction() {
+      return !FEATURE_STATE_MACHINE || phase === 'ready' || phase === 'playing' || phase === 'paused';
     }
 
-    /* v2.1.0: any fresh message from the current owner resets liveness
-       tracking and cancels any pending stale-owner recovery. */
-    if (FEATURE_LEADER_ELECTION && msg.tabId === ownerTabId) {
-      lastOwnerSeen = msg.ts || Date.now();
-      cancelElection();
+    function shelfRead() {
+      return store.shelfRead();
     }
 
-    switch (msg.type) {
-      case 'claim':
-        vlog(2, 'broadcast:remote-claim', { from: msg.tabId, epoch: msg.epoch });
-        cancelYieldGrace();                            // v3.0.0: incoming claim supersedes grace
-        ownerTabId = msg.tabId;
-        lastOwnerSeen = msg.ts || Date.now();
-        cancelElection();                              // v2.1.0: new owner supersedes election
-        if (isOwner) {
-          isOwner = false;
-          stopHeartbeat();                             // v2.1.0: relinquish heartbeat
-        }
-        if (spinning && needle) {
-          needle.pause();
-          spinning = false;                            // reflect immediately; PAUSE event is async
-          transition('paused', 'remote-claim');         // keep phase consistent with spinning
-          reflectSpin();
-        }
-        remoteState = null;                            // populated by first sync
-        break;
-      case 'yield':
-        vlog(3, 'broadcast:remote-yield', { from: msg.tabId, reason: msg.reason });
-        if (ownerTabId === msg.tabId) {
-          /* v3.0.0: yield-grace window — delay clearing to absorb same-tab navigation.
-             If the same tabId reclaims within YIELD_GRACE_MS, the yield is transparent.
-             When v3 is off, yield clears immediately (v2.1 behavior).                  */
-          if (FEATURE_OWNERSHIP_V3) {
-            cancelYieldGrace();
-            var yieldFrom = msg.tabId;
-            /* v4.0.0: use wider grace window when continuity hardening is on */
-            var graceMs = FEATURE_CONTINUITY_V4 ? V4_YIELD_GRACE_MS : YIELD_GRACE_MS;
-            yieldGraceTimer = setTimeout(function () {
-              yieldGraceTimer = null;
-              if (ownerTabId === yieldFrom) {
-                vlog(2, 'yield-grace:expired', { from: yieldFrom });
-                ownerTabId = '';
-                remoteState = null;
-                reflectRemoteState();
-              }
-            }, graceMs);
-            vlog(3, 'yield-grace:started', { from: yieldFrom, grace: graceMs });
-          } else {
-            ownerTabId = '';
-            remoteState = null;
-            reflectRemoteState();
-          }
-        }
-        break;
-      case 'sync':
-        if (msg.tabId !== ownerTabId) break;           // ignore syncs from non-owner
-        lastOwnerSeen = (msg.payload && msg.payload.ts) || Date.now();
-        remoteState = msg.payload || null;
-        vlog(3, 'broadcast:remote-sync', msg.payload);
-        if (!isOwner) reflectRemoteState();
-        break;
-
-      /* v2.1.0: leadership election messages */
-      case 'heartbeat':
-        if (!FEATURE_LEADER_ELECTION) break;
-        if (msg.tabId === ownerTabId) {
-          lastOwnerSeen = msg.ts || Date.now();
-          vlog(3, 'leader:heartbeat-recv', { from: msg.tabId });
-        }
-        break;
-      case 'ping':
-        if (!FEATURE_LEADER_ELECTION) break;
-        vlog(3, 'leader:ping-recv', { from: msg.tabId });
-        if (isOwner) sendPong(msg.tabId);
-        break;
-      case 'pong':
-        if (!FEATURE_LEADER_ELECTION) break;
-        vlog(2, 'leader:pong-recv', { from: msg.tabId });
-        ownerTabId = msg.tabId;
-        lastOwnerSeen = msg.ts || Date.now();
-        remoteState = msg.payload || null;
-        cancelElection();
-        if (!isOwner) reflectRemoteState();
-        break;
+    function shelfWrite(data) {
+      store.shelfWrite(data);
     }
-  }
 
-  function isOwnerStale() {
-    if (!ownerTabId || ownerTabId === tabId) return false;
-    return Date.now() - lastOwnerSeen > OWNER_STALE;
-  }
-
-  function reflectRemoteState() {
-    if (!FEATURE_CRATE_V2 || !el.upnext) return;
-    if (!isOwner && !spinning && remoteState && remoteState.title) {
-      /* v3.0.0: distinguish playing vs paused remote state */
-      var prefix = (FEATURE_OWNERSHIP_V3 && remoteState.spinning === false)
-        ? 'Paused elsewhere'
-        : 'Playing elsewhere';
-      el.upnext.textContent = prefix + ' \u2014 ' + remoteState.title;
-      el.upnext.hidden = false;
-    } else if (!remoteState && !spinning) {
-      /* Remote owner gone — revert to normal "Up next" display */
-      reflectNowPlaying();
-    }
-  }
-
-  /* ── Leadership election (v2.1.0) ────────────────────────
-     Heartbeat: owner sends periodic liveness signals so
-     observers can detect a dead owner (closed tab, crash).
-     Discovery: new tabs send a `ping`; the owner replies
-     with a `pong` carrying current playback state.
-     Recovery: when no heartbeat arrives for OWNER_STALE ms,
-     observers clear stale ownership and update UI.
-     Election jitter prevents simultaneous claims.
-     ────────────────────────────────────────────────────── */
-
-  function leaderElectionActive() {
-    return FEATURE_LEADER_ELECTION && FEATURE_BROADCAST && !!channel;
-  }
-
-  function startHeartbeat() {
-    stopHeartbeat();
-    if (!leaderElectionActive()) return;
-    heartbeatTimer = setInterval(function () {
-      safeBroadcast({ type: 'heartbeat', tabId: tabId, ts: Date.now() });
-      vlog(3, 'leader:heartbeat-sent');
-    }, HEARTBEAT_MS);
-    vlog(3, 'leader:heartbeat-start');
-  }
-
-  function stopHeartbeat() {
-    if (heartbeatTimer) {
-      clearInterval(heartbeatTimer);
-      heartbeatTimer = null;
-      vlog(3, 'leader:heartbeat-stop');
-    }
-  }
-
-  function electionJitter() {
-    /* Deterministic jitter from tabId so concurrent observers
-       stagger their recovery, avoiding simultaneous claims. */
-    var hash = 0;
-    for (var i = 0; i < tabId.length; i++) {
-      hash = ((hash << 5) - hash + tabId.charCodeAt(i)) | 0;
-    }
-    return ELECTION_DELAY + (Math.abs(hash) % 1000);
-  }
-
-  function startElection(reason) {
-    if (!leaderElectionActive() || pendingElection) return;
-    pendingElection = true;
-    var delay = electionJitter();
-    vlog(2, 'leader:election-start', { reason: reason, delay: delay });
-    vmark('leader:election-start');
-    electionTimer = setTimeout(function () {
-      pendingElection = false;
-      electionTimer = null;
-      if (!isOwnerStale()) {
-        vlog(3, 'leader:election-aborted', { reason: 'owner-alive' });
-        return;
-      }
-      vlog(2, 'leader:election-resolved', { previousOwner: ownerTabId });
-      vmark('leader:election-resolved');
-      ownerTabId = '';
-      remoteState = null;
-      reflectRemoteState();
-      /* Don't auto-claim — let the user initiate play.
-         This avoids unwanted audio and respects user intent. */
-    }, delay);
-  }
-
-  function cancelElection() {
-    if (electionTimer) {
-      clearTimeout(electionTimer);
-      electionTimer = null;
-      pendingElection = false;
-      vlog(3, 'leader:election-cancelled');
-    }
-  }
-
-  function sendPing() {
-    if (!leaderElectionActive()) return;
-    safeBroadcast({ type: 'ping', tabId: tabId, ts: Date.now() });
-    vlog(3, 'leader:ping-sent');
-    vmark('leader:ping');
-  }
-
-  function sendPong(toTabId) {
-    if (!leaderElectionActive() || !isOwner) return;
-    var title = records[currentSide] ? records[currentSide].title : '';
-    safeBroadcast({
-      type: 'pong',
-      tabId: tabId,
-      ts: Date.now(),
-      payload: {
-        side: currentSide,
-        spinning: spinning,
-        pos: lastPosition,
-        title: title
-      }
-    });
-    vlog(3, 'leader:pong-sent', { to: toTabId });
-  }
-
-  /* ── Shelf: session-cache for record metadata ────────────── */
-
-  function shelfRead() {
-    try {
-      var raw = sessionStorage.getItem(SHELF_KEY);
-      if (!raw) return null;
-      var obj = JSON.parse(raw);
-      /* v1.3.0: reject cache if shelf schema version doesn't match */
-      if (FEATURE_ENHANCED_PERSISTENCE && obj.v !== SHELF_VERSION) {
-        vlog(3, 'shelf:version-mismatch', { cached: obj.v, expected: SHELF_VERSION });
-        return null;
-      }
-      if (Date.now() - obj.ts > SHELF_TTL) return null;
-      return obj.data;
-    } catch (e) { return null; }
-  }
-
-  function shelfWrite(data) {
-    try {
-      var payload = { ts: Date.now(), data: data };
-      if (FEATURE_ENHANCED_PERSISTENCE) payload.v = SHELF_VERSION;
-      sessionStorage.setItem(SHELF_KEY, JSON.stringify(payload));
-    } catch (e) { /* quota exceeded or private mode — safe to ignore */ }
-  }
-
-  /* ── Continuity: persist playback across page navigation ─── */
-
-  function saveState() {
-    if (!sourceReady) return;
-    try {
+    function saveState() {
+      if (!sourceReady) return;
       var payload = {
         side: currentSide,
         spinning: spinning,
         pos: lastPosition || 0,
         ts: Date.now()
       };
-      /* v1.3.0: enrich payload with schema version and audio state */
       if (FEATURE_ENHANCED_PERSISTENCE) {
         payload.v = CONT_SCHEMA;
-        payload.vol = parseInt(el.dial.value, 10) || DEFAULT_VOLUME;
+        payload.vol = _ui.getDialValue();
         payload.hushed = hushed;
       }
-      sessionStorage.setItem(CONT_KEY, JSON.stringify(payload));
+      store.continuitySave(payload);
       vlog(3, 'continuity:saved', { side: payload.side, pos: payload.pos, vol: payload.vol, hushed: payload.hushed });
-    } catch (e) {}
-  }
+    }
 
-  function restoreState() {
-    try {
-      var raw = sessionStorage.getItem(CONT_KEY);
-      if (!raw) return;
-      var state = JSON.parse(raw);
-      sessionStorage.removeItem(CONT_KEY);
-      if (Date.now() - state.ts > CONT_TTL) {
-        vlog(3, 'continuity:stale', { age: Date.now() - state.ts });
-        return;                                      // stale — discard
-      }
+    function restoreState() {
+      var state = store.continuityRestore();
+      if (!state) return;
+
       if (typeof state.side === 'number' && state.side !== currentSide) {
         currentSide = state.side;
-        needle.skip(state.side);
+        adapter.skip(state.side);
       }
-      if (state.pos > 0) needle.seekTo(state.pos);
+      if (state.pos > 0) adapter.seekTo(state.pos);
 
-      /* v1.3.0: restore volume and mute state from schemaed payloads */
       if (FEATURE_ENHANCED_PERSISTENCE && state.v >= CONT_SCHEMA) {
         if (typeof state.vol === 'number') {
-          needle.setVolume(state.hushed ? 0 : state.vol);
-          el.dial.value = state.hushed ? 0 : state.vol;
+          adapter.setVolume(state.hushed ? 0 : state.vol);
+          _ui.setDialValue(state.hushed ? 0 : state.vol);
           savedVolume = state.vol;
         }
         if (state.hushed) {
           hushed = true;
-          reflectVolume();
+          _ui.reflectVolume();
         }
       } else if (FEATURE_ENHANCED_PERSISTENCE && !state.v) {
-        /* Pre-v1.3.0 payload — no schema version present */
         vlog(3, 'continuity:schema-fallback', { v: state.v || 0 });
       }
 
@@ -759,496 +881,917 @@
         vol: state.vol, hushed: state.hushed
       });
       vmark('continuity:restored');
-      reflectTitle();
-      reflectCrate();
-    } catch (e) {}
-  }
-
-  /* ── Fetch SoundCloud Widget SDK (lazy) ──────────────────── */
-  /*    v1.1.0: optional retry with exponential backoff.       */
-  /*    The `attempt` parameter is internal — callers still    */
-  /*    invoke fetchSDK(cb) with the same signature.           */
-
-  function fetchSDK(cb, attempt) {
-    if (sdkReady) return cb();
-    if (sdkPending) return;                          // already in flight
-    sdkPending = true;                               // reset in onerror before retry delay;
-                                                     // single-caller guarantee via needleDropped
-                                                     // prevents concurrent attempts during backoff
-    attempt = (FEATURE_RESILIENCE && typeof attempt === 'number') ? attempt : 0;
-
-    var s    = document.createElement('script');
-    s.src    = SDK_URL;
-    s.onload = function () {
-      sdkReady   = true;
-      sdkPending = false;
-      vlog(2, 'sdk:loaded', attempt > 0 ? { attempts: attempt + 1 } : undefined);
-      vmark('sdk:loaded');
-      cb();
-    };
-    s.onerror = function () {
-      sdkPending = false;
-      if (FEATURE_RESILIENCE && attempt < SDK_MAX_RETRIES) {
-        var delay = SDK_RETRY_BASE * Math.pow(2, attempt);
-        console.warn('[vinyl] SDK load failed, retrying in ' + delay + 'ms (attempt ' + (attempt + 1) + '/' + SDK_MAX_RETRIES + ').');
-        setTimeout(function () { fetchSDK(cb, attempt + 1); }, delay);
-      } else {
-        console.warn('[vinyl] SoundCloud Widget SDK failed to load.');
-        el.title.textContent = 'Unavailable';
-        transition('errored', 'sdk-failed');
-      }
-    };
-    document.head.appendChild(s);
-  }
-
-  /* ── Warm up the hidden iframe source ────────────────────── */
-
-  function warmSource() {
-    if (el.source.src && el.source.src !== 'about:blank') return;
-    el.source.src =
-      'https://w.soundcloud.com/player/?url=' + encodeURIComponent(CRATE_URL) +
-      '&auto_play=false&show_artwork=false&visual=false' +
-      '&buying=false&sharing=false&download=false' +
-      '&show_playcount=false&show_comments=false&color=%237b5e7b';
-  }
-
-  /* ── Autoplay-safe play wrapper ────────────────────────────
-     Browsers may reject play() if no user gesture preceded it.
-     The SC Widget may return a Promise from play(); we catch
-     rejections silently so the UI stays consistent.
-     ────────────────────────────────────────────────────────── */
-
-  function safePlay() {
-    if (!needle) return;
-    try {
-      var result = needle.play();
-      if (result && typeof result.catch === 'function') {
-        result.catch(function () {
-          /* Autoplay blocked — needle stays lifted, no error shown.
-             v1.4.0: revert phase if PLAY event already promoted us. */
-          if (phase === 'playing') transition('ready', 'autoplay-blocked');
-          spinning = false;
-          reflectSpin();
-        });
-      }
-    } catch (e) {
-      /* Defensive: older SC Widget versions may not return a Promise.
-         v1.4.0: revert phase if PLAY event preceded the exception. */
-      if (phase === 'playing') transition('ready', 'autoplay-blocked');
-      spinning = false;
-      reflectSpin();
-    }
-  }
-
-  /* ── Drop the needle: initialise the widget ──────────────── */
-
-  function dropNeedle() {
-    if (needleDropped) return;                       // guard: one init only
-    /* v1.1.0: strict interface validation — verify SC.Widget is callable   */
-    /*         and exposes the Events map we depend on. Catches SDK shape   */
-    /*         changes before they surface as cryptic runtime errors.       */
-    var valid = window.SC && window.SC.Widget &&
-      (FEATURE_RESILIENCE
-        ? typeof SC.Widget === 'function' && SC.Widget.Events && SC.Widget.Events.READY
-        : true);
-    if (!valid) {
-      el.title.textContent = 'Unavailable';
-      console.warn('[vinyl] SC.Widget interface validation failed.');
-      transition('errored', 'widget-invalid');
-      return;
+      _ui.reflectTitle();
+      _ui.reflectCrate();
     }
 
-    needleDropped = true;
-    needle = SC.Widget(el.source);
+    function fetchSDK(cb, attempt) {
+      if (sdkReady) return cb();
+      if (sdkPending) return;
+      sdkPending = true;
+      attempt = (FEATURE_RESILIENCE && typeof attempt === 'number') ? attempt : 0;
 
-    needle.bind(SC.Widget.Events.READY, function () {
-      sourceReady = true;
-      vlog(2, 'widget:ready');
-      vmark('widget:ready');
-      needle.setVolume(DEFAULT_VOLUME);
-      catalogRecords();
-    });
-
-    needle.bind(SC.Widget.Events.PLAY, function () {
-      if (FEATURE_STATE_MACHINE && !transition('playing', 'play-event')) return;
-      spinning = true;
-      reflectSpin();
-      broadcastClaim();
-    });
-
-    needle.bind(SC.Widget.Events.PAUSE, function () {
-      if (FEATURE_STATE_MACHINE && !transition('paused', 'pause-event')) return;
-      spinning = false;
-      reflectSpin();
-      saveState();
-      /* v3.0.0: retain ownership on pause — broadcast paused state instead of
-         yielding. Other tabs see "Paused — Track Name" rather than losing the
-         owner entirely. Yield only fires on tab close or DND deactivation.
-         When v3 is off, fall back to v2.1 yield-on-pause behavior.            */
-      if (FEATURE_OWNERSHIP_V3) {
-        broadcastPauseRetain();
-      } else {
-        broadcastYield();
-      }
-    });
-
-    needle.bind(SC.Widget.Events.FINISH, function () {
-      transition('ready', 'track-finished');
-      spinning = false;
-      reflectSpin();
-    });
-
-    /* Track change detection via progress events.
-       Throttled: polls getCurrentSoundIndex at most once per second,
-       and only when there are multiple records to track. */
-    needle.bind(SC.Widget.Events.PLAY_PROGRESS, function (data) {
-      if (data && data.currentPosition) lastPosition = data.currentPosition;
-      broadcastSync();
-      if (records.length < 2) return;                // single track — nothing to detect
-      var now = Date.now();
-      if (now - lastSidePoll < 1000) return;         // throttle: 1 s
-      lastSidePoll = now;
-      needle.getCurrentSoundIndex(function (side) {
-        if (side !== currentSide) {
-          currentSide = side;
-          reflectTitle();
-          reflectCrate();
+      var s    = document.createElement('script');
+      s.src    = SDK_URL;
+      s.onload = function () {
+        sdkReady   = true;
+        sdkPending = false;
+        vlog(2, 'sdk:loaded', attempt > 0 ? { attempts: attempt + 1 } : undefined);
+        vmark('sdk:loaded');
+        cb();
+      };
+      s.onerror = function () {
+        sdkPending = false;
+        if (FEATURE_RESILIENCE && attempt < SDK_MAX_RETRIES) {
+          var delay = SDK_RETRY_BASE * Math.pow(2, attempt);
+          console.warn('[vinyl] SDK load failed, retrying in ' + delay + 'ms (attempt ' + (attempt + 1) + '/' + SDK_MAX_RETRIES + ').');
+          setTimeout(function () { fetchSDK(cb, attempt + 1); }, delay);
+        } else {
+          console.warn('[vinyl] SoundCloud Widget SDK failed to load.');
+          _ui.setTitle('Unavailable');
+          transition('errored', 'sdk-failed');
         }
-      });
-    });
-
-    /* Error event: bad URL, geo-blocked track, or network failure */
-    needle.bind(SC.Widget.Events.ERROR, function () {
-      transition('errored', 'widget-error');
-      spinning = false;
-      reflectSpin();
-      el.title.textContent = 'Unavailable';
-      console.warn('[vinyl] SoundCloud widget encountered an error.');
-    });
-
-    /* Safety net: if READY never fires */
-    setTimeout(function () {
-      if (!sourceReady && el.title.textContent === 'Loading\u2026') {
-        el.title.textContent = 'Unavailable';
-        transition('errored', 'ready-timeout');
-      }
-    }, SILENCE_MS);
-  }
-
-  /* ── Catalog records from the widget ─────────────────────── */
-
-  function catalogRecords() {
-    var cached = shelfRead();
-    if (cached && cached.length) {
-      records = cached;
-      vlog(3, 'catalog:shelf-hit', { tracks: cached.length });
-      fillCrate();
-      reflectTitle();
-      transition('ready', 'catalog-shelf');
-      restoreState();
-      return;
+      };
+      document.head.appendChild(s);
     }
 
-    needle.getSounds(function (sounds) {
-      if (!sounds || !sounds.length) {
-        vlog(1, 'catalog:empty');
-        el.title.textContent = 'Empty playlist';
-        transition('errored', 'catalog-empty');
+    function warmSource() {
+      var source = _ui.getSource();
+      if (source.src && source.src !== 'about:blank') return;
+      source.src = adapter.buildEmbedUrl(CRATE_URL);
+    }
+
+    function safePlay() {
+      adapter.safePlay(function onBlocked() {
+        if (phase === 'playing') transition('ready', 'autoplay-blocked');
+        spinning = false;
+        _ui.reflectSpin();
+      });
+    }
+
+    function dropNeedle() {
+      if (needleDropped) return;
+      if (!adapter.init(_ui.getSource())) {
+        _ui.setTitle('Unavailable');
+        console.warn('[vinyl] SC.Widget interface validation failed.');
+        transition('errored', 'widget-invalid');
         return;
       }
-      records = sounds.map(function (s, i) {
-        var rec = { title: s.title || 'Track ' + (i + 1), index: i };
-        if (FEATURE_CRATE_V2 && s.duration) rec.duration = s.duration;
-        return rec;
+
+      needleDropped = true;
+
+      adapter.on('ready', function () {
+        sourceReady = true;
+        vlog(2, 'widget:ready');
+        vmark('widget:ready');
+        adapter.setVolume(DEFAULT_VOLUME);
+        catalogRecords();
       });
-      vlog(2, 'catalog:fetched', { tracks: records.length });
-      vmark('catalog:done');
-      shelfWrite(records);
-      fillCrate();
-      reflectTitle();
-      transition('ready', 'catalog-fetched');
-      restoreState();
-    });
-  }
 
-  /* ── Fill the crate (playlist dropdown) ──────────────────── */
+      adapter.on('play', function () {
+        if (FEATURE_STATE_MACHINE && !transition('playing', 'play-event')) return;
+        spinning = true;
+        _ui.reflectSpin();
+        _sync.claim();
+      });
 
-  function fillCrate() {
-    el.crate.innerHTML = '';
-    records.forEach(function (rec, i) {
-      var li = document.createElement('li');
-      var label = rec.title;
-      if (FEATURE_CRATE_V2) {
-        /* v3.1.0: drop numerical index — title only, with optional duration.
-           When FEATURE_SLEEVE_V3 is off, retain the "01 · Title" format.    */
-        if (FEATURE_SLEEVE_V3) {
-          label = rec.title;
-          if (rec.duration) label += '  ' + formatDuration(rec.duration);
+      adapter.on('pause', function () {
+        if (FEATURE_STATE_MACHINE && !transition('paused', 'pause-event')) return;
+        spinning = false;
+        _ui.reflectSpin();
+        saveState();
+        if (FEATURE_OWNERSHIP_V3) {
+          _sync.pauseRetain();
         } else {
-          var num = String(i + 1).padStart(2, '0');
-          label = num + ' \u00b7 ' + rec.title;
-          if (rec.duration) label += '  (' + formatDuration(rec.duration) + ')';
+          _sync.yieldOwnership('pause');
         }
-        li.setAttribute('tabindex', '0');
-      }
-      li.textContent = label;
-      li.setAttribute('role', 'option');
-      li.setAttribute('data-index', rec.index);
-      if (rec.index === currentSide) li.setAttribute('aria-selected', 'true');
-      li.addEventListener('click', function () {
-        needle.skip(rec.index);
-        safePlay();
-        toggleCrate(false);
       });
-      el.crate.appendChild(li);
-    });
-  }
 
-  /* ── Reflect: sync UI elements to current state ──────────── */
+      adapter.on('finish', function () {
+        transition('ready', 'track-finished');
+        spinning = false;
+        _ui.reflectSpin();
+        if (FEATURE_GROOVE) groove.update(1);
+      });
 
-  function reflectSpin() {
-    glyph.spin.hidden = spinning;
-    glyph.lift.hidden = !spinning;
-    el.spin.setAttribute('aria-label', spinning ? 'Pause' : 'Play');
-    el.spin.title = spinning ? 'Pause' : 'Play';
-    el.stage.classList.toggle('vinyl--spinning', spinning);
-  }
+      adapter.on('progress', function (data) {
+        if (data && data.currentPosition) lastPosition = data.currentPosition;
+        if (FEATURE_GROOVE && records[currentSide] && records[currentSide].duration) {
+          groove.update(lastPosition / records[currentSide].duration);
+        }
+        _sync.broadcastSync();
+        if (records.length < 2) return;
+        var now = Date.now();
+        if (now - lastSidePoll < 1000) return;
+        lastSidePoll = now;
+        adapter.getCurrentIndex(function (side) {
+          if (side !== currentSide) {
+            currentSide = side;
+            _ui.reflectTitle();
+            _ui.reflectCrate();
+          }
+        });
+      });
 
-  function reflectVolume() {
-    glyph.loud.hidden   = hushed;
-    glyph.hushed.hidden = !hushed;
-    el.hush.setAttribute('aria-label', hushed ? 'Unmute' : 'Mute');
-    el.hush.title = hushed ? 'Unmute' : 'Mute';
-  }
+      adapter.on('error', function () {
+        transition('errored', 'widget-error');
+        spinning = false;
+        _ui.reflectSpin();
+        if (FEATURE_GROOVE) groove.clear();
+        _ui.setTitle('Unavailable');
+        console.warn('[vinyl] SoundCloud widget encountered an error.');
+      });
 
-  function reflectTitle() {
-    if (records[currentSide]) el.title.textContent = records[currentSide].title;
-    reflectNowPlaying();
-  }
-
-  function reflectCrate() {
-    var items = el.crate.querySelectorAll('li');
-    for (var i = 0; i < items.length; i++) {
-      var idx = parseInt(items[i].getAttribute('data-index'), 10);
-      items[i].setAttribute('aria-selected', idx === currentSide ? 'true' : 'false');
+      setTimeout(function () {
+        if (!sourceReady && _ui.getTitle() === 'Loading\u2026') {
+          _ui.setTitle('Unavailable');
+          transition('errored', 'ready-timeout');
+        }
+      }, SILENCE_MS);
     }
-    var active = el.crate.querySelector('[aria-selected="true"]');
-    if (active && !el.crate.hidden) active.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-  }
 
-  function reflectNowPlaying() {
-    if (!FEATURE_CRATE_V2 || !el.upnext) return;
-    /* If observing remote playback and not playing locally, defer to reflectRemoteState */
-    if (!spinning && remoteState && remoteState.title && !isOwner) return;
-    var next = currentSide + 1;
-    if (next < records.length && records[next]) {
-      el.upnext.textContent = 'Up next \u2014 ' + records[next].title;
-      el.upnext.hidden = false;
-    } else {
-      el.upnext.hidden = true;
+    function catalogRecords() {
+      var cached = shelfRead();
+      if (cached && cached.length) {
+        records = cached;
+        vlog(3, 'catalog:shelf-hit', { tracks: cached.length });
+        _ui.fillCrate();
+        _ui.reflectTitle();
+        transition('ready', 'catalog-shelf');
+        restoreState();
+        return;
+      }
+
+      adapter.getSounds(function (sounds) {
+        if (!sounds || !sounds.length) {
+          vlog(1, 'catalog:empty');
+          _ui.setTitle('Empty playlist');
+          transition('errored', 'catalog-empty');
+          return;
+        }
+        records = sounds.map(function (s, i) {
+          var rec = { title: s.title || 'Track ' + (i + 1), index: i };
+          if (FEATURE_CRATE_V2 && s.duration) rec.duration = s.duration;
+          return rec;
+        });
+        vlog(2, 'catalog:fetched', { tracks: records.length });
+        vmark('catalog:done');
+        shelfWrite(records);
+        _ui.fillCrate();
+        _ui.reflectTitle();
+        transition('ready', 'catalog-fetched');
+        restoreState();
+      });
     }
-  }
 
-  function toggleCrate(open) {
-    var show = typeof open === 'boolean' ? open : el.crate.hidden;
-    el.crate.hidden = !show;
-    el.latch.setAttribute('aria-expanded', String(show));
-    el.latch.setAttribute('aria-label', show ? 'Hide playlist' : 'Show playlist');
-  }
+    function handleRemoteClaim() {
+      if (spinning && adapter.isInit()) {
+        adapter.pause();
+        spinning = false;
+        transition('paused', 'remote-claim');
+        _ui.reflectSpin();
+      }
+    }
 
-  /* ── Event handlers ──────────────────────────────────────── */
+    function activate() {
+      vlog(2, 'stage:raise');
+      vmark('stage:raise');
+      if (phase === 'dormant') transition('loading', 'sdk-bootstrap');
+      warmSource();
+      if (!needleDropped) fetchSDK(dropNeedle);
+    }
 
-  function onSpin() {
-    if (!needle || !phaseAllowsInteraction()) return;
-    spinning ? needle.pause() : safePlay();
-  }
+    function deactivate() {
+      if (adapter.isInit() && spinning) adapter.pause();
+      if (FEATURE_OWNERSHIP_V3 && _sync.isOwner()) _sync.yieldOwnership('dnd-off');
+    }
 
-  function onHush() {
-    if (!needle || !phaseAllowsInteraction()) return;
-    if (hushed) {
-      needle.setVolume(savedVolume);
-      el.dial.value = savedVolume;
-      hushed = false;
-    } else {
-      savedVolume = parseInt(el.dial.value, 10) || DEFAULT_VOLUME;
-      needle.setVolume(0);
-      el.dial.value = 0;
+    function mute() {
+      savedVolume = _ui.getDialValue() || DEFAULT_VOLUME;
+      adapter.setVolume(0);
+      _ui.setDialValue(0);
       hushed = true;
+      _ui.reflectVolume();
     }
-    reflectVolume();
-  }
 
-  function onDial() {
-    if (!needle || !phaseAllowsInteraction()) return;
-    var v = parseInt(el.dial.value, 10);
-    needle.setVolume(v);
-    hushed = v === 0;
-    if (v > 0) savedVolume = v;
-    reflectVolume();
-  }
+    function unmute() {
+      adapter.setVolume(savedVolume);
+      _ui.setDialValue(savedVolume);
+      hushed = false;
+      _ui.reflectVolume();
+    }
 
-  /* ── Stage: raise / lower based on DND mode ────────────── */
+    function setVolume(v) {
+      adapter.setVolume(v);
+      hushed = v === 0;
+      if (v > 0) savedVolume = v;
+      _ui.reflectVolume();
+    }
 
-  function raiseStage() {
-    vlog(2, 'stage:raise');
-    vmark('stage:raise');
-    if (phase === 'dormant') transition('loading', 'sdk-bootstrap');
-    warmSource();
-    if (!needleDropped) fetchSDK(dropNeedle);        // only bootstrap once
-    el.stage.removeAttribute('aria-hidden');
-    void el.stage.offsetHeight;                      // flush layout — gives browser the opacity:0 "from" frame
-    el.stage.classList.add('vinyl--live');
-  }
+    return {
+      wire: wire,
+      isSpinning: function () { return spinning; },
+      isHushed: function () { return hushed; },
+      getSavedVolume: function () { return savedVolume; },
+      getRecords: function () { return records; },
+      getCurrentSide: function () { return currentSide; },
+      getCurrentRecord: function () { return records[currentSide]; },
+      getLastPosition: function () { return lastPosition; },
+      getPhase: function () { return phase; },
+      isSourceReady: function () { return sourceReady; },
+      phaseAllowsInteraction: phaseAllowsInteraction,
+      isReady: function () { return adapter.isInit() && phaseAllowsInteraction(); },
+      transition: transition,
+      play: safePlay,
+      pause: function () { adapter.pause(); },
+      skip: function (index) { adapter.skip(index); },
+      mute: mute,
+      unmute: unmute,
+      setVolume: setVolume,
+      handleRemoteClaim: handleRemoteClaim,
+      activate: activate,
+      deactivate: deactivate,
+      saveState: saveState,
+      getSnapshot: function () {
+        return { phase: phase, spinning: spinning, records: records, currentSide: currentSide, lastPosition: lastPosition, sourceReady: sourceReady };
+      }
+    };
+  })();
 
-  function lowerStage() {
-    vlog(2, 'stage:lower');
-    el.stage.classList.remove('vinyl--live');
-    el.stage.setAttribute('aria-hidden', 'true');
-    if (needle && spinning) needle.pause();
-    /* v3.0.0: explicitly yield on DND deactivation (not just pause).
-       When v3 is on, the PAUSE handler retains ownership, so we need
-       a direct yield here to release it when the stage goes down.     */
-    if (FEATURE_OWNERSHIP_V3 && isOwner) broadcastYield('dnd-off');
-    toggleCrate(false);
-  }
+  /* ══════════════════════════════════════════════════════════════
+     Sync (v5.0.0 — Phase 5 extraction)
 
-  function onMoodShift() {
-    isDND() ? raiseStage() : lowerStage();
-  }
+     Cross-tab coordination via BroadcastChannel. Owns:
+       - Ownership state and remote state tracking
+       - Heartbeat and leader election
+       - Message dispatch and reception
+       - Yield grace window management
 
-  /* ── Overture: boot sequence ─────────────────────────────── */
+     Wired dependencies: _ctrl and _ui (set via wire())
+     ══════════════════════════════════════════════════════════════ */
+
+  var sync = (function () {
+
+    var _ctrl = null;                                // wired controller module
+    var _ui = null;                                  // wired ui module
+
+    var channel       = null;
+    var tabId         = '';
+    var isOwner       = false;
+    var lastSync      = 0;
+    var ownerTabId    = '';
+    var lastOwnerSeen = 0;
+    var remoteState   = null;
+    var heartbeatTimer  = null;
+    var electionTimer   = null;
+    var pendingElection = false;
+    var yieldGraceTimer = null;
+    var claimEpoch      = 0;
+
+    function wire(deps) {
+      _ctrl = deps.ctrl;
+      _ui = deps.ui;
+    }
+
+    function initTabId() {
+      var id = store.getTabId();
+      vlog(3, 'identity:resolved', { tabId: id });
+      return id;
+    }
+
+    function initClaimEpoch() {
+      return store.getClaimEpoch();
+    }
+
+    function persistClaimEpoch() {
+      store.persistEpoch(claimEpoch);
+    }
+
+    function initChannel() {
+      if (!FEATURE_BROADCAST || typeof BroadcastChannel === 'undefined') return;
+      try {
+        tabId = initTabId();
+        claimEpoch = initClaimEpoch();
+        channel = new BroadcastChannel(CHANNEL_NAME);
+        channel.onmessage = onChannelMessage;
+        vlog(3, 'broadcast:init', { tabId: tabId, epoch: claimEpoch, stableId: FEATURE_OWNERSHIP_V3 });
+        vmark('broadcast:init');
+
+        if (FEATURE_CONTINUITY_V4) {
+          if (store.consumeNavMarker()) {
+            vlog(2, 'continuity:nav-detected', { tabId: tabId });
+            vmark('continuity:nav-reclaim');
+            broadcastClaim();
+            return;
+          }
+        }
+
+        sendPing();
+      } catch (e) {
+        console.warn('[vinyl] Cross-tab sync unavailable (' + e.message + ').');
+        vlog(1, 'broadcast:failed', { error: e.message });
+      }
+    }
+
+    function safeBroadcast(msg) {
+      if (!channel) return false;
+      try {
+        channel.postMessage(msg);
+        return true;
+      } catch (e) {
+        vlog(1, 'broadcast:send-error', { type: msg.type, error: e.message });
+        return false;
+      }
+    }
+
+    function broadcastClaim() {
+      if (!channel) return;
+      if (ownerTabId && ownerTabId !== tabId && isOwnerStale()) {
+        vlog(2, 'broadcast:stale-owner-cleared', { previous: ownerTabId });
+      }
+      isOwner = true;
+      ownerTabId = tabId;
+      lastOwnerSeen = Date.now();
+      remoteState = null;
+      cancelElection();
+      cancelYieldGrace();
+
+      if (FEATURE_OWNERSHIP_V3) {
+        claimEpoch++;
+        persistClaimEpoch();
+      }
+
+      safeBroadcast({ type: 'claim', tabId: tabId, ts: Date.now(), epoch: claimEpoch });
+      startHeartbeat();
+      vlog(3, 'broadcast:claim', { tabId: tabId, epoch: claimEpoch });
+    }
+
+    function broadcastYield(reason) {
+      if (!channel) return;
+      if (!isOwner) {
+        vlog(3, 'broadcast:yield-skipped', { reason: 'not-owner' });
+        return;
+      }
+      isOwner = false;
+      ownerTabId = '';
+      remoteState = null;
+      stopHeartbeat();
+      safeBroadcast({ type: 'yield', tabId: tabId, ts: Date.now(), reason: reason || 'explicit' });
+      vlog(3, 'broadcast:yield', { tabId: tabId, reason: reason || 'explicit' });
+    }
+
+    function broadcastPauseRetain() {
+      if (!FEATURE_OWNERSHIP_V3 || !channel || !isOwner) return;
+      var rec = _ctrl.getCurrentRecord();
+      var title = rec ? rec.title : '';
+      lastSync = Date.now();
+      safeBroadcast({
+        type: 'sync',
+        tabId: tabId,
+        payload: {
+          side: _ctrl.getCurrentSide(),
+          spinning: false,
+          pos: _ctrl.getLastPosition(),
+          title: title,
+          ts: Date.now()
+        }
+      });
+      vlog(3, 'broadcast:pause-retain', { side: _ctrl.getCurrentSide() });
+    }
+
+    function cancelYieldGrace() {
+      if (yieldGraceTimer) {
+        clearTimeout(yieldGraceTimer);
+        yieldGraceTimer = null;
+        vlog(3, 'yield-grace:cancelled');
+      }
+    }
+
+    function broadcastSync() {
+      if (!channel || !isOwner) return;
+      var now = Date.now();
+      if (now - lastSync < SYNC_THROTTLE) return;
+      lastSync = now;
+      var rec = _ctrl.getCurrentRecord();
+      var title = rec ? rec.title : '';
+      safeBroadcast({
+        type: 'sync',
+        tabId: tabId,
+        payload: {
+          side: _ctrl.getCurrentSide(),
+          spinning: _ctrl.isSpinning(),
+          pos: _ctrl.getLastPosition(),
+          title: title,
+          ts: now
+        }
+      });
+      vlog(3, 'broadcast:sync', { side: _ctrl.getCurrentSide(), pos: _ctrl.getLastPosition() });
+    }
+
+    function onChannelMessage(e) {
+      var msg = e.data;
+      if (!msg || msg.tabId === tabId) return;
+
+      if (msg.ts && Date.now() - msg.ts > OWNER_STALE) {
+        vlog(3, 'broadcast:stale', { type: msg.type, age: Date.now() - msg.ts });
+        return;
+      }
+
+      if (FEATURE_LEADER_ELECTION && msg.tabId === ownerTabId) {
+        lastOwnerSeen = msg.ts || Date.now();
+        cancelElection();
+      }
+
+      switch (msg.type) {
+        case 'claim':
+          vlog(2, 'broadcast:remote-claim', { from: msg.tabId, epoch: msg.epoch });
+          cancelYieldGrace();
+          ownerTabId = msg.tabId;
+          lastOwnerSeen = msg.ts || Date.now();
+          cancelElection();
+          if (isOwner) {
+            isOwner = false;
+            stopHeartbeat();
+          }
+          _ctrl.handleRemoteClaim();
+          remoteState = null;
+          break;
+        case 'yield':
+          vlog(3, 'broadcast:remote-yield', { from: msg.tabId, reason: msg.reason });
+          if (ownerTabId === msg.tabId) {
+            if (FEATURE_OWNERSHIP_V3) {
+              cancelYieldGrace();
+              var yieldFrom = msg.tabId;
+              var graceMs = FEATURE_CONTINUITY_V4 ? V4_YIELD_GRACE_MS : YIELD_GRACE_MS;
+              yieldGraceTimer = setTimeout(function () {
+                yieldGraceTimer = null;
+                if (ownerTabId === yieldFrom) {
+                  vlog(2, 'yield-grace:expired', { from: yieldFrom });
+                  ownerTabId = '';
+                  remoteState = null;
+                  _ui.reflectRemoteState();
+                }
+              }, graceMs);
+              vlog(3, 'yield-grace:started', { from: yieldFrom, grace: graceMs });
+            } else {
+              ownerTabId = '';
+              remoteState = null;
+              _ui.reflectRemoteState();
+            }
+          }
+          break;
+        case 'sync':
+          if (msg.tabId !== ownerTabId) break;
+          lastOwnerSeen = (msg.payload && msg.payload.ts) || Date.now();
+          remoteState = msg.payload || null;
+          vlog(3, 'broadcast:remote-sync', msg.payload);
+          if (!isOwner) _ui.reflectRemoteState();
+          break;
+
+        case 'heartbeat':
+          if (!FEATURE_LEADER_ELECTION) break;
+          if (msg.tabId === ownerTabId) {
+            lastOwnerSeen = msg.ts || Date.now();
+            vlog(3, 'leader:heartbeat-recv', { from: msg.tabId });
+          }
+          break;
+        case 'ping':
+          if (!FEATURE_LEADER_ELECTION) break;
+          vlog(3, 'leader:ping-recv', { from: msg.tabId });
+          if (isOwner) sendPong(msg.tabId);
+          break;
+        case 'pong':
+          if (!FEATURE_LEADER_ELECTION) break;
+          vlog(2, 'leader:pong-recv', { from: msg.tabId });
+          ownerTabId = msg.tabId;
+          lastOwnerSeen = msg.ts || Date.now();
+          remoteState = msg.payload || null;
+          cancelElection();
+          if (!isOwner) _ui.reflectRemoteState();
+          break;
+      }
+    }
+
+    function isOwnerStale() {
+      if (!ownerTabId || ownerTabId === tabId) return false;
+      return Date.now() - lastOwnerSeen > OWNER_STALE;
+    }
+
+    function leaderElectionActive() {
+      return FEATURE_LEADER_ELECTION && FEATURE_BROADCAST && !!channel;
+    }
+
+    function startHeartbeat() {
+      stopHeartbeat();
+      if (!leaderElectionActive()) return;
+      heartbeatTimer = setInterval(function () {
+        safeBroadcast({ type: 'heartbeat', tabId: tabId, ts: Date.now() });
+        vlog(3, 'leader:heartbeat-sent');
+      }, HEARTBEAT_MS);
+      vlog(3, 'leader:heartbeat-start');
+    }
+
+    function stopHeartbeat() {
+      if (heartbeatTimer) {
+        clearInterval(heartbeatTimer);
+        heartbeatTimer = null;
+        vlog(3, 'leader:heartbeat-stop');
+      }
+    }
+
+    function electionJitter() {
+      var hash = 0;
+      for (var i = 0; i < tabId.length; i++) {
+        hash = ((hash << 5) - hash + tabId.charCodeAt(i)) | 0;
+      }
+      return ELECTION_DELAY + (Math.abs(hash) % 1000);
+    }
+
+    function startElection(reason) {
+      if (!leaderElectionActive() || pendingElection) return;
+      pendingElection = true;
+      var delay = electionJitter();
+      vlog(2, 'leader:election-start', { reason: reason, delay: delay });
+      vmark('leader:election-start');
+      electionTimer = setTimeout(function () {
+        pendingElection = false;
+        electionTimer = null;
+        if (!isOwnerStale()) {
+          vlog(3, 'leader:election-aborted', { reason: 'owner-alive' });
+          return;
+        }
+        vlog(2, 'leader:election-resolved', { previousOwner: ownerTabId });
+        vmark('leader:election-resolved');
+        ownerTabId = '';
+        remoteState = null;
+        _ui.reflectRemoteState();
+      }, delay);
+    }
+
+    function cancelElection() {
+      if (electionTimer) {
+        clearTimeout(electionTimer);
+        electionTimer = null;
+        pendingElection = false;
+        vlog(3, 'leader:election-cancelled');
+      }
+    }
+
+    function sendPing() {
+      if (!leaderElectionActive()) return;
+      safeBroadcast({ type: 'ping', tabId: tabId, ts: Date.now() });
+      vlog(3, 'leader:ping-sent');
+      vmark('leader:ping');
+    }
+
+    function sendPong(toTabId) {
+      if (!leaderElectionActive() || !isOwner) return;
+      var rec = _ctrl.getCurrentRecord();
+      var title = rec ? rec.title : '';
+      safeBroadcast({
+        type: 'pong',
+        tabId: tabId,
+        ts: Date.now(),
+        payload: {
+          side: _ctrl.getCurrentSide(),
+          spinning: _ctrl.isSpinning(),
+          pos: _ctrl.getLastPosition(),
+          title: title
+        }
+      });
+      vlog(3, 'leader:pong-sent', { to: toTabId });
+    }
+
+    return {
+      wire: wire,
+      init: initChannel,
+      claim: broadcastClaim,
+      yieldOwnership: broadcastYield,
+      pauseRetain: broadcastPauseRetain,
+      broadcastSync: broadcastSync,
+      isOwner: function () { return isOwner; },
+      getRemoteState: function () { return remoteState; },
+      getOwnerTabId: function () { return ownerTabId; },
+      getTabId: function () { return tabId; },
+      getLastOwnerSeen: function () { return lastOwnerSeen; },
+      isOwnerStale: isOwnerStale,
+      startElection: startElection,
+      stopHeartbeat: stopHeartbeat
+    };
+  })();
+
+  /* ══════════════════════════════════════════════════════════════
+     UI (v5.0.0 — Phase 5 extraction)
+
+     DOM interaction and rendering. Owns:
+       - Element references (el.*, glyph.*)
+       - Event binding and handlers
+       - DOM reflection of state changes
+       - Crate and marquee rendering
+
+     Wired dependencies: _ctrl and _sync (set via wire())
+     ══════════════════════════════════════════════════════════════ */
+
+  var ui = (function () {
+
+    var _ctrl = null;                                // wired controller module
+    var _sync = null;                                // wired sync module
+
+    var el    = {};
+    var glyph = {};
+
+    function wire(deps) {
+      _ctrl = deps.ctrl;
+      _sync = deps.sync;
+    }
+
+    function mount(stageEl) {
+      el.stage  = stageEl;
+      el.source = $('vinylSource');
+      el.title  = $('vinylTitle');
+      el.spin   = $('vinylSpin');
+      el.hush   = $('vinylHush');
+      el.dial   = $('vinylDial');
+      el.latch  = $('vinylLatch');
+      el.crate  = $('vinylCrate');
+
+      glyph.spin   = el.stage.querySelector('.vinyl-icon-spin');
+      glyph.lift   = el.stage.querySelector('.vinyl-icon-lift');
+      glyph.loud   = el.stage.querySelector('.vinyl-icon-loud');
+      glyph.hushed = el.stage.querySelector('.vinyl-icon-hushed');
+
+      if (FEATURE_GROOVE) {
+        el.groove = el.stage.querySelector('.vinyl-groove-wrap');
+        if (el.groove) groove.mount(el.groove);
+      }
+
+      el.spin.addEventListener('click', onSpin);
+      el.hush.addEventListener('click', onHush);
+      el.dial.addEventListener('input', onDial);
+      el.latch.addEventListener('click', function () { toggleCrate(); });
+
+      document.addEventListener('click', function (e) {
+        if (!el.crate.hidden && !el.stage.contains(e.target)) toggleCrate(false);
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !el.crate.hidden) toggleCrate(false);
+      });
+
+      var obs = new MutationObserver(function (muts) {
+        for (var i = 0; i < muts.length; i++) {
+          if (muts[i].attributeName === 'data-theme') { onMoodShift(); break; }
+        }
+      });
+      obs.observe(document.documentElement, { attributes: true });
+
+      if (FEATURE_CRATE_V2) {
+        var marquee = el.stage.querySelector('.vinyl-marquee');
+        if (marquee) {
+          el.upnext = document.createElement('span');
+          el.upnext.className = 'vinyl-upnext';
+          el.upnext.hidden = true;
+          marquee.appendChild(el.upnext);
+          marquee.style.cursor = 'pointer';
+          marquee.addEventListener('click', function (e) {
+            e.stopPropagation();
+            toggleCrate();
+          });
+        }
+
+        el.crate.addEventListener('keydown', function (e) {
+          if (el.crate.hidden) return;
+          var items = el.crate.querySelectorAll('li');
+          if (!items.length) return;
+          var active = document.activeElement;
+          var idx = -1;
+          for (var j = 0; j < items.length; j++) {
+            if (items[j] === active) { idx = j; break; }
+          }
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            var nxt = items[Math.min(idx + 1, items.length - 1)];
+            if (nxt && nxt.focus) nxt.focus();
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            var prv = items[Math.max(idx - 1, 0)];
+            if (prv && prv.focus) prv.focus();
+          } else if (e.key === 'Enter' && idx >= 0) {
+            items[idx].click();
+          }
+        });
+
+        var v2css = document.createElement('style');
+        v2css.textContent =
+          '.vinyl-upnext{display:block;font-size:0.55rem;color:var(--ink-lt,#999);' +
+          'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0.7;line-height:1.2}';
+        document.head.appendChild(v2css);
+      }
+    }
+
+    function reflectSpin() {
+      var s = _ctrl.isSpinning();
+      glyph.spin.hidden = s;
+      glyph.lift.hidden = !s;
+      el.spin.setAttribute('aria-label', s ? 'Pause' : 'Play');
+      el.spin.title = s ? 'Pause' : 'Play';
+      el.stage.classList.toggle('vinyl--spinning', s);
+    }
+
+    function reflectVolume() {
+      var h = _ctrl.isHushed();
+      glyph.loud.hidden = h;
+      glyph.hushed.hidden = !h;
+      el.hush.setAttribute('aria-label', h ? 'Unmute' : 'Mute');
+      el.hush.title = h ? 'Unmute' : 'Mute';
+    }
+
+    function reflectTitle() {
+      var rec = _ctrl.getCurrentRecord();
+      if (rec) {
+        el.title.textContent = rec.title;
+        if (FEATURE_GROOVE) groove.seed(rec.title);
+      }
+      reflectNowPlaying();
+    }
+
+    function reflectCrate() {
+      var side = _ctrl.getCurrentSide();
+      var items = el.crate.querySelectorAll('li');
+      for (var i = 0; i < items.length; i++) {
+        var idx = parseInt(items[i].getAttribute('data-index'), 10);
+        items[i].setAttribute('aria-selected', idx === side ? 'true' : 'false');
+      }
+      var active = el.crate.querySelector('[aria-selected="true"]');
+      if (active && !el.crate.hidden) active.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+
+    function reflectNowPlaying() {
+      if (!FEATURE_CRATE_V2 || !el.upnext) return;
+      if (!_ctrl.isSpinning() && _sync.getRemoteState() && _sync.getRemoteState().title && !_sync.isOwner()) return;
+      var side = _ctrl.getCurrentSide();
+      var recs = _ctrl.getRecords();
+      var next = side + 1;
+      if (next < recs.length && recs[next]) {
+        el.upnext.textContent = 'Up next \u2014 ' + recs[next].title;
+        el.upnext.hidden = false;
+      } else {
+        el.upnext.hidden = true;
+      }
+    }
+
+    function reflectRemoteState() {
+      if (!FEATURE_CRATE_V2 || !el.upnext) return;
+      var rs = _sync.getRemoteState();
+      if (!_sync.isOwner() && !_ctrl.isSpinning() && rs && rs.title) {
+        var prefix = (FEATURE_OWNERSHIP_V3 && rs.spinning === false)
+          ? 'Paused elsewhere'
+          : 'Playing elsewhere';
+        el.upnext.textContent = prefix + ' \u2014 ' + rs.title;
+        el.upnext.hidden = false;
+      } else if (!rs && !_ctrl.isSpinning()) {
+        reflectNowPlaying();
+      }
+    }
+
+    function fillCrate() {
+      el.crate.innerHTML = '';
+      var recs = _ctrl.getRecords();
+      var side = _ctrl.getCurrentSide();
+      recs.forEach(function (rec, i) {
+        var li = document.createElement('li');
+        var label = rec.title;
+        if (FEATURE_CRATE_V2) {
+          if (FEATURE_SLEEVE_V3) {
+            label = rec.title;
+            if (rec.duration) label += '  ' + formatDuration(rec.duration);
+          } else {
+            var num = String(i + 1).padStart(2, '0');
+            label = num + ' \u00b7 ' + rec.title;
+            if (rec.duration) label += '  (' + formatDuration(rec.duration) + ')';
+          }
+          li.setAttribute('tabindex', '0');
+        }
+        li.textContent = label;
+        li.setAttribute('role', 'option');
+        li.setAttribute('data-index', rec.index);
+        if (rec.index === side) li.setAttribute('aria-selected', 'true');
+        li.addEventListener('click', function () {
+          _ctrl.skip(rec.index);
+          _ctrl.play();
+          toggleCrate(false);
+        });
+        el.crate.appendChild(li);
+      });
+    }
+
+    function toggleCrate(open) {
+      var show = typeof open === 'boolean' ? open : el.crate.hidden;
+      el.crate.hidden = !show;
+      el.latch.setAttribute('aria-expanded', String(show));
+      el.latch.setAttribute('aria-label', show ? 'Hide playlist' : 'Show playlist');
+    }
+
+    function onSpin() {
+      if (!_ctrl.isReady()) return;
+      _ctrl.isSpinning() ? _ctrl.pause() : _ctrl.play();
+    }
+
+    function onHush() {
+      if (!_ctrl.isReady()) return;
+      _ctrl.isHushed() ? _ctrl.unmute() : _ctrl.mute();
+    }
+
+    function onDial() {
+      if (!_ctrl.isReady()) return;
+      _ctrl.setVolume(parseInt(el.dial.value, 10));
+    }
+
+    function raiseStage() {
+      el.stage.removeAttribute('aria-hidden');
+      void el.stage.offsetHeight;
+      el.stage.classList.add('vinyl--live');
+    }
+
+    function lowerStage() {
+      vlog(2, 'stage:lower');
+      el.stage.classList.remove('vinyl--live');
+      el.stage.setAttribute('aria-hidden', 'true');
+      toggleCrate(false);
+    }
+
+    function onMoodShift() {
+      if (isDND()) {
+        _ctrl.activate();
+        raiseStage();
+      } else {
+        _ctrl.deactivate();
+        lowerStage();
+      }
+    }
+
+    return {
+      wire: wire,
+      mount: mount,
+      reflectSpin: reflectSpin,
+      reflectVolume: reflectVolume,
+      reflectTitle: reflectTitle,
+      reflectCrate: reflectCrate,
+      reflectNowPlaying: reflectNowPlaying,
+      reflectRemoteState: reflectRemoteState,
+      fillCrate: fillCrate,
+      toggleCrate: toggleCrate,
+      raiseStage: raiseStage,
+      lowerStage: lowerStage,
+      setTitle: function (text) { el.title.textContent = text; },
+      getTitle: function () { return el.title.textContent; },
+      getDialValue: function () { return parseInt(el.dial.value, 10) || 0; },
+      setDialValue: function (v) { el.dial.value = v; },
+      getSource: function () { return el.source; }
+    };
+  })();
+
+  /* ── Overture: composition root ───────────────────────────── */
 
   function overture() {
-    el.stage  = $('vinyl');
-    el.source = $('vinylSource');
-    el.title  = $('vinylTitle');
-    el.spin   = $('vinylSpin');
-    el.hush   = $('vinylHush');
-    el.dial   = $('vinylDial');
-    el.latch  = $('vinylLatch');
-    el.crate  = $('vinylCrate');
+    var stageEl = $('vinyl');
+    if (!stageEl) return;
 
-    if (!el.stage) return;                           // bail if markup absent
+    ui.mount(stageEl);
 
-    glyph.spin   = el.stage.querySelector('.vinyl-icon-spin');
-    glyph.lift   = el.stage.querySelector('.vinyl-icon-lift');
-    glyph.loud   = el.stage.querySelector('.vinyl-icon-loud');
-    glyph.hushed = el.stage.querySelector('.vinyl-icon-hushed');
+    controller.wire({ sync: sync, ui: ui });
+    sync.wire({ ctrl: controller, ui: ui });
+    ui.wire({ ctrl: controller, sync: sync });
 
-    /* Bind controls */
-    el.spin.addEventListener('click', onSpin);
-    el.hush.addEventListener('click', onHush);
-    el.dial.addEventListener('input', onDial);
-    el.latch.addEventListener('click', function () { toggleCrate(); });
-
-    /* Close crate on outside click */
-    document.addEventListener('click', function (e) {
-      if (!el.crate.hidden && !el.stage.contains(e.target)) toggleCrate(false);
-    });
-
-    /* Escape key closes crate */
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && !el.crate.hidden) toggleCrate(false);
-    });
-
-    /* Watch data-theme for DND mood shifts */
-    var obs = new MutationObserver(function (muts) {
-      for (var i = 0; i < muts.length; i++) {
-        if (muts[i].attributeName === 'data-theme') { onMoodShift(); break; }
-      }
-    });
-    obs.observe(document.documentElement, { attributes: true });
-
-    /* Save playback state on page unload for cross-page continuity */
     var onExit = function () {
-      if (sourceReady && isDND()) saveState();
-      stopHeartbeat();                                   // v2.1.0: clean timer teardown
-
-      /* v4.0.0: navigation-aware exit. When the owner is in DND mode,
-         assume this unload is a same-tab navigation (Resume → Projects)
-         rather than a tab close. Set a nav marker so the new page can
-         reclaim immediately, and suppress the yield to avoid an
-         ownership gap. If the tab is actually closing, the nav marker
-         persists in sessionStorage but is harmless — the next session
-         in this tab slot will consume and discard it, and other tabs
-         detect the stale owner via heartbeat timeout.                 */
-      if (FEATURE_CONTINUITY_V4 && isDND() && isOwner) {
-        try { sessionStorage.setItem(NAV_MARKER_KEY, '1'); } catch (e) {}
-        vlog(3, 'continuity:nav-exit', { tabId: tabId });
+      if (controller.isSourceReady() && isDND()) controller.saveState();
+      sync.stopHeartbeat();
+      if (FEATURE_CONTINUITY_V4 && isDND() && sync.isOwner()) {
+        store.setNavMarker();
+        vlog(3, 'continuity:nav-exit', { tabId: sync.getTabId() });
       } else {
-        broadcastYield('tab-exit');                       // clean ownership release
+        sync.yieldOwnership('tab-exit');
       }
     };
     window.addEventListener('beforeunload', onExit);
-    /* v1.1.0: pagehide fires on mobile Safari and bfcache navigations    */
-    /*         where beforeunload is often suppressed. Additive listener  */
-    /*         — saveState is idempotent so double-fire is harmless.      */
     if (FEATURE_RESILIENCE) window.addEventListener('pagehide', onExit);
 
-    /* v2.0.0: initialise cross-tab coordination channel */
-    initChannel();
+    sync.init();
 
-    /* v2.1.0: detect stale owner when tab regains focus.
-       If the user switches back to a tab whose owner has gone
-       silent, trigger election to clear stale ownership. */
     if (FEATURE_LEADER_ELECTION) {
       document.addEventListener('visibilitychange', function () {
         if (document.visibilityState !== 'visible') return;
-        if (!isOwner && ownerTabId && isOwnerStale()) {
-          vlog(2, 'leader:stale-on-focus', { owner: ownerTabId, age: Date.now() - lastOwnerSeen });
-          startElection('visibility-change');
+        if (!sync.isOwner() && sync.getOwnerTabId() && sync.isOwnerStale()) {
+          vlog(2, 'leader:stale-on-focus', { owner: sync.getOwnerTabId(), age: Date.now() - sync.getLastOwnerSeen() });
+          sync.startElection('visibility-change');
         }
       });
     }
 
-    /* v2.0.0: enhanced crate — "Up Next" display + marquee click + keyboard nav */
-    if (FEATURE_CRATE_V2) {
-      var marquee = el.stage.querySelector('.vinyl-marquee');
-      if (marquee) {
-        el.upnext = document.createElement('span');
-        el.upnext.className = 'vinyl-upnext';
-        el.upnext.hidden = true;
-        marquee.appendChild(el.upnext);
-        marquee.style.cursor = 'pointer';
-        marquee.addEventListener('click', function (e) {
-          e.stopPropagation();
-          toggleCrate();
-        });
-      }
-
-      /* Keyboard navigation in crate */
-      el.crate.addEventListener('keydown', function (e) {
-        if (el.crate.hidden) return;
-        var items = el.crate.querySelectorAll('li');
-        if (!items.length) return;
-        var active = document.activeElement;
-        var idx = -1;
-        for (var j = 0; j < items.length; j++) {
-          if (items[j] === active) { idx = j; break; }
-        }
-        if (e.key === 'ArrowDown') {
-          e.preventDefault();
-          var nxt = items[Math.min(idx + 1, items.length - 1)];
-          if (nxt && nxt.focus) nxt.focus();
-        } else if (e.key === 'ArrowUp') {
-          e.preventDefault();
-          var prv = items[Math.max(idx - 1, 0)];
-          if (prv && prv.focus) prv.focus();
-        } else if (e.key === 'Enter' && idx >= 0) {
-          items[idx].click();
-        }
-      });
-
-      /* Inject v2.0 styles — zero CSS cost when gate is off */
-      var v2css = document.createElement('style');
-      v2css.textContent =
-        '.vinyl-upnext{display:block;font-size:0.55rem;color:var(--ink-lt,#999);' +
-        'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0.7;line-height:1.2}';
-      document.head.appendChild(v2css);
+    if (isDND()) {
+      controller.activate();
+      ui.raiseStage();
     }
-
-    /* If DND was already saved, raise immediately */
-    if (isDND()) raiseStage();
   }
 
   /* Wait for DOM */

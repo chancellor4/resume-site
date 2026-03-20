@@ -1317,20 +1317,24 @@ suite('v2.0.0 — Remote Claim Pauses Local (LOG_LEVEL=3)');
 //  SUITE 36: v2.0.0 — Broadcast Yield on Pause
 // ═══════════════════════════════════════════════════════════════
 
-suite('v2.0.0 — Broadcast Yield on Pause (LOG_LEVEL=3)');
+suite('v2.0.0 — Pause-Retain on Pause (v3.0 semantics) (LOG_LEVEL=3)');
 
 {
+  // v3.0.0: FEATURE_OWNERSHIP_V3 changes pause behavior — tab retains
+  // ownership and broadcasts a sync with spinning=false (pause-retain)
+  // instead of yielding. This is the correct v3+ behavior.
   const env = execVinyl({ logLevel: 3 });
   env.doc._htmlAttrs['data-theme'] = 'refined';
   const w = env.exec();
   w._fire('ready');
   w._fire('play');   // sets isOwner=true via broadcastClaim
-  w._fire('pause');  // should broadcastYield
+  w._fire('pause');  // v3+: broadcastPauseRetain (not yield)
 
   const ch = env.bc.instances[0];
-  const yields = ch._messages.filter(m => m.type === 'yield');
-  assert('yield message posted on pause', yields.length === 1);
-  assert('broadcast:yield logged', findCaptured(env.cons.captured, 'debug', 'broadcast:yield').length > 0);
+  const syncs = ch._messages.filter(m => m.type === 'sync');
+  const pauseRetain = syncs.find(m => m.payload && m.payload.spinning === false);
+  assert('pause-retain sync posted on pause', !!pauseRetain);
+  assert('broadcast:pause-retain logged', findCaptured(env.cons.captured, 'debug', 'broadcast:pause-retain').length > 0);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1442,13 +1446,15 @@ suite('v2.0.0 — Crate V2 Numbering & Duration (LOG_LEVEL=3)');
   assert('crate has 3 children', crate.children.length === 3);
 
   const first = crate.children[0];
-  assert('first item starts with 01', first.textContent.startsWith('01'));
+  // v3.1.0: FEATURE_SLEEVE_V3 drops the "01 · Title" numerical prefix.
+  // Crate items now show "Title  3:00" format (title-only, left-aligned).
+  assert('first item starts with track title', first.textContent.startsWith('Track A'));
   assert('first item contains Track A', first.textContent.includes('Track A'));
   assert('first item contains duration (3:00)', first.textContent.includes('3:00'));
   assert('first item has tabindex=0', first.attributes.tabindex === '0');
 
   const second = crate.children[1];
-  assert('second item starts with 02', second.textContent.startsWith('02'));
+  assert('second item starts with track title', second.textContent.startsWith('Track B'));
   assert('second item contains duration (3:30)', second.textContent.includes('3:30'));
 }
 
@@ -1560,9 +1566,13 @@ suite('v2.0.0 — Stale Message Rejection (LOG_LEVEL=3)');
 //  SUITE 46: v2.0.0 — Yield on Exit (pagehide)
 // ═══════════════════════════════════════════════════════════════
 
-suite('v2.0.0 — Yield on Exit via pagehide (LOG_LEVEL=3)');
+suite('v2.0.0 — Nav Marker on Exit via pagehide (v4.0 semantics) (LOG_LEVEL=3)');
 
 {
+  // v4.0.0: FEATURE_CONTINUITY_V4 changes exit behavior for DND owners.
+  // Instead of yielding on pagehide, the owner sets a nav marker so the
+  // new page can reclaim immediately (avoiding ownership gaps during
+  // same-tab navigation). This is correct v4+ behavior.
   const env = execVinyl({ logLevel: 3 });
 
   // Capture addEventListener calls on window
@@ -1577,16 +1587,15 @@ suite('v2.0.0 — Yield on Exit via pagehide (LOG_LEVEL=3)');
   w._fire('ready');
   w._fire('play');
 
-  const ch = env.bc.instances[0];
-  const yieldsBeforeExit = ch._messages.filter(m => m.type === 'yield').length;
-
-  // Simulate pagehide — should trigger broadcastYield
+  // Simulate pagehide — v4+: should set nav marker instead of yielding
   if (winListeners.pagehide) {
     winListeners.pagehide.forEach(fn => fn());
   }
 
-  const yieldsAfterExit = ch._messages.filter(m => m.type === 'yield').length;
-  assert('yield posted on pagehide', yieldsAfterExit > yieldsBeforeExit);
+  // v4.0: nav marker set in sessionStorage (consumed by next page load)
+  const navMarker = env.ss.getItem('ce-vinyl-nav');
+  assert('nav marker set on pagehide', navMarker === '1');
+  assert('continuity:nav-exit logged', findCaptured(env.cons.captured, 'debug', 'continuity:nav-exit').length > 0);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1630,9 +1639,15 @@ suite('v2.0.0 — Observer Remote State Tracking (LOG_LEVEL=3)');
 //  SUITE 48: v2.0.0 — Remote Yield Clears Observer State
 // ═══════════════════════════════════════════════════════════════
 
-suite('v2.0.0 — Remote Yield Clears Observer State (LOG_LEVEL=3)');
+suite('v2.0.0 — Remote Yield Starts Grace Window (v3.0 semantics) (LOG_LEVEL=3)');
 
 {
+  // v3.0.0: FEATURE_OWNERSHIP_V3 introduces a yield-grace window.
+  // When a remote yield arrives, the observer does NOT clear immediately.
+  // Instead, it starts a grace timer (V4_YIELD_GRACE_MS = 3000ms).
+  // If the same tabId reclaims within the grace window (same-tab nav),
+  // the yield is absorbed transparently. The clear only happens when
+  // the timer expires.
   const env = execVinyl({ logLevel: 3 });
   env.doc._htmlAttrs['data-theme'] = 'refined';
   const w = env.exec();
@@ -1653,12 +1668,14 @@ suite('v2.0.0 — Remote Yield Clears Observer State (LOG_LEVEL=3)');
   const upnext = marquee ? marquee.children.find(c => c.className === 'vinyl-upnext') : null;
   assert('upnext shows remote state before yield', upnext && upnext.textContent.includes('Playing elsewhere'));
 
-  // Remote yield — should clear remote state
+  // Remote yield — v3+: starts grace timer, does NOT clear immediately
   env.bc.simulateRemote({ type: 'yield', tabId: 'owner-tab', ts: Date.now() });
 
   assert('remote-yield logged', findCaptured(env.cons.captured, 'debug', 'broadcast:remote-yield').length > 0);
-  // After yield, upnext should revert to normal "Up next" display (Track B)
-  assert('upnext reverts after remote yield', upnext && !upnext.textContent.includes('Playing elsewhere'));
+  // v3.0+: yield-grace window is active — remote state persists until grace expires
+  assert('yield-grace started', findCaptured(env.cons.captured, 'debug', 'yield-grace:started').length > 0);
+  // Remote state still visible during grace window (not yet cleared)
+  assert('remote state persists during grace window', upnext && upnext.textContent.includes('Playing elsewhere'));
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -2011,17 +2028,25 @@ suite('v2.1.0 — Heartbeat Starts on Claim (LOG_LEVEL=3)');
 //  SUITE 62: v2.1.0 — Heartbeat Stops on Yield
 // ═══════════════════════════════════════════════════════════════
 
-suite('v2.1.0 — Heartbeat Stops on Yield (LOG_LEVEL=3)');
+suite('v2.1.0 — Heartbeat Continues on Pause (v3.0 pause-retain) (LOG_LEVEL=3)');
 
 {
+  // v3.0.0: Pause no longer yields ownership — it broadcasts pause-retain.
+  // The tab retains ownership, so the heartbeat correctly continues.
+  // Heartbeat only stops on explicit yield (DND off, tab close, remote claim).
   const env = execVinyl({ logLevel: 3 });
   env.doc._htmlAttrs['data-theme'] = 'refined';
   const w = env.exec();
   w._fire('ready');
   w._fire('play');   // starts heartbeat
-  w._fire('pause');  // yield → stops heartbeat
 
-  assert('leader:heartbeat-stop logged', findCaptured(env.cons.captured, 'debug', 'leader:heartbeat-stop').length > 0);
+  assert('leader:heartbeat-start logged', findCaptured(env.cons.captured, 'debug', 'leader:heartbeat-start').length > 0);
+
+  w._fire('pause');  // v3+: pause-retain, heartbeat stays active
+
+  // v3.0+: heartbeat should NOT stop on pause (ownership retained)
+  const stops = findCaptured(env.cons.captured, 'debug', 'leader:heartbeat-stop');
+  assert('heartbeat continues after pause (no stop logged)', stops.length === 0);
 }
 
 // ═══════════════════════════════════════════════════════════════
