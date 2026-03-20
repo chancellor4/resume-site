@@ -108,6 +108,14 @@ a:hover {
   border-radius: 2px;
 }
 
+/* Suppress visible focus ring on programmatically focused headings
+   (SPA router focuses h1 after navigation for screen readers,
+   but the outline is not meaningful for sighted users). */
+[tabindex="-1"]:focus,
+[tabindex="-1"]:focus-visible {
+  outline: none;
+}
+
 /* ─── LAYOUT WRAPPER ────────────────────────────────────────── */
 
 .site-wrap {
