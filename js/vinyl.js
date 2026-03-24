@@ -175,6 +175,30 @@
   var GROOVE_MIN_HEIGHT  = 0.15;                 // minimum bar height (fraction of canvas)
   var GROOVE_DPR         = (function () { try { return Math.min(window.devicePixelRatio || 1, 3); } catch (e) { return 1; } })();
 
+  /* ── Feature gates (v5.1.0) ────────────────────────────── */
+  /*    Interactive groove: click/drag/touch to seek within    */
+  /*    the waveform progress bar. Layers on FEATURE_GROOVE.  */
+  /*    Flip to false to restore passive-only waveform.       */
+
+  var FEATURE_GROOVE_SEEK = true;
+
+  /* ── Feature gates (v5.2.0) ────────────────────────────── */
+  /*    Immersive groove: continuous progress interpolation,   */
+  /*    soft waveform pulse near the playhead, elastic seek    */
+  /*    feedback, and hover time preview. Layers on            */
+  /*    FEATURE_GROOVE + FEATURE_GROOVE_SEEK. Adds no new     */
+  /*    state to the controller — purely visual enhancement    */
+  /*    driven by rAF with deterministic, time-based math.    */
+  /*    Flip to false to restore discrete-update waveform.    */
+
+  var FEATURE_GROOVE_IMMERSIVE = true;
+  var GROOVE_LERP_SPEED        = 5;         // interpolation stiffness (gentler = calmer)
+  var GROOVE_PULSE_RADIUS      = 3;         // bars affected on each side of playhead
+  var GROOVE_PULSE_INTENSITY   = 0.06;      // max amplitude modulation [0..1] — barely visible
+  var GROOVE_PULSE_SPEED       = 1.4;       // breathing frequency (Hz) — slow, ambient
+  var GROOVE_ELASTIC_TENSION   = 0.2;       // spring overshoot factor on seek — softer landing
+  var GROOVE_ELASTIC_DAMPING   = 0.88;      // spring decay per frame — less bounce
+
   var LOG_LEVEL = (function () {
     if (!FEATURE_OBSERVABILITY) return 0;
     try {
@@ -554,12 +578,18 @@
   })();
 
   /* ══════════════════════════════════════════════════════════════
-     Groove — waveform progress visualization (v5.0.0)
+     Groove — waveform progress visualization (v5.0.0 → v5.2.0)
 
      Canvas-based progress bar that renders a seeded pseudo-random
      waveform for each track. The seed is derived from the track
      title, so the waveform is deterministic and consistent across
      page loads. Progress fill is driven by PLAY_PROGRESS events.
+
+     v5.2.0 additions (FEATURE_GROOVE_IMMERSIVE):
+       - Smooth progress interpolation via rAF (no discrete jumps)
+       - Soft waveform pulse near the playhead (time-based, deterministic)
+       - Elastic seek feedback (spring overshoot on commit)
+       - Hover time preview tooltip
 
      No behavioral changes. No adapter/store/FSM interaction beyond
      reading lastPosition and the current record's duration.
@@ -571,6 +601,9 @@
        groove.update(fraction)  — repaints with progress fill [0..1]
        groove.clear()           — resets to empty state
        groove.destroy()         — removes canvas from DOM
+       groove.startFlow()       — begin rAF interpolation loop (v5.2.0)
+       groove.stopFlow()        — stop rAF loop (v5.2.0)
+       groove.elasticSeek(frac) — trigger elastic snap to position (v5.2.0)
      ══════════════════════════════════════════════════════════════ */
 
   var groove = (function () {
@@ -578,14 +611,48 @@
       mount: function () {},
       seed:  function () {},
       update: function () {},
+      snap:  function () {},
       clear:  function () {},
-      destroy: function () {}
+      destroy: function () {},
+      hitTest: function () { return -1; },
+      preview: function () {},
+      clearPreview: function () {},
+      getCanvas: function () { return null; },
+      startFlow: function () {},
+      stopFlow: function () {},
+      elasticSeek: function () {},
+      setHoverTime: function () {},
+      clearHoverTime: function () {}
     };
 
     var canvas  = null;
     var ctx     = null;
     var bars    = null;      // Float32Array of bar heights [0..1]
     var lastFrac = -1;       // last rendered fraction (avoids redundant paints)
+    var hoverFrac = -1;      // hover preview position (-1 = no preview)
+
+    /* ── v5.2.0: Interpolation state ──────────────────────── */
+    var targetFrac   = 0;    // where progress should be (set by update())
+    var displayFrac  = 0;    // where progress appears (smoothed toward target)
+    var rafId        = null; // requestAnimationFrame handle
+    var flowing      = false;// true while the rAF loop is active
+    var lastFrameT   = 0;    // timestamp of last rAF frame
+
+    /* ── v5.2.0: Elastic seek state ──────────────────────── */
+    var elasticActive  = false;
+    var elasticTarget  = 0;
+    var elasticVel     = 0;    // spring velocity
+    var elasticDisplay = 0;    // current elastic position
+
+    /* ── v5.2.0: Hover time tooltip state ─────────────────── */
+    var hoverTimeEl  = null;   // tooltip DOM element
+    var hoverTimeFrac = -1;    // fraction for time display
+
+    /* ── v5.2.0: Reduced motion detection ─────────────────── */
+    var prefersReducedMotion = (function () {
+      try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+      catch (e) { return false; }
+    })();
 
     /* ── Seeded PRNG (mulberry32) ─────────────────────────── */
     /*    Deterministic per-title waveform generation.          */
@@ -624,9 +691,37 @@
       return b;
     }
 
+    /* ── v5.2.0: Pulse calculation ────────────────────────── */
+    /*    Returns a height multiplier [1.0 − intensity .. 1.0 + intensity]  */
+    /*    based on bar proximity to the playhead and wall-clock time.       */
+    /*    Deterministic: same (barIndex, fillFrac, time) → same result.    */
+    /*    Falls back to 1.0 (no effect) when immersive is off or reduced   */
+    /*    motion is preferred.                                              */
+
+    function pulseMultiplier(barIndex, barCount, fillFrac, nowSec) {
+      if (!FEATURE_GROOVE_IMMERSIVE || prefersReducedMotion) return 1.0;
+
+      var playheadBar = fillFrac * (barCount - 1);
+      var dist = Math.abs(barIndex - playheadBar);
+
+      /* Only affect bars within GROOVE_PULSE_RADIUS of the playhead */
+      if (dist > GROOVE_PULSE_RADIUS) return 1.0;
+
+      /* Proximity falloff: closer bars pulse more */
+      var proximity = 1.0 - (dist / GROOVE_PULSE_RADIUS);
+      proximity = proximity * proximity;                    // quadratic falloff — gentle
+
+      /* Sinusoidal breath, offset per-bar for organic shimmer */
+      var phase = nowSec * GROOVE_PULSE_SPEED * Math.PI * 2;
+      phase += barIndex * 0.4;                              // stagger by bar index
+      var breath = Math.sin(phase) * 0.5 + 0.5;            // [0..1]
+
+      return 1.0 + proximity * breath * GROOVE_PULSE_INTENSITY;
+    }
+
     /* ── Render ────────────────────────────────────────────── */
 
-    function render(frac) {
+    function render(frac, hoverAt, nowSec) {
       if (!ctx || !bars) return;
       var w = canvas.width;
       var h = canvas.height;
@@ -637,19 +732,48 @@
       var total    = GROOVE_BARS;
       var barW     = Math.max(1, (w - gap * (total - 1)) / total);
       var fillX    = frac * w;
+      var hoverX   = (typeof hoverAt === 'number' && hoverAt >= 0) ? hoverAt * w : -1;
 
-      /* Colours: filled = amber accent, unfilled = muted lavender */
-      var filled   = 'rgba(186, 155, 100, 0.85)';   // --amber-ish
-      var unfilled = 'rgba(192, 178, 190, 0.35)';    // --border-ish
+      /* Colours: filled = plum accent, unfilled = muted lavender.
+         Tuned for the refined palette — restrained warmth, not loud. */
+      var filled   = 'rgba(155, 126, 155, 0.55)';   // plum accent — restrained
+      var unfilled = 'rgba(192, 178, 190, 0.2)';     // muted lavender — whisper
+      var hovered  = 'rgba(155, 126, 155, 0.3)';     // hover preview tint — gentle
+
+      /* v5.2.0: time for deterministic pulse (seconds since page load) */
+      var pulseSec = (typeof nowSec === 'number') ? nowSec : 0;
 
       for (var i = 0; i < total; i++) {
         var x     = i * (barW + gap);
-        var barH  = bars[i] * h;
+
+        /* v5.2.0: Apply pulse modulation to bar height */
+        var pMul = (flowing && frac > 0) ? pulseMultiplier(i, total, frac, pulseSec) : 1.0;
+        var barH  = bars[i] * h * pMul;
         var y     = (h - barH) / 2;                   // vertically centred
 
-        ctx.fillStyle = (x + barW <= fillX) ? filled
-                      : (x >= fillX) ? unfilled
-                      : filled;                        // partial bar → filled colour
+        /* Colour logic:
+           - Bars fully before fill position → filled (played)
+           - When hovering ahead: bars between fill and hover → preview tint
+           - When hovering behind: bars between hover and fill → preview tint
+           - Everything else → unfilled */
+        var isFilled = (x + barW <= fillX);
+        var isHoverZone = false;
+        if (hoverX >= 0) {
+          if (hoverX > fillX && !isFilled) {
+            /* Hovering ahead of playback: preview zone = fill→hover */
+            isHoverZone = (x + barW > fillX) && (x < hoverX);
+          } else if (hoverX < fillX && isFilled) {
+            /* Hovering behind playback: preview zone = hover→fill
+               These bars are currently "filled" — override to preview.
+               Bounded to fillX so bars beyond fill stay unfilled. */
+            isHoverZone = (x >= hoverX) && (x + barW <= fillX);
+          }
+        }
+
+        ctx.fillStyle = isHoverZone ? hovered
+                      : isFilled ? filled
+                      : unfilled;
+
         /* Round the bar ends with a small radius */
         var r = Math.min(barW / 2, 2 * dpr);
         ctx.beginPath();
@@ -664,6 +788,172 @@
         ctx.quadraticCurveTo(x, y, x + r, y);
         ctx.fill();
       }
+
+      /* Hover cursor line — thin vertical indicator */
+      if (hoverX >= 0) {
+        ctx.fillStyle = 'rgba(155, 126, 155, 0.35)';
+        var lineW = Math.max(1, 1 * dpr);
+        ctx.fillRect(hoverX - lineW / 2, 0, lineW, h);
+      }
+    }
+
+    /* ── v5.2.0: rAF interpolation loop ───────────────────── */
+    /*    Smoothly lerps displayFrac → targetFrac each frame.  */
+    /*    Drives pulse animation when playing. Deterministic:   */
+    /*    same inputs produce same visual regardless of tab.    */
+    /*    Falls back to discrete updates when immersive is off  */
+    /*    or reduced motion is preferred.                       */
+
+    function flowFrame(ts) {
+      if (!flowing) return;
+      rafId = requestAnimationFrame(flowFrame);
+
+      var dt = lastFrameT ? Math.min((ts - lastFrameT) / 1000, 0.05) : 0.016;
+      lastFrameT = ts;
+
+      /* Elastic seek spring physics */
+      if (elasticActive) {
+        var elasticDelta = elasticTarget - elasticDisplay;
+        elasticVel += elasticDelta * GROOVE_ELASTIC_TENSION;
+        elasticVel *= GROOVE_ELASTIC_DAMPING;
+        elasticDisplay += elasticVel;
+
+        /* Settle when close enough */
+        if (Math.abs(elasticDelta) < 0.001 && Math.abs(elasticVel) < 0.001) {
+          elasticDisplay = elasticTarget;
+          elasticActive = false;
+          elasticVel = 0;
+        }
+
+        displayFrac = Math.max(0, Math.min(1, elasticDisplay));
+      } else {
+        /* Smooth interpolation toward target */
+        var delta = targetFrac - displayFrac;
+        if (Math.abs(delta) < 0.0005) {
+          displayFrac = targetFrac;
+        } else {
+          displayFrac += delta * Math.min(1, GROOVE_LERP_SPEED * dt);
+        }
+      }
+
+      /* Wall-clock seconds for deterministic pulse */
+      var nowSec = ts / 1000;
+
+      render(displayFrac, hoverFrac, nowSec);
+    }
+
+    function startFlow() {
+      if (!FEATURE_GROOVE_IMMERSIVE || prefersReducedMotion) return;
+      if (flowing) return;
+      flowing = true;
+      lastFrameT = 0;
+      rafId = requestAnimationFrame(flowFrame);
+      vlog(3, 'groove:flow-start');
+    }
+
+    function stopFlow() {
+      flowing = false;
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      lastFrameT = 0;
+      /* Final snap to target */
+      displayFrac = targetFrac;
+      if (lastFrac >= 0) render(displayFrac, hoverFrac, 0);
+      vlog(3, 'groove:flow-stop');
+    }
+
+    /* ── v5.2.0: Elastic seek ─────────────────────────────── */
+    /*    Trigger a spring animation toward the seek target.    */
+    /*    The overshoot is subtle — creates a "landing" feel    */
+    /*    that communicates the seek has arrived.               */
+
+    function elasticSeek(frac) {
+      if (!FEATURE_GROOVE_IMMERSIVE || prefersReducedMotion) {
+        /* Immediate snap fallback */
+        displayFrac = frac;
+        targetFrac = frac;
+        lastFrac = frac;
+        if (canvas && ctx) render(frac, hoverFrac, 0);
+        return;
+      }
+
+      elasticTarget = Math.max(0, Math.min(1, frac));
+      elasticDisplay = displayFrac;
+      /* Kick velocity toward target with gentle impulse */
+      var seekDelta = elasticTarget - elasticDisplay;
+      elasticVel = seekDelta * 0.15;
+      elasticActive = true;
+      targetFrac = elasticTarget;
+      lastFrac = elasticTarget;
+
+      if (flowing) {
+        /* rAF loop already running (playing) — it picks up elasticActive */
+        return;
+      }
+
+      /* Paused: drive a self-terminating spring rAF chain.
+         Does NOT set flowing=true so the main play/pause lifecycle
+         remains unaffected. Stops itself once the spring settles. */
+      var springRafId = null;
+      var springLastT = 0;
+
+      function springStep(ts) {
+        var dt = springLastT ? Math.min((ts - springLastT) / 1000, 0.05) : 0.016;
+        springLastT = ts;
+
+        var delta = elasticTarget - elasticDisplay;
+        elasticVel += delta * GROOVE_ELASTIC_TENSION;
+        elasticVel *= GROOVE_ELASTIC_DAMPING;
+        elasticDisplay += elasticVel;
+
+        if (Math.abs(delta) < 0.001 && Math.abs(elasticVel) < 0.001) {
+          elasticDisplay = elasticTarget;
+          elasticActive = false;
+          elasticVel = 0;
+        }
+
+        displayFrac = Math.max(0, Math.min(1, elasticDisplay));
+        render(displayFrac, hoverFrac, 0);
+
+        if (elasticActive) {
+          springRafId = requestAnimationFrame(springStep);
+        }
+      }
+
+      springRafId = requestAnimationFrame(springStep);
+    }
+
+    /* ── v5.2.0: Hover time tooltip ───────────────────────── */
+
+    function ensureHoverTimeEl(container) {
+      if (hoverTimeEl) return;
+      hoverTimeEl = document.createElement('div');
+      hoverTimeEl.className = 'vinyl-groove-time';
+      hoverTimeEl.setAttribute('aria-hidden', 'true');
+      container.appendChild(hoverTimeEl);
+    }
+
+    function setHoverTime(frac, durationMs, container) {
+      if (!FEATURE_GROOVE_IMMERSIVE || !durationMs || durationMs <= 0) return;
+      ensureHoverTimeEl(container);
+      hoverTimeFrac = frac;
+      var ms = Math.round(frac * durationMs);
+      var s = Math.round(ms / 1000);
+      var m = Math.floor(s / 60);
+      s = s % 60;
+      hoverTimeEl.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+      /* Clamp left% so the tooltip (centered via translateX(-50%)) stays
+         within the groove wrap. 5% margin keeps full pill width in view. */
+      var clampedPct = Math.max(5, Math.min(95, frac * 100));
+      hoverTimeEl.style.left = clampedPct + '%';
+      hoverTimeEl.hidden = false;
+    }
+
+    function clearHoverTime() {
+      if (hoverTimeEl) hoverTimeEl.hidden = true;
+      hoverTimeFrac = -1;
     }
 
     /* ── Public API ───────────────────────────────────────── */
@@ -696,37 +986,120 @@
     function seed(title) {
       bars = generateBars(title);
       lastFrac = -1;
+      hoverFrac = -1;
+      targetFrac = 0;
+      displayFrac = 0;
+      elasticActive = false;
+      elasticVel = 0;
       render(0);
     }
 
     function update(frac) {
       frac = Math.max(0, Math.min(1, frac));
-      /* Skip repaint if fraction didn't change enough (< 0.2% = invisible) */
-      if (Math.abs(frac - lastFrac) < 0.002) return;
       lastFrac = frac;
-      render(frac);
+      targetFrac = frac;
+
+      /* When flowing (rAF active), let the interpolation loop handle rendering.
+         When not flowing, render immediately (discrete mode / fallback). */
+      if (flowing && FEATURE_GROOVE_IMMERSIVE && !prefersReducedMotion) return;
+
+      /* Skip repaint if fraction didn't change enough (< 0.2% = invisible) */
+      if (Math.abs(frac - displayFrac) < 0.002 && hoverFrac < 0) return;
+      displayFrac = frac;
+      render(frac, hoverFrac, 0);
     }
 
     function clear() {
       bars = null;
       lastFrac = -1;
+      hoverFrac = -1;
+      targetFrac = 0;
+      displayFrac = 0;
+      elasticActive = false;
+      elasticVel = 0;
+      stopFlow();
+      clearHoverTime();
       if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
     function destroy() {
+      stopFlow();
+      clearHoverTime();
+      if (hoverTimeEl && hoverTimeEl.parentNode) hoverTimeEl.parentNode.removeChild(hoverTimeEl);
+      hoverTimeEl = null;
       if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
       canvas = null;
       ctx = null;
       bars = null;
       lastFrac = -1;
+      hoverFrac = -1;
+      targetFrac = 0;
+      displayFrac = 0;
+    }
+
+    /* ── Hit-test: convert clientX to fraction [0..1] ────── */
+    /*    Returns -1 if canvas is absent or click is outside.  */
+
+    function hitTest(clientX) {
+      if (!canvas) return -1;
+      var rect = canvas.getBoundingClientRect();
+      if (rect.width <= 0) return -1;
+      var frac = (clientX - rect.left) / rect.width;
+      return Math.max(0, Math.min(1, frac));
+    }
+
+    /* ── Hover preview ───────────────────────────────────── */
+    /*    Sets a preview fraction that render() uses to draw   */
+    /*    a tinted zone and cursor line. -1 clears preview.    */
+
+    function preview(frac) {
+      hoverFrac = (typeof frac === 'number' && frac >= 0) ? Math.max(0, Math.min(1, frac)) : -1;
+      /* When flowing, the rAF loop picks up hoverFrac automatically on its next frame.
+         When not flowing, render immediately at displayFrac — what's actually on screen. */
+      if (!flowing && displayFrac >= 0) render(displayFrac, hoverFrac, 0);
+    }
+
+    function clearPreview() {
+      if (hoverFrac < 0) return;
+      hoverFrac = -1;
+      if (!flowing && displayFrac >= 0) render(displayFrac, -1, 0);
+    }
+
+    function getCanvas() {
+      return canvas;
+    }
+
+    /* ── v5.2.0 (fix): Immediate scrub snap ──────────────────
+       During drag, display must track the cursor 1:1 with no
+       interpolation lag. snap() sets both displayFrac and
+       targetFrac so the rAF loop has nothing to chase.        */
+
+    function snap(frac) {
+      frac = Math.max(0, Math.min(1, frac));
+      lastFrac = frac;
+      targetFrac = frac;
+      displayFrac = frac;
+      elasticActive = false;
+      elasticVel = 0;
+      render(frac, hoverFrac, 0);
     }
 
     return {
-      mount:   mount,
-      seed:    seed,
-      update:  update,
-      clear:   clear,
-      destroy: destroy
+      mount:          mount,
+      seed:           seed,
+      update:         update,
+      snap:           snap,
+      clear:          clear,
+      destroy:        destroy,
+      hitTest:        hitTest,
+      preview:        preview,
+      clearPreview:   clearPreview,
+      getCanvas:      getCanvas,
+      startFlow:      startFlow,
+      stopFlow:       stopFlow,
+      elasticSeek:    elasticSeek,
+      setHoverTime:   setHoverTime,
+      clearHoverTime: clearHoverTime
     };
   })();
 
@@ -792,6 +1165,7 @@
     var lastSidePoll  = 0;
     var lastPosition  = 0;
     var phase         = 'dormant';
+    var scrubbing     = false;                    // v5.1.0: true during groove drag
 
     var LEGAL_MOVES = {
       dormant:  ['loading'],
@@ -875,7 +1249,12 @@
         vlog(3, 'continuity:schema-fallback', { v: state.v || 0 });
       }
 
-      if (state.spinning) safePlay();
+      if (state.spinning) {
+        safePlay();
+        /* groove.startFlow() is NOT called here — the adapter's 'play' event
+           fires asynchronously and calls startFlow() from its own handler.
+           Calling it here would leave the loop running if autoplay is blocked. */
+      }
       vlog(2, 'continuity:restored', {
         side: state.side, pos: state.pos, spinning: state.spinning,
         vol: state.vol, hushed: state.hushed
@@ -925,6 +1304,7 @@
       adapter.safePlay(function onBlocked() {
         if (phase === 'playing') transition('ready', 'autoplay-blocked');
         spinning = false;
+        if (FEATURE_GROOVE_IMMERSIVE) groove.stopFlow();
         _ui.reflectSpin();
       });
     }
@@ -953,6 +1333,7 @@
         spinning = true;
         _ui.reflectSpin();
         _sync.claim();
+        if (FEATURE_GROOVE_IMMERSIVE) groove.startFlow();
       });
 
       adapter.on('pause', function () {
@@ -960,6 +1341,7 @@
         spinning = false;
         _ui.reflectSpin();
         saveState();
+        if (FEATURE_GROOVE_IMMERSIVE) groove.stopFlow();
         if (FEATURE_OWNERSHIP_V3) {
           _sync.pauseRetain();
         } else {
@@ -971,13 +1353,16 @@
         transition('ready', 'track-finished');
         spinning = false;
         _ui.reflectSpin();
+        if (FEATURE_GROOVE_IMMERSIVE) groove.stopFlow();
         if (FEATURE_GROOVE) groove.update(1);
       });
 
       adapter.on('progress', function (data) {
         if (data && data.currentPosition) lastPosition = data.currentPosition;
-        if (FEATURE_GROOVE && records[currentSide] && records[currentSide].duration) {
-          groove.update(lastPosition / records[currentSide].duration);
+        if (FEATURE_GROOVE && !scrubbing && records[currentSide] && records[currentSide].duration) {
+          var frac = lastPosition / records[currentSide].duration;
+          groove.update(frac);
+          if (FEATURE_GROOVE_SEEK) _ui.updateGrooveAria(frac * 100);
         }
         _sync.broadcastSync();
         if (records.length < 2) return;
@@ -997,6 +1382,7 @@
         transition('errored', 'widget-error');
         spinning = false;
         _ui.reflectSpin();
+        if (FEATURE_GROOVE_IMMERSIVE) groove.stopFlow();
         if (FEATURE_GROOVE) groove.clear();
         _ui.setTitle('Unavailable');
         console.warn('[vinyl] SoundCloud widget encountered an error.');
@@ -1044,10 +1430,41 @@
       });
     }
 
+    /* ── Scrub lock (v5.1.0) ───────────────────────────────── */
+    /*    When true, PLAY_PROGRESS events skip groove.update()  */
+    /*    so the user's drag position isn't overwritten by the  */
+    /*    stream. Released when the seek commit lands.           */
+
+    function setScrubbing(v) { scrubbing = v; }
+    function isScrubbing()   { return scrubbing; }
+
+    /* ── Seek to fraction (v5.1.0) ─────────────────────────── */
+    /*    Converts a [0..1] fraction to ms using the current     */
+    /*    record's duration, then seeks. Returns false if the    */
+    /*    seek can't be performed (no record, no duration).      */
+
+    function seekToFraction(frac) {
+      if (!phaseAllowsInteraction()) return false;
+      var rec = records[currentSide];
+      if (!rec || !rec.duration) return false;
+      frac = Math.max(0, Math.min(1, frac));
+      var ms = Math.round(frac * rec.duration);
+      adapter.seekTo(ms);
+      lastPosition = ms;
+      if (FEATURE_GROOVE_IMMERSIVE) {
+        groove.elasticSeek(frac);
+      } else if (FEATURE_GROOVE) {
+        groove.update(frac);
+      }
+      vlog(3, 'seek:fraction', { frac: frac, ms: ms, side: currentSide });
+      return true;
+    }
+
     function handleRemoteClaim() {
       if (spinning && adapter.isInit()) {
         adapter.pause();
         spinning = false;
+        if (FEATURE_GROOVE_IMMERSIVE) groove.stopFlow();
         transition('paused', 'remote-claim');
         _ui.reflectSpin();
       }
@@ -1062,6 +1479,7 @@
     }
 
     function deactivate() {
+      if (FEATURE_GROOVE_IMMERSIVE) groove.stopFlow();
       if (adapter.isInit() && spinning) adapter.pause();
       if (FEATURE_OWNERSHIP_V3 && _sync.isOwner()) _sync.yieldOwnership('dnd-off');
     }
@@ -1108,6 +1526,9 @@
       mute: mute,
       unmute: unmute,
       setVolume: setVolume,
+      seekToFraction: seekToFraction,
+      setScrubbing: setScrubbing,
+      isScrubbing: isScrubbing,
       handleRemoteClaim: handleRemoteClaim,
       activate: activate,
       deactivate: deactivate,
@@ -1525,6 +1946,11 @@
         if (el.groove) groove.mount(el.groove);
       }
 
+      /* ── Groove seek: interactive waveform (v5.1.0) ─────── */
+      if (FEATURE_GROOVE_SEEK && el.groove) {
+        mountGrooveSeek(el.groove);
+      }
+
       el.spin.addEventListener('click', onSpin);
       el.hush.addEventListener('click', onHush);
       el.dial.addEventListener('input', onDial);
@@ -1587,6 +2013,138 @@
           'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0.7;line-height:1.2}';
         document.head.appendChild(v2css);
       }
+    }
+
+    /* ── Groove seek interaction (v5.1.0) ───────────────────── */
+    /*    Handles click-to-seek, drag-to-scrub, touch support,  */
+    /*    and hover preview. All events gated behind phase       */
+    /*    checks — inert when widget isn't ready.                */
+
+    function mountGrooveSeek(wrap) {
+      var dragging = false;
+
+      /* Promote from decorative to interactive for assistive tech */
+      wrap.removeAttribute('aria-hidden');
+      wrap.setAttribute('role', 'slider');
+      wrap.setAttribute('aria-label', 'Seek position');
+      wrap.setAttribute('aria-valuemin', '0');
+      wrap.setAttribute('aria-valuemax', '100');
+      wrap.setAttribute('aria-valuenow', '0');
+      wrap.setAttribute('tabindex', '0');
+
+      /* Keyboard seek: left/right arrows step ±5% */
+      wrap.addEventListener('keydown', function (e) {
+        if (!_ctrl.isReady()) return;
+        var rec = _ctrl.getCurrentRecord();
+        if (!rec || !rec.duration) return;
+        var current = _ctrl.getLastPosition() / rec.duration;
+        var step = 0.05;
+        if (e.key === 'ArrowRight' || e.key === 'Right') {
+          e.preventDefault();
+          _ctrl.seekToFraction(Math.min(1, current + step));
+        } else if (e.key === 'ArrowLeft' || e.key === 'Left') {
+          e.preventDefault();
+          _ctrl.seekToFraction(Math.max(0, current - step));
+        }
+      });
+
+      /* Convert a pointer/touch event to a fraction via hit-test.
+         Uses changedTouches for touchend (touches list is empty). */
+      function fracFromEvent(e) {
+        var clientX;
+        if (e.touches && e.touches.length) {
+          clientX = e.touches[0].clientX;
+        } else if (e.changedTouches && e.changedTouches.length) {
+          clientX = e.changedTouches[0].clientX;
+        } else {
+          clientX = e.clientX;
+        }
+        return groove.hitTest(clientX);
+      }
+
+      /* ── Pointer down: begin scrub ──────────────────────── */
+      function onPointerDown(e) {
+        if (!_ctrl.isReady()) return;
+        if (e.button && e.button !== 0) return;      // left-click only
+        e.preventDefault();
+        e.stopPropagation();
+        dragging = true;
+        _ctrl.setScrubbing(true);
+        wrap.classList.add('vinyl-groove--scrubbing');
+        if (FEATURE_GROOVE_IMMERSIVE) groove.clearHoverTime(); // dismiss tooltip before drag
+
+        var frac = fracFromEvent(e);
+        if (frac >= 0) groove.snap(frac);   // immediate — no lerp lag on initial click
+
+        /* Bind move/up to document so drag works outside the bar */
+        document.addEventListener('mousemove', onPointerMove, { passive: false });
+        document.addEventListener('mouseup', onPointerUp);
+        document.addEventListener('touchmove', onPointerMove, { passive: false });
+        document.addEventListener('touchend', onPointerUp);
+        document.addEventListener('touchcancel', onPointerUp);
+      }
+
+      /* ── Pointer move: live scrub preview ───────────────── */
+      function onPointerMove(e) {
+        if (!dragging) return;
+        e.preventDefault();
+        var frac = fracFromEvent(e);
+        if (frac >= 0) {
+          groove.preview(-1);        // clear hover — show fill instead
+          groove.snap(frac);         // immediate snap — drag must track cursor 1:1
+        }
+      }
+
+      /* ── Pointer up: commit seek ────────────────────────── */
+      function onPointerUp(e) {
+        if (!dragging) return;
+        dragging = false;
+        _ctrl.setScrubbing(false);
+        wrap.classList.remove('vinyl-groove--scrubbing');
+
+        document.removeEventListener('mousemove', onPointerMove);
+        document.removeEventListener('mouseup', onPointerUp);
+        document.removeEventListener('touchmove', onPointerMove);
+        document.removeEventListener('touchend', onPointerUp);
+        document.removeEventListener('touchcancel', onPointerUp);
+
+        var frac = fracFromEvent(e);
+        if (frac >= 0) {
+          _ctrl.seekToFraction(frac);
+        }
+        groove.clearPreview();
+        if (FEATURE_GROOVE_IMMERSIVE) groove.clearHoverTime();
+      }
+
+      /* ── Hover: preview indicator + time tooltip (v5.2.0) ─ */
+      function onHover(e) {
+        if (dragging || !_ctrl.isReady()) return;
+        var frac = fracFromEvent(e);
+        if (frac >= 0) {
+          groove.preview(frac);
+          if (FEATURE_GROOVE_IMMERSIVE) {
+            var rec = _ctrl.getCurrentRecord();
+            if (rec && rec.duration) groove.setHoverTime(frac, rec.duration, wrap);
+          }
+        }
+      }
+
+      function onHoverLeave() {
+        if (!dragging) {
+          groove.clearPreview();
+          if (FEATURE_GROOVE_IMMERSIVE) groove.clearHoverTime();
+        }
+      }
+
+      /* ── Click: simple click-to-seek (non-drag) ─────────── */
+      /*    Handled via mousedown→mouseup sequence above.        */
+      /*    Standalone click fires if pointer didn't move.       */
+
+      /* ── Bind events ────────────────────────────────────── */
+      wrap.addEventListener('mousedown', onPointerDown);
+      wrap.addEventListener('touchstart', onPointerDown, { passive: false });
+      wrap.addEventListener('mousemove', onHover);
+      wrap.addEventListener('mouseleave', onHoverLeave);
     }
 
     function reflectSpin() {
@@ -1747,7 +2305,12 @@
       getTitle: function () { return el.title.textContent; },
       getDialValue: function () { return parseInt(el.dial.value, 10) || 0; },
       setDialValue: function (v) { el.dial.value = v; },
-      getSource: function () { return el.source; }
+      getSource: function () { return el.source; },
+      updateGrooveAria: function (pct) {
+        if (FEATURE_GROOVE_SEEK && el.groove && el.groove.hasAttribute('role')) {
+          el.groove.setAttribute('aria-valuenow', String(Math.round(pct)));
+        }
+      }
     };
   })();
 
