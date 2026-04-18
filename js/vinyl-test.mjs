@@ -33,6 +33,7 @@ class Element {
   }
   setAttribute(k, v) { this.attributes[k] = v; }
   getAttribute(k) { return this.attributes[k] || null; }
+  hasAttribute(k)   { return Object.prototype.hasOwnProperty.call(this.attributes, k); }
   removeAttribute(k) { delete this.attributes[k]; }
   addEventListener(type, fn) {
     if (!this._listeners[type]) this._listeners[type] = [];
@@ -314,6 +315,11 @@ function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, featureB
     clearTimeout: function (id) { globalThis.clearTimeout(id); },
     setInterval: function (fn, delay) { var id = globalThis.setInterval(fn, delay); _intervals.push(id); return id; },
     clearInterval: function (id) { globalThis.clearInterval(id); },
+    /* Minimal rAF shim: groove.startFlow is invoked on 'play' in
+       integration suites. We never flush the frame, so the loop is
+       a no-op body; we just return and accept handles. */
+    requestAnimationFrame: function () { return 0; },
+    cancelAnimationFrame: function () {},
     __mockSdkSuccess: mockSdkSuccess,
   };
   win.SC.Widget.Events = {
@@ -326,7 +332,9 @@ function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, featureB
   const fn = new Function(
     'window', 'document', 'sessionStorage', 'performance', 'console',
     'location', 'MutationObserver', 'setTimeout', 'clearTimeout',
-    'setInterval', 'clearInterval', '__mockSdkSuccess',
+    'setInterval', 'clearInterval',
+    'requestAnimationFrame', 'cancelAnimationFrame',
+    '__mockSdkSuccess',
     'SC', 'BroadcastChannel',
     src
   );
@@ -346,6 +354,7 @@ function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, featureB
   function exec() {
     fn(win, doc, ss, perf, cons, win.location, win.MutationObserver,
        win.setTimeout, win.clearTimeout, win.setInterval, win.clearInterval,
+       win.requestAnimationFrame, win.cancelAnimationFrame,
        mockSdkSuccess, win.SC, win.BroadcastChannel);
     return mockWidget;
   }
@@ -2501,6 +2510,75 @@ suite('v2.1.0 — Stale Pong Dropped (LOG_LEVEL=3)');
   // Stale message protection should drop it
   assert('stale pong dropped', findCaptured(env.cons.captured, 'debug', 'broadcast:stale').length > 0);
   assert('no pong-recv logged', findCaptured(env.cons.captured, 'log', 'leader:pong-recv').length === 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE: DND is Strictly Presentational (regression guard)
+//
+//  Contract: toggling DND off (or cycling palettes through a
+//  data-theme mutation) must NEVER pause audio, yield cross-tab
+//  ownership, or stop the groove animation loop. The persistent
+//  player outlives all visual-mode transitions.
+// ═══════════════════════════════════════════════════════════════
+
+suite('DND Presentational Contract — audio survives DND off (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+
+  // Instrument the mock widget before exec so we capture every call.
+  const w = env.exec();
+  let pauseCalls = 0;
+  const origPause = w.pause;
+  w.pause = function () { pauseCalls++; origPause.apply(this, arguments); };
+
+  w._fire('ready');
+  w._fire('play');             // tab becomes owner and is spinning
+
+  const captured = env.cons.captured;
+  const pauseEmittedBeforeToggle = findCaptured(captured, 'debug', 'phase:paused').length;
+  const yieldsBeforeToggle = findCaptured(captured, 'debug', 'broadcast:yield').length;
+
+  // Simulate the user toggling DND off. Previously this cascaded
+  // through onMoodShift → controller.deactivate → adapter.pause +
+  // yieldOwnership('dnd-off'), interrupting playback. The presentational
+  // contract requires all three side effects to be absent.
+  env.doc.documentElement.setAttribute('data-theme', 'default');
+
+  assert('adapter.pause not invoked on DND off', pauseCalls === 0);
+  assert('no phase:paused transition on DND off',
+    findCaptured(captured, 'debug', 'phase:paused').length === pauseEmittedBeforeToggle);
+  assert('no ownership yield on DND off',
+    findCaptured(captured, 'debug', 'broadcast:yield').length === yieldsBeforeToggle);
+
+  // The presentational half must still run so the player hides itself.
+  assert('stage:lower still emitted on DND off',
+    findCaptured(captured, 'log', 'stage:lower').length > 0);
+}
+
+suite('DND Presentational Contract — re-entry is idempotent (LOG_LEVEL=3)');
+
+{
+  const env = execVinyl({ logLevel: 3 });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  w._fire('ready');
+  w._fire('play');
+
+  // Rapid DND off → on → off → on. No duplicate loading phase, no
+  // extra pauses, no redundant yields. activate() must remain a
+  // safe no-op after the first entry because needleDropped is set.
+  env.doc.documentElement.setAttribute('data-theme', 'default');
+  env.doc.documentElement.setAttribute('data-theme', 'refined');
+  env.doc.documentElement.setAttribute('data-theme', 'default');
+  env.doc.documentElement.setAttribute('data-theme', 'refined');
+
+  const captured = env.cons.captured;
+  const loadingCount = findCaptured(captured, 'debug', 'phase:loading').length;
+  assert('at most one phase:loading across toggles', loadingCount <= 1);
+  assert('no phase:paused transitions from toggling',
+    findCaptured(captured, 'debug', 'phase:paused').length === 0);
 }
 
 // ═══════════════════════════════════════════════════════════════

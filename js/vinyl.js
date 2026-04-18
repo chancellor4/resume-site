@@ -1482,10 +1482,17 @@
       if (!needleDropped) fetchSDK(dropNeedle);
     }
 
+    /* ── deactivate ────────────────────────────────────────────
+       Retained for API symmetry with activate(); intentionally a
+       no-op now that DND is strictly presentational. Previous
+       revisions paused the adapter and yielded ownership here,
+       which silently broke the persistent-player contract every
+       time the user toggled DND off (or cycled palettes through
+       a data-theme mutation). Audio lifecycle is now owned solely
+       by explicit user input, the remote-claim handler, and the
+       page-unload guard. */
     function deactivate() {
-      if (FEATURE_GROOVE_IMMERSIVE) groove.stopFlow();
-      if (adapter.isInit() && spinning) adapter.pause();
-      if (FEATURE_OWNERSHIP_V3 && _sync.isOwner()) _sync.yieldOwnership('dnd-off');
+      /* no-op — DND is presentational */
     }
 
     function mute() {
@@ -2282,13 +2289,21 @@
       toggleCrate(false);
     }
 
+    /* ── onMoodShift ────────────────────────────────────────────
+       Fires whenever `data-theme` mutates on the documentElement.
+       DND is strictly presentational: entering lifts the stage and
+       (idempotently) warms the SDK so the first play is instant;
+       leaving simply lowers the stage. The persistent player keeps
+       streaming across DND toggles, palette cycles, SPA route
+       swaps, and tab visibility changes. Audio is interrupted only
+       by explicit user input, a remote claim from another tab, or
+       a real page unload. */
     function onMoodShift() {
       if (isDND()) {
-        _ctrl.activate();
+        _ctrl.activate();   // idempotent: guarded by needleDropped + phase
         raiseStage();
       } else {
-        _ctrl.deactivate();
-        lowerStage();
+        lowerStage();       // presentational only; audio continues
       }
     }
 
