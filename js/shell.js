@@ -18,10 +18,44 @@
   if (!window.DOMParser) return;
 
   /* ── Constants ───────────────────────────────────────────── */
-  var PERSIST_SCRIPTS = ['js/refined.js', 'js/vinyl.js', 'js/shell.js'];
+  var PERSIST_SCRIPTS = [
+    'js/refined.js',
+    'js/vinyl.js',
+    'js/shell.js',
+    'js/fountain-clock.js'
+  ];
   var transitioning   = false;
+  var isFileProtocol  = location.protocol === 'file:';
 
   /* ── Helpers ─────────────────────────────────────────────── */
+
+  /**
+   * Parse a URL's pathname reliably across protocols.
+   * On file://, the URL constructor fails because location.origin
+   * is the literal string "null". Fall back to an anchor element,
+   * which the browser resolves correctly for any protocol.
+   */
+  function parsePath(href) {
+    if (!isFileProtocol) {
+      try {
+        return new URL(href, location.origin).pathname;
+      } catch (e) { /* fall through */ }
+    }
+    var a = document.createElement('a');
+    a.href = href;
+    return a.pathname;
+  }
+
+  /**
+   * Check if a path should be treated as an internal route.
+   */
+  function isRoutablePath(path) {
+    if (/\.html?$/i.test(path)) return true;
+    if (/\/$/.test(path)) return true;
+    // Bare path with no extension (e.g. /about)
+    if (path.indexOf('.') === -1) return true;
+    return false;
+  }
 
   /**
    * Determine whether an anchor element targets an internal page
@@ -33,17 +67,18 @@
     if (anchor.hasAttribute('download')) return false;
 
     try {
-      var url = new URL(anchor.href, location.origin);
-      if (url.origin !== location.origin) return false;
+      // On file://, compare protocol directly; on HTTP(S), compare origin.
+      if (isFileProtocol) {
+        if (anchor.protocol !== 'file:') return false;
+      } else {
+        var url = new URL(anchor.href, location.origin);
+        if (url.origin !== location.origin) return false;
+      }
+
+      var path = parsePath(anchor.href);
       // Same page — let browser scroll to hash or no-op
-      if (url.pathname === location.pathname) return false;
-      // Only intercept .html pages and bare directory paths
-      var path = url.pathname;
-      if (/\.html?$/i.test(path)) return true;
-      if (/\/$/.test(path)) return true;
-      // Bare path with no extension (e.g. /about)
-      if (path.indexOf('.') === -1) return true;
-      return false;
+      if (path === location.pathname) return false;
+      return isRoutablePath(path);
     } catch (e) { return false; }
   }
 
@@ -52,7 +87,7 @@
    */
   function filenameOf(url) {
     try {
-      var parts = new URL(url, location.origin).pathname.split('/');
+      var parts = parsePath(url).split('/');
       return parts[parts.length - 1] || 'index.html';
     } catch (e) { return ''; }
   }
@@ -72,8 +107,10 @@
                   (target === 'index.html' && href === 'index.html');
       if (match) {
         links[i].classList.add('nav-active');
+        links[i].setAttribute('aria-current', 'page');
       } else {
         links[i].classList.remove('nav-active');
+        links[i].removeAttribute('aria-current');
       }
     }
   }
@@ -134,19 +171,44 @@
 
   /* ── Core: fetch + swap ──────────────────────────────────── */
 
+  /**
+   * Retrieve page HTML as text. Uses fetch over HTTP(S) and
+   * XMLHttpRequest over file:// (where fetch is CORS-blocked
+   * but XHR succeeds with status 0).
+   */
+  function fetchPage(url) {
+    if (!isFileProtocol) {
+      return fetch(url, { credentials: 'same-origin' }).then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.text();
+      });
+    }
+    return new Promise(function (resolve, reject) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.onload = function () {
+        // file:// returns status 0 on success
+        if (xhr.status === 0 || (xhr.status >= 200 && xhr.status < 300)) {
+          resolve(xhr.responseText);
+        } else {
+          reject(new Error('XHR ' + xhr.status));
+        }
+      };
+      xhr.onerror = function () { reject(new Error('XHR network error')); };
+      xhr.send();
+    });
+  }
+
   function navigate(url, push) {
     if (transitioning) return;
     transitioning = true;
 
-    fetch(url, { credentials: 'same-origin' })
-      .then(function (res) {
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        return res.text();
-      })
+    fetchPage(url)
       .then(function (html) {
         var doc       = new DOMParser().parseFromString(html, 'text/html');
         var newHeader = doc.querySelector('header');
         var newMain   = doc.querySelector('main');
+        var newBody   = doc.body;
 
         if (!newHeader || !newMain) throw new Error('content missing');
 
@@ -167,6 +229,13 @@
           curMain.parentNode.replaceChild(
             document.adoptNode(newMain), curMain
           );
+        }
+
+        // ── Sync body route metadata ──
+        if (newBody) {
+          var nextPage = newBody.getAttribute('data-page');
+          if (nextPage) document.body.setAttribute('data-page', nextPage);
+          else document.body.removeAttribute('data-page');
         }
 
         // ── Update document title ──
@@ -214,6 +283,14 @@
         if (heading) {
           heading.setAttribute('tabindex', '-1');
           heading.focus({ preventScroll: true });
+        }
+
+        // Re-sync persistent UI controllers after the DOM swap.
+        if (window.CE_APPEARANCE && typeof window.CE_APPEARANCE.mount === 'function') {
+          window.CE_APPEARANCE.mount();
+        }
+        if (window.CE_AMBIENT && typeof window.CE_AMBIENT.mount === 'function') {
+          window.CE_AMBIENT.mount();
         }
 
         // ── Execute page-specific scripts ──

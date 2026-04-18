@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO -->
+  <title>Playground — Chancellor Edwards (Chance Edwards)</title>
+  <meta name="description" content="Playground — software and experiments by Chancellor Edwards (Chance Edwards). A contained proof-of-skill room. Open a project, try a demo." />
+  <meta name="author" content="Chancellor Edwards" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Playground — Chancellor Edwards (Chance Edwards)" />
+  <meta property="og:description" content="A contained proof-of-skill room. Open a project, try a demo." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://chancelloredwards.dev/playground.html" />
+  <meta property="og:site_name" content="Chancellor Edwards" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:image" content="https://chancelloredwards.dev/assets/social-card.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Playground — projects and experiments by Chancellor Edwards" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Playground — Chancellor Edwards (Chance Edwards)" />
+  <meta name="twitter:description" content="A contained proof-of-skill room. Open a project, try a demo." />
+  <meta name="twitter:image" content="https://chancelloredwards.dev/assets/social-card.png" />
+  <meta name="twitter:image:alt" content="Playground — projects and experiments by Chancellor Edwards" />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://chancelloredwards.dev/playground.html" />
+
+  <!-- License -->
+  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
+
+  <!-- Structured Data: WebPage + Breadcrumb -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": "https://chancelloredwards.dev/playground.html#webpage",
+    "name": "Playground",
+    "description": "A contained proof-of-skill room. Open a project, try a demo.",
+    "url": "https://chancelloredwards.dev/playground.html",
+    "isPartOf": { "@id": "https://chancelloredwards.dev/#website" },
+    "about": { "@id": "https://chancelloredwards.dev/#person" },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Fountain Clock", "item": "https://chancelloredwards.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Playground",     "item": "https://chancelloredwards.dev/playground.html" }
+      ]
+    }
+  }
+  </script>
+
+  <!-- Fonts (non-render-blocking) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" /></noscript>
+
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-page="playground">
+
+  <!-- ─── NAV ─────────────────────────────────────────────────── -->
+  <nav class="site-nav" aria-label="Site navigation">
+    <div class="site-wrap">
+      <div class="nav-shell">
+        <div class="nav-brand">
+          <span class="nav-brand-orb" aria-hidden="true"></span>
+          <span class="nav-brand-full">chancelloredwards.dev</span>
+          <span class="nav-brand-short">ce.dev</span>
+        </div>
+        <ul class="nav-links">
+          <li>
+            <a href="index.html">
+              <span class="nav-link-label">Home</span>
+              <span class="nav-link-meta">Clock</span>
+            </a>
+          </li>
+          <li>
+            <a href="playground.html" class="nav-active" aria-current="page">
+              <span class="nav-link-label">Playground</span>
+            </a>
+          </li>
+          <li><a href="notes.html"><span class="nav-link-label">Notes</span></a></li>
+        </ul>
+        <div class="nav-mode">
+          <button class="nav-mode-btn" type="button" id="dndToggle" aria-pressed="false" aria-label="Enable DND mode">
+            <span class="nav-mode-signal" aria-hidden="true"></span>
+            <span class="nav-mode-copy">
+              <span class="nav-mode-label">Mode</span>
+              <span class="nav-mode-state">DND <span class="nav-mode-value" id="dndToggleValue">Off</span></span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── HEADER ───────────────────────────────────────────────── -->
+  <header class="projects-header">
+    <div class="site-wrap">
+      <p class="hero-eyebrow">Proof of skill</p>
+      <h1>Playground</h1>
+      <p>
+        A small, contained room for software I've built — a current snapshot, quietly refreshed in the background.
+        Open a project, read along, try a demo. Nothing demands your attention.
+      </p>
+    </div>
+  </header>
+
+  <!-- ─── MAIN ──────────────────────────────────────────────────── -->
+  <main>
+    <div class="site-wrap">
+
+      <!-- ── Stats Overview ──────────────────────────────────────── -->
+      <section class="resume-section" aria-labelledby="sec-stats">
+        <div class="section-header">
+          <h2 id="sec-stats">Overview</h2>
+          <div class="section-rule" aria-hidden="true"></div>
+        </div>
+        <p class="playground-section-intro">
+          Snapshot-first, quietly refreshed. The room renders from a committed project snapshot first, then checks GitHub in the background for anything newer.
+        </p>
+
+        <!-- Stats Grid -->
+        <div class="gh-stats-grid" id="gh-stats-grid">
+          <div class="gh-stat-card">
+            <span class="gh-stat-value" id="stat-repos">1</span>
+            <span class="gh-stat-label">Repositories</span>
+          </div>
+          <div class="gh-stat-card">
+            <span class="gh-stat-value" id="stat-stars">0</span>
+            <span class="gh-stat-label">Stars Earned</span>
+          </div>
+          <div class="gh-stat-card">
+            <span class="gh-stat-value" id="stat-forks">0</span>
+            <span class="gh-stat-label">Forks</span>
+          </div>
+          <div class="gh-stat-card">
+            <span class="gh-stat-value" id="stat-languages">1</span>
+            <span class="gh-stat-label">Languages</span>
+          </div>
+        </div>
+
+        <!-- Language Breakdown Bar -->
+        <div class="gh-lang-bar-wrap" id="gh-lang-bar-wrap">
+          <div class="gh-lang-bar" id="gh-lang-bar" role="img" aria-label="Language breakdown">
+            <div class="gh-lang-segment" style="width:100%;background:#a06428" title="HTML 100.0%"></div>
+          </div>
+          <div class="gh-lang-legend" id="gh-lang-legend">
+            <span class="gh-lang-legend-item"><span class="gh-lang-dot" style="background:#a06428"></span>HTML <span class="gh-lang-pct">100.0%</span></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Repositories ────────────────────────────────────────── -->
+      <section class="resume-section" aria-labelledby="sec-repos">
+        <div class="section-header">
+          <h2 id="sec-repos">Repositories</h2>
+          <div class="section-rule" aria-hidden="true"></div>
+        </div>
+        <p class="playground-section-intro">
+          Each card keeps one clear path forward: source first, live demo when a stable deployment exists.
+        </p>
+
+        <!-- Filter + Sort Controls -->
+        <div class="gh-controls" id="gh-controls" hidden>
+          <div class="gh-filter-pills" id="gh-filter-pills" role="radiogroup" aria-label="Filter by language">
+            <button class="gh-pill gh-pill-active" data-lang="all" aria-pressed="true">All</button>
+          </div>
+          <div class="gh-sort-wrap">
+            <label for="gh-sort" class="gh-sort-label">Sort</label>
+            <select id="gh-sort" class="gh-sort-select">
+              <option value="updated">Recently updated</option>
+              <option value="stars">Most stars</option>
+              <option value="name">Name A–Z</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Loading state (JS may briefly reveal this while refreshing) -->
+        <div class="gh-repo-list" id="gh-loading" aria-live="polite" hidden>
+          <article class="gh-empty-card">
+            <h3>Refreshing repository snapshot</h3>
+            <p>The Playground loads from a local snapshot first, then quietly checks GitHub for anything newer.</p>
+          </article>
+        </div>
+
+        <!-- Repo List (static fallback + enhanced by projects-cache.js) -->
+        <div class="gh-repo-list" id="gh-repo-list" aria-label="Repository list">
+          <article class="gh-repo-card">
+            <a href="https://github.com/chancellor4/chancelloredwards-site" class="gh-repo-card-link" target="_blank" rel="noopener noreferrer" aria-label="Open chancelloredwards-site"></a>
+            <div class="gh-repo-card-header">
+              <a href="https://github.com/chancellor4/chancelloredwards-site" class="gh-repo-name" target="_blank" rel="noopener noreferrer">chancelloredwards-site</a>
+              <span class="gh-repo-visibility">Public</span>
+            </div>
+            <p class="gh-repo-desc">Personal site — calm, private, ambient portfolio architecture with snapshot-first Playground rendering.</p>
+            <div class="gh-topics">
+              <span class="gh-topic">portfolio</span>
+              <span class="gh-topic">static-site</span>
+              <span class="gh-topic">ambient</span>
+              <span class="gh-topic">frontend</span>
+            </div>
+            <div class="gh-repo-actions">
+              <a href="https://github.com/chancellor4/chancelloredwards-site" class="gh-repo-action gh-repo-action-primary" target="_blank" rel="noopener noreferrer">Source ↗</a>
+              <a href="https://chancelloredwards.dev" class="gh-repo-action" target="_blank" rel="noopener noreferrer">Live ↗</a>
+            </div>
+            <div class="gh-repo-footer">
+              <span class="gh-repo-lang"><span class="gh-lang-dot" style="background:#a06428"></span>HTML</span>
+              <span class="gh-repo-updated">Updated recently</span>
+            </div>
+          </article>
+        </div>
+
+        <!-- View All Link -->
+        <div class="gh-view-all" id="gh-view-all" hidden>
+          <a href="https://github.com/chancellor4?tab=repositories" class="btn-outline" target="_blank" rel="noopener noreferrer">
+            View all repositories on GitHub →
+          </a>
+        </div>
+      </section>
+
+      <!-- ── Experiments Lane (short-lived demos) ────────────────── -->
+      <section class="resume-section experiments-lane" aria-labelledby="sec-experiments">
+        <div class="section-header">
+          <h2 id="sec-experiments">Experiments</h2>
+          <div class="section-rule" aria-hidden="true"></div>
+        </div>
+        <p class="experiments-note">
+          A quiet lane for short-lived demos — small things that don't warrant a full repo.
+          When there's something here, it'll appear softly; no notifications, no fanfare.
+        </p>
+      </section>
+
+      <!-- ── Data Freshness ──────────────────────────────────────── -->
+      <div class="gh-freshness" id="gh-freshness" hidden>
+        <span id="gh-freshness-text"></span>
+        <button class="gh-refresh-btn" id="gh-refresh-btn" aria-label="Refresh live data">Refresh</button>
+      </div>
+
+      <!-- ── Resume (linked from Playground per the plan) ────────── -->
+      <p class="playground-resume-link">
+        Looking for the résumé? <a href="resume.json">resume.json</a>
+      </p>
+
+    </div>
+  </main>
+
+  <!-- ─── FOOTER ────────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="site-wrap">
+      <span class="footer-copy">&copy; 2026 Chancellor Edwards · Application Developer &amp; Product Manager, Houston, TX · Content licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer license">CC BY 4.0</a></span>
+      <ul class="footer-links">
+        <li><a href="resume.json">Résumé</a></li>
+        <li><a href="https://github.com/chancellor4" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a href="https://medium.com/@chancelloredwards" target="_blank" rel="noopener noreferrer">Medium</a></li>
+        <li><a href="mailto:chance.edwards9@icloud.com">Email</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- ─── VINYL PLAYER (DND mode only) ─────────────────────── -->
+  <div class="vinyl" id="vinyl" aria-label="Music player" role="region" aria-hidden="true">
+    <iframe id="vinylSource" allow="autoplay" title="SoundCloud player"
+      style="position:absolute;width:0;height:0;border:0;overflow:hidden"
+      aria-hidden="true"></iframe>
+
+    <div class="vinyl-sleeve">
+      <div class="vinyl-marquee">
+        <span class="vinyl-title" id="vinylTitle">Loading&#8230;</span>
+      </div>
+
+      <div class="vinyl-groove-wrap" aria-hidden="true"></div>
+
+      <div class="vinyl-deck">
+        <button class="vinyl-btn" id="vinylSpin" type="button" aria-label="Play" title="Play">
+          <svg class="vinyl-icon vinyl-icon-spin" viewBox="0 0 16 16" fill="currentColor" width="16" height="16"><polygon points="3,1 13,8 3,15"/></svg>
+          <svg class="vinyl-icon vinyl-icon-lift" viewBox="0 0 16 16" fill="currentColor" width="16" height="16" hidden><rect x="2" y="1" width="4" height="14"/><rect x="10" y="1" width="4" height="14"/></svg>
+        </button>
+        <button class="vinyl-btn" id="vinylHush" type="button" aria-label="Mute" title="Mute">
+          <svg class="vinyl-icon vinyl-icon-loud" viewBox="0 0 16 16" fill="currentColor" width="16" height="16"><path d="M2,5 L5,5 L9,1 L9,15 L5,11 L2,11 Z"/><path class="vinyl-wave" d="M11,4 Q14,8 11,12" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          <svg class="vinyl-icon vinyl-icon-hushed" viewBox="0 0 16 16" fill="currentColor" width="16" height="16" hidden><path d="M2,5 L5,5 L9,1 L9,15 L5,11 L2,11 Z"/><line x1="11" y1="5" x2="15" y2="11" stroke="currentColor" stroke-width="1.5"/><line x1="15" y1="5" x2="11" y2="11" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+        <input class="vinyl-dial" id="vinylDial" type="range" min="0" max="100" value="40" step="1" aria-label="Volume"/>
+      </div>
+
+      <div class="vinyl-crate-wrap">
+        <button class="vinyl-btn vinyl-crate-latch" id="vinylLatch" type="button" aria-expanded="false" aria-label="Show playlist">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><rect x="1" y="2" width="14" height="1.5" rx="0.5"/><rect x="1" y="7" width="10" height="1.5" rx="0.5"/><rect x="1" y="12" width="14" height="1.5" rx="0.5"/></svg>
+        </button>
+        <ul class="vinyl-crate" id="vinylCrate" role="listbox" aria-label="Playlist" hidden></ul>
+      </div>
+    </div>
+  </div>
+
+  <script id="playgroundSnapshotFallback" type="application/json">
+  {
+    "repos": [
+      {
+        "name": "chancelloredwards-site",
+        "description": "Personal site — calm, private, ambient portfolio architecture with snapshot-first Playground rendering.",
+        "html_url": "https://github.com/chancellor4/chancelloredwards-site",
+        "homepage": "https://chancelloredwards.dev",
+        "language": "HTML",
+        "stargazers_count": 0,
+        "forks_count": 0,
+        "topics": ["portfolio", "static-site", "ambient", "frontend"],
+        "updated_at": "2026-04-17T00:00:00Z",
+        "fork": false,
+        "private": false,
+        "size": 240
+      }
+    ]
+  }
+  </script>
+
+  <!-- ─── PLAYGROUND BOOTSTRAP ───────────────────────────────────
+       Works for both a full page load and SPA re-entry. The inline
+       snapshot fallback is declared first so the loader can always
+       see it, even if the external script resolves very quickly. -->
+  <script>
+    (function bootPlayground() {
+      if (window.CE_PLAYGROUND && typeof window.CE_PLAYGROUND.mount === 'function') {
+        window.CE_PLAYGROUND.mount();
+        return;
+      }
+      var s = document.createElement('script');
+      s.src = 'js/projects-cache.js';
+      s.async = false;
+      document.head.appendChild(s);
+    })();
+  </script>
+
+  <script src="js/refined.js"></script>
+  <script src="js/shell.js" defer></script>
+  <script src="js/vinyl.js" defer></script>
+  <script src="js/fountain-clock.js" defer></script>
+</body>
+</html>

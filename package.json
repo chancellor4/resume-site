@@ -1,0 +1,12 @@
+{
+  "name": "chancelloredwards-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal site — static HTML/CSS/JS. Local dev only.",
+  "scripts": {
+    "dev": "npx --yes browser-sync start --server --files \"**/*.{html,css,js,json}\" --no-notify --no-open --port 3000",
+    "dev:open": "npx --yes browser-sync start --server --files \"**/*.{html,css,js,json}\" --no-notify --port 3000",
+    "serve": "python3 -m http.server 8000"
+  },
+  "license": "CC-BY-4.0"
+}

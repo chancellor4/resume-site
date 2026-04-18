@@ -5,32 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- SEO -->
-  <title>Chancellor Edwards — Application Developer | Houston, TX</title>
-  <meta name="description" content="Chancellor Edwards (Chance Edwards) is an Application Developer and Product Manager in Houston, TX. Enterprise software, agile delivery, and full-lifecycle product development across government and logistics." />
+  <title>Fountain Clock — Chancellor Edwards (Chance Edwards)</title>
+  <meta name="description" content="A calm, always-on ambient tab: local time, sunrise and sunset, and current weather. The Fountain Clock is the landing room of Chancellor Edwards's personal site." />
   <meta name="author" content="Chancellor Edwards" />
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
-  <meta name="keywords" content="Chancellor Edwards, Chance Edwards, Application Developer, Product Manager, Houston TX, Software Developer, IBM, Enterprise Software" />
+  <meta name="keywords" content="Fountain Clock, ambient clock, Chancellor Edwards, Chance Edwards, Houston TX, calm web, personal site" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="Chancellor Edwards (Chance Edwards) — Developer & Product Manager" />
-  <meta property="og:description" content="Application Developer and Product Manager in Houston, TX. Enterprise software, agile delivery, government and logistics." />
-  <meta property="og:type" content="profile" />
+  <meta property="og:title" content="Fountain Clock — Chancellor Edwards (Chance Edwards)" />
+  <meta property="og:description" content="A calm, always-on ambient tab: local time, sunrise and sunset, and current weather." />
+  <meta property="og:type" content="website" />
   <meta property="og:url" content="https://chancelloredwards.dev/" />
   <meta property="og:site_name" content="Chancellor Edwards" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:image" content="https://chancelloredwards.dev/assets/social-card.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Chancellor Edwards — Application Developer and Product Manager in Houston, TX" />
-  <meta property="profile:first_name" content="Chancellor" />
-  <meta property="profile:last_name" content="Edwards" />
+  <meta property="og:image:alt" content="Fountain Clock — ambient time and weather on Chancellor Edwards's personal site" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Chancellor Edwards (Chance Edwards) — Developer & Product Manager" />
-  <meta name="twitter:description" content="Application Developer and Product Manager in Houston, TX. Enterprise software, agile delivery, government and logistics." />
+  <meta name="twitter:title" content="Fountain Clock — Chancellor Edwards (Chance Edwards)" />
+  <meta name="twitter:description" content="A calm, always-on ambient tab: local time, sunrise and sunset, and current weather." />
   <meta name="twitter:image" content="https://chancelloredwards.dev/assets/social-card.png" />
-  <meta name="twitter:image:alt" content="Chancellor Edwards — Application Developer and Product Manager in Houston, TX" />
+  <meta name="twitter:image:alt" content="Fountain Clock — ambient time and weather on Chancellor Edwards's personal site" />
 
   <!-- Canonical -->
   <link rel="canonical" href="https://chancelloredwards.dev/" />
@@ -141,19 +139,25 @@
     "@type": "WebPage",
     "@id": "https://chancelloredwards.dev/#webpage",
     "url": "https://chancelloredwards.dev/",
-    "name": "Chancellor Edwards (Chance Edwards) — Application Developer & Product Manager",
-    "description": "Resume and portfolio of Chancellor Edwards, Application Developer and Product Manager in Houston, TX.",
+    "name": "Fountain Clock — Chancellor Edwards (Chance Edwards)",
+    "description": "The Fountain Clock is a calm, always-on ambient landing: local time, sunrise and sunset, and current weather on Chancellor Edwards's personal site.",
     "datePublished": "2026-03-01",
-    "dateModified": "2026-03-15",
+    "dateModified": "2026-04-18",
     "isPartOf": { "@id": "https://chancelloredwards.dev/#website" },
     "about": { "@id": "https://chancelloredwards.dev/#person" },
+    "primaryImageOfPage": {
+      "@type": "ImageObject",
+      "url": "https://chancelloredwards.dev/assets/social-card.png",
+      "width": 1200,
+      "height": 630
+    },
     "breadcrumb": {
       "@type": "BreadcrumbList",
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
-          "name": "Home",
+          "name": "Fountain Clock",
           "item": "https://chancelloredwards.dev/"
         }
       ]
@@ -186,50 +190,87 @@
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" /></noscript>
 
+  <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
-<body>
+<body data-page="home">
 
   <!-- ─── NAV ─────────────────────────────────────────────────── -->
   <nav class="site-nav" aria-label="Site navigation">
     <div class="site-wrap">
-      <a href="index.html" class="nav-brand">Chancellor Edwards</a>
-      <ul class="nav-links">
-        <li><a href="index.html" class="nav-active">Resume</a></li>
-        <li><a href="projects.html">Projects</a></li>
-        <li><a href="about.html">About</a></li>
-      </ul>
-      <button
-        class="mood-toggle"
-        type="button"
-        role="switch"
-        aria-checked="false"
-        aria-label="Toggle DND viewing mode"
-        id="moodToggle"
-      >
-        <span class="mood-toggle-label" aria-hidden="true">DND</span>
-        <span class="mood-toggle-track">
-          <span class="mood-toggle-thumb"></span>
-        </span>
-      </button>
+      <div class="nav-shell">
+        <div class="nav-brand">
+          <span class="nav-brand-orb" aria-hidden="true"></span>
+          <span class="nav-brand-full">chancelloredwards.dev</span>
+          <span class="nav-brand-short">ce.dev</span>
+        </div>
+        <ul class="nav-links">
+          <li>
+            <a href="index.html" class="nav-active" aria-current="page">
+              <span class="nav-link-label">Home</span>
+              <span class="nav-link-meta">Clock</span>
+            </a>
+          </li>
+          <li><a href="playground.html"><span class="nav-link-label">Playground</span></a></li>
+          <li><a href="notes.html"><span class="nav-link-label">Notes</span></a></li>
+        </ul>
+        <div class="nav-mode">
+          <button class="nav-mode-btn" type="button" id="dndToggle" aria-pressed="false" aria-label="Enable DND mode">
+            <span class="nav-mode-signal" aria-hidden="true"></span>
+            <span class="nav-mode-copy">
+              <span class="nav-mode-label">Mode</span>
+              <span class="nav-mode-state">DND <span class="nav-mode-value" id="dndToggleValue">Off</span></span>
+            </span>
+          </button>
+        </div>
+      </div>
     </div>
   </nav>
 
-  <!-- ─── HERO ─────────────────────────────────────────────────── -->
-  <header class="hero">
+  <!-- ─── HERO (Fountain Clock) ────────────────────────────────── -->
+  <header class="hero hero-clock">
     <div class="site-wrap">
-      <p class="hero-eyebrow">Portfolio · Archive</p>
-      <h1>Chancellor Edwards</h1>
-      <p class="hero-alias">Also known as <strong>Chance Edwards</strong></p>
-      <p class="hero-subtitle">Application Developer · Product Manager</p>
-      <p class="hero-location">Houston, TX</p>
-      <p class="hero-bio">
-        Application Developer with experience building open and closed source software systems for public and private sector clients. Strong foundations in hardware, networking, databases, and object-oriented programming. Chancellor (Chance) Edwards brings a first-principles approach to engineering and product delivery.
-      </p>
-      <div class="hero-links">
-        <a href="mailto:chance.edwards9@icloud.com">✉ chance.edwards9@icloud.com</a>
-        <a href="projects.html">View Projects →</a>
-      </div>
+
+      <!-- Ambient time + weather layer (see js/fountain-clock.js) -->
+      <section class="fountain-clock" data-fountain-clock aria-label="Ambient time and weather">
+        <h1 class="hero-eyebrow fc-eyebrow">Fountain Clock</h1>
+
+        <div class="fc-face">
+          <time class="fc-time" data-fc-time datetime="">
+            <span class="fc-time-hm" data-fc-time-hm>—</span>
+          </time>
+          <div class="fc-meta">
+            <span class="fc-phase" data-fc-phase>Day</span>
+            <span class="fc-meta-sep" aria-hidden="true">·</span>
+            <span class="fc-date" data-fc-date>—</span>
+            <span class="fc-meta-sep" aria-hidden="true">·</span>
+            <span class="fc-zone" data-fc-zone>—</span>
+          </div>
+        </div>
+
+        <div class="fc-sun" aria-hidden="true">
+          <div class="fc-sun-rail">
+            <span class="fc-sun-dot"></span>
+          </div>
+          <div class="fc-sun-labels">
+            <span class="fc-sun-label" data-fc-sunrise>—</span>
+            <span class="fc-sun-label" data-fc-sunset>—</span>
+          </div>
+        </div>
+
+        <div class="fc-weather" data-fc-weather data-fc-state="loading"></div>
+
+        <div class="fc-status">
+          <span class="fc-location" data-fc-location>Houston, TX</span>
+          <span class="fc-asof" data-fc-asof hidden></span>
+          <span class="fc-status-actions">
+            <button type="button" class="fc-link-btn" data-fc-locate>Use my location</button>
+            <button type="button" class="fc-link-btn" data-fc-reset hidden>Reset location</button>
+            <button type="button" class="fc-link-btn" data-fc-simplify aria-pressed="false">Simplify</button>
+          </span>
+          <span class="fc-note" data-fc-note aria-live="polite"></span>
+        </div>
+      </section>
     </div>
   </header>
 
@@ -376,8 +417,9 @@
   <!-- ─── FOOTER ────────────────────────────────────────────────── -->
   <footer class="site-footer">
     <div class="site-wrap">
-      <span class="footer-copy">© 2026 Chancellor Edwards · Content licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer license">CC BY 4.0</a></span>
+      <span class="footer-copy">&copy; 2026 Chancellor Edwards · Application Developer &amp; Product Manager, Houston, TX · Content licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer license">CC BY 4.0</a></span>
       <ul class="footer-links">
+        <li><a href="resume.json">Résumé</a></li>
         <li><a href="https://github.com/chancellor4" target="_blank" rel="noopener noreferrer">GitHub</a></li>
         <li><a href="https://medium.com/@chancelloredwards" target="_blank" rel="noopener noreferrer">Medium</a></li>
         <li><a href="mailto:chance.edwards9@icloud.com">Email</a></li>
@@ -422,5 +464,6 @@
   <script src="js/refined.js"></script>
   <script src="js/shell.js" defer></script>
   <script src="js/vinyl.js" defer></script>
+  <script src="js/fountain-clock.js" defer></script>
 </body>
 </html>

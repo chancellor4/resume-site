@@ -1,0 +1,21 @@
+{
+  "updated_at": "2026-04-17T00:00:00Z",
+  "source": "https://api.github.com/users/chancellor4/repos",
+  "note": "Build-time snapshot. Refreshed by a scheduled task. Rendered first by js/projects-cache.js; a live refresh is attempted silently after.",
+  "repos": [
+    {
+      "name": "chancelloredwards-site",
+      "description": "Personal site — retro-nostalgia archive. Calm, private, always-on.",
+      "html_url": "https://github.com/chancellor4/chancelloredwards-site",
+      "homepage": "https://chancelloredwards.dev",
+      "language": "HTML",
+      "stargazers_count": 0,
+      "forks_count": 0,
+      "topics": ["portfolio", "static-site", "ambient", "retro"],
+      "updated_at": "2026-04-17T00:00:00Z",
+      "fork": false,
+      "private": false,
+      "size": 240
+    }
+  ]
+}

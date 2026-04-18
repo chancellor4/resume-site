@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO -->
+  <title>Notes — Chancellor Edwards</title>
+  <meta name="description" content="Notes — a local-first, offline-only micro-vault by Chancellor Edwards. Nothing syncs, nothing streams. The paper is always here." />
+  <meta name="author" content="Chancellor Edwards" />
+  <!-- Intentionally lightweight SEO: Notes is a private, client-side tool, not a content page. -->
+  <meta name="robots" content="noindex, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Notes — Chancellor Edwards" />
+  <meta property="og:description" content="A local-first, offline-only micro-vault. Nothing syncs, nothing streams." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://chancelloredwards.dev/notes.html" />
+  <meta property="og:site_name" content="Chancellor Edwards" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:image" content="https://chancelloredwards.dev/assets/social-card.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Notes — Chancellor Edwards" />
+  <meta name="twitter:description" content="A local-first, offline-only micro-vault." />
+  <meta name="twitter:image" content="https://chancelloredwards.dev/assets/social-card.png" />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://chancelloredwards.dev/notes.html" />
+
+  <!-- License -->
+  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
+
+  <!-- Structured Data: WebPage + Breadcrumb -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": "https://chancelloredwards.dev/notes.html#webpage",
+    "name": "Notes",
+    "description": "A local-first, offline-only micro-vault.",
+    "url": "https://chancelloredwards.dev/notes.html",
+    "isPartOf": { "@id": "https://chancelloredwards.dev/#website" },
+    "about": { "@id": "https://chancelloredwards.dev/#person" },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Fountain Clock", "item": "https://chancelloredwards.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Notes",          "item": "https://chancelloredwards.dev/notes.html" }
+      ]
+    }
+  }
+  </script>
+
+  <!-- Fonts (non-render-blocking) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" /></noscript>
+
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-page="notes">
+
+  <!-- ─── NAV ─────────────────────────────────────────────────── -->
+  <nav class="site-nav" aria-label="Site navigation">
+    <div class="site-wrap">
+      <div class="nav-shell">
+        <div class="nav-brand">
+          <span class="nav-brand-orb" aria-hidden="true"></span>
+          <span class="nav-brand-full">chancelloredwards.dev</span>
+          <span class="nav-brand-short">ce.dev</span>
+        </div>
+        <ul class="nav-links">
+          <li>
+            <a href="index.html">
+              <span class="nav-link-label">Home</span>
+              <span class="nav-link-meta">Clock</span>
+            </a>
+          </li>
+          <li><a href="playground.html"><span class="nav-link-label">Playground</span></a></li>
+          <li>
+            <a href="notes.html" class="nav-active" aria-current="page">
+              <span class="nav-link-label">Notes</span>
+            </a>
+          </li>
+        </ul>
+        <div class="nav-mode">
+          <button class="nav-mode-btn" type="button" id="dndToggle" aria-pressed="false" aria-label="Enable DND mode">
+            <span class="nav-mode-signal" aria-hidden="true"></span>
+            <span class="nav-mode-copy">
+              <span class="nav-mode-label">Mode</span>
+              <span class="nav-mode-state">DND <span class="nav-mode-value" id="dndToggleValue">Off</span></span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── HEADER ───────────────────────────────────────────────── -->
+  <header class="notes-header">
+    <div class="site-wrap">
+      <p class="hero-eyebrow">Local-first</p>
+      <h1>Notes</h1>
+      <p>
+        A quiet drawer for ideas and fragments. Nothing syncs, nothing streams — everything you type stays on this device.
+        Press <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>&nbsp;+&nbsp;<kbd>Enter</kbd> to save.
+      </p>
+    </div>
+  </header>
+
+  <!-- ─── MAIN ──────────────────────────────────────────────────── -->
+  <main>
+    <div class="site-wrap">
+      <div class="notes-root" id="notes-root">
+
+        <!-- ── Compose ─────────────────────────────────────────── -->
+        <form class="notes-compose" id="notes-compose" autocomplete="off" novalidate>
+          <label class="visually-hidden" for="notes-compose-title">Title (optional)</label>
+          <input
+            id="notes-compose-title"
+            class="notes-compose-title"
+            type="text"
+            placeholder="Title (optional)"
+            maxlength="200"
+          />
+
+          <label class="visually-hidden" for="notes-compose-body">Note</label>
+          <textarea
+            id="notes-compose-body"
+            class="notes-compose-body"
+            rows="5"
+            placeholder="What are you thinking? Use #tags inline."
+            autofocus
+          ></textarea>
+
+          <div class="notes-compose-row">
+            <span class="notes-compose-hint" aria-hidden="true">Cmd/Ctrl + Enter to save</span>
+            <div class="notes-compose-actions">
+              <button
+                type="button"
+                class="notes-btn notes-btn-quiet"
+                id="notes-compose-cancel"
+                hidden
+              >Cancel</button>
+              <button
+                type="submit"
+                class="notes-btn notes-btn-primary"
+                id="notes-compose-submit"
+              >Save note</button>
+            </div>
+          </div>
+        </form>
+
+        <!-- ── Flash (imports/exports/errors) ──────────────────── -->
+        <div
+          class="notes-flash"
+          id="notes-flash"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></div>
+
+        <!-- ── Toolbar: search + filters ───────────────────────── -->
+        <div class="notes-toolbar">
+          <label class="visually-hidden" for="notes-search">Search notes</label>
+          <input
+            id="notes-search"
+            class="notes-search"
+            type="search"
+            placeholder="Search…"
+            autocomplete="off"
+          />
+
+          <div class="notes-filters" id="notes-filters" role="group" aria-label="Filter notes">
+            <button type="button" class="notes-pill notes-pill-active" data-filter="all">All</button>
+            <button type="button" class="notes-pill" data-filter="pinned">Pinned</button>
+            <button type="button" class="notes-pill" data-filter="archived">Archived</button>
+          </div>
+        </div>
+
+        <!-- ── Meta row: count + export/import ─────────────────── -->
+        <div class="notes-meta-row">
+          <span class="notes-count" id="notes-count" aria-live="polite">0 notes</span>
+          <div class="notes-io">
+            <button type="button" class="notes-btn" id="notes-export">Export JSON</button>
+            <button type="button" class="notes-btn" id="notes-import">Import</button>
+            <input
+              type="file"
+              id="notes-import-file"
+              class="notes-hidden-input"
+              accept="application/json,.json"
+              aria-hidden="true"
+              tabindex="-1"
+            />
+          </div>
+        </div>
+
+        <!-- ── Empty state ─────────────────────────────────────── -->
+        <p class="notes-empty" id="notes-empty" aria-live="polite" hidden></p>
+
+        <!-- ── List ────────────────────────────────────────────── -->
+        <div class="notes-list" id="notes-list" aria-label="Notes"></div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ─── FOOTER ────────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="site-wrap">
+      <span class="footer-copy">&copy; 2026 Chancellor Edwards · Application Developer &amp; Product Manager, Houston, TX · Content licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer license">CC BY 4.0</a></span>
+      <ul class="footer-links">
+        <li><a href="resume.json">Résumé</a></li>
+        <li><a href="https://github.com/chancellor4" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a href="https://medium.com/@chancelloredwards" target="_blank" rel="noopener noreferrer">Medium</a></li>
+        <li><a href="mailto:chance.edwards9@icloud.com">Email</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- ─── VINYL PLAYER (DND mode only) ─────────────────────── -->
+  <div class="vinyl" id="vinyl" aria-label="Music player" role="region" aria-hidden="true">
+    <iframe id="vinylSource" allow="autoplay" title="SoundCloud player"
+      style="position:absolute;width:0;height:0;border:0;overflow:hidden"
+      aria-hidden="true"></iframe>
+
+    <div class="vinyl-sleeve">
+      <div class="vinyl-marquee">
+        <span class="vinyl-title" id="vinylTitle">Loading&#8230;</span>
+      </div>
+
+      <div class="vinyl-groove-wrap" aria-hidden="true"></div>
+
+      <div class="vinyl-deck">
+        <button class="vinyl-btn" id="vinylSpin" type="button" aria-label="Play" title="Play">
+          <svg class="vinyl-icon vinyl-icon-spin" viewBox="0 0 16 16" fill="currentColor" width="16" height="16"><polygon points="3,1 13,8 3,15"/></svg>
+          <svg class="vinyl-icon vinyl-icon-lift" viewBox="0 0 16 16" fill="currentColor" width="16" height="16" hidden><rect x="2" y="1" width="4" height="14"/><rect x="10" y="1" width="4" height="14"/></svg>
+        </button>
+        <button class="vinyl-btn" id="vinylHush" type="button" aria-label="Mute" title="Mute">
+          <svg class="vinyl-icon vinyl-icon-loud" viewBox="0 0 16 16" fill="currentColor" width="16" height="16"><path d="M2,5 L5,5 L9,1 L9,15 L5,11 L2,11 Z"/><path class="vinyl-wave" d="M11,4 Q14,8 11,12" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          <svg class="vinyl-icon vinyl-icon-hushed" viewBox="0 0 16 16" fill="currentColor" width="16" height="16" hidden><path d="M2,5 L5,5 L9,1 L9,15 L5,11 L2,11 Z"/><line x1="11" y1="5" x2="15" y2="11" stroke="currentColor" stroke-width="1.5"/><line x1="15" y1="5" x2="11" y2="11" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+        <input class="vinyl-dial" id="vinylDial" type="range" min="0" max="100" value="40" step="1" aria-label="Volume"/>
+      </div>
+
+      <div class="vinyl-crate-wrap">
+        <button class="vinyl-btn vinyl-crate-latch" id="vinylLatch" type="button" aria-expanded="false" aria-label="Show playlist">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><rect x="1" y="2" width="14" height="1.5" rx="0.5"/><rect x="1" y="7" width="10" height="1.5" rx="0.5"/><rect x="1" y="12" width="14" height="1.5" rx="0.5"/></svg>
+        </button>
+        <ul class="vinyl-crate" id="vinylCrate" role="listbox" aria-label="Playlist" hidden></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── NOTES BOOTSTRAP ────────────────────────────────────────
+       Works for both a full page load and SPA re-entry. If the
+       module is already in memory, re-mount against the freshly
+       swapped DOM; otherwise load it on demand. -->
+  <script>
+    (function bootNotes() {
+      if (window.CE_NOTES && typeof window.CE_NOTES.mount === 'function') {
+        window.CE_NOTES.mount();
+        return;
+      }
+      var s = document.createElement('script');
+      s.src = 'js/notes.js';
+      s.defer = true;
+      document.head.appendChild(s);
+    })();
+  </script>
+
+  <script src="js/refined.js"></script>
+  <script src="js/shell.js" defer></script>
+  <script src="js/vinyl.js" defer></script>
+  <script src="js/fountain-clock.js" defer></script>
+</body>
+</html>

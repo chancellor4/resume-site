@@ -1,0 +1,276 @@
+/*
+  tokens.css — Chancellor Edwards
+  Shared design tokens for color, typography, spacing, surfaces, and motion.
+  The visual refresh can now layer on top of semantic tokens instead of
+  hard-coded page colors.
+*/
+
+:root {
+  color-scheme: light;
+
+  /* Typography */
+  --font-serif: 'Lora', 'Georgia', serif;
+  --font-mono: 'Courier Prime', 'Courier New', monospace;
+  --ls-tight: 0.08em;
+  --ls-wide: 0.14em;
+
+  /* Layout */
+  --max-w: 680px;
+  --side: clamp(1.25rem, 5vw, 3rem);
+
+  /* Spacing */
+  --sp-xs: 0.25rem;
+  --sp-sm: 0.5rem;
+  --sp-md: 1rem;
+  --sp-lg: 1.5rem;
+  --sp-xl: 2rem;
+  --sp-2xl: 3rem;
+  --sp-3xl: 4rem;
+
+  /* Shape */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  /* Motion */
+  --t-fast: 140ms;
+  --t-calm: 240ms;
+  --t-spring: 420ms;
+  --t-theme: 700ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-breathe: cubic-bezier(0.37, 0, 0.2, 1);
+  --ease: var(--t-calm) var(--ease-soft);
+  --ease-fast: var(--t-fast) var(--ease-soft);
+
+  /* Ambient behavior */
+  --surface-lift-y: 0px;
+  --surface-lift-scale: 1;
+  --ambient-strength: 1;
+  --ambient-shimmer-opacity: 0.08;
+  --ambient-glow-opacity: 0.2;
+  --alive-indicator-opacity: 0.92;
+
+  /* Fountain Clock — derived from time of day and weather (written by JS) */
+  --ambient-warmth: 0.3;  /* 0 cool → 1 warm */
+  --ambient-light: 0.5;   /* 0 dark → 1 bright */
+  --fc-sun-x: 50%;        /* sun-dot position along the rail */
+
+  /* Semantic palette: calm pearl */
+  --page-bg: #f8f4ee;
+  --page-bg-alt: #f4eef8;
+  --page-bg-accent: #edf6fb;
+
+  --surface-1: rgba(255, 252, 247, 0.78);
+  --surface-2: rgba(255, 248, 240, 0.9);
+  --surface-3: rgba(246, 237, 230, 0.92);
+  --surface-solid: #fcf7f1;
+
+  --surface-border: rgba(158, 122, 90, 0.22);
+  --surface-border-strong: rgba(158, 122, 90, 0.34);
+  --surface-rule: rgba(158, 122, 90, 0.18);
+  --surface-shadow: 0 18px 46px rgba(115, 86, 62, 0.08);
+  --surface-shadow-strong: 0 22px 54px rgba(115, 86, 62, 0.12);
+  --surface-glow: radial-gradient(circle at top right, rgba(167, 224, 255, 0.26), transparent 52%);
+  --surface-highlight: linear-gradient(180deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.04));
+  --surface-texture-opacity: 0.05;
+
+  --text-strong: #24180f;
+  --text: #4f3a25;
+  --text-muted: #826d59;
+
+  --accent: #6ea7c8;
+  --accent-soft: #9dc6de;
+  --accent-contrast: #173548;
+  --accent-warm: #d4936d;
+  --accent-success: #6a9f87;
+
+  /* Legacy aliases for existing styles */
+  --cream: var(--page-bg);
+  --parchment: var(--surface-3);
+  --border: var(--surface-border-strong);
+  --border-lt: var(--surface-border);
+  --rule-color: var(--surface-rule);
+  --ink: var(--text-strong);
+  --ink-mid: var(--text);
+  --ink-muted: var(--text-muted);
+  --amber: var(--accent-contrast);
+  --amber-lt: var(--accent);
+}
+
+html[data-theme="aqua"] {
+  --page-bg: #eef8fb;
+  --page-bg-alt: #f4f7ff;
+  --page-bg-accent: #f2fdff;
+  --surface-1: rgba(248, 254, 255, 0.76);
+  --surface-2: rgba(237, 249, 252, 0.9);
+  --surface-3: rgba(228, 243, 247, 0.94);
+  --surface-solid: #f5fcff;
+  --surface-border: rgba(76, 140, 156, 0.22);
+  --surface-border-strong: rgba(76, 140, 156, 0.34);
+  --surface-rule: rgba(76, 140, 156, 0.18);
+  --surface-shadow: 0 18px 46px rgba(39, 97, 113, 0.08);
+  --surface-shadow-strong: 0 22px 54px rgba(39, 97, 113, 0.13);
+  --surface-glow: radial-gradient(circle at top right, rgba(97, 221, 229, 0.28), transparent 52%);
+  --text-strong: #12323a;
+  --text: #2f5660;
+  --text-muted: #62818a;
+  --accent: #57c7db;
+  --accent-soft: #97dfec;
+  --accent-contrast: #15566d;
+  --accent-warm: #f3b77d;
+  --accent-success: #48a785;
+}
+
+html[data-theme="blush"] {
+  --page-bg: #fbf1f2;
+  --page-bg-alt: #fff7ef;
+  --page-bg-accent: #f7f0ff;
+  --surface-1: rgba(255, 249, 248, 0.8);
+  --surface-2: rgba(255, 244, 242, 0.9);
+  --surface-3: rgba(249, 234, 232, 0.94);
+  --surface-solid: #fff8f7;
+  --surface-border: rgba(173, 110, 123, 0.2);
+  --surface-border-strong: rgba(173, 110, 123, 0.34);
+  --surface-rule: rgba(173, 110, 123, 0.16);
+  --surface-shadow: 0 18px 46px rgba(126, 75, 88, 0.08);
+  --surface-shadow-strong: 0 22px 54px rgba(126, 75, 88, 0.13);
+  --surface-glow: radial-gradient(circle at top right, rgba(244, 176, 190, 0.3), transparent 55%);
+  --text-strong: #341722;
+  --text: #654151;
+  --text-muted: #8f6a7a;
+  --accent: #ef9db0;
+  --accent-soft: #f6beca;
+  --accent-contrast: #97476f;
+  --accent-warm: #f0b56a;
+  --accent-success: #7ea38a;
+}
+
+html[data-theme="refined"] {
+  --page-bg: #f4f0f6;
+  --page-bg-alt: #f6f2fb;
+  --page-bg-accent: #eef4fb;
+  --surface-1: rgba(247, 243, 248, 0.78);
+  --surface-2: rgba(239, 231, 241, 0.9);
+  --surface-3: rgba(230, 220, 233, 0.94);
+  --surface-solid: #f7f2f8;
+  --surface-border: rgba(109, 93, 121, 0.22);
+  --surface-border-strong: rgba(109, 93, 121, 0.34);
+  --surface-rule: rgba(109, 93, 121, 0.18);
+  --surface-shadow: 0 18px 46px rgba(61, 43, 73, 0.1);
+  --surface-shadow-strong: 0 22px 54px rgba(61, 43, 73, 0.16);
+  --surface-glow: radial-gradient(circle at top right, rgba(189, 146, 216, 0.28), transparent 52%);
+  --text-strong: #1e1520;
+  --text: #3e2e42;
+  --text-muted: #796880;
+  --accent: #af8bb9;
+  --accent-soft: #ceb6d4;
+  --accent-contrast: #68476e;
+  --accent-warm: #d4a46b;
+  --accent-success: #7d9988;
+}
+
+html[data-surface="paper"] {
+  --surface-texture-opacity: 0.075;
+}
+
+html[data-surface="glass"] {
+  --surface-texture-opacity: 0.03;
+  --surface-shadow: 0 20px 54px rgba(58, 52, 86, 0.1);
+  --surface-shadow-strong: 0 26px 68px rgba(58, 52, 86, 0.15);
+}
+
+body.is-idle {
+  --surface-lift-y: -1px;
+  --surface-lift-scale: 1.002;
+  --ambient-shimmer-opacity: 0.05;
+  --ambient-glow-opacity: 0.14;
+  --alive-indicator-opacity: 0.7;
+}
+
+body.is-background {
+  --surface-lift-y: 0px;
+  --surface-lift-scale: 1;
+  --ambient-strength: 0.8;
+  --ambient-shimmer-opacity: 0.02;
+  --ambient-glow-opacity: 0.08;
+  --alive-indicator-opacity: 0.45;
+}
+
+html[data-motion="reduced"] {
+  --t-fast: 1ms;
+  --t-calm: 1ms;
+  --t-spring: 1ms;
+  --t-theme: 180ms;
+  --surface-lift-y: 0px;
+  --surface-lift-scale: 1;
+  --ambient-shimmer-opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="full"]) {
+    --t-fast: 1ms;
+    --t-calm: 1ms;
+    --t-spring: 1ms;
+    --t-theme: 180ms;
+    --surface-lift-y: 0px;
+    --surface-lift-scale: 1;
+    --ambient-shimmer-opacity: 0;
+  }
+}
+
+/* ─── FOUNTAIN CLOCK: day-phase tints ──────────────────────────
+   Written by js/fountain-clock.js as [data-phase="dawn|day|dusk|night"]
+   on <html>. These modulate only the ambient glow — base palette is
+   untouched. Suppressed under DND or when ambient is simplified. */
+
+html[data-phase="dawn"]:not([data-mode="dnd"]):not([data-ambient="simplified"]) {
+  --surface-glow:
+    radial-gradient(circle at 28% 8%,  rgba(255, 196, 148, 0.36), transparent 56%),
+    radial-gradient(circle at 86% 22%, rgba(255, 164, 124, 0.24), transparent 52%);
+  --ambient-glow-opacity: 0.3;
+}
+
+html[data-phase="dusk"]:not([data-mode="dnd"]):not([data-ambient="simplified"]) {
+  --surface-glow:
+    radial-gradient(circle at 82% 10%, rgba(255, 172, 148, 0.32), transparent 54%),
+    radial-gradient(circle at 18% 32%, rgba(186, 142, 172, 0.24), transparent 58%);
+  --ambient-glow-opacity: 0.3;
+}
+
+html[data-phase="night"]:not([data-mode="dnd"]):not([data-ambient="simplified"]) {
+  --surface-glow:
+    radial-gradient(circle at 50% 14%, rgba(104, 124, 182, 0.24), transparent 60%),
+    radial-gradient(circle at 20% 80%, rgba(72, 86, 148, 0.18), transparent 62%);
+  --ambient-glow-opacity: 0.24;
+}
+
+/* ─── FOUNTAIN CLOCK: weather moods ─────────────────────────────
+   Additive, very subtle. Only change glow intensity, never palette. */
+
+html[data-weather="cloudy"]:not([data-mode="dnd"]):not([data-ambient="simplified"]) {
+  --ambient-glow-opacity: 0.16;
+  --ambient-shimmer-opacity: 0.04;
+}
+
+html[data-weather="rain"]:not([data-mode="dnd"]):not([data-ambient="simplified"]) {
+  --ambient-glow-opacity: 0.18;
+  --ambient-shimmer-opacity: 0.03;
+}
+
+html[data-weather="snow"]:not([data-mode="dnd"]):not([data-ambient="simplified"]) {
+  --ambient-shimmer-opacity: 0.06;
+}
+
+html[data-weather="storm"]:not([data-mode="dnd"]):not([data-ambient="simplified"]) {
+  --ambient-glow-opacity: 0.14;
+  --ambient-shimmer-opacity: 0.025;
+}
+
+/* ─── FOUNTAIN CLOCK: simplified mode ───────────────────────────
+   Freezes ambient at calm defaults, no phase/weather shifting. */
+
+html[data-ambient="simplified"] {
+  --ambient-shimmer-opacity: 0;
+}

@@ -4,246 +4,70 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- SEO -->
-  <title>About Chancellor Edwards (Chance Edwards) — Developer & Product Manager</title>
-  <meta name="description" content="About Chancellor Edwards, also known as Chance Edwards. Application Developer and Product Manager based in Houston, TX. IBM alumnus, BS in Information Technology, SAFe Scrum Master." />
-  <meta name="author" content="Chancellor Edwards" />
-  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <!--
+    about.html — compatibility redirect
+    The About page has been folded back into the Fountain Clock (the
+    landing room) and into Notes, where identity lives more naturally.
+    Retained for inbound links and cached search results.
+  -->
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="About Chancellor Edwards (Chance Edwards)" />
-  <meta property="og:description" content="Application Developer and Product Manager in Houston, TX. IBM alumnus, University of the Cumberlands graduate." />
-  <meta property="og:type" content="profile" />
-  <meta property="og:url" content="https://chancelloredwards.dev/about.html" />
-  <meta property="og:site_name" content="Chancellor Edwards" />
-  <meta property="og:locale" content="en_US" />
-  <meta property="og:image" content="https://chancelloredwards.dev/assets/social-card.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Chancellor Edwards — Application Developer and Product Manager in Houston, TX" />
-  <meta property="profile:first_name" content="Chancellor" />
-  <meta property="profile:last_name" content="Edwards" />
+  <title>About moved — Chancellor Edwards</title>
+  <meta name="description" content="The About page has moved to the Fountain Clock. Redirecting you now." />
+  <meta name="robots" content="noindex, follow" />
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="About Chancellor Edwards (Chance Edwards)" />
-  <meta name="twitter:description" content="Application Developer and Product Manager in Houston, TX." />
-  <meta name="twitter:image" content="https://chancelloredwards.dev/assets/social-card.png" />
-  <meta name="twitter:image:alt" content="Chancellor Edwards — Application Developer and Product Manager in Houston, TX" />
+  <!-- Canonical points to the new home: the Fountain Clock landing. -->
+  <link rel="canonical" href="https://chancelloredwards.dev/" />
 
-  <!-- Canonical -->
-  <link rel="canonical" href="https://chancelloredwards.dev/about.html" />
-
-  <!-- License -->
-  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/" />
+  <!-- No-JS fallback: meta refresh -->
+  <meta http-equiv="refresh" content="0; url=index.html" />
 
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="assets/icons/favicon.ico" />
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png" />
 
-  <!-- Structured Data: Person (reinforced) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ProfilePage",
-    "mainEntity": {
-      "@type": "Person",
-      "@id": "https://chancelloredwards.dev/#person",
-      "name": "Chancellor Edwards",
-      "alternateName": ["Chance Edwards", "Chancellor E. Edwards"],
-      "givenName": "Chancellor",
-      "familyName": "Edwards",
-      "url": "https://chancelloredwards.dev/",
-      "email": "mailto:chance.edwards9@icloud.com",
-      "jobTitle": "Application Developer",
-      "description": "Application Developer and Product Manager based in Houston, TX with experience at IBM, the U.S. Department of Veterans Affairs, and UPS.",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Houston",
-        "addressRegion": "TX",
-        "addressCountry": "US"
-      },
-      "alumniOf": [
-        {
-          "@type": "CollegeOrUniversity",
-          "name": "University of the Cumberlands"
-        },
-        {
-          "@type": "CollegeOrUniversity",
-          "name": "Weatherford College"
-        }
-      ],
-      "worksFor": {
-        "@type": "Organization",
-        "name": "Baca Stein White and Associates"
-      },
-      "sameAs": [
-        "https://github.com/chancellor4",
-        "https://medium.com/@chancelloredwards"
-      ]
-    },
-    "breadcrumb": {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://chancelloredwards.dev/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "About",
-          "item": "https://chancelloredwards.dev/about.html"
-        }
-      ]
+  <!-- Minimal inline styling so the fallback view is still calm if JS is off -->
+  <style>
+    :root {
+      --cream: #f6f1e7;
+      --ink:   #2a1a0a;
+      --amber: #a06428;
     }
-  }
-  </script>
-
-  <!-- Fonts (non-render-blocking) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" /></noscript>
-
-  <link rel="stylesheet" href="css/styles.css" />
+    html, body { margin: 0; padding: 0; background: var(--cream); color: var(--ink); }
+    body {
+      font-family: 'Lora', 'Georgia', serif;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 2rem;
+      text-align: center;
+    }
+    .stub-card { max-width: 28rem; }
+    .stub-card h1 { font-size: 1.25rem; font-weight: 600; margin: 0 0 0.75rem; }
+    .stub-card p  { margin: 0.5rem 0; color: var(--ink); opacity: 0.85; }
+    .stub-card a  { color: var(--amber); text-decoration: none; border-bottom: 1px solid currentColor; }
+    .stub-card a:hover { opacity: 0.75; }
+  </style>
 </head>
 <body>
-
-  <!-- ─── NAV ─────────────────────────────────────────────────── -->
-  <nav class="site-nav" aria-label="Site navigation">
-    <div class="site-wrap">
-      <a href="index.html" class="nav-brand">Chancellor Edwards</a>
-      <ul class="nav-links">
-        <li><a href="index.html">Resume</a></li>
-        <li><a href="projects.html">Projects</a></li>
-        <li><a href="about.html" class="nav-active">About</a></li>
-      </ul>
-      <button
-        class="mood-toggle"
-        type="button"
-        role="switch"
-        aria-checked="false"
-        aria-label="Toggle DND viewing mode"
-        id="moodToggle"
-      >
-        <span class="mood-toggle-label" aria-hidden="true">DND</span>
-        <span class="mood-toggle-track">
-          <span class="mood-toggle-thumb"></span>
-        </span>
-      </button>
-    </div>
-  </nav>
-
-  <!-- ─── HEADER ───────────────────────────────────────────────── -->
-  <header class="hero">
-    <div class="site-wrap">
-      <p class="hero-eyebrow">Background</p>
-      <h1>About Chancellor Edwards</h1>
-      <p class="hero-alias">Also known as <strong>Chance Edwards</strong></p>
-      <p class="hero-subtitle">Application Developer · Product Manager · Houston, TX</p>
-    </div>
-  </header>
-
-  <!-- ─── MAIN ──────────────────────────────────────────────────── -->
-  <main>
-    <div class="site-wrap">
-
-      <section class="resume-section" aria-labelledby="sec-about">
-        <div class="section-header">
-          <h2 id="sec-about">Who I Am</h2>
-          <div class="section-rule" aria-hidden="true"></div>
-        </div>
-
-        <p class="about-prose">
-          Chancellor Edwards — known to most as <strong>Chance Edwards</strong> — is an Application Developer and Product Manager based in Houston, Texas. With a career spanning enterprise software development, government technology, and logistics systems, Chance brings a disciplined, first-principles approach to building software.
-        </p>
-
-        <p class="about-prose">
-          Chance earned a Bachelor of Science in Information Technology from the University of the Cumberlands, where he served as Secretary of the Cyber Club and played collegiate basketball. He began his career at IBM, where over three years he contributed to mission-critical applications for the U.S. Department of Veterans Affairs and built logistics software systems for the United Parcel Service.
-        </p>
-
-        <p class="about-prose">
-          At the VA, Chancellor worked on a team that automated a business-critical process, innovating with an OCR technology that cleared a significant backlog of cases, freeing funds for veterans. As scrum master, he coordinated development across application components, leading agile ceremonies that included sprint planning, retrospectives, and backlog refinement. At UPS, he built and enhanced enterprise software while coaching development teams on Scrum best practices.
-        </p>
-
-        <p class="about-prose">
-          After IBM, Edwards served as a Product Manager at Sanmore Investments, leading product strategy across the software development lifecycle — orchestrating cloud engineering, application development, and design teams. He currently works as an Application Developer at Baca Stein White and Associates, developing enterprise applications and contributing to data engineering operations.
-        </p>
-
-        <p class="about-prose">
-          Chancellor Edwards holds a SAFe Scrum Master certification and certifications in Design Thinking and HTML Development. His technical skill set spans object-oriented programming, web development, SQL, networking, and hardware systems.
-        </p>
-      </section>
-
-      <section class="resume-section" aria-labelledby="sec-connect">
-        <div class="section-header">
-          <h2 id="sec-connect">Connect</h2>
-          <div class="section-rule" aria-hidden="true"></div>
-        </div>
-
-        <div class="hero-links">
-          <a href="mailto:chance.edwards9@icloud.com">✉ chance.edwards9@icloud.com</a>
-          <a href="https://github.com/chancellor4" target="_blank" rel="noopener noreferrer">GitHub →</a>
-          <a href="https://medium.com/@chancelloredwards" target="_blank" rel="noopener noreferrer">Medium →</a>
-        </div>
-      </section>
-
-    </div>
+  <main class="stub-card" role="main">
+    <h1>About has moved.</h1>
+    <p>Identity now lives on the Fountain Clock.</p>
+    <p>If nothing happens, <a href="index.html">open the Fountain Clock &rarr;</a></p>
   </main>
 
-  <!-- ─── FOOTER ────────────────────────────────────────────────── -->
-  <footer class="site-footer">
-    <div class="site-wrap">
-      <span class="footer-copy">© 2026 Chancellor Edwards · Content licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer license">CC BY 4.0</a></span>
-      <ul class="footer-links">
-        <li><a href="https://github.com/chancellor4" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-        <li><a href="https://medium.com/@chancelloredwards" target="_blank" rel="noopener noreferrer">Medium</a></li>
-        <li><a href="mailto:chance.edwards9@icloud.com">Email</a></li>
-      </ul>
-    </div>
-  </footer>
-
-  <!-- ─── VINYL PLAYER (DND mode only) ─────────────────────── -->
-  <div class="vinyl" id="vinyl" aria-label="Music player" role="region" aria-hidden="true">
-    <iframe id="vinylSource" allow="autoplay" title="SoundCloud player"
-      style="position:absolute;width:0;height:0;border:0;overflow:hidden"
-      aria-hidden="true"></iframe>
-
-    <div class="vinyl-sleeve">
-      <div class="vinyl-marquee">
-        <span class="vinyl-title" id="vinylTitle">Loading&#8230;</span>
-      </div>
-
-      <div class="vinyl-groove-wrap" aria-hidden="true"></div>
-
-      <div class="vinyl-deck">
-        <button class="vinyl-btn" id="vinylSpin" type="button" aria-label="Play" title="Play">
-          <svg class="vinyl-icon vinyl-icon-spin" viewBox="0 0 16 16" fill="currentColor" width="16" height="16"><polygon points="3,1 13,8 3,15"/></svg>
-          <svg class="vinyl-icon vinyl-icon-lift" viewBox="0 0 16 16" fill="currentColor" width="16" height="16" hidden><rect x="2" y="1" width="4" height="14"/><rect x="10" y="1" width="4" height="14"/></svg>
-        </button>
-        <button class="vinyl-btn" id="vinylHush" type="button" aria-label="Mute" title="Mute">
-          <svg class="vinyl-icon vinyl-icon-loud" viewBox="0 0 16 16" fill="currentColor" width="16" height="16"><path d="M2,5 L5,5 L9,1 L9,15 L5,11 L2,11 Z"/><path class="vinyl-wave" d="M11,4 Q14,8 11,12" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-          <svg class="vinyl-icon vinyl-icon-hushed" viewBox="0 0 16 16" fill="currentColor" width="16" height="16" hidden><path d="M2,5 L5,5 L9,1 L9,15 L5,11 L2,11 Z"/><line x1="11" y1="5" x2="15" y2="11" stroke="currentColor" stroke-width="1.5"/><line x1="15" y1="5" x2="11" y2="11" stroke="currentColor" stroke-width="1.5"/></svg>
-        </button>
-        <input class="vinyl-dial" id="vinylDial" type="range" min="0" max="100" value="40" step="1" aria-label="Volume"/>
-      </div>
-
-      <div class="vinyl-crate-wrap">
-        <button class="vinyl-btn vinyl-crate-latch" id="vinylLatch" type="button" aria-expanded="false" aria-label="Show playlist">
-          <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><rect x="1" y="2" width="14" height="1.5" rx="0.5"/><rect x="1" y="7" width="10" height="1.5" rx="0.5"/><rect x="1" y="12" width="14" height="1.5" rx="0.5"/></svg>
-        </button>
-        <ul class="vinyl-crate" id="vinylCrate" role="listbox" aria-label="Playlist" hidden></ul>
-      </div>
-    </div>
-  </div>
-
-  <script src="js/refined.js"></script>
-  <script src="js/shell.js" defer></script>
-  <script src="js/vinyl.js" defer></script>
-
+  <!--
+    Fast, clean client-side redirect. Also fires when the SPA shell
+    fetches this stub and runs its inline scripts; location.replace
+    escapes the shell cleanly.
+  -->
+  <script>
+    (function () {
+      try {
+        var suffix = (location.search || '') + (location.hash || '');
+        location.replace('index.html' + suffix);
+      } catch (e) {
+        location.href = 'index.html';
+      }
+    })();
+  </script>
 </body>
 </html>

@@ -1106,7 +1106,11 @@
   /* ── Shared IIFE scope utilities ───────────────────────────── */
 
   function $(id)       { return document.getElementById(id); }
-  function isDND()  { return document.documentElement.getAttribute('data-theme') === 'refined'; }
+  function isDND()  {
+    var root = document.documentElement;
+    return root.getAttribute('data-mode') === 'dnd' ||
+      root.getAttribute('data-theme') === 'refined';
+  }
 
   function formatDuration(ms) {
     if (!ms || ms <= 0) return '';
