@@ -239,26 +239,35 @@
           <time class="fc-time" data-fc-time datetime="">
             <span class="fc-time-hm" data-fc-time-hm>—</span>
           </time>
-          <div class="fc-meta">
+          <p class="fc-meta">
             <span class="fc-phase" data-fc-phase>Day</span>
             <span class="fc-meta-sep" aria-hidden="true">·</span>
             <span class="fc-date" data-fc-date>—</span>
             <span class="fc-meta-sep" aria-hidden="true">·</span>
             <span class="fc-zone" data-fc-zone>—</span>
-          </div>
+          </p>
         </div>
 
-        <div class="fc-sun" aria-hidden="true">
-          <div class="fc-sun-rail">
+        <div class="fc-sun">
+          <div class="fc-sun-rail" aria-hidden="true">
             <span class="fc-sun-dot"></span>
           </div>
-          <div class="fc-sun-labels">
-            <span class="fc-sun-label" data-fc-sunrise>—</span>
-            <span class="fc-sun-label" data-fc-sunset>—</span>
-          </div>
+          <p class="fc-sun-labels">
+            <span class="fc-sun-label">
+              <span class="fc-sr-only">Sunrise </span><span data-fc-sunrise>—</span>
+            </span>
+            <span class="fc-sun-label">
+              <span class="fc-sr-only">Sunset </span><span data-fc-sunset>—</span>
+            </span>
+          </p>
         </div>
 
-        <div class="fc-weather" data-fc-weather data-fc-state="loading"></div>
+        <div class="fc-weather"
+             data-fc-weather
+             data-fc-state="loading"
+             aria-live="polite"
+             aria-busy="true"
+             aria-label="Current conditions and forecast"></div>
 
         <div class="fc-status">
           <span class="fc-location" data-fc-location>Houston, TX</span>
@@ -268,7 +277,7 @@
             <button type="button" class="fc-link-btn" data-fc-reset hidden>Reset location</button>
             <button type="button" class="fc-link-btn" data-fc-simplify aria-pressed="false">Simplify</button>
           </span>
-          <span class="fc-note" data-fc-note aria-live="polite"></span>
+          <span class="fc-note" data-fc-note role="status" aria-live="polite"></span>
         </div>
       </section>
     </div>

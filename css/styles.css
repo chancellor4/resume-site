@@ -565,6 +565,19 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   min-height: 14rem;
 }
 
+/* Scoped screen-reader-only utility for SR captions inside the clock. */
+.fountain-clock .fc-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .fc-eyebrow {
   margin-bottom: 0;
 }
@@ -603,6 +616,7 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   flex-wrap: wrap;
   gap: 0.5rem;
   align-items: baseline;
+  margin: 0;
   font-family: var(--font-mono);
   font-size: 0.72rem;
   letter-spacing: var(--ls-tight);
@@ -658,10 +672,17 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
 .fc-sun-labels {
   display: flex;
   justify-content: space-between;
+  margin: 0;
   font-family: var(--font-mono);
   font-size: 0.66rem;
   letter-spacing: var(--ls-tight);
   color: var(--ink-muted);
+}
+
+.fc-sun-label {
+  /* Tabular nums keep the sunrise/sunset numerals from jittering
+     as the clock ticks. */
+  font-variant-numeric: tabular-nums;
 }
 
 /* ─── Weather block ──────────────────────────────────────────── */
@@ -671,7 +692,14 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   gap: var(--sp-md);
   /* Reserve height during loading so the layout doesn't jump. */
   min-height: 5.25rem;
+  /* Soft fade as state crosses loading → ready → stale. */
+  transition: opacity var(--t-calm) var(--ease-out);
 }
+
+.fc-weather[data-fc-state="ready"] { opacity: 1; }
+.fc-weather[data-fc-state="stale"] { opacity: 0.82; }
+.fc-weather[data-fc-state="loading"] { opacity: 0.9; }
+.fc-weather[data-fc-state="error"] { opacity: 0.85; }
 
 .fc-weather-now {
   display: flex;
@@ -832,6 +860,12 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   border-bottom-color: var(--ink);
 }
 
+.fc-link-btn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--amber) 55%, transparent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
 .fc-link-btn[aria-pressed="true"] {
   color: var(--ink);
   border-bottom-color: var(--ink);
@@ -862,9 +896,14 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   animation: fc-skeleton 2.4s var(--ease-breathe) infinite;
 }
 
-.fc-weather[data-fc-state="error"] .fc-weather-cond {
+.fc-weather[data-fc-state="error"] .fc-weather-cond,
+.fc-weather[data-fc-state="error"] .fc-weather-feels {
   color: var(--ink-mid);
   font-style: normal;
+}
+
+.fc-weather[data-fc-state="stale"] .fc-weather-cond {
+  font-style: italic;
 }
 
 /* ─── DND: keep the clock but strip phase/weather tinting ────── */

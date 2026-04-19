@@ -14,18 +14,29 @@
   - Single IIFE; exposes window.CE_AMBIENT with mount()/unmount() so the
     SPA shell (js/shell.js) can re-bind after DOM swaps.
   - If the page lacks [data-fountain-clock], the module stays inert.
-  - Time: Intl.DateTimeFormat, tick once per minute.
+  - Time: Intl.DateTimeFormat, tick re-aligned to each wall-clock minute
+    (drift-free even across tab throttling and long background spells).
   - Sun: local NOAA-style solar calc (no extra network call).
   - Weather: Open-Meteo (keyless). sessionStorage cache, SWR:
-      current   → 10 min
-      forecast  →  1 hour
-  - Location: defaults to Houston, TX. Browser geolocation is opt-in
+      current (soft)  → 10 min      refetch in background
+      forecast (hard) →  1 hour     escalate to "stale" presentation
+  - In-flight fetches are coalesced; location changes abort stale work.
+  - Rendering is surgical — the weather DOM is scaffolded once and its
+    text/attrs updated in place so focus, a11y hints, and animation
+    continuity survive every state transition.
+  - Location defaults to Houston, TX. Browser geolocation is opt-in
     and reversible. No IP lookup. No PII persisted beyond this tab.
   - Failures degrade silently: last-known-good from cache, then default,
     then the clock alone — the core view never breaks.
   - Respects data-mode="dnd", data-motion, and prefers-reduced-motion.
 
-  v1.0.0
+  v1.1.0 — vectorized pass (2026-04-19):
+    • drift-free ticking, in-flight coalesce, abort-on-location-change
+    • surgical weather render (no more innerHTML churn)
+    • 1-hour stale ceiling with dedicated ready/stale/error/loading states
+    • jittered single retry on transient failure
+    • accessible sun labels + aria-busy on weather + softer error copy
+    • idempotent mount with proper teardown across SPA navigations
 */
 (function () {
   'use strict';
@@ -45,42 +56,45 @@
   var LOCATION_KEY     = 'fc:location';
   var SIMPLIFY_KEY     = 'fc:simplify';
 
-  var CURRENT_TTL_MS   = 10 * 60 * 1000;   // 10 minutes — fresh enough
-  var FORECAST_TTL_MS  = 60 * 60 * 1000;   // 1 hour — SWR ceiling
+  var CURRENT_TTL_MS   = 10 * 60 * 1000;   // 10 min — soft freshness window
+  var FORECAST_TTL_MS  = 60 * 60 * 1000;   // 1 hour — hard staleness ceiling
+  var FETCH_TIMEOUT_MS = 8000;
+  var RETRY_MIN_MS     = 1200;
+  var RETRY_MAX_MS     = 2600;
 
   var OPEN_METEO_URL = 'https://api.open-meteo.com/v1/forecast';
 
-  /* ── Weather code → human label + phase tint ─────────────── */
-  /* Maps WMO weather_code to { label, mood }. "mood" feeds CSS vars. */
+  /* ── Weather code → human label + mood ───────────────────── */
+  /* Maps WMO weather_code to { label, mood }. "mood" feeds CSS tints. */
   var WEATHER_CODES = {
-    0:  { label: 'Clear',           mood: 'clear'   },
-    1:  { label: 'Mostly clear',    mood: 'clear'   },
-    2:  { label: 'Partly cloudy',   mood: 'partly'  },
-    3:  { label: 'Overcast',        mood: 'cloudy'  },
-    45: { label: 'Fog',             mood: 'cloudy'  },
-    48: { label: 'Icy fog',         mood: 'cloudy'  },
-    51: { label: 'Light drizzle',   mood: 'rain'    },
-    53: { label: 'Drizzle',         mood: 'rain'    },
-    55: { label: 'Heavy drizzle',   mood: 'rain'    },
-    56: { label: 'Freezing drizzle',mood: 'rain'    },
-    57: { label: 'Freezing drizzle',mood: 'rain'    },
-    61: { label: 'Light rain',      mood: 'rain'    },
-    63: { label: 'Rain',            mood: 'rain'    },
-    65: { label: 'Heavy rain',      mood: 'rain'    },
-    66: { label: 'Freezing rain',   mood: 'rain'    },
-    67: { label: 'Freezing rain',   mood: 'rain'    },
-    71: { label: 'Light snow',      mood: 'snow'    },
-    73: { label: 'Snow',            mood: 'snow'    },
-    75: { label: 'Heavy snow',      mood: 'snow'    },
-    77: { label: 'Snow grains',     mood: 'snow'    },
-    80: { label: 'Rain showers',    mood: 'rain'    },
-    81: { label: 'Rain showers',    mood: 'rain'    },
-    82: { label: 'Heavy showers',   mood: 'rain'    },
-    85: { label: 'Snow showers',    mood: 'snow'    },
-    86: { label: 'Snow showers',    mood: 'snow'    },
-    95: { label: 'Thunderstorm',    mood: 'storm'   },
-    96: { label: 'Thunderstorm',    mood: 'storm'   },
-    99: { label: 'Thunderstorm',    mood: 'storm'   }
+    0:  { label: 'Clear',            mood: 'clear'  },
+    1:  { label: 'Mostly clear',     mood: 'clear'  },
+    2:  { label: 'Partly cloudy',    mood: 'partly' },
+    3:  { label: 'Overcast',         mood: 'cloudy' },
+    45: { label: 'Fog',              mood: 'cloudy' },
+    48: { label: 'Icy fog',          mood: 'cloudy' },
+    51: { label: 'Light drizzle',    mood: 'rain'   },
+    53: { label: 'Drizzle',          mood: 'rain'   },
+    55: { label: 'Heavy drizzle',    mood: 'rain'   },
+    56: { label: 'Freezing drizzle', mood: 'rain'   },
+    57: { label: 'Freezing drizzle', mood: 'rain'   },
+    61: { label: 'Light rain',       mood: 'rain'   },
+    63: { label: 'Rain',             mood: 'rain'   },
+    65: { label: 'Heavy rain',       mood: 'rain'   },
+    66: { label: 'Freezing rain',    mood: 'rain'   },
+    67: { label: 'Freezing rain',    mood: 'rain'   },
+    71: { label: 'Light snow',       mood: 'snow'   },
+    73: { label: 'Snow',             mood: 'snow'   },
+    75: { label: 'Heavy snow',       mood: 'snow'   },
+    77: { label: 'Snow grains',      mood: 'snow'   },
+    80: { label: 'Rain showers',     mood: 'rain'   },
+    81: { label: 'Rain showers',     mood: 'rain'   },
+    82: { label: 'Heavy showers',    mood: 'rain'   },
+    85: { label: 'Snow showers',     mood: 'snow'  },
+    86: { label: 'Snow showers',     mood: 'snow'  },
+    95: { label: 'Thunderstorm',     mood: 'storm' },
+    96: { label: 'Thunderstorm',     mood: 'storm' },
+    99: { label: 'Thunderstorm',     mood: 'storm' }
   };
 
   /* ── Safe storage wrappers ───────────────────────────────── */
@@ -102,7 +116,9 @@
     if (!raw) return null;
     try {
       var parsed = JSON.parse(raw);
-      if (typeof parsed.lat === 'number' && typeof parsed.lon === 'number') {
+      if (parsed && typeof parsed.lat === 'number' &&
+          typeof parsed.lon === 'number' &&
+          isFinite(parsed.lat) && isFinite(parsed.lon)) {
         return parsed;
       }
     } catch (e) {}
@@ -110,8 +126,7 @@
   }
 
   function writeStoredLocation(loc) {
-    try { sessionStorage.setItem(LOCATION_KEY, JSON.stringify(loc)); }
-    catch (e) {}
+    safeSet(sessionStorage, LOCATION_KEY, JSON.stringify(loc));
   }
 
   function clearStoredLocation() {
@@ -121,7 +136,7 @@
   /* ── Cache (session-scoped, SWR) ─────────────────────────── */
 
   function cacheKey(lat, lon) {
-    /* Round to ~1km grid for cache locality without over-sharing. */
+    /* Round to ~1 km grid so slight wobble doesn't spawn new entries. */
     return CACHE_KEY_PREFIX + lat.toFixed(2) + ':' + lon.toFixed(2);
   }
 
@@ -130,7 +145,7 @@
     if (!raw) return null;
     try {
       var entry = JSON.parse(raw);
-      if (entry && entry.ts && entry.data) return entry;
+      if (entry && typeof entry.ts === 'number' && entry.data) return entry;
     } catch (e) {}
     return null;
   }
@@ -141,7 +156,7 @@
   }
 
   /* ── Solar calculation (NOAA approximation) ──────────────── */
-  /* Returns { sunrise: Date, sunset: Date, dayFraction: 0..1, isDay } */
+  /* Returns { sunrise: Date|null, sunset: Date|null, dayFraction, isDay } */
 
   function solarTimes(lat, lon, date) {
     var d = date || new Date();
@@ -176,19 +191,14 @@
     var cosH = (Math.sin(-0.83 * rad) - Math.sin(lat * rad) * sinDelta) /
                (Math.cos(lat * rad) * Math.cos(delta * rad));
 
-    /* Polar day / polar night */
-    if (cosH > 1) {
-      return { sunrise: null, sunset: null, dayFraction: 0, isDay: false };
-    }
-    if (cosH < -1) {
-      return { sunrise: null, sunset: null, dayFraction: 0.5, isDay: true };
-    }
+    /* Polar day / polar night — clamp gracefully. */
+    if (cosH > 1)  return { sunrise: null, sunset: null, dayFraction: 0,   isDay: false };
+    if (cosH < -1) return { sunrise: null, sunset: null, dayFraction: 0.5, isDay: true  };
 
     var H = Math.acos(cosH) / rad;
     var Jrise = Jtransit - H / 360;
     var Jset  = Jtransit + H / 360;
 
-    /* Convert Julian date → ms since epoch */
     var JD_UNIX = 2440587.5;
     var riseMs = (Jrise - JD_UNIX) * 86400000;
     var setMs  = (Jset  - JD_UNIX) * 86400000;
@@ -198,30 +208,21 @@
 
     var nowMs = d.getTime();
     var dayLen = setMs - riseMs;
-    var frac;
-    var isDay = false;
+    var frac, isDay = false;
 
     if (nowMs <= riseMs) {
-      /* pre-dawn */
       frac = 0;
     } else if (nowMs >= setMs) {
-      /* post-sunset */
       frac = 1;
     } else {
-      frac = (nowMs - riseMs) / dayLen;
+      frac = dayLen > 0 ? (nowMs - riseMs) / dayLen : 0.5;
       isDay = true;
     }
 
-    return {
-      sunrise: sunrise,
-      sunset: sunset,
-      dayFraction: frac,
-      isDay: isDay
-    };
+    return { sunrise: sunrise, sunset: sunset, dayFraction: frac, isDay: isDay };
   }
 
-  /* ── Phase classifier ────────────────────────────────────── */
-  /* dawn: 45min window around sunrise; dusk: 45min around sunset. */
+  /* ── Phase classifier — 45-min shoulder around sunrise/sunset ─ */
 
   function classifyPhase(solar, now) {
     if (!solar.sunrise || !solar.sunset) {
@@ -230,55 +231,53 @@
     var n = now.getTime();
     var r = solar.sunrise.getTime();
     var s = solar.sunset.getTime();
-    var window = 45 * 60 * 1000;
+    var w = 45 * 60 * 1000;
 
-    if (Math.abs(n - r) < window) return 'dawn';
-    if (Math.abs(n - s) < window) return 'dusk';
-    if (solar.isDay) return 'day';
-    return 'night';
+    if (Math.abs(n - r) < w) return 'dawn';
+    if (Math.abs(n - s) < w) return 'dusk';
+    return solar.isDay ? 'day' : 'night';
   }
 
-  /* ── Number formatting ───────────────────────────────────── */
+  /* ── Formatters (cached) ─────────────────────────────────── */
 
-  var timeFmtCache = {};
+  var hmFormatters = {};
   function formatHM(date, tz) {
     var key = tz || 'local';
-    if (!timeFmtCache[key]) {
+    if (!hmFormatters[key]) {
+      var opts = { hour: 'numeric', minute: '2-digit', hour12: true };
+      if (tz) opts.timeZone = tz;
       try {
-        timeFmtCache[key] = new Intl.DateTimeFormat(undefined, {
-          hour: 'numeric', minute: '2-digit', hour12: true,
-          timeZone: tz || undefined
-        });
+        hmFormatters[key] = new Intl.DateTimeFormat(undefined, opts);
       } catch (e) {
-        timeFmtCache[key] = new Intl.DateTimeFormat(undefined, {
+        hmFormatters[key] = new Intl.DateTimeFormat(undefined, {
           hour: 'numeric', minute: '2-digit', hour12: true
         });
       }
     }
-    return timeFmtCache[key].format(date);
+    return hmFormatters[key].format(date);
   }
 
-  var dateFmtCache = null;
+  var dateFormatter = null;
   function formatDate(date) {
-    if (!dateFmtCache) {
-      dateFmtCache = new Intl.DateTimeFormat(undefined, {
+    if (!dateFormatter) {
+      dateFormatter = new Intl.DateTimeFormat(undefined, {
         weekday: 'long', month: 'long', day: 'numeric'
       });
     }
-    return dateFmtCache.format(date);
+    return dateFormatter.format(date);
   }
 
+  var zoneFormatter = null;
   function formatZoneLabel() {
     try {
-      var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-      /* Short abbreviation, e.g. "CST" */
-      var parts = new Intl.DateTimeFormat(undefined, {
-        timeZoneName: 'short'
-      }).formatToParts(new Date());
+      if (!zoneFormatter) {
+        zoneFormatter = new Intl.DateTimeFormat(undefined, { timeZoneName: 'short' });
+      }
+      var parts = zoneFormatter.formatToParts(new Date());
       for (var i = 0; i < parts.length; i++) {
         if (parts[i].type === 'timeZoneName') return parts[i].value;
       }
-      return tz;
+      return Intl.DateTimeFormat().resolvedOptions().timeZone || '';
     } catch (e) {
       return '';
     }
@@ -289,24 +288,37 @@
     return Math.round(t) + '°';
   }
 
-  /* ── Fetch with timeout ──────────────────────────────────── */
+  /* ── Fetch with timeout & external abort ─────────────────── */
 
-  function fetchWithTimeout(url, ms) {
-    if (typeof AbortController === 'function') {
-      var ctrl = new AbortController();
-      var t = setTimeout(function () { ctrl.abort(); }, ms);
-      return fetch(url, { signal: ctrl.signal })
-        .then(function (r) { clearTimeout(t); return r; })
-        .catch(function (err) { clearTimeout(t); throw err; });
-    }
-    return fetch(url);
+  function fetchWithTimeout(url, ms, externalController) {
+    var controller = externalController ||
+                     (typeof AbortController === 'function' ? new AbortController() : null);
+    if (!controller) return fetch(url); /* ancient browsers: graceful */
+
+    var timedOut = false;
+    var t = setTimeout(function () {
+      timedOut = true;
+      try { controller.abort(); } catch (e) {}
+    }, ms);
+
+    return fetch(url, { signal: controller.signal })
+      .then(function (r) { clearTimeout(t); return r; })
+      .catch(function (err) {
+        clearTimeout(t);
+        if (timedOut) {
+          var timeoutErr = new Error('timeout');
+          timeoutErr.name = 'TimeoutError';
+          throw timeoutErr;
+        }
+        throw err;
+      });
   }
 
-  /* ── Open-Meteo call ─────────────────────────────────────── */
+  /* ── Open-Meteo call + normalizer ────────────────────────── */
 
-  function fetchWeather(lat, lon) {
+  function fetchWeather(lat, lon, controller) {
     var url = OPEN_METEO_URL +
-      '?latitude=' + lat.toFixed(4) +
+      '?latitude='  + lat.toFixed(4) +
       '&longitude=' + lon.toFixed(4) +
       '&current=temperature_2m,apparent_temperature,weather_code,is_day,wind_speed_10m' +
       '&hourly=temperature_2m,weather_code,is_day' +
@@ -315,14 +327,16 @@
       '&forecast_days=1' +
       '&timezone=auto';
 
-    return fetchWithTimeout(url, 8000)
+    return fetchWithTimeout(url, FETCH_TIMEOUT_MS, controller)
       .then(function (res) {
-        if (!res.ok) throw new Error('weather http ' + res.status);
+        if (!res.ok) {
+          var err = new Error('weather http ' + res.status);
+          err.status = res.status;
+          throw err;
+        }
         return res.json();
       })
-      .then(function (raw) {
-        return normalizeWeather(raw);
-      });
+      .then(normalizeWeather);
   }
 
   function normalizeWeather(raw) {
@@ -334,7 +348,7 @@
     var codes = hourly.weather_code || [];
     var days  = hourly.is_day || [];
 
-    /* Find first hourly slot that is strictly after "now". */
+    /* Find first hourly slot strictly after "now". */
     var nowMs = Date.now();
     var startIdx = 0;
     for (var i = 0; i < times.length; i++) {
@@ -342,7 +356,6 @@
     }
 
     var forecast = [];
-    /* Next 3 slots, spaced 2 hours apart for a lighter feel. */
     for (var j = 0; j < 3; j++) {
       var idx = startIdx + j * 2;
       if (idx >= times.length) break;
@@ -372,8 +385,38 @@
     return WEATHER_CODES[code] || { label: '—', mood: 'clear' };
   }
 
-  /* ── Weather SVG icons ───────────────────────────────────── */
-  /* Compact, stroke-based glyphs that read cleanly at small size. */
+  /* ── One-shot jittered retry on transient errors ─────────── */
+
+  function isTransient(err) {
+    if (!err) return false;
+    if (err.name === 'TimeoutError') return true;
+    if (err.name === 'AbortError')   return false;
+    if (typeof err.status === 'number' && err.status >= 500) return true;
+    /* Network errors surface as TypeError in fetch. */
+    if (err.name === 'TypeError') return true;
+    return false;
+  }
+
+  function fetchWeatherResilient(lat, lon, controller) {
+    return fetchWeather(lat, lon, controller).catch(function (err) {
+      if (!isTransient(err)) throw err;
+      if (controller && controller.signal && controller.signal.aborted) throw err;
+      var delay = RETRY_MIN_MS + Math.floor(Math.random() * (RETRY_MAX_MS - RETRY_MIN_MS));
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          if (controller && controller.signal && controller.signal.aborted) {
+            var abortErr = new Error('aborted');
+            abortErr.name = 'AbortError';
+            reject(abortErr);
+            return;
+          }
+          fetchWeather(lat, lon, controller).then(resolve, reject);
+        }, delay);
+      });
+    });
+  }
+
+  /* ── Weather SVG glyphs (compact, stroke-based) ──────────── */
 
   function iconSvg(mood, isDay) {
     var cls = 'fc-glyph';
@@ -397,7 +440,7 @@
     }
   }
 
-  /* ── Mount state ─────────────────────────────────────────── */
+  /* ── Module state ────────────────────────────────────────── */
 
   var state = {
     mounted: false,
@@ -406,19 +449,30 @@
     location: DEFAULT_LOCATION,
     weather: null,
     weatherError: null,
-    simplified: false
+    simplified: false,
+    pendingFetch: null,
+    pendingController: null,
+    pendingKey: null
   };
 
   /* ── DOM helpers ─────────────────────────────────────────── */
 
   function qs(sel, root) { return (root || document).querySelector(sel); }
-  function qsa(sel, root) { return Array.prototype.slice.call(
-    (root || document).querySelectorAll(sel)); }
+  function qsa(sel, root) {
+    return Array.prototype.slice.call(
+      (root || document).querySelectorAll(sel)
+    );
+  }
 
   function rootEl() { return document.querySelector('[data-fountain-clock]'); }
 
   function setText(el, text) {
     if (el && el.textContent !== text) el.textContent = text;
+  }
+
+  function setAttr(el, name, value) {
+    if (!el) return;
+    if (el.getAttribute(name) !== value) el.setAttribute(name, value);
   }
 
   /* ── Render: time, date, zone, sun rail, phase ───────────── */
@@ -430,8 +484,9 @@
     var now = new Date();
 
     setText(qs('[data-fc-time-hm]', root), formatHM(now));
+
     var timeEl = qs('[data-fc-time]', root);
-    if (timeEl) timeEl.setAttribute('datetime', now.toISOString());
+    if (timeEl) setAttr(timeEl, 'datetime', now.toISOString());
 
     setText(qs('[data-fc-date]', root), formatDate(now));
     setText(qs('[data-fc-zone]', root), formatZoneLabel());
@@ -449,21 +504,17 @@
       setText(qs('[data-fc-sunset]',  root), '—');
     }
 
-    /* Sun dot position: clamp to [0..1]. */
     var pct = Math.max(0, Math.min(1, solar.dayFraction));
     root.style.setProperty('--fc-sun-x', (pct * 100).toFixed(2) + '%');
 
-    /* Global phase attribute on <html>, consumed by CSS. */
     applyPhaseAttribute(phase, solar);
   }
 
   function phaseLabel(phase) {
-    switch (phase) {
-      case 'dawn':  return 'Dawn';
-      case 'dusk':  return 'Dusk';
-      case 'night': return 'Night';
-      default:      return 'Day';
-    }
+    if (phase === 'dawn')  return 'Dawn';
+    if (phase === 'dusk')  return 'Dusk';
+    if (phase === 'night') return 'Night';
+    return 'Day';
   }
 
   function applyPhaseAttribute(phase, solar) {
@@ -476,32 +527,94 @@
       return;
     }
 
-    html.setAttribute('data-phase', phase);
+    setAttr(html, 'data-phase', phase);
 
-    /* Warmth: high at dawn/dusk, neutral midday, cool at night. */
     var warmth;
     switch (phase) {
-      case 'dawn': warmth = 0.85; break;
-      case 'dusk': warmth = 0.9;  break;
-      case 'day':  warmth = 0.3;  break;
-      case 'night':warmth = 0.05; break;
-      default:     warmth = 0.3;
+      case 'dawn':  warmth = 0.85; break;
+      case 'dusk':  warmth = 0.90; break;
+      case 'night': warmth = 0.05; break;
+      default:      warmth = 0.30;
     }
 
-    /* Light level: bell-shaped around solar noon. */
     var light = 0.15;
     if (solar.isDay) {
       var x = Math.max(0, Math.min(1, solar.dayFraction));
-      /* Triangular bell peaking at 0.5. */
-      light = 1 - Math.abs(x - 0.5) * 2;
-      light = Math.max(0.35, light);
+      light = Math.max(0.35, 1 - Math.abs(x - 0.5) * 2);
     }
 
     html.style.setProperty('--ambient-warmth', warmth.toFixed(3));
     html.style.setProperty('--ambient-light',  light.toFixed(3));
   }
 
-  /* ── Render: weather ─────────────────────────────────────── */
+  /* ── Render: weather (surgical) ──────────────────────────── */
+
+  var WEATHER_COPY = {
+    loading: {
+      cond: 'Listening for weather…',
+      feels: ''
+    },
+    error: {
+      cond: 'Weather is quiet right now',
+      feels: 'Your clock keeps time just the same.'
+    }
+  };
+
+  function ensureWeatherScaffold(surface) {
+    if (surface.__fcScaffolded) return;
+    surface.__fcScaffolded = true;
+    surface.innerHTML =
+      '<div class="fc-weather-now">' +
+        '<div class="fc-weather-glyph" data-fc-weather-icon aria-hidden="true"></div>' +
+        '<div class="fc-weather-temp" data-fc-weather-temp>—</div>' +
+        '<div class="fc-weather-meta">' +
+          '<div class="fc-weather-cond" data-fc-weather-cond></div>' +
+          '<div class="fc-weather-feels" data-fc-weather-feels></div>' +
+        '</div>' +
+      '</div>' +
+      '<ol class="fc-forecast" data-fc-forecast>' +
+        '<li class="fc-forecast-slot" data-fc-forecast-slot>' +
+          '<span class="fc-forecast-time" data-fc-forecast-time></span>' +
+          '<span class="fc-forecast-glyph" data-fc-forecast-glyph aria-hidden="true"></span>' +
+          '<span class="fc-forecast-temp" data-fc-forecast-temp></span>' +
+        '</li>' +
+        '<li class="fc-forecast-slot" data-fc-forecast-slot>' +
+          '<span class="fc-forecast-time" data-fc-forecast-time></span>' +
+          '<span class="fc-forecast-glyph" data-fc-forecast-glyph aria-hidden="true"></span>' +
+          '<span class="fc-forecast-temp" data-fc-forecast-temp></span>' +
+        '</li>' +
+        '<li class="fc-forecast-slot" data-fc-forecast-slot>' +
+          '<span class="fc-forecast-time" data-fc-forecast-time></span>' +
+          '<span class="fc-forecast-glyph" data-fc-forecast-glyph aria-hidden="true"></span>' +
+          '<span class="fc-forecast-temp" data-fc-forecast-temp></span>' +
+        '</li>' +
+      '</ol>';
+  }
+
+  function setGlyph(el, mood, isDay) {
+    if (!el) return;
+    var key = mood + ':' + (isDay ? 'd' : 'n');
+    if (el.__fcGlyph === key) return;
+    el.__fcGlyph = key;
+    el.innerHTML = iconSvg(mood, isDay);
+  }
+
+  function clearGlyph(el) {
+    if (!el || el.__fcGlyph === null) return;
+    el.__fcGlyph = null;
+    el.innerHTML = '';
+  }
+
+  function weatherIsStale() {
+    return !!(state.weather && state.weather.fetchedAt &&
+              (Date.now() - state.weather.fetchedAt) > FORECAST_TTL_MS);
+  }
+
+  function weatherStateName() {
+    if (state.weather) return weatherIsStale() ? 'stale' : 'ready';
+    if (state.weatherError) return 'error';
+    return 'loading';
+  }
 
   function renderWeather() {
     var root = rootEl();
@@ -510,36 +623,36 @@
     var surface = qs('[data-fc-weather]', root);
     if (!surface) return;
 
-    if (state.weather) {
-      surface.removeAttribute('data-fc-state');
-      surface.setAttribute('data-fc-state', 'ready');
-    } else if (state.weatherError) {
-      surface.setAttribute('data-fc-state', 'error');
-    } else {
-      surface.setAttribute('data-fc-state', 'loading');
-    }
+    ensureWeatherScaffold(surface);
+
+    var phase = weatherStateName();
+    setAttr(surface, 'data-fc-state', phase);
+    setAttr(surface, 'aria-busy', phase === 'loading' ? 'true' : 'false');
+
+    var iconEl  = qs('[data-fc-weather-icon]',  surface);
+    var tempEl  = qs('[data-fc-weather-temp]',  surface);
+    var condEl  = qs('[data-fc-weather-cond]',  surface);
+    var feelsEl = qs('[data-fc-weather-feels]', surface);
+    var slots   = qsa('[data-fc-forecast-slot]', surface);
 
     if (!state.weather) {
-      /* Populate skeleton placeholders once. */
-      if (!qs('[data-fc-weather-icon]', surface)) {
-        surface.innerHTML =
-          '<div class="fc-weather-now">' +
-            '<div class="fc-weather-glyph" data-fc-weather-icon aria-hidden="true"></div>' +
-            '<div class="fc-weather-temp" data-fc-weather-temp>—</div>' +
-            '<div class="fc-weather-meta">' +
-              '<div class="fc-weather-cond" data-fc-weather-cond>Listening for weather…</div>' +
-              '<div class="fc-weather-feels" data-fc-weather-feels>&nbsp;</div>' +
-            '</div>' +
-          '</div>' +
-          '<ol class="fc-forecast" data-fc-forecast>' +
-            '<li class="fc-forecast-slot"></li>' +
-            '<li class="fc-forecast-slot"></li>' +
-            '<li class="fc-forecast-slot"></li>' +
-          '</ol>';
+      var copy = state.weatherError ? WEATHER_COPY.error : WEATHER_COPY.loading;
+      clearGlyph(iconEl);
+      setText(tempEl,  '—');
+      setText(condEl,  copy.cond);
+      setText(feelsEl, copy.feels);
+
+      for (var i = 0; i < slots.length; i++) {
+        var s = slots[i];
+        s.hidden = false;
+        setText(qs('[data-fc-forecast-time]', s), '');
+        setText(qs('[data-fc-forecast-temp]', s), '');
+        clearGlyph(qs('[data-fc-forecast-glyph]', s));
       }
-      if (state.weatherError) {
-        setText(qs('[data-fc-weather-cond]', surface), 'Weather unavailable');
-        setText(qs('[data-fc-weather-feels]', surface), 'Showing your clock only.');
+
+      /* When we have no weather, suppress mood tint to stay calm. */
+      if (document.documentElement.hasAttribute('data-weather')) {
+        document.documentElement.removeAttribute('data-weather');
       }
       return;
     }
@@ -547,46 +660,33 @@
     var w = state.weather.current;
     var info = weatherInfo(w.code);
 
-    surface.innerHTML =
-      '<div class="fc-weather-now">' +
-        '<div class="fc-weather-glyph" data-fc-weather-icon aria-hidden="true">' +
-          iconSvg(info.mood, w.isDay) +
-        '</div>' +
-        '<div class="fc-weather-temp" data-fc-weather-temp>' + roundTemp(w.temp) + '</div>' +
-        '<div class="fc-weather-meta">' +
-          '<div class="fc-weather-cond" data-fc-weather-cond>' + escapeHtml(info.label) + '</div>' +
-          '<div class="fc-weather-feels" data-fc-weather-feels>Feels ' + roundTemp(w.feels) + '</div>' +
-        '</div>' +
-      '</div>' +
-      '<ol class="fc-forecast" data-fc-forecast>' +
-        state.weather.forecast.map(function (slot) {
-          var si = weatherInfo(slot.code);
-          return '<li class="fc-forecast-slot">' +
-            '<span class="fc-forecast-time">' + escapeHtml(formatHM(slot.time)) + '</span>' +
-            '<span class="fc-forecast-glyph" aria-hidden="true">' + iconSvg(si.mood, slot.isDay) + '</span>' +
-            '<span class="fc-forecast-temp">' + roundTemp(slot.temp) + '</span>' +
-          '</li>';
-        }).join('') +
-      '</ol>';
+    setGlyph(iconEl, info.mood, w.isDay);
+    setText(tempEl,  roundTemp(w.temp));
+    setText(condEl,  info.label);
+    setText(feelsEl, 'Feels ' + roundTemp(w.feels));
 
-    /* Weather mood attribute: tints the ambient glow subtly. */
+    for (var k = 0; k < slots.length; k++) {
+      var slotEl = slots[k];
+      var data   = state.weather.forecast[k];
+      if (!data) {
+        slotEl.hidden = true;
+        continue;
+      }
+      slotEl.hidden = false;
+      setText(qs('[data-fc-forecast-time]', slotEl), formatHM(data.time));
+      setText(qs('[data-fc-forecast-temp]', slotEl), roundTemp(data.temp));
+      setGlyph(qs('[data-fc-forecast-glyph]', slotEl),
+               weatherInfo(data.code).mood, data.isDay);
+    }
+
     if (state.simplified) {
       document.documentElement.removeAttribute('data-weather');
     } else {
-      document.documentElement.setAttribute('data-weather', info.mood);
+      setAttr(document.documentElement, 'data-weather', info.mood);
     }
   }
 
-  function escapeHtml(s) {
-    if (s == null) return '';
-    return String(s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
-  /* ── Render: status line (location, errors, controls) ───── */
+  /* ── Render: status row (location, asof, controls, note) ─── */
 
   function renderStatus() {
     var root = rootEl();
@@ -602,32 +702,36 @@
     if (asOf) {
       if (state.weather && state.weather.fetchedAt) {
         asOf.hidden = false;
-        setText(asOf, 'As of ' + formatHM(new Date(state.weather.fetchedAt)));
+        var prefixAs = weatherIsStale() ? 'Last seen ' : 'As of ';
+        setText(asOf, prefixAs + formatHM(new Date(state.weather.fetchedAt)));
       } else {
         asOf.hidden = true;
       }
     }
 
-    var locateBtn = qs('[data-fc-locate]', root);
-    var resetBtn  = qs('[data-fc-reset]',  root);
+    var locateBtn  = qs('[data-fc-locate]',   root);
+    var resetBtn   = qs('[data-fc-reset]',    root);
+    var simplifyBtn = qs('[data-fc-simplify]', root);
+
     if (locateBtn) locateBtn.hidden = state.location.source === 'geo';
     if (resetBtn)  resetBtn.hidden  = state.location.source !== 'geo';
 
-    var simplifyBtn = qs('[data-fc-simplify]', root);
     if (simplifyBtn) {
-      simplifyBtn.setAttribute('aria-pressed', state.simplified ? 'true' : 'false');
-      simplifyBtn.textContent = state.simplified ? 'Restore ambient' : 'Simplify';
+      setAttr(simplifyBtn, 'aria-pressed', state.simplified ? 'true' : 'false');
+      setText(simplifyBtn, state.simplified ? 'Restore ambient' : 'Simplify');
     }
   }
 
-  /* ── Weather load orchestration (SWR) ─────────────────────── */
+  /* ── Weather load orchestration (SWR + coalesce + abort) ─── */
 
   function loadWeather(force) {
-    var loc = state.location;
-    var cached = readCache(loc.lat, loc.lon);
-    var age    = cached ? Date.now() - cached.ts : Infinity;
+    if (!state.mounted) return;
 
-    /* 1. If we have *any* cache, show it immediately (no flash). */
+    var loc = state.location;
+    var key = cacheKey(loc.lat, loc.lon);
+
+    /* 1. Paint from any cache immediately so return visits don't flash. */
+    var cached = readCache(loc.lat, loc.lon);
     if (cached) {
       state.weather = cached.data;
       state.weatherError = null;
@@ -635,13 +739,25 @@
       renderStatus();
     }
 
-    /* 2. Decide whether to refetch. */
+    var age = cached ? (Date.now() - cached.ts) : Infinity;
     var needsRefresh = force || !cached || age > CURRENT_TTL_MS;
     if (!needsRefresh) return;
 
-    /* 3. Fetch quietly; keep last-known-good on failure. */
-    fetchWeather(loc.lat, loc.lon)
+    /* 2. Coalesce concurrent calls for the same location. */
+    if (state.pendingFetch && state.pendingKey === key) {
+      return state.pendingFetch;
+    }
+
+    /* 3. Abort any in-flight fetch for a different location. */
+    abortPendingFetch();
+
+    var controller = typeof AbortController === 'function' ? new AbortController() : null;
+    state.pendingController = controller;
+    state.pendingKey = key;
+
+    var promise = fetchWeatherResilient(loc.lat, loc.lon, controller)
       .then(function (data) {
+        if (state.pendingKey !== key) return;    /* location changed */
         state.weather = data;
         state.weatherError = null;
         writeCache(loc.lat, loc.lon, data);
@@ -649,27 +765,51 @@
         renderStatus();
       })
       .catch(function (err) {
-        /* Swallow the error if we already rendered cached data. */
+        if (state.pendingKey !== key) return;
+        if (err && err.name === 'AbortError') return;
+        /* Keep last-known-good on failure; only surface error if empty. */
         if (!state.weather) {
           state.weatherError = err;
           renderWeather();
           renderStatus();
         }
+      })
+      .then(function () {
+        if (state.pendingKey === key) {
+          state.pendingFetch = null;
+          state.pendingController = null;
+          state.pendingKey = null;
+        }
       });
+
+    state.pendingFetch = promise;
+    return promise;
+  }
+
+  function abortPendingFetch() {
+    if (state.pendingController) {
+      try { state.pendingController.abort(); } catch (e) {}
+    }
+    state.pendingFetch = null;
+    state.pendingController = null;
+    state.pendingKey = null;
   }
 
   /* ── Geolocation (opt-in, reversible) ─────────────────────── */
 
-  function requestGeolocation() {
+  function setNote(msg) {
     var root = rootEl();
     var note = root && qs('[data-fc-note]', root);
+    if (note) setText(note, msg);
+  }
 
+  function requestGeolocation() {
     if (!('geolocation' in navigator)) {
-      if (note) setText(note, 'This browser does not expose geolocation.');
+      setNote('This browser does not share location.');
       return;
     }
 
-    if (note) setText(note, 'Asking for your location…');
+    setNote('Asking for your location…');
 
     navigator.geolocation.getCurrentPosition(function (pos) {
       var loc = {
@@ -680,17 +820,17 @@
       };
       state.location = loc;
       writeStoredLocation(loc);
-      if (note) setText(note, '');
+      setNote('');
+      /* Abort any in-flight fetch for the previous location. */
+      abortPendingFetch();
       loadWeather(true);
       renderClock();
       renderStatus();
     }, function (err) {
-      if (note) {
-        if (err && err.code === 1) {
-          setText(note, 'Permission denied. Using Houston, TX.');
-        } else {
-          setText(note, 'Could not reach your location. Using Houston, TX.');
-        }
+      if (err && err.code === 1) {
+        setNote('No worries — staying on Houston, TX.');
+      } else {
+        setNote('Couldn\u2019t reach your location. Staying on Houston, TX.');
       }
     }, {
       enableHighAccuracy: false,
@@ -702,13 +842,11 @@
   function resetLocation() {
     state.location = DEFAULT_LOCATION;
     clearStoredLocation();
+    abortPendingFetch();
     loadWeather(true);
     renderClock();
     renderStatus();
-
-    var root = rootEl();
-    var note = root && qs('[data-fc-note]', root);
-    if (note) setText(note, 'Reset. Showing Houston, TX.');
+    setNote('Reset. Showing Houston, TX.');
   }
 
   /* ── Simplify toggle ─────────────────────────────────────── */
@@ -717,44 +855,46 @@
     state.simplified = !!next;
     if (state.simplified) {
       safeSet(sessionStorage, SIMPLIFY_KEY, '1');
-    } else {
-      safeRemove(sessionStorage, SIMPLIFY_KEY);
-    }
-
-    /* Let CSS decide the fallback values. */
-    if (state.simplified) {
       document.documentElement.setAttribute('data-ambient', 'simplified');
       document.documentElement.removeAttribute('data-phase');
       document.documentElement.removeAttribute('data-weather');
     } else {
+      safeRemove(sessionStorage, SIMPLIFY_KEY);
       document.documentElement.removeAttribute('data-ambient');
     }
 
+    /* Surgical re-render — no DOM replacement, no layout shift. */
     renderClock();
     renderWeather();
     renderStatus();
   }
 
-  /* ── Tick scheduler ──────────────────────────────────────── */
+  /* ── Tick scheduler (drift-free) ─────────────────────────── */
 
   function scheduleTick() {
     clearTimeout(state.tickTimer);
 
-    /* Align to the next :00 second of the next minute so hh:mm is crisp. */
-    var now = new Date();
-    var msToNextMinute = 60000 - (now.getSeconds() * 1000 + now.getMilliseconds());
+    function align() {
+      var now = new Date();
+      var ms = 60000 - (now.getSeconds() * 1000 + now.getMilliseconds());
+      return Math.max(250, ms);
+    }
 
-    state.tickTimer = setTimeout(function onTick() {
+    function tick() {
       renderClock();
-      /* Reschedule immediately; the next beat is exactly 60s away. */
-      state.tickTimer = setTimeout(onTick, 60000);
-    }, Math.max(250, msToNextMinute));
+      /* Re-align on every beat so the clock never drifts across tab
+         throttling, sleep, or long-background periods. */
+      state.tickTimer = setTimeout(tick, align());
+    }
+
+    state.tickTimer = setTimeout(tick, align());
   }
 
   function scheduleRefetch() {
     clearInterval(state.refetchTimer);
     state.refetchTimer = setInterval(function () {
-      if (document.hidden) return; /* Don't hammer in background tabs. */
+      if (document.hidden) return;          /* polite in background */
+      if (!state.mounted) return;
       loadWeather(false);
     }, CURRENT_TTL_MS);
   }
@@ -763,29 +903,27 @@
 
   function bindControls() {
     var root = rootEl();
-    if (!root) return;
-
-    /* Delegated listener so markup can change without rebinds. */
-    if (root.__fcBound) return;
+    if (!root || root.__fcBound) return;
     root.__fcBound = true;
 
     root.addEventListener('click', function (event) {
       var t = event.target;
       if (!t || !t.closest) return;
-
-      if (t.closest('[data-fc-locate]'))   { requestGeolocation(); return; }
-      if (t.closest('[data-fc-reset]'))    { resetLocation();      return; }
-      if (t.closest('[data-fc-simplify]')) { setSimplified(!state.simplified); return; }
-      if (t.closest('[data-fc-refresh]'))  { loadWeather(true);    return; }
+      if (t.closest('[data-fc-locate]'))   { requestGeolocation();              return; }
+      if (t.closest('[data-fc-reset]'))    { resetLocation();                   return; }
+      if (t.closest('[data-fc-simplify]')) { setSimplified(!state.simplified);  return; }
+      if (t.closest('[data-fc-refresh]'))  { loadWeather(true);                 return; }
     });
   }
 
+  /* Visibility handler is bound once — it no-ops when unmounted. */
   function handleVisibility() {
-    if (!document.hidden) {
-      /* Back in view — catch up time and refresh weather if stale. */
-      renderClock();
-      loadWeather(false);
-    }
+    if (document.hidden) return;
+    if (!state.mounted) return;
+    /* Returning to the tab: resync the clock face *now* and give the
+       weather a quiet chance to refresh if it is stale. */
+    renderClock();
+    loadWeather(false);
   }
 
   /* ── Lifecycle ───────────────────────────────────────────── */
@@ -793,12 +931,16 @@
   function mount() {
     var root = rootEl();
     if (!root) {
-      /* Page doesn't have the ambient surface — stay inert. */
+      /* Page doesn't expose the ambient surface — go inert. */
       teardownTimers();
+      abortPendingFetch();
+      document.documentElement.removeAttribute('data-phase');
+      document.documentElement.removeAttribute('data-weather');
+      state.mounted = false;
       return;
     }
 
-    /* Restore session preferences. */
+    /* Restore session preferences — safe to re-run on SPA navigations. */
     var stored = readStoredLocation();
     state.location   = stored || DEFAULT_LOCATION;
     state.simplified = safeGet(sessionStorage, SIMPLIFY_KEY) === '1';
@@ -809,6 +951,10 @@
       document.documentElement.removeAttribute('data-ambient');
     }
 
+    state.mounted = true;
+
+    /* First-paint order matters: paint the clock before loading weather
+       so the sanctuary is legible even if the network is slow. */
     renderClock();
     renderWeather();
     renderStatus();
@@ -817,20 +963,17 @@
     loadWeather(false);
     scheduleTick();
     scheduleRefetch();
-
-    state.mounted = true;
   }
 
   function teardownTimers() {
-    clearTimeout(state.tickTimer);
-    clearInterval(state.refetchTimer);
-    state.tickTimer = null;
-    state.refetchTimer = null;
-    state.mounted = false;
+    if (state.tickTimer)    { clearTimeout(state.tickTimer);    state.tickTimer = null; }
+    if (state.refetchTimer) { clearInterval(state.refetchTimer); state.refetchTimer = null; }
   }
 
   function unmount() {
+    state.mounted = false;
     teardownTimers();
+    abortPendingFetch();
     document.documentElement.removeAttribute('data-phase');
     document.documentElement.removeAttribute('data-weather');
   }
@@ -853,13 +996,13 @@
         location: state.location,
         simplified: state.simplified,
         hasWeather: !!state.weather,
+        weatherStage: weatherStateName(),
         fetchedAt: state.weather && state.weather.fetchedAt || null
       };
     }
   };
 
-  /* Auto-mount on first load; shell.js will call mount() again
-     after SPA navigations. */
+  /* Auto-mount on first load; shell.js re-calls mount() after SPA nav. */
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', mount);
   } else {
