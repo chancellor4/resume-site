@@ -65,6 +65,7 @@
 
   var CRATE_URL      = 'https://soundcloud.com/chance-222067461/sets/website-music';
   var DEFAULT_VOLUME = 40;
+  var VOLUME_KEY     = 'fc:volume';
   var SHELF_KEY      = 'ce-vinyl-shelf';
   var SHELF_TTL      = 30 * 60 * 1000;              // 30 min
   var SDK_URL        = 'https://w.soundcloud.com/player/api.js';
@@ -280,6 +281,19 @@
       try { sessionStorage.removeItem(SHELF_KEY); } catch (e) {}
     }
 
+    function volumeRead() {
+      try {
+        var value = parseInt(localStorage.getItem(VOLUME_KEY), 10);
+        return isNaN(value) ? DEFAULT_VOLUME : Math.max(0, Math.min(100, value));
+      } catch (e) { return DEFAULT_VOLUME; }
+    }
+
+    function volumeWrite(value) {
+      try {
+        localStorage.setItem(VOLUME_KEY, String(Math.max(0, Math.min(100, value))));
+      } catch (e) {}
+    }
+
     /* ── Continuity: cross-page playback state ───────────────
        Key:  CONT_KEY ('ce-vinyl-cont')
        TTL:  CONT_TTL (30 s)
@@ -386,6 +400,8 @@
       shelfRead:         shelfRead,
       shelfWrite:        shelfWrite,
       shelfClear:        shelfClear,
+      volumeRead:        volumeRead,
+      volumeWrite:       volumeWrite,
       continuitySave:    continuitySave,
       continuityRestore: continuityRestore,
       continuityPeek:    continuityPeek,
@@ -1159,7 +1175,7 @@
 
     var spinning      = false;
     var hushed        = false;
-    var savedVolume   = DEFAULT_VOLUME;
+    var savedVolume   = store.volumeRead();
     var records       = [];
     var currentSide   = 0;
     var sdkReady      = false;
@@ -1328,7 +1344,8 @@
         sourceReady = true;
         vlog(2, 'widget:ready');
         vmark('widget:ready');
-        adapter.setVolume(DEFAULT_VOLUME);
+        adapter.setVolume(savedVolume);
+        _ui.setDialValue(savedVolume);
         catalogRecords();
       });
 
@@ -1497,6 +1514,7 @@
 
     function mute() {
       savedVolume = _ui.getDialValue() || DEFAULT_VOLUME;
+      store.volumeWrite(savedVolume);
       adapter.setVolume(0);
       _ui.setDialValue(0);
       hushed = true;
@@ -1506,6 +1524,7 @@
     function unmute() {
       adapter.setVolume(savedVolume);
       _ui.setDialValue(savedVolume);
+      store.volumeWrite(savedVolume);
       hushed = false;
       _ui.reflectVolume();
     }
@@ -1514,6 +1533,7 @@
       adapter.setVolume(v);
       hushed = v === 0;
       if (v > 0) savedVolume = v;
+      store.volumeWrite(v > 0 ? v : savedVolume);
       _ui.reflectVolume();
     }
 
@@ -1952,6 +1972,8 @@
       glyph.loud   = el.stage.querySelector('.vinyl-icon-loud');
       glyph.hushed = el.stage.querySelector('.vinyl-icon-hushed');
 
+      el.dial.value = store.volumeRead();
+
       if (FEATURE_GROOVE) {
         el.groove = el.stage.querySelector('.vinyl-groove-wrap');
         if (el.groove) groove.mount(el.groove);
@@ -2278,6 +2300,7 @@
 
     function raiseStage() {
       el.stage.removeAttribute('aria-hidden');
+      el.stage.removeAttribute('inert');
       void el.stage.offsetHeight;
       el.stage.classList.add('vinyl--live');
     }
@@ -2286,6 +2309,7 @@
       vlog(2, 'stage:lower');
       el.stage.classList.remove('vinyl--live');
       el.stage.setAttribute('aria-hidden', 'true');
+      el.stage.setAttribute('inert', '');
       toggleCrate(false);
     }
 

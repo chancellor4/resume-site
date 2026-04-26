@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f8f4ee" />
+  <meta name="color-scheme" content="light" />
 
   <!-- SEO -->
   <title>Fountain Clock — Chancellor Edwards (Chance Edwards)</title>
@@ -232,32 +234,33 @@
     <div class="site-wrap">
 
       <!-- Ambient time + weather layer (see js/fountain-clock.js) -->
-      <section class="fountain-clock" data-fountain-clock aria-label="Ambient time and weather">
+      <section class="fountain-clock" data-fountain-clock data-fc-details="closed" aria-label="Fountain Clock: local time and weather">
         <h1 class="hero-eyebrow fc-eyebrow">Fountain Clock</h1>
 
-        <div class="fc-face">
-          <time class="fc-time" data-fc-time datetime="">
+        <div class="fc-face" data-fc-face>
+          <time class="fc-time" data-fc-time datetime="" aria-label="Current local time">
             <span class="fc-time-hm" data-fc-time-hm>—</span>
           </time>
-          <p class="fc-meta">
-            <span class="fc-phase" data-fc-phase>Day</span>
+          <p class="fc-meta" aria-label="Date, place, and current weather">
+            <time class="fc-date" data-fc-date datetime="">Today</time>
             <span class="fc-meta-sep" aria-hidden="true">·</span>
-            <span class="fc-date" data-fc-date>—</span>
+            <span class="fc-location" data-fc-location>Houston, Texas</span>
             <span class="fc-meta-sep" aria-hidden="true">·</span>
-            <span class="fc-zone" data-fc-zone>—</span>
+            <span class="fc-weather-line" data-fc-weather-line>Weather staying useful</span>
           </p>
+          <p class="fc-ambient-copy" data-fc-note role="status" aria-live="polite">Warm glass, big-sky focus.</p>
         </div>
 
-        <div class="fc-sun">
+        <div class="fc-sun" data-fc-sun>
           <div class="fc-sun-rail" aria-hidden="true">
             <span class="fc-sun-dot"></span>
           </div>
           <p class="fc-sun-labels">
             <span class="fc-sun-label">
-              <span class="fc-sr-only">Sunrise </span><span data-fc-sunrise>—</span>
+              <span class="fc-sr-only">Sunrise </span><time data-fc-sunrise>—</time>
             </span>
             <span class="fc-sun-label">
-              <span class="fc-sr-only">Sunset </span><span data-fc-sunset>—</span>
+              <span class="fc-sr-only">Sunset </span><time data-fc-sunset>—</time>
             </span>
           </p>
         </div>
@@ -270,14 +273,15 @@
              aria-label="Current conditions and forecast"></div>
 
         <div class="fc-status">
-          <span class="fc-location" data-fc-location>Houston, TX</span>
-          <span class="fc-asof" data-fc-asof hidden></span>
-          <span class="fc-status-actions">
-            <button type="button" class="fc-link-btn" data-fc-locate>Use my location</button>
-            <button type="button" class="fc-link-btn" data-fc-reset hidden>Reset location</button>
-            <button type="button" class="fc-link-btn" data-fc-simplify aria-pressed="false">Simplify</button>
+          <span class="fc-phase" data-fc-phase>Day</span>
+          <span class="fc-zone" data-fc-zone>—</span>
+          <span class="fc-asof" data-fc-asof>Weather warming up</span>
+          <span class="fc-status-actions" role="group" aria-label="Clock preferences">
+            <label class="fc-select-label" for="fcLocationSelect">Location</label>
+            <select class="fc-select" id="fcLocationSelect" data-fc-location-select aria-label="Choose clock location"></select>
+            <button type="button" class="fc-toggle-btn" data-fc-time-format aria-pressed="false" aria-label="Use 24-hour time">12h</button>
+            <button type="button" class="fc-link-btn" data-fc-details-toggle aria-expanded="false" aria-controls="fcWeatherDetails">Details</button>
           </span>
-          <span class="fc-note" data-fc-note role="status" aria-live="polite"></span>
         </div>
       </section>
     </div>
@@ -286,6 +290,24 @@
   <!-- ─── MAIN ──────────────────────────────────────────────────── -->
   <main>
     <div class="site-wrap">
+
+      <!-- Ambient news surface v1.1 (see js/news-surface.js).
+           Hidden by default; revealed only when the committed snapshot
+           at /assets/news.json contains items. Five RSS sources mixed
+           by sourceType, capped at 12. Metadata-only, outbound links,
+           image-aware. No client-side feed fetching. -->
+      <section class="resume-section news-surface"
+               data-news-surface
+               data-state="loading"
+               aria-labelledby="sec-news"
+               hidden>
+        <div class="section-header">
+          <h2 id="sec-news">News</h2>
+          <div class="section-rule" aria-hidden="true"></div>
+        </div>
+        <div class="news-list" data-news-list></div>
+        <span class="news-asof" data-news-asof aria-live="polite"></span>
+      </section>
 
       <!-- Experience -->
       <section class="resume-section" aria-labelledby="sec-experience">
@@ -437,9 +459,8 @@
   </footer>
 
   <!-- ─── VINYL PLAYER (DND mode only) ─────────────────────── -->
-  <div class="vinyl" id="vinyl" aria-label="Music player" role="region" aria-hidden="true">
-    <iframe id="vinylSource" allow="autoplay" title="SoundCloud player"
-      style="position:absolute;width:0;height:0;border:0;overflow:hidden"
+  <div class="vinyl" id="vinyl" aria-label="Music player" role="region" aria-hidden="true" inert>
+    <iframe id="vinylSource" class="vinyl-source" allow="autoplay" title="SoundCloud player"
       aria-hidden="true"></iframe>
 
     <div class="vinyl-sleeve">
@@ -474,5 +495,9 @@
   <script src="js/shell.js" defer></script>
   <script src="js/vinyl.js" defer></script>
   <script src="js/fountain-clock.js" defer></script>
+  <!-- News snapshot is delivered inline so the homepage renders even
+       under file:// (no fetch needed). Regenerated by news/aggregate.mjs. -->
+  <script src="assets/news-snapshot.js" defer></script>
+  <script src="js/news-surface.js" defer></script>
 </body>
 </html>

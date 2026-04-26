@@ -22,7 +22,8 @@
     'js/refined.js',
     'js/vinyl.js',
     'js/shell.js',
-    'js/fountain-clock.js'
+    'js/fountain-clock.js',
+    'js/news-surface.js'
   ];
   var transitioning   = false;
   var isFileProtocol  = location.protocol === 'file:';
@@ -124,17 +125,27 @@
   }
 
   /**
-   * Collect inline script source from a parsed document,
-   * skipping persistent shell scripts and JSON-LD blocks.
+   * Collect inline JavaScript source from a parsed document, skipping
+   * persistent shell scripts and any non-JS <script> blocks (JSON-LD,
+   * application/json data islands like the playground snapshot, etc.).
+   * Anything not in the executable script-type allowlist stays in the
+   * adopted DOM as data and is not re-executed.
    */
+  var EXECUTABLE_SCRIPT_TYPES = {
+    '': 1,
+    'text/javascript': 1,
+    'application/javascript': 1,
+    'module': 1
+  };
+
   function collectPageScripts(doc) {
     var all     = doc.querySelectorAll('script');
     var sources = [];
 
     for (var i = 0; i < all.length; i++) {
       var s = all[i];
-      // Skip structured data
-      if (s.type === 'application/ld+json') continue;
+      var type = (s.getAttribute('type') || '').toLowerCase();
+      if (!EXECUTABLE_SCRIPT_TYPES[type]) continue;
 
       var src  = s.getAttribute('src') || '';
       var skip = false;
@@ -274,8 +285,11 @@
           history.pushState({ shell: true }, '', url);
         }
 
-        // ── Scroll to top ──
-        window.scrollTo(0, 0);
+        // ── Scroll position ──
+        // Forward navigation lands at the top of the new room; back/forward
+        // (push === false) lets the browser restore the previous offset so
+        // returning to a long page doesn't lose the reader's place.
+        if (push) window.scrollTo(0, 0);
 
         // ── Accessibility: focus the page heading ──
         var heading = document.querySelector('header h1') ||
@@ -291,6 +305,9 @@
         }
         if (window.CE_AMBIENT && typeof window.CE_AMBIENT.mount === 'function') {
           window.CE_AMBIENT.mount();
+        }
+        if (window.CE_NEWS && typeof window.CE_NEWS.mount === 'function') {
+          window.CE_NEWS.mount();
         }
 
         // ── Execute page-specific scripts ──

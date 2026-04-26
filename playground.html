@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f8f4ee" />
+  <meta name="color-scheme" content="light" />
 
   <!-- SEO -->
   <title>Playground — Chancellor Edwards (Chance Edwards)</title>
@@ -255,6 +257,30 @@
         Looking for the résumé? <a href="resume.json">resume.json</a>
       </p>
 
+      <!-- Inline snapshot fallback. Must live inside <main> so the SPA
+           shell carries it across navigations along with the rest of the
+           Playground content. -->
+      <script id="playgroundSnapshotFallback" type="application/json">
+      {
+        "repos": [
+          {
+            "name": "chancelloredwards-site",
+            "description": "Personal site — calm, private, ambient portfolio architecture with snapshot-first Playground rendering.",
+            "html_url": "https://github.com/chancellor4/chancelloredwards-site",
+            "homepage": "https://chancelloredwards.dev",
+            "language": "HTML",
+            "stargazers_count": 0,
+            "forks_count": 0,
+            "topics": ["portfolio", "static-site", "ambient", "frontend"],
+            "updated_at": "2026-04-17T00:00:00Z",
+            "fork": false,
+            "private": false,
+            "size": 240
+          }
+        ]
+      }
+      </script>
+
     </div>
   </main>
 
@@ -272,9 +298,8 @@
   </footer>
 
   <!-- ─── VINYL PLAYER (DND mode only) ─────────────────────── -->
-  <div class="vinyl" id="vinyl" aria-label="Music player" role="region" aria-hidden="true">
-    <iframe id="vinylSource" allow="autoplay" title="SoundCloud player"
-      style="position:absolute;width:0;height:0;border:0;overflow:hidden"
+  <div class="vinyl" id="vinyl" aria-label="Music player" role="region" aria-hidden="true" inert>
+    <iframe id="vinylSource" class="vinyl-source" allow="autoplay" title="SoundCloud player"
       aria-hidden="true"></iframe>
 
     <div class="vinyl-sleeve">
@@ -305,31 +330,10 @@
     </div>
   </div>
 
-  <script id="playgroundSnapshotFallback" type="application/json">
-  {
-    "repos": [
-      {
-        "name": "chancelloredwards-site",
-        "description": "Personal site — calm, private, ambient portfolio architecture with snapshot-first Playground rendering.",
-        "html_url": "https://github.com/chancellor4/chancelloredwards-site",
-        "homepage": "https://chancelloredwards.dev",
-        "language": "HTML",
-        "stargazers_count": 0,
-        "forks_count": 0,
-        "topics": ["portfolio", "static-site", "ambient", "frontend"],
-        "updated_at": "2026-04-17T00:00:00Z",
-        "fork": false,
-        "private": false,
-        "size": 240
-      }
-    ]
-  }
-  </script>
-
   <!-- ─── PLAYGROUND BOOTSTRAP ───────────────────────────────────
        Works for both a full page load and SPA re-entry. The inline
-       snapshot fallback is declared first so the loader can always
-       see it, even if the external script resolves very quickly. -->
+       snapshot fallback (declared inside <main>) is always reachable
+       so the loader can fall back to it under any failure mode. -->
   <script>
     (function bootPlayground() {
       if (window.CE_PLAYGROUND && typeof window.CE_PLAYGROUND.mount === 'function') {

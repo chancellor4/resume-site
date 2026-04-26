@@ -1,0 +1,51 @@
+name: news-snapshot
+
+# Re-runs the build-time aggregator on a calm cadence and commits the
+# regenerated snapshot back to main when the content actually changed.
+# The browser never hits publisher RSS — it only reads what this
+# workflow committed. This is the v1.1 spec's "server-side fetch +
+# cache" intent, adapted to a static GitHub Pages deploy.
+
+on:
+  schedule:
+    # Every 30 minutes — within the spec's 15–60 minute window.
+    # GitHub cron is best-effort; expect drift up to a few minutes.
+    - cron: '*/30 * * * *'
+  workflow_dispatch: {}
+  push:
+    paths:
+      - 'news/**'
+      - '.github/workflows/news.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: news-snapshot
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Aggregate news
+        run: node news/aggregate.mjs
+
+      - name: Commit if changed
+        run: |
+          if [ -n "$(git status --porcelain assets/news.json assets/news-snapshot.js)" ]; then
+            git config user.name  "fountain-clock-bot"
+            git config user.email "bot@chancelloredwards.dev"
+            git add assets/news.json assets/news-snapshot.js
+            git commit -m "news: refresh snapshot ($(date -u +'%Y-%m-%dT%H:%MZ'))"
+            git push
+          else
+            echo "Snapshot unchanged."
+          fi

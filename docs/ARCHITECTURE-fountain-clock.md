@@ -78,8 +78,8 @@ the strip feels paced rather than dense.
 
 ## Cache strategy
 
-Stale-while-revalidate in `sessionStorage` (per-tab, cleared when the
-tab closes):
+Stale-while-revalidate in local storage, mirrored to `sessionStorage`
+for fast same-tab reads:
 
 - **Current conditions:** fresh for 10 minutes.
 - **Forecast:** bundled with current; the same 10-minute SWR window
@@ -93,23 +93,38 @@ tab closes):
 - **Background tabs** skip the scheduled refetch to avoid quietly
   hammering the API while the user isn't looking.
 
+## Location Model
+
+Fountain Clock uses the immutable `CITY_PRESETS` list as its location
+source of truth:
+
+- New Orleans, Louisiana
+- Houston, Texas (default)
+- Dallas, Texas
+- Williamsburg, Kentucky
+- Baton Rouge, Louisiana
+- New York, New York
+- Los Angeles, California
+
+The selected preset is stored in `localStorage` under `fc:location`.
+No geolocation, IP lookup, account data, or personal location data is
+requested or stored.
+
 ## Fallback chain
 
-1. Stored location from this session (only set when user explicitly
-   grants geolocation).
+1. Stored preset location from this browser.
 2. Cached weather for that location.
-3. Default location: **Houston, TX** (matches the resume's identity).
-4. If the weather API fails and no cache exists, the weather block
-   switches to an "unavailable" state; the clock and sun rail continue
-   to work — the core view never goes blank.
+3. Default location: **Houston, Texas**.
+4. If the weather API fails and no cache exists, the clock restores the
+   last known good location state when possible; the clock and sun rail
+   continue to work — the core view never goes blank.
 
 ## Privacy & safety
 
-- Browser geolocation is **opt-in** via a single "Use my location"
-  link and **reversible** via "Reset location".
-- No IP geolocation, no fingerprinting, no third-party scripts.
-- Location data lives in `sessionStorage` only. Closing the tab clears
-  it. No `localStorage`, no cookies, no server round-trip.
+- No geolocation prompts, no IP geolocation, no fingerprinting, no
+  third-party scripts.
+- Only a preset city key is persisted locally. No coordinates from the
+  user, cookies, or server round-trip.
 - No analytics or tracking hooks.
 
 ## Performance
@@ -131,9 +146,8 @@ Three pressure valves, in increasing order of restraint:
 1. **Reduced motion** — all animations/transitions collapse to 1 ms
    under `prefers-reduced-motion: reduce` or the site's own
    `data-motion="reduced"`.
-2. **Simplify** — a user-pressable toggle pins the ambient layer to
-   calm defaults and suppresses phase/weather tinting. Persists per
-   session under `fc:simplify`.
+2. **Details reveal** — a light tap/click expands humidity, wind, and
+   near-term forecast context without replacing the primary clock.
 3. **DND mode** — the site-wide "Do Not Disturb" palette. The
    fountain clock still shows time and weather but the phase/weather
    tints are suppressed via `:not([data-mode="dnd"])` guards so the
@@ -157,7 +171,7 @@ fixed bottom-right position doesn't overlap the hero-embedded clock.
 | First load, offline | Skeleton → "Weather unavailable", clock/sun still work. |
 | Warm load, fresh cache | Cached data renders instantly, no refetch. |
 | Warm load, stale cache | Cached data renders instantly, silent refetch. |
-| Geolocation denied | Note explains, Houston default remains. |
+| Location changed | Preset city persists locally and aborts stale fetches. |
 | Timezone / DST transitions | `Intl.DateTimeFormat` absorbs them. |
 | Polar day / polar night | Solar calc clamps cleanly (no NaN). |
 | Day/night crossings while open | Phase attribute updates on the next minute tick. |
@@ -166,19 +180,18 @@ fixed bottom-right position doesn't overlap the hero-embedded clock.
 | SPA navigation back | `mount()` rebinds against the fresh DOM node. |
 | Reduced motion | All animations and transitions collapse to 1 ms. |
 | DND on | Palette suppresses phase/weather tints; clock still reads cleanly. |
-| Simplify on | Ambient is frozen at calm defaults; session-persistent. |
+| Details open | Secondary weather context appears without replacing time. |
 
 ## Trade-offs
 
 - **Minutes only, no seconds.** A second hand is the hallmark of a
   productivity clock; here it's a distraction. A 9-second opacity
   breathe on the minute display signals liveness without motion noise.
-- **Session storage, not local storage.** Privacy over convenience —
-  closing the tab should truly reset. Weather reloads on next visit,
-  which is cheap.
-- **No IP geolocation provider.** Every keyless option adds a
-  dependency or a surveillance surface. Houston is a better default
-  than a guessed location — it's honest.
+- **Preset city storage, not personal location.** The product needs a
+  remembered city but not the user's exact whereabouts.
+- **No IP or browser geolocation provider.** Every guessed location adds
+  a dependency or a surveillance surface. Houston, Texas is the default,
+  and the user can switch among the curated presets.
 - **Subtle phase tints over dramatic ones.** The calmest day looks
   like the loudest day with ±10% glow intensity. A louder design would
   compete with reading the page.
@@ -193,7 +206,7 @@ fixed bottom-right position doesn't overlap the hero-embedded clock.
  css/styles.css                + .fountain-clock component styles
  js/fountain-clock.js          + new ambient-state module
  js/shell.js                   ± PERSIST_SCRIPTS + CE_AMBIENT.mount hook
- index.html                    ± fountain-clock hero markup + <script>
+ index.html                    ± fountain-clock hero markup + preset selector + <script>
  notes.html                    + <script> for ambient module
  playground.html               + <script> for ambient module
  ARCHITECTURE-fountain-clock.md  (this file)
@@ -201,7 +214,6 @@ fixed bottom-right position doesn't overlap the hero-embedded clock.
 
 ## How to disable or remove
 
-- **Disable for a session:** press "Simplify" on the page.
 - **Disable permanently:** remove the `<section data-fountain-clock>` block
   from `index.html`. The module auto-detects its absence and stays inert.
 - **Full removal:** delete `js/fountain-clock.js`, unregister from

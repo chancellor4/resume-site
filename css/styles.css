@@ -72,7 +72,7 @@ h1, h2, h3 {
   line-height: 1.2;
 }
 
-h1 { font-size: clamp(1.75rem, 4vw, 2.25rem); letter-spacing: -0.01em; }
+h1 { font-size: clamp(1.75rem, 4vw, 2.25rem); letter-spacing: 0; }
 h2 { font-size: 0.72rem; font-weight: 600; letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--ink-muted); }
 h3 { font-size: 1rem; font-weight: 700; }
 
@@ -293,13 +293,11 @@ a:hover {
   gap: 0.72rem;
   min-height: 2.85rem;
   padding: 0.55rem 0.9rem 0.55rem 0.72rem;
-  border: 1px solid color-mix(in srgb, var(--border-lt) 86%, rgba(255, 255, 255, 0.6));
+  border: 1px solid var(--card-border);
   border-radius: var(--radius-pill);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.18)),
-    color-mix(in srgb, var(--surface-1) 88%, transparent);
+  background: var(--chip-surface);
   box-shadow:
-    0 12px 26px rgba(58, 43, 28, 0.07),
+    0 12px 26px rgba(58, 43, 28, 0.055),
     inset 0 1px 0 rgba(255, 255, 255, 0.74);
   color: var(--ink-mid);
   cursor: pointer;
@@ -308,24 +306,24 @@ a:hover {
     border-color var(--ease),
     background-color var(--ease),
     box-shadow var(--ease),
-    transform 180ms var(--ease-soft);
+    transform 180ms var(--ease-out);
 }
 
 .nav-mode-btn:hover {
   color: var(--ink);
-  transform: scale(1.02);
+  transform: translateY(-1px);
   box-shadow:
-    0 14px 30px rgba(58, 43, 28, 0.09),
+    var(--card-glow),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .nav-mode-btn:active {
-  transform: scale(0.99);
+  transform: scale(var(--press-scale));
 }
 
 .nav-mode-btn:focus-visible {
-  outline: 2px solid var(--amber);
-  outline-offset: 3px;
+  outline: none;
+  box-shadow: var(--focus-ring), inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .nav-mode-signal {
@@ -374,9 +372,7 @@ a:hover {
 .nav-mode-btn-active {
   color: var(--ink);
   border-color: color-mix(in srgb, var(--amber) 44%, var(--accent-soft));
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.3)),
-    color-mix(in srgb, var(--accent-soft) 18%, var(--surface-1));
+  background: var(--card-surface-soft);
   box-shadow:
     0 16px 32px color-mix(in srgb, var(--accent-soft) 16%, rgba(58, 43, 28, 0.08)),
     inset 0 1px 0 rgba(255, 255, 255, 0.86);
@@ -483,7 +479,7 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   }
 }
 
-@media (max-width: 390px) {
+@media (max-width: 600px) {
   .nav-shell {
     grid-template-columns: 1fr;
     grid-template-areas:
@@ -514,8 +510,8 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
 
 /* Clock-only hero breathes a little more — nothing else competes for space. */
 .hero-clock {
-  padding-top: clamp(3rem, 8vw, 5rem);
-  padding-bottom: clamp(2.25rem, 6vw, 3.5rem);
+  padding-top: clamp(2rem, 6vw, 3.5rem);
+  padding-bottom: clamp(1.5rem, 4vw, 2.4rem);
 }
 
 .hero-eyebrow {
@@ -556,13 +552,78 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
    ═══════════════════════════════════════════════════════════════ */
 
 .fountain-clock {
+  box-sizing: border-box;
   position: relative;
   z-index: 1;
   margin-bottom: var(--sp-2xl);
   display: grid;
-  gap: var(--sp-lg);
+  gap: clamp(0.9rem, 3.2vw, 1.25rem);
+  padding: clamp(1rem, 4.5vw, 1.85rem);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  background: var(--card-surface);
+  backdrop-filter: blur(22px) saturate(1.08);
+  -webkit-backdrop-filter: blur(22px) saturate(1.08);
+  box-shadow:
+    var(--card-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    inset 0 -1px 0 rgba(153, 226, 234, 0.12);
+  overflow: hidden;
+  transform: translateZ(0);
   /* Reserve vertical space so skeleton → loaded state never shifts. */
-  min-height: 14rem;
+  min-height: clamp(20rem, 48svh, 26rem);
+  align-content: center;
+  transition:
+    border-color var(--ease),
+    box-shadow 190ms var(--ease-out),
+    transform 190ms var(--ease-out),
+    background var(--t-theme) var(--ease-out);
+}
+
+.fountain-clock::before,
+.fountain-clock::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+.fountain-clock::before {
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, rgba(193, 176, 255, 0.46), rgba(151, 239, 235, 0.42), rgba(255, 185, 205, 0.38), rgba(244, 190, 120, 0.34));
+  opacity: 0.34;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  padding: 1px;
+}
+
+.fountain-clock:hover {
+  border-color: color-mix(in srgb, var(--accent-soft) 44%, var(--surface-border));
+  box-shadow:
+    var(--card-shadow-hover),
+    inset 0 1px 0 rgba(255, 255, 255, 0.88),
+    inset 0 -1px 0 rgba(153, 226, 234, 0.14);
+  transform: translateY(-1px);
+}
+
+.fountain-clock::after {
+  right: clamp(0.75rem, 4vw, 1.75rem);
+  top: clamp(0.75rem, 4vw, 1.4rem);
+  width: clamp(3.5rem, 13vw, 4.75rem);
+  height: clamp(3.5rem, 13vw, 4.75rem);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.82), transparent 22%),
+    radial-gradient(circle, rgba(169, 242, 239, 0.26), transparent 68%);
+  filter: blur(0.2px);
+  opacity: 0.58;
+  transform: translate3d(0, 0, 0);
+}
+
+@keyframes fc-depth {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.58; }
+  50% { transform: translate3d(-4px, 3px, 0) scale(1.03); opacity: 0.78; }
 }
 
 /* Scoped screen-reader-only utility for SR captions inside the clock. */
@@ -585,24 +646,24 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
 .fc-face {
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 0.65rem;
+  cursor: default;
 }
 
 .fc-time {
+  display: block;
   font-family: var(--font-serif);
   font-weight: 600;
-  font-size: clamp(3rem, 10vw, 5rem);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--ink);
+  font-size: clamp(3.35rem, 14.5vw, 6.1rem);
+  line-height: 0.9;
+  letter-spacing: 0;
+  color: color-mix(in srgb, var(--ink) 92%, var(--accent-contrast));
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1, 'lnum' 1;
   transition: color var(--t-theme) var(--ease-out);
 }
 
 .fc-time-hm {
-  /* Soft breathing — slow enough to be felt, not watched. */
-  animation: fc-breathe 9s var(--ease-breathe) infinite;
   display: inline-block;
 }
 
@@ -614,11 +675,11 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
 .fc-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.38rem 0.6rem;
   align-items: baseline;
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: clamp(0.7rem, 2.2vw, 0.82rem);
   letter-spacing: var(--ls-tight);
   text-transform: uppercase;
   color: var(--ink-muted);
@@ -634,20 +695,46 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   letter-spacing: var(--ls-wide);
 }
 
+.fc-weather-line,
+.fc-ambient-copy {
+  color: var(--ink-mid);
+}
+
+.fc-ambient-copy {
+  max-width: 28rem;
+  min-height: 1.35em;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(0.86rem, 2.5vw, 1rem);
+  font-style: italic;
+  line-height: 1.45;
+  opacity: 0.68;
+}
+
 /* ─── Sun rail (sunrise → sunset arc, flattened) ──────────────── */
 
 .fc-sun {
   display: grid;
-  gap: 0.375rem;
+  gap: 0.55rem;
+  padding: clamp(0.75rem, 3vw, 1rem);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius-inner);
+  background: var(--card-surface-soft);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.64);
+  cursor: default;
 }
 
 .fc-sun-rail {
   position: relative;
-  height: 1px;
+  height: 0.42rem;
+  border-radius: var(--radius-pill);
   background: linear-gradient(90deg,
-    color-mix(in srgb, var(--amber) 18%, transparent),
-    color-mix(in srgb, var(--amber) 42%, transparent) var(--fc-sun-x, 50%),
-    color-mix(in srgb, var(--border-lt) 60%, transparent));
+    color-mix(in srgb, #c5b4ff 28%, transparent),
+    color-mix(in srgb, #84e6e5 36%, transparent) var(--fc-sun-x, 50%),
+    color-mix(in srgb, #ffbdcc 30%, transparent));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 0 12px rgba(134, 221, 231, 0.12);
   transition: background var(--t-theme) var(--ease-out);
 }
 
@@ -655,13 +742,13 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   position: absolute;
   top: 50%;
   left: var(--fc-sun-x, 50%);
-  width: 8px;
-  height: 8px;
+  width: 0.92rem;
+  height: 0.92rem;
   border-radius: 50%;
-  background: var(--amber);
+  background: radial-gradient(circle at 34% 32%, #fff8d6, #f6bd72 52%, #92ece7);
   box-shadow:
     0 0 0 2px color-mix(in srgb, var(--page-bg) 88%, transparent),
-    0 0 12px 2px color-mix(in srgb, var(--amber) 40%, transparent);
+    0 0 12px 2px rgba(146, 236, 231, 0.28);
   transform: translate(-50%, -50%);
   transition: left var(--t-spring) var(--ease-out),
               background var(--t-theme) var(--ease-out),
@@ -689,11 +776,31 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
 
 .fc-weather {
   display: grid;
-  gap: var(--sp-md);
+  gap: 0.8rem;
   /* Reserve height during loading so the layout doesn't jump. */
-  min-height: 5.25rem;
+  min-height: 5rem;
+  padding: var(--card-padding);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius-inner);
+  background: var(--card-surface-soft);
+  box-shadow:
+    0 10px 26px rgba(115, 86, 62, 0.045),
+    inset 0 1px 0 rgba(255, 255, 255, 0.68);
+  backdrop-filter: blur(18px) saturate(1.06);
+  -webkit-backdrop-filter: blur(18px) saturate(1.06);
+  cursor: default;
   /* Soft fade as state crosses loading → ready → stale. */
-  transition: opacity var(--t-calm) var(--ease-out);
+  transition:
+    opacity var(--t-calm) var(--ease-out),
+    border-color 190ms var(--ease-out),
+    box-shadow 190ms var(--ease-out),
+    transform 190ms var(--ease-out);
+}
+
+.fc-weather:hover {
+  border-color: color-mix(in srgb, var(--accent-soft) 42%, var(--surface-border));
+  box-shadow: var(--card-glow), inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  transform: translateY(-1px);
 }
 
 .fc-weather[data-fc-state="ready"] { opacity: 1; }
@@ -711,9 +818,9 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  color: var(--amber);
+  width: 2rem;
+  height: 2rem;
+  color: color-mix(in srgb, var(--accent-contrast) 72%, #8dece9);
   opacity: 0.88;
 }
 
@@ -736,7 +843,7 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
 .fc-weather-temp {
   font-family: var(--font-serif);
   font-weight: 600;
-  font-size: 1.5rem;
+  font-size: clamp(1.4rem, 5.5vw, 2.15rem);
   color: var(--ink);
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
@@ -750,7 +857,7 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
 
 .fc-weather-cond {
   font-family: var(--font-serif);
-  font-size: 0.9rem;
+  font-size: clamp(0.9rem, 2.7vw, 1rem);
   color: var(--ink-mid);
   font-style: italic;
   line-height: 1.3;
@@ -758,23 +865,63 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
 
 .fc-weather-feels {
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   letter-spacing: var(--ls-tight);
   text-transform: uppercase;
   color: var(--ink-muted);
+}
+
+.fc-weather-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem 0.6rem;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: var(--ls-tight);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  transition:
+    max-height var(--t-spring) var(--ease-out),
+    opacity var(--t-calm) var(--ease-out);
+}
+
+.fc-weather-details span,
+.fc-weather-details time,
+.fc-forecast-slot {
+  border-radius: var(--radius-pill);
+  background: var(--chip-surface);
+  border: 1px solid var(--chip-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
+}
+
+.fc-weather-details span,
+.fc-weather-details time {
+  padding: 0.42rem 0.55rem;
+}
+
+.fountain-clock[data-fc-details="open"] .fc-weather-details {
+  max-height: 8rem;
+  opacity: 1;
 }
 
 /* ─── Forecast strip ─────────────────────────────────────────── */
 
 .fc-forecast {
   list-style: none;
-  display: grid;
+  display: none;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--sp-md);
+  gap: 0.8rem;
   padding: 0;
   margin: 0;
   border-top: 1px dashed var(--border-lt);
-  padding-top: var(--sp-md);
+  padding-top: 0.8rem;
+}
+
+.fountain-clock[data-fc-details="open"] .fc-forecast {
+  display: grid;
 }
 
 .fc-forecast-slot {
@@ -782,11 +929,12 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   align-items: center;
   gap: 0.5rem;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   letter-spacing: var(--ls-tight);
   color: var(--ink-muted);
   /* Placeholder height while loading. */
   min-height: 1.5rem;
+  padding: 0.5rem 0.6rem;
 }
 
 .fc-forecast-time {
@@ -815,12 +963,27 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.625rem 1rem;
+  gap: 0.55rem 0.6rem;
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   letter-spacing: var(--ls-tight);
   text-transform: uppercase;
   color: var(--ink-muted);
+  min-height: 2.25rem;
+}
+
+.fc-phase,
+.fc-zone,
+.fc-asof,
+.fc-location {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.85rem;
+  padding: 0.28rem 0.55rem;
+  border-radius: var(--radius-pill);
+  background: var(--chip-surface);
+  border: 1px solid var(--chip-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.58);
 }
 
 .fc-location {
@@ -829,46 +992,124 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
 
 .fc-asof {
   color: var(--ink-muted);
-  opacity: 0.75;
+  opacity: 0.68;
 }
 
 .fc-status-actions {
   display: inline-flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  align-items: center;
+  gap: 0.5rem;
   margin-left: auto;
 }
 
-.fc-link-btn {
+.fc-select-label {
+  color: var(--ink-muted);
+}
+
+.fc-select {
+  appearance: none;
+  min-height: 2rem;
+  width: min(100%, 10rem);
+  max-width: 10rem;
+  padding: 0.25rem 1.55rem 0.25rem 0.55rem;
+  border: 1px solid var(--chip-border);
+  border-radius: var(--radius-pill);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(239, 252, 255, 0.28)),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 14 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 5.5 7 8.5l3-3' fill='none' stroke='%2368476e' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") right 0.45rem center / 0.75rem 0.75rem no-repeat;
+  color: var(--ink-mid);
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  box-shadow:
+    0 8px 18px rgba(115, 86, 62, 0.045),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  transition:
+    border-color 170ms var(--ease-out),
+    box-shadow 170ms var(--ease-out),
+    transform 170ms var(--ease-out);
+}
+
+.fc-select:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring), inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.fc-link-btn,
+.fc-toggle-btn {
   appearance: none;
   background: none;
   border: none;
-  padding: 0;
   font: inherit;
   letter-spacing: inherit;
   text-transform: inherit;
   color: var(--amber);
   cursor: pointer;
-  border-bottom: 1px solid color-mix(in srgb, var(--amber) 40%, transparent);
-  padding-bottom: 1px;
-  transition: color var(--ease), border-color var(--ease);
+}
+
+.fc-link-btn {
+  min-height: 2rem;
+  padding: 0.2rem 0.68rem;
+  border: 1px solid var(--chip-border);
+  border-radius: var(--radius-pill);
+  background: var(--chip-surface);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.64);
+  transition:
+    color 170ms var(--ease-out),
+    border-color 170ms var(--ease-out),
+    box-shadow 170ms var(--ease-out),
+    transform 170ms var(--ease-out);
+}
+
+.fc-toggle-btn {
+  min-width: 2.6rem;
+  min-height: 2rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--chip-border);
+  border-radius: var(--radius-pill);
+  background: var(--chip-surface);
+  color: var(--ink-mid);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.66);
+  transition:
+    color 170ms var(--ease-out),
+    border-color 170ms var(--ease-out),
+    box-shadow 170ms var(--ease-out),
+    transform 170ms var(--ease-out);
 }
 
 .fc-link-btn:hover,
-.fc-link-btn:focus-visible {
+.fc-link-btn:focus-visible,
+.fc-toggle-btn:hover,
+.fc-toggle-btn:focus-visible {
   color: var(--ink);
-  border-bottom-color: var(--ink);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--ink));
+  box-shadow: var(--card-glow), inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  transform: translateY(-1px);
 }
 
-.fc-link-btn:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--amber) 55%, transparent);
-  outline-offset: 3px;
-  border-radius: 2px;
+.fc-select:active,
+.fc-link-btn:active,
+.fc-toggle-btn:active {
+  transform: scale(var(--press-scale));
+}
+
+.fc-link-btn:focus-visible,
+.fc-toggle-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring), inset 0 1px 0 rgba(255, 255, 255, 0.72);
 }
 
 .fc-link-btn[aria-pressed="true"] {
   color: var(--ink);
   border-bottom-color: var(--ink);
+}
+
+.fc-toggle-btn[aria-pressed="true"],
+.fc-link-btn[aria-expanded="true"] {
+  color: var(--ink);
+  border-color: color-mix(in srgb, var(--accent) 38%, var(--chip-border));
+  background: var(--card-surface-soft);
 }
 
 .fc-note {
@@ -893,7 +1134,7 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
 .fc-weather[data-fc-state="loading"] .fc-weather-glyph,
 .fc-weather[data-fc-state="loading"] .fc-forecast-slot {
   color: var(--ink-muted);
-  animation: fc-skeleton 2.4s var(--ease-breathe) infinite;
+  animation: fc-skeleton 3.8s var(--ease-breathe) infinite;
 }
 
 .fc-weather[data-fc-state="error"] .fc-weather-cond,
@@ -906,46 +1147,161 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   font-style: italic;
 }
 
+/* ─── Reality-driven atmosphere via clock attributes ─────────── */
+
+html[data-clock-phase="morning"] .fountain-clock {
+  background:
+    linear-gradient(135deg, rgba(255, 252, 245, 0.82), rgba(238, 253, 255, 0.5) 52%, rgba(255, 232, 219, 0.5)),
+    color-mix(in srgb, var(--surface-1) 84%, transparent);
+}
+
+html[data-clock-phase="evening"] .fountain-clock {
+  background:
+    linear-gradient(135deg, rgba(255, 249, 246, 0.8), rgba(248, 238, 255, 0.5) 52%, rgba(255, 226, 232, 0.5)),
+    color-mix(in srgb, var(--surface-1) 82%, transparent);
+}
+
+html[data-clock-phase="night"] .fountain-clock {
+  background:
+    linear-gradient(135deg, rgba(250, 249, 255, 0.78), rgba(236, 242, 255, 0.5) 52%, rgba(248, 237, 255, 0.44)),
+    color-mix(in srgb, var(--surface-1) 84%, transparent);
+}
+
+html[data-weather="rain"] .fc-weather-glyph,
+html[data-weather="fog"] .fc-weather-glyph {
+  color: color-mix(in srgb, var(--accent-contrast) 64%, #88d5dc);
+}
+
+html[data-weather="hot"] .fc-weather-glyph {
+  color: color-mix(in srgb, var(--accent-warm) 76%, #f2bf74);
+}
+
+html[data-weather="cold"] .fc-weather-glyph {
+  color: color-mix(in srgb, var(--accent) 76%, #d8f4ff);
+}
+
+html[data-location="houston-texas"] .fc-location,
+html[data-location="new-orleans-louisiana"] .fc-location,
+html[data-location="baton-rouge-louisiana"] .fc-location {
+  color: color-mix(in srgb, var(--accent-warm) 62%, var(--ink-mid));
+}
+
+html[data-location="dallas-texas"] .fc-location,
+html[data-location="williamsburg-kentucky"] .fc-location,
+html[data-location="new-york-new-york"] .fc-location,
+html[data-location="los-angeles-california"] .fc-location {
+  color: color-mix(in srgb, var(--accent-contrast) 72%, var(--ink-mid));
+}
+
 /* ─── DND: keep the clock but strip phase/weather tinting ────── */
 
+html[data-dnd="true"] .fc-time-hm,
+html[data-dnd="true"] .fc-weather-glyph,
+html[data-dnd="true"] .fc-forecast-glyph,
 html[data-mode="dnd"] .fc-time-hm,
 html[data-mode="dnd"] .fc-weather-glyph,
 html[data-mode="dnd"] .fc-forecast-glyph {
   animation: none;
 }
 
+html[data-dnd="true"] .fc-phase,
 html[data-mode="dnd"] .fc-phase {
   color: var(--amber);
   opacity: 0.85;
 }
 
+html[data-dnd="true"] .fountain-clock,
+html[data-mode="dnd"] .fountain-clock {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.66), rgba(246, 242, 250, 0.46)),
+    rgba(247, 244, 248, 0.82);
+  box-shadow:
+    0 18px 42px rgba(80, 64, 92, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.78);
+}
+
+html[data-dnd="true"] .fountain-clock::before,
+html[data-mode="dnd"] .fountain-clock::before {
+  opacity: 0.22;
+}
+
+html[data-dnd="true"] .fountain-clock::after,
+html[data-mode="dnd"] .fountain-clock::after {
+  animation: none;
+  opacity: 0.28;
+}
+
 /* ─── Reduced motion: honor fully ───────────────────────────── */
 
 html[data-motion="reduced"] .fc-time-hm,
-html[data-motion="reduced"] .fc-sun-dot {
+html[data-motion="reduced"] .fc-sun-dot,
+html[data-motion="reduced"] .fountain-clock::after {
   animation: none;
   transition: none;
+}
+
+html[data-motion="reduced"] .fountain-clock:hover,
+html[data-motion="reduced"] .fc-weather:hover {
+  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html:not([data-motion="full"]) .fc-time-hm,
   html:not([data-motion="full"]) .fc-sun-dot,
-  html:not([data-motion="full"]) .fc-weather[data-fc-state="loading"] * {
+  html:not([data-motion="full"]) .fountain-clock::after,
+  html:not([data-motion="full"]) .fc-weather[data-fc-state="loading"] *,
+  html:not([data-motion="full"]) .fc-weather-details {
     animation: none;
     transition: none;
+  }
+
+  html:not([data-motion="full"]) .fountain-clock:hover,
+  html:not([data-motion="full"]) .fc-weather:hover {
+    transform: none;
   }
 }
 
 /* ─── Narrow viewports ──────────────────────────────────────── */
 
 @media (max-width: 520px) {
-  .fc-forecast {
-    grid-template-columns: 1fr;
+  .hero-clock {
+    padding-top: clamp(1rem, 4vw, 1.6rem);
+  }
+  .fountain-clock {
+    min-height: 20rem;
+    text-align: left;
+  }
+  .fc-time {
+    font-size: clamp(2.65rem, 12.2vw, 3.05rem);
+  }
+  .fc-meta {
+    max-width: 18rem;
+  }
+  .fc-meta-sep {
+    display: none;
+  }
+  .fc-weather-now {
+    gap: 0.75rem;
+  }
+  .fc-sun-labels {
+    gap: 0.75rem;
+    overflow: hidden;
+  }
+  .fc-sun-label:last-child {
+    text-align: right;
   }
   .fc-status-actions {
     margin-left: 0;
-    width: 100%;
     justify-content: flex-start;
+  }
+  .fc-select-label {
+    width: 100%;
+  }
+  .fc-weather-details {
+    grid-template-columns: 1fr;
+  }
+  .fountain-clock[data-fc-details="open"] .fc-weather-details {
+    max-height: 16rem;
   }
 }
 
@@ -2385,6 +2741,19 @@ html[data-mode="dnd"] .gh-repo-card:hover {
    Naming theme: vinyl record setup (see js/vinyl.js header)
    ═══════════════════════════════════════════════════════════════ */
 
+/* ─── SOURCE (offscreen audio iframe) ─────────────────────────
+   The SoundCloud widget needs a real iframe in the DOM to play
+   audio, but we never want it visible. Pulled offscreen rather
+   than display:none so the SDK can still drive playback. */
+
+.vinyl-source {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 0;
+  overflow: hidden;
+}
+
 /* ─── STAGE (root container) ───────────────────────────────── */
 
 .vinyl {
@@ -2477,16 +2846,14 @@ html[data-mode="dnd"] .vinyl.vinyl--spinning .vinyl-sleeve::after {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 12px;
-  background: rgba(245, 241, 244, 0.70);
-  backdrop-filter: blur(28px) saturate(1.5);
-  -webkit-backdrop-filter: blur(28px) saturate(1.5);
-  border: 0.5px solid rgba(212, 201, 210, 0.55);
-  border-radius: 11px;
+  padding: 7px 12px;
+  background: var(--card-surface-soft);
+  backdrop-filter: blur(28px) saturate(1.22);
+  -webkit-backdrop-filter: blur(28px) saturate(1.22);
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
   box-shadow:
-    0 4px 18px rgba(30, 21, 32, 0.07),
-    0 1.5px 4px rgba(30, 21, 32, 0.04),
-    0 0 0 0.5px rgba(212, 201, 210, 0.2),
+    var(--card-shadow),
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
     inset 0 -0.5px 0 rgba(30, 21, 32, 0.02);
   transition:
@@ -2539,7 +2906,8 @@ html[data-mode="dnd"] .vinyl.vinyl--spinning .vinyl-sleeve::after {
   flex: 1 1 0;
   min-width: 48px;
   height: 16px;
-  border-radius: 3px;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--accent-soft) 18%, rgba(255, 255, 255, 0.26));
   opacity: 0.8;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -2567,7 +2935,7 @@ html[data-mode="dnd"] .vinyl.vinyl--spinning .vinyl-sleeve::after {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  border-radius: 3px;
+  border-radius: var(--radius-pill);
   overflow: hidden;
 }
 
@@ -2620,30 +2988,34 @@ html[data-mode="dnd"] .vinyl.vinyl--spinning .vinyl-sleeve::after {
   width: 26px;
   height: 26px;
   padding: 0;
-  border: 0.5px solid rgba(192, 178, 190, 0.4);
-  border-radius: 7px;
-  background: rgba(245, 241, 244, 0.25);
+  border: 1px solid var(--chip-border);
+  border-radius: 10px;
+  background: var(--chip-surface);
   color: var(--ink-mid);
   cursor: pointer;
   transition:
-    color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color 180ms var(--ease-out),
+    border-color 180ms var(--ease-out),
+    background-color 180ms var(--ease-out),
+    box-shadow 180ms var(--ease-out),
+    transform 180ms var(--ease-out);
 }
 
 .vinyl-btn:hover {
   color: var(--amber);
-  border-color: rgba(123, 94, 123, 0.22);
-  background: rgba(123, 94, 123, 0.04);
+  border-color: color-mix(in srgb, var(--accent) 34%, var(--chip-border));
+  background: var(--card-surface-soft);
+  box-shadow: var(--card-glow);
+  transform: translateY(-1px);
 }
 
 .vinyl-btn:active {
-  background: rgba(123, 94, 123, 0.07);
+  transform: scale(var(--press-scale));
 }
 
 .vinyl-btn:focus-visible {
-  outline: 2px solid var(--amber);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 /* ─── DIAL (volume slider) ─────────────────────────────────── */
@@ -2653,8 +3025,8 @@ html[data-mode="dnd"] .vinyl.vinyl--spinning .vinyl-sleeve::after {
   height: 3px;
   -webkit-appearance: none;
   appearance: none;
-  background: rgba(192, 178, 190, 0.35);
-  border-radius: 1.5px;
+  background: color-mix(in srgb, var(--accent-soft) 28%, rgba(192, 178, 190, 0.35));
+  border-radius: var(--radius-pill);
   outline: none;
   cursor: pointer;
   vertical-align: middle;
@@ -2877,4 +3249,343 @@ html[data-motion="reduced"] *::after {
   animation-iteration-count: 1 !important;
   transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   AMBIENT NEWS SURFACE (v1.1) — image-aware newsstand under the clock
+   Markup: index.html (first .resume-section in <main>)
+   Behavior: js/news-surface.js   Data: assets/news-snapshot.js
+   Stays hidden until JS confirms a non-empty snapshot. Reuses the
+   site's tokens — no new color, motion, or radius primitives.
+   ═══════════════════════════════════════════════════════════════ */
+
+.news-surface {
+  margin-top: clamp(1.25rem, 5vw, 2.35rem);
+  margin-bottom: var(--sp-2xl);
+}
+
+.news-surface .section-header {
+  margin-bottom: var(--sp-lg);
+}
+
+/* Mobile-first: single column. Two columns once the container has
+   room to seat two cards comfortably without crowding the title. */
+.news-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--card-gap);
+}
+
+@media (min-width: 560px) {
+  .news-list { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── The card ───────────────────────────────────────────────── */
+
+.news-item {
+  position: relative;
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  background: var(--card-surface);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    border-color 180ms var(--ease-out),
+    transform 190ms var(--ease-out),
+    box-shadow 190ms var(--ease-out),
+    background-color 190ms var(--ease-out);
+  /* Slow fade-in on mount; reduced-motion tokens flatten this. */
+  animation: news-fade-in var(--t-spring) var(--ease-out) both;
+}
+
+.news-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 18% 0%, color-mix(in srgb, var(--accent-soft) 18%, transparent), transparent 34%),
+    radial-gradient(circle at 92% 100%, color-mix(in srgb, var(--accent-warm) 12%, transparent), transparent 38%);
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+@keyframes news-fade-in {
+  from { opacity: 0; transform: translateY(2px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.news-item:hover {
+  border-color: color-mix(in srgb, var(--accent-soft) 42%, var(--surface-border));
+  transform: translateY(-2px) scale(1.002);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.news-item:active {
+  transform: scale(var(--press-scale));
+}
+
+/* The whole card is a single link wrapping image + body. */
+.news-link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+}
+
+.news-link:focus-visible {
+  outline: none;
+  border-radius: var(--card-radius);
+  box-shadow: var(--focus-ring);
+}
+
+/* ── Image well (image-led variant) ─────────────────────────── */
+
+.news-image-well {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  margin: clamp(0.45rem, 2vw, 0.58rem) clamp(0.45rem, 2vw, 0.58rem) 0;
+  width: calc(100% - clamp(0.9rem, 4vw, 1.16rem));
+  border-radius: var(--image-mask-radius);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, #fff4df 72%, var(--surface-2)), color-mix(in srgb, #efe6ff 70%, var(--page-bg-accent))),
+    var(--surface-3);
+  overflow: hidden;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.62),
+    0 1px 0 rgba(255, 255, 255, 0.38);
+}
+
+.news-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--t-spring) var(--ease-out);
+}
+
+.news-item:hover .news-image { transform: scale(1.025); }
+
+/* Subtle warm wash so titles stay readable across varied imagery
+   without dramatizing the photograph. */
+.news-image-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(36, 24, 15, 0) 58%, rgba(36, 24, 15, 0.16) 100%),
+    radial-gradient(circle at 18% 8%, rgba(255, 247, 214, 0.26), transparent 40%);
+  opacity: 0.82;
+}
+
+.news-image-fallback {
+  display: grid;
+  align-content: end;
+  gap: 0.35rem;
+  min-height: 0;
+  padding: clamp(0.8rem, 4vw, 1rem);
+  color: color-mix(in srgb, var(--accent-contrast) 76%, var(--ink-mid));
+}
+
+.news-image-fallback::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.48), transparent 44%),
+    radial-gradient(circle at 82% 16%, color-mix(in srgb, var(--accent-soft) 30%, transparent), transparent 34%),
+    radial-gradient(circle at 18% 86%, color-mix(in srgb, var(--accent-warm) 22%, transparent), transparent 38%);
+  opacity: 0.9;
+}
+
+.news-fallback-mark,
+.news-fallback-source {
+  position: relative;
+  z-index: 1;
+}
+
+.news-fallback-mark {
+  width: max-content;
+  max-width: 100%;
+  padding: 0.35rem 0.58rem;
+  border: 1px solid var(--chip-border);
+  border-radius: var(--radius-pill);
+  background: var(--chip-surface);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.64);
+}
+
+.news-fallback-source {
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 5vw, 1.55rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ── Card body ──────────────────────────────────────────────── */
+
+.news-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.62rem;
+  padding: var(--card-padding);
+  flex: 1 1 auto;
+}
+
+.news-item[data-variant="fallback"] .news-body {
+  padding-top: 0.9rem;
+}
+
+.news-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.news-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.55rem;
+  max-width: 100%;
+  padding: 0.28rem 0.52rem;
+  border: 1px solid var(--chip-border);
+  border-radius: var(--radius-pill);
+  background: var(--chip-surface);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: var(--ls-tight);
+  text-transform: uppercase;
+  line-height: 1;
+  color: color-mix(in srgb, var(--accent-contrast) 74%, var(--ink-mid));
+}
+
+.news-chip-category {
+  color: var(--ink-muted);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.54), rgba(255, 255, 255, 0.16)),
+    color-mix(in srgb, var(--accent-warm) 11%, var(--surface-1));
+}
+
+.news-title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 2.6vw, 1.08rem);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0;
+  color: var(--ink);
+  /* 2-line clamp on image-led, 3-line on text-led. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  /* Quiet underline grow on hover/focus. */
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  transition: background-size var(--ease), color var(--ease);
+}
+
+.news-item[data-variant="fallback"] .news-title {
+  -webkit-line-clamp: 3;
+  font-size: clamp(1.05rem, 3vw, 1.14rem);
+  line-height: 1.4;
+}
+
+.news-link:hover .news-title,
+.news-link:focus-visible .news-title {
+  color: var(--accent-contrast);
+}
+
+.news-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-sm);
+  margin-top: auto;
+  padding-top: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: var(--ls-tight);
+  color: var(--ink-muted);
+}
+
+.news-time { white-space: nowrap; }
+
+.news-affordance {
+  opacity: 0;
+  transform: translateX(-2px);
+  transition: opacity var(--ease), transform var(--ease), color var(--ease);
+}
+
+.news-link:hover .news-affordance,
+.news-link:focus-visible .news-affordance {
+  opacity: 0.85;
+  transform: translateX(0);
+  color: var(--accent-contrast);
+}
+
+/* ── Section as-of ──────────────────────────────────────────── */
+
+.news-asof {
+  display: block;
+  margin-top: var(--sp-md);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  opacity: 0.7;
+}
+
+/* ── Mobile tweaks ──────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .news-body { padding: 0.95rem; }
+  .news-item[data-variant="fallback"] .news-body { padding: 0.95rem; padding-top: 0.82rem; }
+  .news-title { font-size: 1rem; }
+  .news-item[data-variant="fallback"] .news-title { font-size: 1.05rem; }
+  .news-foot { align-items: flex-start; flex-direction: column; }
+  .news-affordance { opacity: 0.72; transform: none; }
+}
+
+/* ── DND mode: warmer, quieter, in keeping with the rest of the room. */
+html[data-mode="dnd"] .news-item {
+  border-color: rgba(123, 94, 123, 0.18);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.66), rgba(247, 244, 246, 0.48)),
+    rgba(247, 244, 246, 0.92);
+  box-shadow: 0 12px 26px rgba(90, 70, 96, 0.06);
+}
+
+html[data-mode="dnd"] .news-chip-source,
+html[data-mode="dnd"] .news-link:hover .news-title,
+html[data-mode="dnd"] .news-link:focus-visible .news-title,
+html[data-mode="dnd"] .news-link:hover .news-affordance,
+html[data-mode="dnd"] .news-link:focus-visible .news-affordance {
+  color: var(--amber);
+}
+
+/* Reduced motion already nukes --t-* via tokens.css; belt and braces
+   for animation-name + image scale. */
+html[data-motion="reduced"] .news-item { animation: none; }
+html[data-motion="reduced"] .news-item:hover .news-image { transform: none; }
+html[data-motion="reduced"] .news-item:hover { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="full"]) .news-item { animation: none; }
+  html:not([data-motion="full"]) .news-item:hover .news-image { transform: none; }
+  html:not([data-motion="full"]) .news-item:hover { transform: none; }
 }

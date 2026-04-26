@@ -17,15 +17,15 @@
   - Time: Intl.DateTimeFormat, tick re-aligned to each wall-clock minute
     (drift-free even across tab throttling and long background spells).
   - Sun: local NOAA-style solar calc (no extra network call).
-  - Weather: Open-Meteo (keyless). sessionStorage cache, SWR:
+  - Weather: Open-Meteo (keyless). localStorage + sessionStorage cache, SWR:
       current (soft)  → 10 min      refetch in background
       forecast (hard) →  1 hour     escalate to "stale" presentation
   - In-flight fetches are coalesced; location changes abort stale work.
   - Rendering is surgical — the weather DOM is scaffolded once and its
     text/attrs updated in place so focus, a11y hints, and animation
     continuity survive every state transition.
-  - Location defaults to Houston, TX. Browser geolocation is opt-in
-    and reversible. No IP lookup. No PII persisted beyond this tab.
+  - Location defaults to Houston, TX. Location is limited to curated
+    preset cities and persists locally. No IP lookup, geolocation, or PII.
   - Failures degrade silently: last-known-good from cache, then default,
     then the clock alone — the core view never breaks.
   - Respects data-mode="dnd", data-motion, and prefers-reduced-motion.
@@ -45,16 +45,154 @@
 
   /* ── Constants ───────────────────────────────────────────── */
 
-  var DEFAULT_LOCATION = {
-    label: 'Houston, TX',
-    lat: 29.7604,
-    lon: -95.3698,
-    source: 'default'
-  };
+  var CITY_PRESETS = Object.freeze([
+    Object.freeze({
+      label: 'New Orleans, Louisiana',
+      query: 'New Orleans, LA',
+      lat: 29.9511,
+      lon: -90.0715,
+      timezone: 'America/Chicago'
+    }),
+    Object.freeze({
+      label: 'Houston, Texas',
+      query: 'Houston, TX',
+      lat: 29.7604,
+      lon: -95.3698,
+      timezone: 'America/Chicago'
+    }),
+    Object.freeze({
+      label: 'Dallas, Texas',
+      query: 'Dallas, TX',
+      lat: 32.7767,
+      lon: -96.7970,
+      timezone: 'America/Chicago'
+    }),
+    Object.freeze({
+      label: 'Williamsburg, Kentucky',
+      query: 'Williamsburg, KY',
+      lat: 36.7434,
+      lon: -84.1597,
+      timezone: 'America/New_York'
+    }),
+    Object.freeze({
+      label: 'Baton Rouge, Louisiana',
+      query: 'Baton Rouge, LA',
+      lat: 30.4515,
+      lon: -91.1871,
+      timezone: 'America/Chicago'
+    }),
+    Object.freeze({
+      label: 'New York, New York',
+      query: 'New York, NY',
+      lat: 40.7128,
+      lon: -74.0060,
+      timezone: 'America/New_York'
+    }),
+    Object.freeze({
+      label: 'Los Angeles, California',
+      query: 'Los Angeles, CA',
+      lat: 34.0522,
+      lon: -118.2437,
+      timezone: 'America/Los_Angeles'
+    })
+  ]);
+
+  var LOCATION_MICROCOPY = Object.freeze({
+    'new-orleans-louisiana': 'Soft start, jazz-air steady.',
+    'houston-texas': 'Warm glass, big-sky focus.',
+    'dallas-texas': 'Clear grid, bright focus.',
+    'williamsburg-kentucky': 'Green hills, steady hands.',
+    'baton-rouge-louisiana': 'River light, calm pace.',
+    'new-york-new-york': 'Bright pace, steady center.',
+    'los-angeles-california': 'Wide light, quiet momentum.'
+  });
+
+  var LOCATION_ALIASES = Object.freeze({
+    'New Orleans': 'new-orleans-louisiana',
+    'New Orleans, LA': 'new-orleans-louisiana',
+    'New Orleans, Louisiana': 'new-orleans-louisiana',
+    'Houston': 'houston-texas',
+    'Houston, TX': 'houston-texas',
+    'Houston, Texas': 'houston-texas',
+    'Dallas': 'dallas-texas',
+    'Dallas, TX': 'dallas-texas',
+    'Dallas, Texas': 'dallas-texas',
+    'Williamsburg': 'williamsburg-kentucky',
+    'Williamsburg, KY': 'williamsburg-kentucky',
+    'Williamsburg, Kentucky': 'williamsburg-kentucky',
+    'Baton Rouge': 'baton-rouge-louisiana',
+    'Baton Rouge, LA': 'baton-rouge-louisiana',
+    'Baton Rouge, Louisiana': 'baton-rouge-louisiana',
+    'New York': 'new-york-new-york',
+    'New York, NY': 'new-york-new-york',
+    'New York, New York': 'new-york-new-york',
+    'Los Angeles': 'los-angeles-california',
+    'Los Angeles, CA': 'los-angeles-california',
+    'Los Angeles, California': 'los-angeles-california',
+    'new-orleans': 'new-orleans-louisiana',
+    'houston': 'houston-texas',
+    'new-york': 'new-york-new-york',
+    'nyc': 'new-york-new-york',
+    'los-angeles': 'los-angeles-california'
+  });
+
+  function locationKey(label) {
+    return String(label || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  function isValidTimezone(tz) {
+    try {
+      new Intl.DateTimeFormat('en-US', { timeZone: tz }).format(new Date());
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function isValidPreset(city) {
+    return !!(city &&
+      typeof city.label === 'string' &&
+      typeof city.query === 'string' &&
+      typeof city.lat === 'number' &&
+      typeof city.lon === 'number' &&
+      city.lat >= -90 && city.lat <= 90 &&
+      city.lon >= -180 && city.lon <= 180 &&
+      isValidTimezone(city.timezone));
+  }
+
+  function buildLocations() {
+    var locations = {};
+    for (var i = 0; i < CITY_PRESETS.length; i++) {
+      var city = CITY_PRESETS[i];
+      if (!isValidPreset(city)) continue;
+      var key = locationKey(city.label);
+      locations[key] = Object.freeze({
+        key: key,
+        attr: key,
+        label: city.label,
+        query: city.query,
+        microcopy: LOCATION_MICROCOPY[key],
+        lat: city.lat,
+        lon: city.lon,
+        timezone: city.timezone,
+        tz: city.timezone
+      });
+    }
+    return Object.freeze(locations);
+  }
+
+  var LOCATIONS = buildLocations();
+  var DEFAULT_LOCATION = LOCATIONS['houston-texas'] || LOCATIONS[Object.keys(LOCATIONS)[0]];
 
   var CACHE_KEY_PREFIX = 'fc:weather:';
+  var PREFS_KEY        = 'fc:preferences:v2';
   var LOCATION_KEY     = 'fc:location';
-  var SIMPLIFY_KEY     = 'fc:simplify';
+  var DETAILS_KEY      = 'fc:details';
+  var TIME_FORMAT_KEY  = 'fc:time-format';
+  var DND_KEY          = 'ce-mode';
 
   var CURRENT_TTL_MS   = 10 * 60 * 1000;   // 10 min — soft freshness window
   var FORECAST_TTL_MS  = 60 * 60 * 1000;   // 1 hour — hard staleness ceiling
@@ -69,10 +207,10 @@
   var WEATHER_CODES = {
     0:  { label: 'Clear',            mood: 'clear'  },
     1:  { label: 'Mostly clear',     mood: 'clear'  },
-    2:  { label: 'Partly cloudy',    mood: 'partly' },
+    2:  { label: 'Partly cloudy',    mood: 'cloudy' },
     3:  { label: 'Overcast',         mood: 'cloudy' },
-    45: { label: 'Fog',              mood: 'cloudy' },
-    48: { label: 'Icy fog',          mood: 'cloudy' },
+    45: { label: 'Fog',              mood: 'fog'    },
+    48: { label: 'Icy fog',          mood: 'fog'    },
     51: { label: 'Light drizzle',    mood: 'rain'   },
     53: { label: 'Drizzle',          mood: 'rain'   },
     55: { label: 'Heavy drizzle',    mood: 'rain'   },
@@ -83,15 +221,15 @@
     65: { label: 'Heavy rain',       mood: 'rain'   },
     66: { label: 'Freezing rain',    mood: 'rain'   },
     67: { label: 'Freezing rain',    mood: 'rain'   },
-    71: { label: 'Light snow',       mood: 'snow'   },
-    73: { label: 'Snow',             mood: 'snow'   },
-    75: { label: 'Heavy snow',       mood: 'snow'   },
-    77: { label: 'Snow grains',      mood: 'snow'   },
+    71: { label: 'Light snow',       mood: 'cold'   },
+    73: { label: 'Snow',             mood: 'cold'   },
+    75: { label: 'Heavy snow',       mood: 'cold'   },
+    77: { label: 'Snow grains',      mood: 'cold'   },
     80: { label: 'Rain showers',     mood: 'rain'   },
     81: { label: 'Rain showers',     mood: 'rain'   },
     82: { label: 'Heavy showers',    mood: 'rain'   },
-    85: { label: 'Snow showers',     mood: 'snow'  },
-    86: { label: 'Snow showers',     mood: 'snow'  },
+    85: { label: 'Snow showers',     mood: 'cold'  },
+    86: { label: 'Snow showers',     mood: 'cold'  },
     95: { label: 'Thunderstorm',     mood: 'storm' },
     96: { label: 'Thunderstorm',     mood: 'storm' },
     99: { label: 'Thunderstorm',     mood: 'storm' }
@@ -100,37 +238,97 @@
   /* ── Safe storage wrappers ───────────────────────────────── */
 
   function safeGet(storage, key) {
-    try { return storage.getItem(key); } catch (e) { return null; }
+    try { return storage && storage.getItem(key); } catch (e) { return null; }
   }
   function safeSet(storage, key, value) {
-    try { storage.setItem(key, value); } catch (e) {}
+    try { if (storage) storage.setItem(key, value); } catch (e) {}
   }
-  function safeRemove(storage, key) {
-    try { storage.removeItem(key); } catch (e) {}
-  }
-
   /* ── Location state (session-scoped) ─────────────────────── */
 
   function readStoredLocation() {
-    var raw = safeGet(sessionStorage, LOCATION_KEY);
+    var raw = safeGet(localStorage, LOCATION_KEY);
     if (!raw) return null;
+    if (LOCATIONS[raw]) return LOCATIONS[raw];
+    if (LOCATION_ALIASES[raw] && LOCATIONS[LOCATION_ALIASES[raw]]) {
+      return LOCATIONS[LOCATION_ALIASES[raw]];
+    }
     try {
       var parsed = JSON.parse(raw);
-      if (parsed && typeof parsed.lat === 'number' &&
-          typeof parsed.lon === 'number' &&
-          isFinite(parsed.lat) && isFinite(parsed.lon)) {
-        return parsed;
+      if (parsed && parsed.key && LOCATIONS[parsed.key]) return LOCATIONS[parsed.key];
+      if (parsed && parsed.key && LOCATION_ALIASES[parsed.key]) {
+        return LOCATIONS[LOCATION_ALIASES[parsed.key]];
+      }
+      if (parsed && parsed.label && LOCATION_ALIASES[parsed.label]) {
+        return LOCATIONS[LOCATION_ALIASES[parsed.label]];
+      }
+      if (parsed && parsed.query && LOCATION_ALIASES[parsed.query]) {
+        return LOCATIONS[LOCATION_ALIASES[parsed.query]];
       }
     } catch (e) {}
     return null;
   }
 
   function writeStoredLocation(loc) {
-    safeSet(sessionStorage, LOCATION_KEY, JSON.stringify(loc));
+    safeSet(localStorage, LOCATION_KEY, loc.key || DEFAULT_LOCATION.key);
   }
 
-  function clearStoredLocation() {
-    safeRemove(sessionStorage, LOCATION_KEY);
+  function readPreferences() {
+    var prefs = {
+      location: DEFAULT_LOCATION.key,
+      DND: false,
+      detailsOpen: false,
+      volume: 40,
+      hour24: false
+    };
+
+    try {
+      var raw = safeGet(localStorage, PREFS_KEY);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          if (LOCATIONS[parsed.location]) prefs.location = parsed.location;
+          if (LOCATION_ALIASES[parsed.location] && LOCATIONS[LOCATION_ALIASES[parsed.location]]) {
+            prefs.location = LOCATION_ALIASES[parsed.location];
+          }
+          if (typeof parsed.DND === 'boolean') prefs.DND = parsed.DND;
+          if (typeof parsed.detailsOpen === 'boolean') prefs.detailsOpen = parsed.detailsOpen;
+          if (typeof parsed.volume === 'number') prefs.volume = Math.max(0, Math.min(100, parsed.volume));
+          if (typeof parsed.hour24 === 'boolean') prefs.hour24 = parsed.hour24;
+        }
+      }
+    } catch (e) {}
+
+    var storedLocation = readStoredLocation();
+    if (storedLocation) prefs.location = storedLocation.key;
+
+    var storedDetails = safeGet(localStorage, DETAILS_KEY);
+    if (storedDetails === 'open' || storedDetails === 'true') prefs.detailsOpen = true;
+    if (storedDetails === 'closed' || storedDetails === 'false') prefs.detailsOpen = false;
+
+    var storedFormat = safeGet(localStorage, TIME_FORMAT_KEY);
+    if (storedFormat === '24') prefs.hour24 = true;
+    if (storedFormat === '12') prefs.hour24 = false;
+
+    var storedDnd = safeGet(localStorage, DND_KEY);
+    if (storedDnd) prefs.DND = storedDnd === 'dnd';
+
+    return prefs;
+  }
+
+  function writePreferences(patch) {
+    var prefs = state && state.preferences ? state.preferences : readPreferences();
+    for (var key in patch) {
+      if (Object.prototype.hasOwnProperty.call(patch, key)) prefs[key] = patch[key];
+    }
+    safeSet(localStorage, PREFS_KEY, JSON.stringify(prefs));
+    if (patch.location) writeStoredLocation(LOCATIONS[patch.location] || DEFAULT_LOCATION);
+    if (Object.prototype.hasOwnProperty.call(patch, 'detailsOpen')) {
+      safeSet(localStorage, DETAILS_KEY, patch.detailsOpen ? 'open' : 'closed');
+    }
+    if (Object.prototype.hasOwnProperty.call(patch, 'hour24')) {
+      safeSet(localStorage, TIME_FORMAT_KEY, patch.hour24 ? '24' : '12');
+    }
+    state.preferences = prefs;
   }
 
   /* ── Cache (session-scoped, SWR) ─────────────────────────── */
@@ -141,18 +339,43 @@
   }
 
   function readCache(lat, lon) {
-    var raw = safeGet(sessionStorage, cacheKey(lat, lon));
+    var raw = safeGet(localStorage, cacheKey(lat, lon)) ||
+              safeGet(sessionStorage, cacheKey(lat, lon));
     if (!raw) return null;
     try {
       var entry = JSON.parse(raw);
-      if (entry && typeof entry.ts === 'number' && entry.data) return entry;
+      if (entry && typeof entry.ts === 'number' && entry.data) {
+        reviveWeatherDates(entry.data);
+        return entry;
+      }
     } catch (e) {}
     return null;
   }
 
   function writeCache(lat, lon, data) {
     var entry = { ts: Date.now(), data: data };
-    safeSet(sessionStorage, cacheKey(lat, lon), JSON.stringify(entry));
+    var value = JSON.stringify(entry);
+    safeSet(localStorage, cacheKey(lat, lon), value);
+    safeSet(sessionStorage, cacheKey(lat, lon), value);
+  }
+
+  function reviveWeatherDates(data) {
+    if (!data) return;
+    if (data.daily) {
+      if (data.daily.sunrise && !(data.daily.sunrise instanceof Date)) {
+        data.daily.sunrise = new Date(data.daily.sunrise);
+      }
+      if (data.daily.sunset && !(data.daily.sunset instanceof Date)) {
+        data.daily.sunset = new Date(data.daily.sunset);
+      }
+    }
+    if (data.forecast) {
+      for (var i = 0; i < data.forecast.length; i++) {
+        if (data.forecast[i] && !(data.forecast[i].time instanceof Date)) {
+          data.forecast[i].time = new Date(data.forecast[i].time);
+        }
+      }
+    }
   }
 
   /* ── Solar calculation (NOAA approximation) ──────────────── */
@@ -241,43 +464,66 @@
   /* ── Formatters (cached) ─────────────────────────────────── */
 
   var hmFormatters = {};
-  function formatHM(date, tz) {
-    var key = tz || 'local';
+  function formatHM(date, tz, hour24) {
+    var key = (tz || 'local') + ':' + (hour24 ? '24' : '12');
     if (!hmFormatters[key]) {
-      var opts = { hour: 'numeric', minute: '2-digit', hour12: true };
+      var opts = { hour: 'numeric', minute: '2-digit', hour12: !hour24 };
       if (tz) opts.timeZone = tz;
       try {
         hmFormatters[key] = new Intl.DateTimeFormat(undefined, opts);
       } catch (e) {
         hmFormatters[key] = new Intl.DateTimeFormat(undefined, {
-          hour: 'numeric', minute: '2-digit', hour12: true
+          hour: 'numeric', minute: '2-digit', hour12: !hour24
         });
       }
     }
     return hmFormatters[key].format(date);
   }
 
-  var dateFormatter = null;
-  function formatDate(date) {
-    if (!dateFormatter) {
-      dateFormatter = new Intl.DateTimeFormat(undefined, {
-        weekday: 'long', month: 'long', day: 'numeric'
-      });
+  var dateFormatters = {};
+  function formatDate(date, tz) {
+    var key = tz || 'local';
+    if (!dateFormatters[key]) {
+      var opts = { weekday: 'long', month: 'long', day: 'numeric' };
+      if (tz) opts.timeZone = tz;
+      try {
+        dateFormatters[key] = new Intl.DateTimeFormat(undefined, opts);
+      } catch (e) {
+        dateFormatters[key] = new Intl.DateTimeFormat(undefined, {
+          weekday: 'long', month: 'long', day: 'numeric'
+        });
+      }
     }
-    return dateFormatter.format(date);
+    return dateFormatters[key].format(date);
   }
 
-  var zoneFormatter = null;
-  function formatZoneLabel() {
+  function formatDateISO(date, tz) {
     try {
-      if (!zoneFormatter) {
-        zoneFormatter = new Intl.DateTimeFormat(undefined, { timeZoneName: 'short' });
+      var opts = { year: 'numeric', month: '2-digit', day: '2-digit' };
+      if (tz) opts.timeZone = tz;
+      var parts = new Intl.DateTimeFormat('en-CA', opts).formatToParts(date);
+      var map = {};
+      for (var i = 0; i < parts.length; i++) map[parts[i].type] = parts[i].value;
+      return map.year + '-' + map.month + '-' + map.day;
+    } catch (e) {
+      return date.toISOString().slice(0, 10);
+    }
+  }
+
+  var zoneFormatters = {};
+  function formatZoneLabel(tz) {
+    var key = tz || 'local';
+    try {
+      if (!zoneFormatters[key]) {
+        var opts = { timeZoneName: 'short' };
+        if (tz) opts.timeZone = tz;
+        zoneFormatters[key] = new Intl.DateTimeFormat(undefined, opts);
       }
-      var parts = zoneFormatter.formatToParts(new Date());
+      var parts = zoneFormatters[key].formatToParts(new Date());
       for (var i = 0; i < parts.length; i++) {
         if (parts[i].type === 'timeZoneName') return parts[i].value;
       }
-      return Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+      return tz || Intl.DateTimeFormat().resolvedOptions().timeZone || '';
     } catch (e) {
       return '';
     }
@@ -320,8 +566,9 @@
     var url = OPEN_METEO_URL +
       '?latitude='  + lat.toFixed(4) +
       '&longitude=' + lon.toFixed(4) +
-      '&current=temperature_2m,apparent_temperature,weather_code,is_day,wind_speed_10m' +
+      '&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,is_day,wind_speed_10m' +
       '&hourly=temperature_2m,weather_code,is_day' +
+      '&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset' +
       '&temperature_unit=fahrenheit' +
       '&wind_speed_unit=mph' +
       '&forecast_days=1' +
@@ -343,6 +590,7 @@
     if (!raw || !raw.current) throw new Error('weather shape invalid');
     var cur = raw.current;
     var hourly = raw.hourly || {};
+    var daily = raw.daily || {};
     var times = hourly.time || [];
     var temps = hourly.temperature_2m || [];
     var codes = hourly.weather_code || [];
@@ -359,8 +607,10 @@
     for (var j = 0; j < 3; j++) {
       var idx = startIdx + j * 2;
       if (idx >= times.length) break;
+      var slotTime = new Date(times[idx]);
+      if (isNaN(slotTime.getTime())) continue;
       forecast.push({
-        time: new Date(times[idx]),
+        time: slotTime,
         temp: temps[idx],
         code: codes[idx],
         isDay: days[idx] === 1
@@ -371,11 +621,20 @@
       current: {
         temp: cur.temperature_2m,
         feels: cur.apparent_temperature,
+        humidity: cur.relative_humidity_2m,
         code: cur.weather_code,
         isDay: cur.is_day === 1,
         wind: cur.wind_speed_10m
       },
+      daily: {
+        high: daily.temperature_2m_max && daily.temperature_2m_max[0],
+        low: daily.temperature_2m_min && daily.temperature_2m_min[0],
+        sunrise: daily.sunrise && daily.sunrise[0] ? new Date(daily.sunrise[0]) : null,
+        sunset: daily.sunset && daily.sunset[0] ? new Date(daily.sunset[0]) : null
+      },
       forecast: forecast,
+      source: 'Open-Meteo',
+      fallback: false,
       timezone: raw.timezone || null,
       fetchedAt: Date.now()
     };
@@ -429,10 +688,14 @@
         return '<svg class="' + cls + '" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="10" r="3"/><path d="M11 19h7a4 4 0 0 0 .5-7.97A5 5 0 0 0 9 12.5"/></svg>';
       case 'cloudy':
         return '<svg class="' + cls + '" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 19h10a4 4 0 0 0 .5-7.97A5 5 0 0 0 8 10.5 4 4 0 0 0 7 19z"/></svg>';
+      case 'fog':
+        return '<svg class="' + cls + '" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 15h10a4 4 0 0 0 .5-7.97A5 5 0 0 0 8 6.5 4 4 0 0 0 7 15z"/><g stroke-linecap="round"><line x1="5" y1="18" x2="19" y2="18"/><line x1="7" y1="21" x2="17" y2="21"/></g></svg>';
       case 'rain':
         return '<svg class="' + cls + '" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 15h10a4 4 0 0 0 .5-7.97A5 5 0 0 0 8 6.5 4 4 0 0 0 7 15z"/><g stroke-linecap="round"><line x1="9"  y1="18" x2="8"  y2="21"/><line x1="13" y1="18" x2="12" y2="21"/><line x1="17" y1="18" x2="16" y2="21"/></g></svg>';
-      case 'snow':
+      case 'cold':
         return '<svg class="' + cls + '" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 15h10a4 4 0 0 0 .5-7.97A5 5 0 0 0 8 6.5 4 4 0 0 0 7 15z"/><g stroke-linecap="round"><circle cx="9"  cy="19.5" r="0.6"/><circle cx="13" cy="20"   r="0.6"/><circle cx="17" cy="19.5" r="0.6"/></g></svg>';
+      case 'hot':
+        return '<svg class="' + cls + '" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><g stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.5" y1="4.5" x2="6.5" y2="6.5"/><line x1="17.5" y1="17.5" x2="19.5" y2="19.5"/></g></svg>';
       case 'storm':
         return '<svg class="' + cls + '" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14h10a4 4 0 0 0 .5-7.97A5 5 0 0 0 8 5.5 4 4 0 0 0 7 14z"/><polyline points="12,15 10,19 13,19 11,22" stroke-linecap="round" stroke-linejoin="round"/></svg>';
       default:
@@ -446,13 +709,25 @@
     mounted: false,
     tickTimer: null,
     refetchTimer: null,
+    timeOfDay: 'day',
     location: DEFAULT_LOCATION,
     weather: null,
+    sun: null,
+    DND: false,
+    reducedMotion: false,
     weatherError: null,
-    simplified: false,
+    detailsOpen: false,
+    preferences: {
+      location: DEFAULT_LOCATION.key,
+      DND: false,
+      detailsOpen: false,
+      volume: 40,
+      hour24: false
+    },
     pendingFetch: null,
     pendingController: null,
-    pendingKey: null
+    pendingKey: null,
+    lastGood: null
   };
 
   /* ── DOM helpers ─────────────────────────────────────────── */
@@ -475,6 +750,59 @@
     if (el.getAttribute(name) !== value) el.setAttribute(name, value);
   }
 
+  function removeAttr(el, name) {
+    if (el && el.hasAttribute(name)) el.removeAttribute(name);
+  }
+
+  function rememberGoodState() {
+    if (!state.location) return;
+    state.lastGood = {
+      location: state.location,
+      weather: state.weather || null
+    };
+  }
+
+  function restoreLastGoodState(err) {
+    if (!state.lastGood || !state.lastGood.location) {
+      state.weatherError = err;
+      renderWeather();
+      renderStatus();
+      return;
+    }
+    state.location = state.lastGood.location;
+    state.preferences.location = state.location.key;
+    state.weather = state.lastGood.weather || null;
+    state.weatherError = state.weather ? null : err;
+    writePreferences({ location: state.location.key });
+    renderClock();
+    renderWeather();
+    renderStatus();
+  }
+
+  function prefersReducedMotion() {
+    try { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
+    catch (e) { return false; }
+  }
+
+  function readDnd() {
+    return document.documentElement.getAttribute('data-mode') === 'dnd' ||
+      safeGet(localStorage, DND_KEY) === 'dnd';
+  }
+
+  function clockPhase(phase) {
+    if (phase === 'dawn') return 'morning';
+    if (phase === 'dusk') return 'evening';
+    if (phase === 'night') return 'night';
+    return 'day';
+  }
+
+  function weatherMood(info, current) {
+    if (!current) return null;
+    if (typeof current.temp === 'number' && current.temp >= 92) return 'hot';
+    if (typeof current.temp === 'number' && current.temp <= 38) return 'cold';
+    return info.mood;
+  }
+
   /* ── Render: time, date, zone, sun rail, phase ───────────── */
 
   function renderClock() {
@@ -483,22 +811,28 @@
 
     var now = new Date();
 
-    setText(qs('[data-fc-time-hm]', root), formatHM(now));
+    setText(qs('[data-fc-time-hm]', root), formatHM(now, state.location.tz, state.preferences.hour24));
 
     var timeEl = qs('[data-fc-time]', root);
     if (timeEl) setAttr(timeEl, 'datetime', now.toISOString());
 
-    setText(qs('[data-fc-date]', root), formatDate(now));
-    setText(qs('[data-fc-zone]', root), formatZoneLabel());
+    var dateEl = qs('[data-fc-date]', root);
+    setText(dateEl, formatDate(now, state.location.tz));
+    if (dateEl) setAttr(dateEl, 'datetime', formatDateISO(now, state.location.tz));
+    setText(qs('[data-fc-zone]', root), formatZoneLabel(state.location.tz));
 
     var solar = solarTimes(state.location.lat, state.location.lon, now);
     var phase = classifyPhase(solar, now);
+    state.sun = solar;
+    state.timeOfDay = clockPhase(phase);
+    state.DND = readDnd();
+    state.reducedMotion = prefersReducedMotion();
 
     setText(qs('[data-fc-phase]', root), phaseLabel(phase));
 
     if (solar.sunrise) {
-      setText(qs('[data-fc-sunrise]', root), formatHM(solar.sunrise));
-      setText(qs('[data-fc-sunset]',  root), formatHM(solar.sunset));
+      setText(qs('[data-fc-sunrise]', root), formatHM(solar.sunrise, state.location.tz, state.preferences.hour24));
+      setText(qs('[data-fc-sunset]',  root), formatHM(solar.sunset, state.location.tz, state.preferences.hour24));
     } else {
       setText(qs('[data-fc-sunrise]', root), '—');
       setText(qs('[data-fc-sunset]',  root), '—');
@@ -520,14 +854,10 @@
   function applyPhaseAttribute(phase, solar) {
     var html = document.documentElement;
 
-    if (state.simplified) {
-      html.removeAttribute('data-phase');
-      html.style.removeProperty('--ambient-warmth');
-      html.style.removeProperty('--ambient-light');
-      return;
-    }
-
     setAttr(html, 'data-phase', phase);
+    setAttr(html, 'data-clock-phase', state.timeOfDay);
+    setAttr(html, 'data-location', state.location.attr || state.location.key);
+    setAttr(html, 'data-dnd', state.DND ? 'true' : 'false');
 
     var warmth;
     switch (phase) {
@@ -571,6 +901,16 @@
           '<div class="fc-weather-cond" data-fc-weather-cond></div>' +
           '<div class="fc-weather-feels" data-fc-weather-feels></div>' +
         '</div>' +
+      '</div>' +
+      '<div class="fc-weather-details" id="fcWeatherDetails" data-fc-weather-details>' +
+        '<span data-fc-weather-feels-detail>Feels like —</span>' +
+        '<span data-fc-weather-highlow>High / low —</span>' +
+        '<span data-fc-weather-wind>Wind —</span>' +
+        '<span data-fc-weather-humidity>Humidity —</span>' +
+        '<time data-fc-weather-sunrise datetime="">Sunrise —</time>' +
+        '<time data-fc-weather-sunset datetime="">Sunset —</time>' +
+        '<time data-fc-weather-updated datetime="">Updated —</time>' +
+        '<span data-fc-weather-source>Source —</span>' +
       '</div>' +
       '<ol class="fc-forecast" data-fc-forecast>' +
         '<li class="fc-forecast-slot" data-fc-forecast-slot>' +
@@ -633,6 +973,14 @@
     var tempEl  = qs('[data-fc-weather-temp]',  surface);
     var condEl  = qs('[data-fc-weather-cond]',  surface);
     var feelsEl = qs('[data-fc-weather-feels]', surface);
+    var feelsDetailEl = qs('[data-fc-weather-feels-detail]', surface);
+    var highLowEl = qs('[data-fc-weather-highlow]', surface);
+    var humidityEl = qs('[data-fc-weather-humidity]', surface);
+    var windEl = qs('[data-fc-weather-wind]', surface);
+    var sunriseEl = qs('[data-fc-weather-sunrise]', surface);
+    var sunsetEl = qs('[data-fc-weather-sunset]', surface);
+    var updatedEl = qs('[data-fc-weather-updated]', surface);
+    var sourceEl = qs('[data-fc-weather-source]', surface);
     var slots   = qsa('[data-fc-forecast-slot]', surface);
 
     if (!state.weather) {
@@ -641,29 +989,55 @@
       setText(tempEl,  '—');
       setText(condEl,  copy.cond);
       setText(feelsEl, copy.feels);
+      setText(feelsDetailEl, 'Feels like —');
+      setText(highLowEl, 'High / low —');
+      setText(humidityEl, 'Humidity —');
+      setText(windEl, 'Wind —');
+      setText(sunriseEl, 'Sunrise —');
+      setText(sunsetEl, 'Sunset —');
+      setText(updatedEl, 'Updated —');
+      removeAttr(sunriseEl, 'datetime');
+      removeAttr(sunsetEl, 'datetime');
+      removeAttr(updatedEl, 'datetime');
+      setText(sourceEl, state.weatherError ? 'Fallback clock only' : 'Source pending');
+      setText(qs('[data-fc-weather-line]', root), state.weatherError ? 'Weather quiet, clock steady' : 'Weather warming up');
 
-      for (var i = 0; i < slots.length; i++) {
-        var s = slots[i];
-        s.hidden = false;
-        setText(qs('[data-fc-forecast-time]', s), '');
-        setText(qs('[data-fc-forecast-temp]', s), '');
-        clearGlyph(qs('[data-fc-forecast-glyph]', s));
+    for (var i = 0; i < slots.length; i++) {
+      var s = slots[i];
+      s.hidden = false;
+      setText(qs('[data-fc-forecast-time]', s), state.detailsOpen ? 'Soon' : '');
+      setText(qs('[data-fc-forecast-temp]', s), '');
+      clearGlyph(qs('[data-fc-forecast-glyph]', s));
       }
 
       /* When we have no weather, suppress mood tint to stay calm. */
-      if (document.documentElement.hasAttribute('data-weather')) {
-        document.documentElement.removeAttribute('data-weather');
-      }
+      setAttr(document.documentElement, 'data-weather', 'clear');
       return;
     }
 
     var w = state.weather.current;
     var info = weatherInfo(w.code);
+    var mood = weatherMood(info, w);
+    var daily = state.weather.daily || {};
+    var sunrise = daily.sunrise || (state.sun && state.sun.sunrise);
+    var sunset = daily.sunset || (state.sun && state.sun.sunset);
 
-    setGlyph(iconEl, info.mood, w.isDay);
+    setGlyph(iconEl, mood, w.isDay);
     setText(tempEl,  roundTemp(w.temp));
     setText(condEl,  info.label);
     setText(feelsEl, 'Feels ' + roundTemp(w.feels));
+    setText(feelsDetailEl, 'Feels like ' + roundTemp(w.feels));
+    setText(highLowEl, 'High ' + roundTemp(daily.high) + ' / Low ' + roundTemp(daily.low));
+    setText(humidityEl, 'Humidity ' + (isNaN(w.humidity) ? '—' : Math.round(w.humidity) + '%'));
+    setText(windEl, 'Wind ' + (isNaN(w.wind) ? '—' : Math.round(w.wind) + ' mph'));
+    setText(sunriseEl, 'Sunrise ' + (sunrise ? formatHM(new Date(sunrise), state.location.tz, state.preferences.hour24) : '—'));
+    setText(sunsetEl, 'Sunset ' + (sunset ? formatHM(new Date(sunset), state.location.tz, state.preferences.hour24) : '—'));
+    setText(updatedEl, 'Updated ' + formatHM(new Date(state.weather.fetchedAt), state.location.tz, state.preferences.hour24));
+    setAttr(sunriseEl, 'datetime', sunrise ? new Date(sunrise).toISOString() : '');
+    setAttr(sunsetEl, 'datetime', sunset ? new Date(sunset).toISOString() : '');
+    setAttr(updatedEl, 'datetime', new Date(state.weather.fetchedAt).toISOString());
+    setText(sourceEl, (state.weather.fallback ? 'Fallback' : 'Source') + ' ' + (state.weather.source || 'Open-Meteo'));
+    setText(qs('[data-fc-weather-line]', root), roundTemp(w.temp) + ' and ' + info.label.toLowerCase());
 
     for (var k = 0; k < slots.length; k++) {
       var slotEl = slots[k];
@@ -673,52 +1047,73 @@
         continue;
       }
       slotEl.hidden = false;
-      setText(qs('[data-fc-forecast-time]', slotEl), formatHM(data.time));
+      var slotTime = data.time instanceof Date ? data.time : new Date(data.time);
+      setText(qs('[data-fc-forecast-time]', slotEl),
+              slotTime && !isNaN(slotTime.getTime()) ? formatHM(slotTime, state.location.tz, state.preferences.hour24) : 'Soon');
       setText(qs('[data-fc-forecast-temp]', slotEl), roundTemp(data.temp));
       setGlyph(qs('[data-fc-forecast-glyph]', slotEl),
-               weatherInfo(data.code).mood, data.isDay);
+               weatherMood(weatherInfo(data.code), data), data.isDay);
     }
 
-    if (state.simplified) {
-      document.documentElement.removeAttribute('data-weather');
-    } else {
-      setAttr(document.documentElement, 'data-weather', info.mood);
-    }
+    setAttr(document.documentElement, 'data-weather', mood);
   }
 
   /* ── Render: status row (location, asof, controls, note) ─── */
+
+  function syncLocationOptions(select) {
+    if (!select) return;
+    if (select.__fcPresetSignature === CITY_PRESETS.length + ':' + DEFAULT_LOCATION.key) return;
+    while (select.firstChild) select.removeChild(select.firstChild);
+    for (var i = 0; i < CITY_PRESETS.length; i++) {
+      var city = CITY_PRESETS[i];
+      if (!isValidPreset(city)) continue;
+      var option = document.createElement('option');
+      option.value = locationKey(city.label);
+      option.textContent = city.label;
+      select.appendChild(option);
+    }
+    select.__fcPresetSignature = CITY_PRESETS.length + ':' + DEFAULT_LOCATION.key;
+  }
 
   function renderStatus() {
     var root = rootEl();
     if (!root) return;
 
+    setAttr(root, 'data-fc-details', state.detailsOpen ? 'open' : 'closed');
+
     var locEl = qs('[data-fc-location]', root);
-    if (locEl) {
-      var prefix = state.location.source === 'geo' ? 'Your location · ' : '';
-      setText(locEl, prefix + state.location.label);
-    }
+    setText(locEl, state.location.label);
+    setText(qs('[data-fc-note]', root), state.location.microcopy || 'Steady clock, soft room.');
 
     var asOf = qs('[data-fc-asof]', root);
     if (asOf) {
       if (state.weather && state.weather.fetchedAt) {
         asOf.hidden = false;
-        var prefixAs = weatherIsStale() ? 'Last seen ' : 'As of ';
-        setText(asOf, prefixAs + formatHM(new Date(state.weather.fetchedAt)));
+        var prefixAs = weatherIsStale() ? 'Stale cache ' : 'As of ';
+        setText(asOf, prefixAs + formatHM(new Date(state.weather.fetchedAt), state.location.tz, state.preferences.hour24));
       } else {
-        asOf.hidden = true;
+        asOf.hidden = false;
+        setText(asOf, state.weatherError ? 'Weather fallback' : 'Weather warming up');
       }
     }
 
-    var locateBtn  = qs('[data-fc-locate]',   root);
-    var resetBtn   = qs('[data-fc-reset]',    root);
-    var simplifyBtn = qs('[data-fc-simplify]', root);
+    var select = qs('[data-fc-location-select]', root);
+    syncLocationOptions(select);
+    if (select && select.value !== state.location.key) {
+      select.value = state.location.key;
+    }
 
-    if (locateBtn) locateBtn.hidden = state.location.source === 'geo';
-    if (resetBtn)  resetBtn.hidden  = state.location.source !== 'geo';
+    var detailsBtn = qs('[data-fc-details-toggle]', root);
+    if (detailsBtn) {
+      setAttr(detailsBtn, 'aria-expanded', state.detailsOpen ? 'true' : 'false');
+      setText(detailsBtn, state.detailsOpen ? 'Less' : 'Details');
+    }
 
-    if (simplifyBtn) {
-      setAttr(simplifyBtn, 'aria-pressed', state.simplified ? 'true' : 'false');
-      setText(simplifyBtn, state.simplified ? 'Restore ambient' : 'Simplify');
+    var timeFormatBtn = qs('[data-fc-time-format]', root);
+    if (timeFormatBtn) {
+      setAttr(timeFormatBtn, 'aria-pressed', state.preferences.hour24 ? 'true' : 'false');
+      setAttr(timeFormatBtn, 'aria-label', state.preferences.hour24 ? 'Use 12-hour time' : 'Use 24-hour time');
+      setText(timeFormatBtn, state.preferences.hour24 ? '24h' : '12h');
     }
   }
 
@@ -735,6 +1130,7 @@
     if (cached) {
       state.weather = cached.data;
       state.weatherError = null;
+      rememberGoodState();
       renderWeather();
       renderStatus();
     }
@@ -761,6 +1157,7 @@
         state.weather = data;
         state.weatherError = null;
         writeCache(loc.lat, loc.lon, data);
+        rememberGoodState();
         renderWeather();
         renderStatus();
       })
@@ -769,9 +1166,7 @@
         if (err && err.name === 'AbortError') return;
         /* Keep last-known-good on failure; only surface error if empty. */
         if (!state.weather) {
-          state.weatherError = err;
-          renderWeather();
-          renderStatus();
+          restoreLastGoodState(err);
         }
       })
       .then(function () {
@@ -795,75 +1190,38 @@
     state.pendingKey = null;
   }
 
-  /* ── Geolocation (opt-in, reversible) ─────────────────────── */
+  /* ── Preset location + details controls ───────────────────── */
 
-  function setNote(msg) {
-    var root = rootEl();
-    var note = root && qs('[data-fc-note]', root);
-    if (note) setText(note, msg);
-  }
-
-  function requestGeolocation() {
-    if (!('geolocation' in navigator)) {
-      setNote('This browser does not share location.');
-      return;
-    }
-
-    setNote('Asking for your location…');
-
-    navigator.geolocation.getCurrentPosition(function (pos) {
-      var loc = {
-        label: 'Near you',
-        lat: pos.coords.latitude,
-        lon: pos.coords.longitude,
-        source: 'geo'
-      };
-      state.location = loc;
-      writeStoredLocation(loc);
-      setNote('');
-      /* Abort any in-flight fetch for the previous location. */
-      abortPendingFetch();
-      loadWeather(true);
-      renderClock();
-      renderStatus();
-    }, function (err) {
-      if (err && err.code === 1) {
-        setNote('No worries — staying on Houston, TX.');
-      } else {
-        setNote('Couldn\u2019t reach your location. Staying on Houston, TX.');
-      }
-    }, {
-      enableHighAccuracy: false,
-      timeout: 8000,
-      maximumAge: 10 * 60 * 1000
-    });
-  }
-
-  function resetLocation() {
-    state.location = DEFAULT_LOCATION;
-    clearStoredLocation();
+  function setLocationByKey(key) {
+    var nextKey = LOCATIONS[key] ? key : LOCATION_ALIASES[key];
+    var next = LOCATIONS[nextKey] || DEFAULT_LOCATION;
+    if (state.location && state.location.key === next.key) return;
+    rememberGoodState();
+    state.location = next;
+    state.preferences.location = next.key;
+    state.weather = null;
+    state.weatherError = null;
+    writePreferences({ location: next.key });
     abortPendingFetch();
-    loadWeather(true);
     renderClock();
+    renderWeather();
     renderStatus();
-    setNote('Reset. Showing Houston, TX.');
+    loadWeather(true);
   }
 
-  /* ── Simplify toggle ─────────────────────────────────────── */
+  function setDetailsOpen(open) {
+    state.detailsOpen = !!open;
+    writePreferences({ detailsOpen: state.detailsOpen });
+    renderWeather();
+    renderStatus();
+    setTimeout(function () {
+      if (state.mounted) renderStatus();
+    }, 0);
+  }
 
-  function setSimplified(next) {
-    state.simplified = !!next;
-    if (state.simplified) {
-      safeSet(sessionStorage, SIMPLIFY_KEY, '1');
-      document.documentElement.setAttribute('data-ambient', 'simplified');
-      document.documentElement.removeAttribute('data-phase');
-      document.documentElement.removeAttribute('data-weather');
-    } else {
-      safeRemove(sessionStorage, SIMPLIFY_KEY);
-      document.documentElement.removeAttribute('data-ambient');
-    }
-
-    /* Surgical re-render — no DOM replacement, no layout shift. */
+  function setHour24(hour24) {
+    state.preferences.hour24 = !!hour24;
+    writePreferences({ hour24: state.preferences.hour24 });
     renderClock();
     renderWeather();
     renderStatus();
@@ -906,13 +1264,39 @@
     if (!root || root.__fcBound) return;
     root.__fcBound = true;
 
+    var detailsBtn = qs('[data-fc-details-toggle]', root);
+    if (detailsBtn) {
+      detailsBtn.addEventListener('click', function (event) {
+        event.stopPropagation();
+        if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+        setDetailsOpen(!state.detailsOpen);
+      });
+    }
+
     root.addEventListener('click', function (event) {
       var t = event.target;
       if (!t || !t.closest) return;
-      if (t.closest('[data-fc-locate]'))   { requestGeolocation();              return; }
-      if (t.closest('[data-fc-reset]'))    { resetLocation();                   return; }
-      if (t.closest('[data-fc-simplify]')) { setSimplified(!state.simplified);  return; }
-      if (t.closest('[data-fc-refresh]'))  { loadWeather(true);                 return; }
+      if (t.closest('[data-fc-details-toggle]')) {
+        setDetailsOpen(!state.detailsOpen);
+        return;
+      }
+      if (t.closest('[data-fc-time-format]')) {
+        setHour24(!state.preferences.hour24);
+        return;
+      }
+      if (t.closest('[data-fc-face]') || t.closest('[data-fc-weather]') ||
+          t.closest('[data-fc-sun]')) {
+        setDetailsOpen(!state.detailsOpen);
+        return;
+      }
+      if (t.closest('[data-fc-refresh]')) { loadWeather(true); return; }
+    });
+
+    root.addEventListener('change', function (event) {
+      var t = event.target;
+      if (t && t.matches && t.matches('[data-fc-location-select]')) {
+        setLocationByKey(t.value);
+      }
     });
   }
 
@@ -926,6 +1310,13 @@
     loadWeather(false);
   }
 
+  function handleAmbientAttributeChange() {
+    if (!state.mounted) return;
+    state.DND = readDnd();
+    writePreferences({ DND: state.DND });
+    renderClock();
+  }
+
   /* ── Lifecycle ───────────────────────────────────────────── */
 
   function mount() {
@@ -934,22 +1325,22 @@
       /* Page doesn't expose the ambient surface — go inert. */
       teardownTimers();
       abortPendingFetch();
-      document.documentElement.removeAttribute('data-phase');
-      document.documentElement.removeAttribute('data-weather');
+      removeAttr(document.documentElement, 'data-phase');
+      removeAttr(document.documentElement, 'data-clock-phase');
+      removeAttr(document.documentElement, 'data-weather');
+      removeAttr(document.documentElement, 'data-location');
+      removeAttr(document.documentElement, 'data-dnd');
       state.mounted = false;
       return;
     }
 
-    /* Restore session preferences — safe to re-run on SPA navigations. */
-    var stored = readStoredLocation();
-    state.location   = stored || DEFAULT_LOCATION;
-    state.simplified = safeGet(sessionStorage, SIMPLIFY_KEY) === '1';
-
-    if (state.simplified) {
-      document.documentElement.setAttribute('data-ambient', 'simplified');
-    } else {
-      document.documentElement.removeAttribute('data-ambient');
-    }
+    /* Restore local preferences — safe to re-run on SPA navigations. */
+    state.preferences = readPreferences();
+    state.location = LOCATIONS[state.preferences.location] || DEFAULT_LOCATION;
+    state.detailsOpen = !!state.preferences.detailsOpen;
+    state.DND = readDnd();
+    state.reducedMotion = prefersReducedMotion();
+    document.documentElement.removeAttribute('data-ambient');
 
     state.mounted = true;
 
@@ -974,13 +1365,27 @@
     state.mounted = false;
     teardownTimers();
     abortPendingFetch();
-    document.documentElement.removeAttribute('data-phase');
-    document.documentElement.removeAttribute('data-weather');
+    removeAttr(document.documentElement, 'data-phase');
+    removeAttr(document.documentElement, 'data-clock-phase');
+    removeAttr(document.documentElement, 'data-weather');
+    removeAttr(document.documentElement, 'data-location');
+    removeAttr(document.documentElement, 'data-dnd');
   }
 
   /* ── Global bindings (once) ──────────────────────────────── */
 
   document.addEventListener('visibilitychange', handleVisibility);
+  if (typeof MutationObserver === 'function') {
+    var ambientObserver = new MutationObserver(function (mutations) {
+      for (var i = 0; i < mutations.length; i++) {
+        if (mutations[i].attributeName === 'data-mode' || mutations[i].attributeName === 'data-motion') {
+          handleAmbientAttributeChange();
+          break;
+        }
+      }
+    });
+    ambientObserver.observe(document.documentElement, { attributes: true });
+  }
 
   /* ── Expose public API ───────────────────────────────────── */
 
@@ -988,13 +1393,12 @@
     mount: mount,
     unmount: unmount,
     refresh: function () { loadWeather(true); },
-    requestGeolocation: requestGeolocation,
-    resetLocation: resetLocation,
-    setSimplified: setSimplified,
+    setLocation: setLocationByKey,
+    setDetailsOpen: setDetailsOpen,
     getState: function () {
       return {
         location: state.location,
-        simplified: state.simplified,
+        detailsOpen: state.detailsOpen,
         hasWeather: !!state.weather,
         weatherStage: weatherStateName(),
         fetchedAt: state.weather && state.weather.fetchedAt || null

@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f8f4ee" />
+  <meta name="color-scheme" content="light" />
 
   <!-- SEO -->
   <title>Notes — Chancellor Edwards</title>
@@ -181,9 +183,9 @@
           />
 
           <div class="notes-filters" id="notes-filters" role="group" aria-label="Filter notes">
-            <button type="button" class="notes-pill notes-pill-active" data-filter="all">All</button>
-            <button type="button" class="notes-pill" data-filter="pinned">Pinned</button>
-            <button type="button" class="notes-pill" data-filter="archived">Archived</button>
+            <button type="button" class="notes-pill notes-pill-active" data-filter="all" aria-pressed="true">All</button>
+            <button type="button" class="notes-pill" data-filter="pinned" aria-pressed="false">Pinned</button>
+            <button type="button" class="notes-pill" data-filter="archived" aria-pressed="false">Archived</button>
           </div>
         </div>
 
@@ -228,9 +230,8 @@
   </footer>
 
   <!-- ─── VINYL PLAYER (DND mode only) ─────────────────────── -->
-  <div class="vinyl" id="vinyl" aria-label="Music player" role="region" aria-hidden="true">
-    <iframe id="vinylSource" allow="autoplay" title="SoundCloud player"
-      style="position:absolute;width:0;height:0;border:0;overflow:hidden"
+  <div class="vinyl" id="vinyl" aria-label="Music player" role="region" aria-hidden="true" inert>
+    <iframe id="vinylSource" class="vinyl-source" allow="autoplay" title="SoundCloud player"
       aria-hidden="true"></iframe>
 
     <div class="vinyl-sleeve">

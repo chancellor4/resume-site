@@ -3,7 +3,7 @@
 
   Notes — a local-first, offline-only micro-vault.
 
-  Design intent (from PLAN-v2.md):
+  Design intent (from docs/PLAN-v2.md):
     Notes never asks for attention. Never makes a network request.
     It is your desk drawer: the paper is always there, nothing syncs,
     nothing streams. Capture is instant, search is fluid, persistence
@@ -145,6 +145,18 @@
         query:  state.query
       }));
     } catch (e) { /* silent */ }
+  }
+
+  // Coalesce rapid pref writes (e.g. typing in search) so storage isn't
+  // touched on every keystroke. Trailing-edge debounce keeps the last
+  // value the user settled on.
+  var _savePrefsTimer = null;
+  function savePrefsDebounced() {
+    if (_savePrefsTimer) clearTimeout(_savePrefsTimer);
+    _savePrefsTimer = setTimeout(function () {
+      _savePrefsTimer = null;
+      savePrefs();
+    }, 300);
   }
 
   function isValidNote(n) {
@@ -327,8 +339,9 @@
     var pills = document.querySelectorAll('[data-filter]');
     for (var p = 0; p < pills.length; p++) {
       var f = pills[p].getAttribute('data-filter');
-      if (f === state.filter) pills[p].classList.add('notes-pill-active');
-      else                    pills[p].classList.remove('notes-pill-active');
+      var on = f === state.filter;
+      pills[p].classList.toggle('notes-pill-active', on);
+      pills[p].setAttribute('aria-pressed', on ? 'true' : 'false');
     }
   }
 
@@ -464,7 +477,7 @@
 
   function handleSearchInput(e) {
     state.query = e.target.value || '';
-    savePrefs();
+    savePrefsDebounced();
     renderList();
   }
 

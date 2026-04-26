@@ -1,0 +1,122 @@
+{
+  "version": "1.1",
+  "_demo": "Seeded for local preview. Run `node news/aggregate.mjs` to replace with a real fetch before committing.",
+  "generatedAt": "2026-04-26T17:00:00.000Z",
+  "items": [
+    {
+      "title": "Spring 2026: A Slow Return to Cut and Drape",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/",
+      "publishedAt": "2026-04-26T16:55:00.000Z",
+      "excerpt": "Backstage notes from a quiet runway: tailoring softens, accessories step back, and the room exhales.",
+      "imageUrl": "https://picsum.photos/seed/vogue1/800/500"
+    },
+    {
+      "title": "What the Q1 Margin Numbers Are Really Telling Us",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/",
+      "publishedAt": "2026-04-26T16:48:00.000Z",
+      "excerpt": "A measured read on the latest quarterly disclosures across luxury, contemporary, and direct-to-consumer brands.",
+      "imageUrl": null
+    },
+    {
+      "title": "The Capsule That Sold Out in Six Minutes",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/",
+      "publishedAt": "2026-04-26T16:22:00.000Z",
+      "excerpt": "A short field study on a rapid sellout and what it says about restocking discipline.",
+      "imageUrl": "https://picsum.photos/seed/hypebae1/800/500"
+    },
+    {
+      "title": "Negotiators Reach a Working Framework Overnight",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/world",
+      "publishedAt": "2026-04-26T15:45:00.000Z",
+      "excerpt": "A late-session breakthrough in talks that had stalled for the better part of three weeks.",
+      "imageUrl": "https://picsum.photos/seed/bbc1/800/500"
+    },
+    {
+      "title": "Field Notes from a Capital That's Holding Its Breath",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/section/world",
+      "publishedAt": "2026-04-26T15:00:00.000Z",
+      "excerpt": "A short dispatch on the mood of the city in the days following the announcement.",
+      "imageUrl": null
+    },
+    {
+      "title": "An Editorial in Plain Cotton",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/",
+      "publishedAt": "2026-04-26T14:00:00.000Z",
+      "excerpt": "A study in restraint photographed across two continents and three quiet wardrobes.",
+      "imageUrl": null
+    },
+    {
+      "title": "Wholesale Is Quietly Coming Back",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/",
+      "publishedAt": "2026-04-26T13:00:00.000Z",
+      "excerpt": "After half a decade of DTC absolutism, several mid-sized labels are reopening retail conversations.",
+      "imageUrl": "https://picsum.photos/seed/bof1/800/500"
+    },
+    {
+      "title": "An Interview, Slowly",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/",
+      "publishedAt": "2026-04-26T12:00:00.000Z",
+      "excerpt": "Forty-five minutes of unhurried conversation with a designer who'd rather not be photographed.",
+      "imageUrl": "https://picsum.photos/seed/hypebae2/800/500"
+    },
+    {
+      "title": "Aid Convoys Move Again After a Long Pause",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/world",
+      "publishedAt": "2026-04-26T11:00:00.000Z",
+      "excerpt": "First confirmed crossings since early last week, tracked from regional sources on the ground.",
+      "imageUrl": null
+    },
+    {
+      "title": "What the New Forecast Model Gets Right",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/section/world",
+      "publishedAt": "2026-04-26T10:00:00.000Z",
+      "excerpt": "Improvements at the hyperlocal scale, with notable gains for sunrise timing and morning humidity.",
+      "imageUrl": "https://picsum.photos/seed/nyt1/800/500"
+    },
+    {
+      "title": "On the Studio Floor, Quietly",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/",
+      "publishedAt": "2026-04-26T09:00:00.000Z",
+      "excerpt": "A morning in the workrooms with a houses' tailors, after the noise of show season has cleared.",
+      "imageUrl": "https://picsum.photos/seed/vogue2/800/500"
+    },
+    {
+      "title": "Three Quiet Trades Most People Missed",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/",
+      "publishedAt": "2026-04-26T08:00:00.000Z",
+      "excerpt": "Small acquisitions and quiet license renewals reshaping the mid-market without any of the press kit drama.",
+      "imageUrl": null
+    }
+  ],
+  "sources": {
+    "Vogue": "ok",
+    "BusinessOfFashion": "ok",
+    "Hypebae": "ok",
+    "BBCWorld": "ok",
+    "NYTWorld": "ok"
+  }
+}
