@@ -412,6 +412,7 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
     grid-template-areas:
       "brand mode"
       "links links";
+    gap: clamp(0.45rem, 2vw, 0.65rem);
   }
 
   .nav-brand { grid-area: brand; }
@@ -429,8 +430,7 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   }
 
   .nav-shell {
-    gap: 0.5rem;
-    padding: 0.4rem;
+    padding: clamp(0.35rem, 1.25vw, 0.4rem);
     border-radius: 1.6rem;
   }
 
@@ -449,13 +449,13 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   }
 
   .nav-links {
-    gap: 0.3rem;
-    padding: 0.2rem;
+    gap: clamp(0.22rem, 1vw, 0.3rem);
+    padding: clamp(0.16rem, 0.65vw, 0.2rem);
   }
 
   .nav-links a {
     min-height: 2.4rem;
-    padding: 0.45rem 0.35rem;
+    padding: 0.45rem clamp(0.25rem, 1.4vw, 0.35rem);
     font-size: 0.56rem;
     letter-spacing: 0.1em;
   }
@@ -476,25 +476,6 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   .nav-mode-state {
     font-size: 0.61rem;
     letter-spacing: 0.1em;
-  }
-}
-
-@media (max-width: 600px) {
-  .nav-shell {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "brand"
-      "links"
-      "mode";
-  }
-
-  .nav-mode {
-    justify-self: stretch;
-  }
-
-  .nav-mode-btn {
-    width: 100%;
-    justify-content: center;
   }
 }
 
