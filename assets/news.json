@@ -1,115 +1,114 @@
 {
   "version": "1.1",
-  "_demo": "Seeded for local preview. Run `node news/aggregate.mjs` to replace with a real fetch before committing.",
-  "generatedAt": "2026-04-26T17:00:00.000Z",
+  "generatedAt": "2026-04-26T22:43:57.361Z",
   "items": [
     {
-      "title": "Spring 2026: A Slow Return to Cut and Drape",
+      "title": "Flip-Flops Season Has Officially Sprung: Zendaya, Kylie, and Hailey Are On-Board",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/",
-      "publishedAt": "2026-04-26T16:55:00.000Z",
-      "excerpt": "Backstage notes from a quiet runway: tailoring softens, accessories step back, and the room exhales.",
-      "imageUrl": "https://picsum.photos/seed/vogue1/800/500"
+      "link": "https://www.vogue.com/article/flip-flops-season-kylie-jenner-zendaya-hailey-bieber",
+      "publishedAt": "2026-04-26T17:56:56.000Z",
+      "excerpt": "Forget transitional dressing; these stars are ready for full-on summer, each proposing their own stylish approaches to flip-flops.",
+      "imageUrl": "https://assets.vogue.com/photos/69ee43565903b524c0cc575c/master/pass/IMG_2210.jpeg"
     },
     {
-      "title": "What the Q1 Margin Numbers Are Really Telling Us",
+      "title": "Adidas Gets Running Lift in London From Two Sub-2-Hour Marathons",
       "source": "Business of Fashion",
       "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/",
-      "publishedAt": "2026-04-26T16:48:00.000Z",
-      "excerpt": "A measured read on the latest quarterly disclosures across luxury, contemporary, and direct-to-consumer brands.",
-      "imageUrl": null
+      "link": "https://www.businessoffashion.com/news/sports/adidas-london-marathon-sub-2-hour-shoe/",
+      "publishedAt": "2026-04-26T16:07:08.000Z",
+      "excerpt": "As athletes and spectators marvel at, not one, but two men smashing the once-thinkable two-hour barrier in this year’s London Marathon, German sportsgear maker Adidas AG also has…",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/YEB3MSTHVBCA7CNCGTWLRZ24LM.png?auth=85129bbd9906e6be340801cd6e54b677b655aa23ce489732fe7607ea1be3c33d&amp;smart=true&amp;width=1800&amp;height=1013"
     },
     {
-      "title": "The Capsule That Sold Out in Six Minutes",
+      "title": "Teyana Taylor Is the Face of Revlon's Cult-Favorite Lipstick",
       "source": "Hypebae",
       "sourceType": "youth-culture",
-      "link": "https://hypebae.com/",
-      "publishedAt": "2026-04-26T16:22:00.000Z",
-      "excerpt": "A short field study on a rapid sellout and what it says about restocking discipline.",
-      "imageUrl": "https://picsum.photos/seed/hypebae1/800/500"
+      "link": "https://hypebae.com/2026/4/revlon-teyana-taylor-super-lustrous-lipstick-campaign",
+      "publishedAt": "2026-04-24T16:57:21.000Z",
+      "excerpt": "Revlon has announced Teyana Taylor as the face of its best-selling Super Lustrous Lipstick. In a new campaign titled \"Revlon Be Unforgettable,\" the star highlights the brand's sig…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F04%2F24%2Fteyana-fi.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Negotiators Reach a Working Framework Overnight",
+      "title": "Mali defence minister killed as country hit by wave of rebel attacks",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/world",
-      "publishedAt": "2026-04-26T15:45:00.000Z",
-      "excerpt": "A late-session breakthrough in talks that had stalled for the better part of three weeks.",
-      "imageUrl": "https://picsum.photos/seed/bbc1/800/500"
+      "link": "https://www.bbc.com/news/articles/c5yvy7v66ndo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-04-26T20:56:26.000Z",
+      "excerpt": "A wave of coordinated attacks by jihadist militants and separatists has spread through the country.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/0bb7/live/32b8b2d0-418f-11f1-ac78-2112837ce2aa.jpg"
     },
     {
-      "title": "Field Notes from a Capital That's Holding Its Breath",
+      "title": "Israel and Hezbollah Trade Strikes in Lebanon, as Iran Talks Remain on Hold",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/section/world",
-      "publishedAt": "2026-04-26T15:00:00.000Z",
-      "excerpt": "A short dispatch on the mood of the city in the days following the announcement.",
-      "imageUrl": null
+      "link": "https://www.nytimes.com/2026/04/26/world/middleeast/iranian-negotiators-set-to-return-to-pakistan-to-try-to-revive-truce-talks.html",
+      "publishedAt": "2026-04-26T22:27:09.000Z",
+      "excerpt": "Cease-fires in Lebanon and Iran are on shaky ground, with military attacks flaring and direct talks between Washington and Tehran to end their war stalled.",
+      "imageUrl": "https://static01.nyt.com/images/2026/04/26/multimedia/26int-iran-us-wclm/26int-iran-us-wclm-mediumSquareAt3X.jpg"
     },
     {
-      "title": "An Editorial in Plain Cotton",
+      "title": "The Best Dressed Stars of the Week Embraced Compelling Shapes",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/",
-      "publishedAt": "2026-04-26T14:00:00.000Z",
-      "excerpt": "A study in restraint photographed across two continents and three quiet wardrobes.",
-      "imageUrl": null
+      "link": "https://www.vogue.com/slideshow/10-best-dressed-stars-meryl-streep-michaela-coel-anne-hathaway",
+      "publishedAt": "2026-04-26T14:41:55.000Z",
+      "excerpt": "Stars redefined bodycon on the red carpets this week—choosing looks that interacted with the body in intriguing ways.",
+      "imageUrl": "https://assets.vogue.com/photos/69ed0b7c90c8a9d3c3e1ad92/master/pass/GettyImages-2272937114.jpg"
     },
     {
-      "title": "Wholesale Is Quietly Coming Back",
+      "title": "US Consumer Sentiment Drops to Record Low in April",
       "source": "Business of Fashion",
       "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/",
-      "publishedAt": "2026-04-26T13:00:00.000Z",
-      "excerpt": "After half a decade of DTC absolutism, several mid-sized labels are reopening retail conversations.",
-      "imageUrl": "https://picsum.photos/seed/bof1/800/500"
+      "link": "https://www.businessoffashion.com/news/retail/us-consumer-sentiment-april-middle-east-war-iran/",
+      "publishedAt": "2026-04-26T15:38:56.000Z",
+      "excerpt": "U.S. consumer sentiment fell to a record low in April as the war with Iran fanned inflation fears, a survey showed on Friday.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/R3UWRMQ5FFDXLE6LIA77AY2H34.jpg?auth=3b1b156bcde566b404c16acc78f265e0740e040c60b3ec91bd47fba5cdc2fe2c&amp;smart=true&amp;width=1800&amp;height=1013"
     },
     {
-      "title": "An Interview, Slowly",
+      "title": "Victoria's Secret Says Mothers Are the Real Angels",
       "source": "Hypebae",
       "sourceType": "youth-culture",
-      "link": "https://hypebae.com/",
-      "publishedAt": "2026-04-26T12:00:00.000Z",
-      "excerpt": "Forty-five minutes of unhurried conversation with a designer who'd rather not be photographed.",
-      "imageUrl": "https://picsum.photos/seed/hypebae2/800/500"
+      "link": "https://hypebae.com/2026/4/victorias-secret-mothers-day-campaign-elsa-hosk-adriana-lima-jasmine-tookes-where-to-buy",
+      "publishedAt": "2026-04-24T15:46:01.000Z",
+      "excerpt": "Victoria's Secret is rewriting the Mother's Day playbook with its latest campaign, \"Modeled After Mom,\" and it's less about fantasy, more about real-life intimacy.Created with Spr…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F04%2F24%2FSingle-Image-1084-1.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Aid Convoys Move Again After a Long Pause",
+      "title": "Did Trump save eight Iranian women from execution?",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/world",
+      "link": "https://www.bbc.com/news/videos/cx2e2lg2ny9o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-04-26T19:16:58.000Z",
+      "excerpt": "The US president says he saved eight Iranian women from execution, but Iran says otherwise.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/1b21/live/246eea50-4194-11f1-bd52-e755d604ece4.jpg"
+    },
+    {
+      "title": "Former Israeli Premiers Join in Bid to Oust Netanyahu in Elections",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/04/26/world/middleeast/israel-netanyahu-lapid-bennett.html",
+      "publishedAt": "2026-04-26T22:00:17.000Z",
+      "excerpt": "Naftali Bennett, a right-wing politician, and Yair Lapid, a centrist, will merge parties for a vote later this year.",
+      "imageUrl": "https://static01.nyt.com/images/2026/04/26/multimedia/26int-israel-politics-vqhm/26int-israel-politics-vqhm-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Miranda Priestly Had Nothing on Diana Vreeland",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/from-the-archives-diana-vreeland",
       "publishedAt": "2026-04-26T11:00:00.000Z",
-      "excerpt": "First confirmed crossings since early last week, tracked from regional sources on the ground.",
-      "imageUrl": null
+      "excerpt": "Vogue staffers remembered the intrepid and declarative editor and curator in a 1989 issue of Vogue.",
+      "imageUrl": "https://assets.vogue.com/photos/69debe97e6886e79535b02ce/master/pass/CM9481.jpg"
     },
     {
-      "title": "What the New Forecast Model Gets Right",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/section/world",
-      "publishedAt": "2026-04-26T10:00:00.000Z",
-      "excerpt": "Improvements at the hyperlocal scale, with notable gains for sunrise timing and morning humidity.",
-      "imageUrl": "https://picsum.photos/seed/nyt1/800/500"
-    },
-    {
-      "title": "On the Studio Floor, Quietly",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/",
-      "publishedAt": "2026-04-26T09:00:00.000Z",
-      "excerpt": "A morning in the workrooms with a houses' tailors, after the noise of show season has cleared.",
-      "imageUrl": "https://picsum.photos/seed/vogue2/800/500"
-    },
-    {
-      "title": "Three Quiet Trades Most People Missed",
+      "title": "Euro Zone Price Spike Seen Surging Higher in Second Month of War",
       "source": "Business of Fashion",
       "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/",
-      "publishedAt": "2026-04-26T08:00:00.000Z",
-      "excerpt": "Small acquisitions and quiet license renewals reshaping the mid-market without any of the press kit drama.",
-      "imageUrl": null
+      "link": "https://www.businessoffashion.com/news/global-markets/europe-euro-zone-inflation-iran-war/",
+      "publishedAt": "2026-04-26T15:21:36.000Z",
+      "excerpt": "Euro-zone inflation probably jumped in April to the highest in 2 1/2 years as fallout from the Iran war squeezed economies across the currency area.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/SIU32H4WKRHAJDCA5OFVQ2IH3I.png?auth=50f7007ac10a8e38919bf03093de8a0884e72dcd0c493dbbca2d6ff6b0dc4e0f&amp;smart=true&amp;width=1800&amp;height=1013"
     }
   ],
   "sources": {
