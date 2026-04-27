@@ -1,7 +1,52 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-04-27T18:46:35.863Z",
+  "generatedAt": "2026-04-27T20:03:21.448Z",
   "items": [
+    {
+      "title": "So, What Is a Resort Show?",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/what-is-a-resort-show",
+      "publishedAt": "2026-04-27T18:57:19.000Z",
+      "excerpt": "From Shanghai to Versailles, resort shows often provide bigger experiences than their regular season counterparts, and more conceptual collections have followed suit.",
+      "imageUrl": "https://assets.vogue.com/photos/69ef93fd274a66ebf73042fa/master/pass/534974762"
+    },
+    {
+      "title": "Tate to Stage Exhibition Exploring 90s Art and Fashion",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/news/media/tate-britain-90s-exhibition-edward-enninful/",
+      "publishedAt": "2026-04-27T17:31:42.000Z",
+      "excerpt": "The exhibition, curated by Edward Enninful, will highlight the decade’s ‘do it yourself’ attitude and shift focus away from the dominant Cool Britannia narrative of the time.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/LJEXN4TYONHZTOYY6HCJ63FBRY.jpg?auth=658b3a57b3025599ee4f4739dcdbca5359911474fabfc51731b91e7be9a42329&amp;smart=true&amp;width=1800&amp;height=1013"
+    },
+    {
+      "title": "How Edie Liberty Rose Created a Vintage Fashion Safe Haven",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/4/edie-liberty-rose-koroma-archive-vintage-designer-fashion-interview",
+      "publishedAt": "2026-04-27T19:12:48.000Z",
+      "excerpt": "Stylist to the stars, model and all-round it-girl Edie Liberty Rose is on a mission to make vintage fashion less intimidating. That's why she created Koroma Archive, a physical st…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F04%2F27%2FKoroma-Archive-Photography-%40heyesben-89-scaled-e1777316797830.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "At least four killed and dozens injured in Indonesia train crash",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/ckgegg8r0v1o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-04-27T19:06:10.000Z",
+      "excerpt": "Officials say a commuter train and a long-distance train collided on the outskirts of Jakarta on Monday.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/eeb6/live/c380eda0-4266-11f1-ba04-0105efb4069e.png"
+    },
+    {
+      "title": "Carney to Launch Sovereign Wealth Fund to Distance Canada’s Economy From U.S.",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/04/27/world/canada/canada-sovereign-wealth-fund.html",
+      "publishedAt": "2026-04-27T19:26:45.000Z",
+      "excerpt": "The sovereign wealth fund announced by Prime Minister Mark Carney will be far smaller than ones in other oil producers like Norway and the Middle East.",
+      "imageUrl": "https://static01.nyt.com/images/2026/04/27/multimedia/27int-canada-carney-fund-qlvh/27int-canada-carney-fund-qlvh-mediumSquareAt3X.jpg"
+    },
     {
       "title": "Beyoncé Revives the “Lemonade” Era With an Iconic Dress",
       "source": "Vogue",
@@ -12,13 +57,13 @@
       "imageUrl": "https://assets.vogue.com/photos/69ef7be3b178cdb050d02628/master/pass/682047985_18634159177008035_7179461903461962347_n-1.jpg"
     },
     {
-      "title": "Tate to Stage Exhibition Exploring 90s Art and Fashion",
+      "title": "Fondazione Sozzani Launches Award for Emerging Creative Talent",
       "source": "Business of Fashion",
       "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/news/media/tate-britain-90s-exhibition-edward-enninful/",
-      "publishedAt": "2026-04-27T17:31:42.000Z",
-      "excerpt": "The exhibition, curated by Edward Enninful, will highlight the decade’s ‘do it yourself’ attitude and shift focus away from the dominant Cool Britannia narrative of the time.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/LJEXN4TYONHZTOYY6HCJ63FBRY.jpg?auth=658b3a57b3025599ee4f4739dcdbca5359911474fabfc51731b91e7be9a42329&amp;smart=true&amp;width=1800&amp;height=1013"
+      "link": "https://www.businessoffashion.com/news/luxury/fondazione-sozzani-launches-award-for-emerging-creative-talent/",
+      "publishedAt": "2026-04-27T15:29:08.000Z",
+      "excerpt": "The annual Sozzani Award will recognise budding creatives across photography, fashion and artisan craft. The winner of the inaugural edition will be announced during Milan Fashion…",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/HR4XR2XCTVDUHNDLXLW4QONWXQ.jpg?auth=3f01f847697dc4764e0213d594af427892fc9df1afc1daa3167dd71f60ffb8f0&amp;smart=true&amp;width=1980&amp;height=1320"
     },
     {
       "title": "Half Magic's Limited-Edition 'Euphoria' Collection Is Selling Out Quickly",
@@ -39,13 +84,13 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/2323/live/4ee19910-425f-11f1-ba04-0105efb4069e.jpg"
     },
     {
-      "title": "Canada’s New Route to Citizenship Has Thousands of Americans Lining Up to Apply",
+      "title": "Iran Offers Plan to Focus on Strait of Hormuz and Delay Nuclear Talks",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/04/27/world/canada/canadian-citizenship-by-descent-applications-americans-us.html",
-      "publishedAt": "2026-04-27T18:34:41.000Z",
-      "excerpt": "Canada has opened a route to citizenship for people who can prove they have a Canada-born ancestor. Millions could qualify, and Americans are already lining up to apply.",
-      "imageUrl": "https://static01.nyt.com/images/2026/04/27/world/00int-canada-immigration/00int-canada-immigration-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/04/27/world/middleeast/iran-trump-talks-strait-of-hormuz-nuclear.html",
+      "publishedAt": "2026-04-27T18:59:55.000Z",
+      "excerpt": "In its latest offer delivered on Sunday, Iran proposed opening the key waterway to shipping traffic and lifting the U.S. blockade, while postponing the thornier nuclear issue unti…",
+      "imageUrl": "https://static01.nyt.com/images/2026/04/27/multimedia/27int-iran-peace-proposal-zgkt/27int-iran-peace-proposal-zgkt-mediumSquareAt3X.jpg"
     },
     {
       "title": "Harry Styles and Zoë Kravitz Are Engaged!",
@@ -55,51 +100,6 @@
       "publishedAt": "2026-04-27T18:05:45.000Z",
       "excerpt": "According to sources close to the couple, as reported by People, Harry Styles and Zoë Kravitz have shared the happy news with “a small circle” of friends and loved ones.",
       "imageUrl": "https://assets.vogue.com/photos/69efa76a70ad7fa98656d8b4/master/pass/BGUS_3338092_010.jpg"
-    },
-    {
-      "title": "Fondazione Sozzani Launches Award for Emerging Creative Talent",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/news/luxury/fondazione-sozzani-launches-award-for-emerging-creative-talent/",
-      "publishedAt": "2026-04-27T15:29:08.000Z",
-      "excerpt": "The annual Sozzani Award will recognise budding creatives across photography, fashion and artisan craft. The winner of the inaugural edition will be announced during Milan Fashion…",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/HR4XR2XCTVDUHNDLXLW4QONWXQ.jpg?auth=3f01f847697dc4764e0213d594af427892fc9df1afc1daa3167dd71f60ffb8f0&amp;smart=true&amp;width=1980&amp;height=1320"
-    },
-    {
-      "title": "Dior Beauty Taps Jisoo, Anya Taylor-Joy and Willow Smith to Unveil a Glossy Lipstick",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/4/dior-beauty-addict-glass-lipstick-anya-taylor-joy-jisoo-willow-smith-campaign",
-      "publishedAt": "2026-04-27T18:31:20.000Z",
-      "excerpt": "The \"Dior Addict\" collection has expanded yet again. In honor of the new Glass Lipstick, Dior Beauty has called upon ambassadors Jisoo, Anya Taylor-Joy and Willow Smith to star in…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F04%2F24%2Fdior-fi.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Melania Trump urges ABC to 'take stand' on Jimmy Kimmel after widow joke",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/c04x40d4424o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-04-27T17:32:15.000Z",
-      "excerpt": "In a parody aired days before the White House Correspondents' Dinner, Kimmel called Melania an \"expectant widow\".",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/9c5c/live/3845fc00-4255-11f1-a8e5-d31af761243a.jpg"
-    },
-    {
-      "title": "Raghu Rai, Photographer Who Captured Modern India, Dies at 83",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/04/27/world/asia/raghu-rai-photographer-dead.html",
-      "publishedAt": "2026-04-27T18:30:03.000Z",
-      "excerpt": "Mr. Rai documented major figures like the Dalai Lama and Indira Gandhi, as well as the victims of a poison gas leak in the city of Bhopal.",
-      "imageUrl": null
-    },
-    {
-      "title": "“It’s Not All Behind a Screen”—Why Some Gen Z-ers Are Shopping Made-to-Measure",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/gen-z-made-to-measure-algorithm-dressing",
-      "publishedAt": "2026-04-27T18:00:58.000Z",
-      "excerpt": "Writer Jalil Johnson explores how some members of Gen Z use made-to-measure fashion as a tool to ground themselves in community and resist algorithm-backed trends.",
-      "imageUrl": "https://assets.vogue.com/photos/65d49fb3201e23425d56ba43/master/pass/MOSCHINO-vogue-business-story-inline-3.jpg"
     },
     {
       "title": "Vinted Valued at €8 Billion in Share Transaction",
