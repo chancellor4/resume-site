@@ -1,7 +1,43 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-04-30T11:25:46.110Z",
+  "generatedAt": "2026-04-30T13:02:09.186Z",
   "items": [
+    {
+      "title": "Chic Pajama Party Fashion Made For The Morning After The Met Gala",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/chic-pajama-party-fashion-morning-after-met-gala",
+      "publishedAt": "2026-04-30T12:00:00.000Z",
+      "excerpt": "At Manhattan’s Mark Hotel, a fashionably lazy day of telling stories and recovering from the big night out.",
+      "imageUrl": "https://assets.vogue.com/photos/69ef806455909b5dbfee993d/master/pass/VO0526_Pajama_01.jpg"
+    },
+    {
+      "title": "Oil Prices Soar to Wartime High with US and Iran Stuck in Standoff",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/news/global-markets/oil-prices-soar-to-wartime-high-with-us-and-iran-stuck-in-standoff/",
+      "publishedAt": "2026-04-30T12:19:30.000Z",
+      "excerpt": "Brent oil surged to more than $126 a barrel on Thursday, before paring gains to $121.40 as traders factor in an even longer closure of the Strait of Hormuz.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/K5B7ZPXLBFCFHDCUQ7TSYKYGEA.png?auth=cee5da225a540b465cd2c8de31d95fc94ca0ec5325e8624060071b7a628b54fa&amp;smart=true&amp;width=1800&amp;height=1013"
+    },
+    {
+      "title": "Oil price hits highest since 2022 after report Trump to be briefed on new Iran options",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/cx21m88rd14o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-04-30T12:59:04.000Z",
+      "excerpt": "Axios reported that US Central Command has prepared a plan for a wave of \"short and powerful\" strikes on Iran.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/f095/live/e9ca4ae0-442a-11f1-84a0-55946b952877.jpg"
+    },
+    {
+      "title": "Rising Fuel Prices Force Policymakers to Weigh Excruciating Choices",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/04/30/business/bank-of-england-european-central-bank.html",
+      "publishedAt": "2026-04-30T12:56:45.000Z",
+      "excerpt": "The Bank of England and European Central Bank held interest rates steady on Thursday, as officials search for signs of possible longer-term damage and warn of the impact of a prol…",
+      "imageUrl": "https://static01.nyt.com/images/2026/04/30/multimedia/30biz-europe-econ-bmzk/30biz-europe-econ-bmzk-mediumSquareAt3X.jpg"
+    },
     {
       "title": "Can Agolde Ride the Denim Wave Into Ready-to-Wear?",
       "source": "Vogue",
@@ -12,31 +48,31 @@
       "imageUrl": "https://assets.vogue.com/photos/69f315cde3f0e34711c3ac7c/master/pass/agolde-vogue-business-story.jpg"
     },
     {
-      "title": "Reliance Retail Acquires Priyanka Chopra Jonas’ Hair Care Brand Anomaly",
+      "title": "Prada Posts Modest Q1 Growth as Miu Miu Cools",
       "source": "Business of Fashion",
       "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/news/beauty/reliance-retail-priyanka-chopra-jones-anomaly/",
-      "publishedAt": "2026-04-30T09:30:00.000Z",
-      "excerpt": "The company will leverage its omnichannel network to scale the label, citing India as a priority market.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/RUQHEGMIIFD2HGVBGNHU2U6FBE.jpg?auth=a4a14b27360dc59485c6d5046c20a861ff2bbfe700869532a9ed7e64bed4c77b&amp;smart=true&amp;width=900&amp;height=1350"
+      "link": "https://www.businessoffashion.com/articles/luxury/prada-posts-modest-q1-growth-as-miu-miu-cools/",
+      "publishedAt": "2026-04-30T12:00:31.000Z",
+      "excerpt": "Revenue advanced 3% as broader sector softness and geopolitical pressures weighed on performance.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/FVBX26EP5ZB4DF4ZL7EKAH6TUU.png?auth=77c779d13eb69f5181d70a05c9875d2adb919f2b77dd8e6aeaf745f3253247aa&amp;smart=true&amp;width=1800&amp;height=1013"
     },
     {
-      "title": "Oil price hits highest since 2022 after report Trump to be briefed on new Iran options",
+      "title": "Israel intercepts Gaza flotilla near Crete and detains 175 activists",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/cx21m88rd14o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-04-30T10:50:19.000Z",
-      "excerpt": "Axios reported that US Central Command has prepared a plan for a wave of \"short and powerful\" strikes on Iran.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/f095/live/e9ca4ae0-442a-11f1-84a0-55946b952877.jpg"
+      "link": "https://www.bbc.com/news/articles/c4g4lk9m77vo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-04-30T12:50:41.000Z",
+      "excerpt": "Pro-Palestinian activists say 22 boats carrying aid for Gaza were illegally intercepted in international waters near the Greek island.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/ef63/live/b4c1f7c0-4471-11f1-ac78-2112837ce2aa.jpg"
     },
     {
-      "title": "Rising Fuel Prices Could Force Excruciating Choices on Economic Policies",
+      "title": "Attacks on Jewish Targets in Europe Suggest Hybrid Warfare",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/04/30/business/bank-of-england-european-central-bank.html",
-      "publishedAt": "2026-04-30T11:22:50.000Z",
-      "excerpt": "The Bank of England held interest rates steady on Thursday, and the European Central Bank is expected to do the same, as officials search for signs of possible longer-term damage.",
-      "imageUrl": "https://static01.nyt.com/images/2026/04/30/multimedia/30biz-europe-econ-bmzk/30biz-europe-econ-bmzk-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/04/30/world/europe/european-antisemitism-hybrid-warfare.html",
+      "publishedAt": "2026-04-30T12:53:17.000Z",
+      "excerpt": "Officials are investigating similar attacks across Europe, all claimed by a shadowy Islamist group that may be using low-cost, unsophisticated methods to sow fear in Jewish commun…",
+      "imageUrl": "https://static01.nyt.com/images/2026/05/01/multimedia/01europe-attacks-01-vwjg/01europe-attacks-01-vwjg-mediumSquareAt3X.jpg"
     },
     {
       "title": "The Best Tote Bags Are Smaller Than Ever This Summer",
@@ -48,67 +84,31 @@
       "imageUrl": "https://assets.vogue.com/photos/685727a7b9238ccdf995e653/master/pass/BGUS_3277857_011.jpg"
     },
     {
-      "title": "Estée Lauder Considers Bid for Puig at 18-19 Euros per Share, Source Says",
+      "title": "Can the ‘MAC of Italy’ Make It in America?",
       "source": "Business of Fashion",
       "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/news/beauty/estee-lauder-puig-bid-considered/",
-      "publishedAt": "2026-04-30T08:45:57.000Z",
-      "excerpt": "Cosmetics giant Estée Lauder is considering launching a takeover bid for all of Puig’s Class B shares at 18 to 19 euros ($21 to $22.20) a share, ​said ⁠a source close to the matte…",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/MF22FWQLTBBDTNJIPE2B2HDRHA.jpg?auth=361854c525d8d2ea2b765a08ff2146a520aa51009e57aa8667264d72790470a2&amp;smart=true&amp;width=1800&amp;height=1013"
+      "link": "https://www.businessoffashion.com/articles/beauty/kiko-milano-macys-us-launch-2026/",
+      "publishedAt": "2026-04-30T12:00:00.000Z",
+      "excerpt": "European cosmetics giant Kiko Milano has racked up over $1 billion in sales with storefronts across the globe from Chile to India. Until now, success in the hyper-competitive US m…",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/Z7R7VYNLL5A4DBECKAHNVV74BU.jpg?auth=aea3ee5023e85ae2de61b336314bb02e401226823dd8e46cdb500bfb2bb3d764&amp;smart=true&amp;width=900&amp;height=1350"
     },
     {
-      "title": "Stranded whale ferried out of German waters in barge",
+      "title": "'How are we going to get back home?' Islamist group tightens blockade on Mali capital",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/clyp559l06no?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-04-30T09:46:38.000Z",
-      "excerpt": "The final operation to save the whale is being closely followed, after the failure of earlier attempts.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/3820/live/bb9b4ea0-43e7-11f1-9113-1988573e8ff7.jpg"
+      "link": "https://www.bbc.com/news/articles/cg4pq3zxnpqo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-04-30T12:24:12.000Z",
+      "excerpt": "The blockade comes days after Mali's defence minister was assassinated in a series of nationwide attacks.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/3a97/live/395bbbf0-447d-11f1-88ff-575186ed76aa.jpg"
     },
     {
-      "title": "Missing Indigenous Girl in Australia Is Found Dead After 5-Day Search",
+      "title": "Trump May Pull Troops From Germany. That Isn’t as Scary as It Once Was.",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/04/30/world/australia/australia-missing-girl-found-dead.html",
-      "publishedAt": "2026-04-30T11:11:42.000Z",
-      "excerpt": "The police are seeking a man who was last seen holding hands with the five-year-old girl on Saturday night near Alice Springs.",
-      "imageUrl": "https://static01.nyt.com/images/2026/04/30/multimedia/30int-oz-crime-cmjf/30int-oz-crime-cmjf-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Feels Like a Steal: Shop Vogue Favorite Under-$300 Finds",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/feels-like-a-steal",
-      "publishedAt": "2026-04-30T10:00:00.000Z",
-      "excerpt": "Love a good fashion find? Same. And while there’s plenty we recommend on a daily basis, what makes us play for keeps is in the name: when it feels like a steal.",
-      "imageUrl": "https://assets.vogue.com/photos/69f26db4e3f0e34711c3a83b/master/pass/042926_feelslikeasteal_holding%20(1).jpg"
-    },
-    {
-      "title": "Unilever Sales Rise on Strong Demand in India, Brazil",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/news/beauty/unilever-sales-demand-india-brazil/",
-      "publishedAt": "2026-04-30T07:52:43.000Z",
-      "excerpt": "The UK multinational’s sales rose more than expected as consumers in emerging markets snapped up its cleaning products and Dove soap, offsetting lacklustre demand in the US.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/HSAZEVTEQJGNPNIVPF63IAEBFE.jpg?auth=5048c17aa5cb36d48cb0882319f89d3c33a8ad512a14715c6e341741b478622b&amp;smart=true&amp;width=5184&amp;height=3456"
-    },
-    {
-      "title": "Israel intercepts Gaza flotilla near Crete and detains 175 activists",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/c4g4lk9m77vo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-04-30T09:07:47.000Z",
-      "excerpt": "Pro-Palestinian activists say 22 boats carrying aid for Gaza were illegally intercepted in international waters near the Greek island.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/ef63/live/b4c1f7c0-4471-11f1-ac78-2112837ce2aa.jpg"
-    },
-    {
-      "title": "Korean Air Bans Roosters on U.S. Flights to the Philippines",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/04/30/world/asia/korean-air-cockfighting-roosters-philippines.html",
-      "publishedAt": "2026-04-30T10:35:19.000Z",
-      "excerpt": "The airline was used by chicken breeders in Texas to illegally transport roosters for cockfights, an animal welfare group said.",
-      "imageUrl": "https://static01.nyt.com/images/2026/04/30/multimedia/30xp-roosters-mwvq/30xp-roosters-mwvq-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/04/30/world/europe/trump-germany-troops-merz-threat.html",
+      "publishedAt": "2026-04-30T12:49:44.000Z",
+      "excerpt": "Germany has hugely increased its military spending, aiming to be less dependent on Washington. Its support for U.S. attacks on Iran may also give it leverage.",
+      "imageUrl": "https://static01.nyt.com/images/2026/05/20/multimedia/20int-germany-troops-qjwt/20int-germany-troops-qjwt-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
