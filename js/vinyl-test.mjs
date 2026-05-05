@@ -24,7 +24,7 @@ class Element {
     this.src = '';
     this.value = '40';
     this.textContent = '';
-    this.innerHTML = '';
+    this._innerHTML = '';
     this.classList = new ClassList();
     this.title = '';
     this.style = {};
@@ -32,6 +32,12 @@ class Element {
     this._listeners = {};
   }
   setAttribute(k, v) { this.attributes[k] = v; }
+  set innerHTML(v) {
+    this._innerHTML = String(v);
+    this.children = [];
+    this.textContent = '';
+  }
+  get innerHTML() { return this._innerHTML; }
   getAttribute(k) { return this.attributes[k] || null; }
   hasAttribute(k)   { return Object.prototype.hasOwnProperty.call(this.attributes, k); }
   removeAttribute(k) { delete this.attributes[k]; }
@@ -62,7 +68,10 @@ class Element {
       this._listeners.click.forEach(fn => fn({ stopPropagation() {}, preventDefault() {} }));
     }
   }
-  appendChild(child) { this.children.push(child); }
+  appendChild(child) {
+    this.children.push(child);
+    if (child && child.textContent) this.textContent += child.textContent;
+  }
   get offsetHeight() { return 0; }
 }
 
@@ -218,9 +227,9 @@ function createMockWidget(opts = {}) {
     setVolume() {},
     getSounds(cb) {
       if (opts.empty) return cb([]);
-      cb([
-        { title: 'Track A', duration: 180000 },
-        { title: 'Track B', duration: 210000 },
+      cb(opts.sounds || [
+        { title: 'Track A', duration: 180000, user: { username: 'Artist A' } },
+        { title: 'Track B', duration: 210000, publisher_metadata: { artist: 'Artist B' } },
         { title: 'Track C', duration: 195000 },
       ]);
     },
@@ -235,7 +244,7 @@ function createMockWidget(opts = {}) {
 
 const vinylSrc = readFileSync(new URL('./vinyl.js', import.meta.url), 'utf-8');
 
-function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, featureBroadcast = true, featureCrateV2 = true, featureLeaderElection = true, mockSdkSuccess = true, syncTimers = false, ownerStale = null } = {}) {
+function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, featureBroadcast = true, featureCrateV2 = true, featureLeaderElection = true, mockSdkSuccess = true, syncTimers = false, ownerStale = null, mockSounds = null } = {}) {
   let src = vinylSrc;
 
   // Inject LOG_LEVEL
@@ -287,7 +296,7 @@ function execVinyl({ logLevel = 3, featureObs = true, featureSM = true, featureB
   const ss = createSessionStorage();
   const perf = createPerformance();
   const cons = createConsoleCapture();
-  let mockWidget = createMockWidget({ empty: false });
+  let mockWidget = createMockWidget({ empty: false, sounds: mockSounds });
   const bc = createMockBroadcastChannel();
 
   // v2.1.0: track timers for heartbeat/election verification
@@ -1452,19 +1461,26 @@ suite('v2.0.0 — Crate V2 Numbering & Duration (LOG_LEVEL=3)');
 
   // Crate items are appended as children of el.crate
   const crate = env.doc._elements['vinylCrate'];
-  assert('crate has 3 children', crate.children.length === 3);
+  assert('crate has station strip + 3 queue rows', crate.children.length === 4);
+  assert('station strip names abstraction.fm', crate.children[0].textContent.includes('abstraction.fm'));
 
-  const first = crate.children[0];
+  const playableRows = crate.children.slice(1);
+  const first = playableRows.find(row => row.textContent.includes('Track A'));
   // v3.1.0: FEATURE_SLEEVE_V3 drops the "01 · Title" numerical prefix.
   // Crate items now show "Title  3:00" format (title-only, left-aligned).
   assert('first item starts with track title', first.textContent.startsWith('Track A'));
   assert('first item contains Track A', first.textContent.includes('Track A'));
+  assert('first item contains artist/source', first.textContent.includes('Artist A'));
   assert('first item contains duration (3:00)', first.textContent.includes('3:00'));
   assert('first item has tabindex=0', first.attributes.tabindex === '0');
 
-  const second = crate.children[1];
+  const second = playableRows.find(row => row.textContent.includes('Track B'));
   assert('second item starts with track title', second.textContent.startsWith('Track B'));
+  assert('second item contains artist/source', second.textContent.includes('Artist B'));
   assert('second item contains duration (3:30)', second.textContent.includes('3:30'));
+
+  const third = playableRows.find(row => row.textContent.includes('Track C'));
+  assert('third item falls back to explicit source', third.textContent.includes('SoundCloud'));
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1520,7 +1536,47 @@ suite('v2.0.0 — Duration in Shelf (LOG_LEVEL=3)');
   w2._fire('ready');
 
   const crate2 = env2.doc._elements['vinylCrate'];
-  assert('shelf-cached crate shows duration', crate2.children[0].textContent.includes('3:00'));
+  assert('shelf-cached queue row shows duration',
+    crate2.children.slice(1).some(row => row.textContent.includes('3:00')));
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  SUITE: v6.0.0 — Queue Metadata + Current Track Invariant
+// ═══════════════════════════════════════════════════════════════
+
+suite('v6.0.0 — Queue metadata and current-track invariant (LOG_LEVEL=3)');
+
+{
+  const sounds = Array.from({ length: 12 }, (_, i) => ({
+    id: 1000 + i,
+    title: 'Queue Track ' + String(i + 1).padStart(2, '0'),
+    duration: 180000 + i * 1000,
+    user: { username: 'Queue Source ' + String(i + 1).padStart(2, '0') },
+  }));
+  const env = execVinyl({ logLevel: 3, mockSounds: sounds });
+  env.doc._htmlAttrs['data-theme'] = 'refined';
+  const w = env.exec();
+  env.ss.setItem('ce-vinyl-cont', JSON.stringify({
+    v: 1,
+    ts: Date.now(),
+    side: 11,
+    spinning: false,
+    pos: 0,
+    vol: 40,
+    hushed: false,
+  }));
+  w._fire('ready');
+
+  const crate = env.doc._elements['vinylCrate'];
+  const rows = crate.children.slice(1);
+  assert('queue renders exactly 10 playable rows', rows.length === 10);
+  assert('restored current track is included at top', rows[0].textContent.includes('Queue Track 12'));
+  assert('restored current track marked on air', rows[0].textContent.includes('on air'));
+  assert('restored current track includes source', rows[0].textContent.includes('Queue Source 12'));
+  assert('all rendered queue rows include source metadata',
+    rows.every(row => /Queue Source \d\d/.test(row.textContent)));
+  assert('all rendered queue rows include titles',
+    rows.every(row => /Queue Track \d\d/.test(row.textContent)));
 }
 
 // ═══════════════════════════════════════════════════════════════

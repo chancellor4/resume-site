@@ -72,6 +72,9 @@
   var SILENCE_MS     = 10000;                        // "Unavailable" timeout
   var CONT_KEY       = 'ce-vinyl-cont';              // cross-page continuity
   var CONT_TTL       = 30000;                        // 30 s — stale after navigation
+  var QUEUE_KEY      = 'ce-vinyl-queue';             // 72-hour radio queue metadata
+  var QUEUE_REFRESH_MS = 72 * 60 * 60 * 1000;
+  var QUEUE_LIMIT    = 10;
 
   /* ── Feature gates (v1.1.0) ────────────────────────────── */
   /*    Flip to false to disable all resilience enhancements   */
@@ -200,6 +203,26 @@
   var GROOVE_ELASTIC_TENSION   = 0.2;       // spring overshoot factor on seek — softer landing
   var GROOVE_ELASTIC_DAMPING   = 0.88;      // spring decay per frame — less bounce
 
+  /* ── Feature gates (v6.0.0) ────────────────────────────── */
+  /*    abstraction.fm queue: deterministic 10-track radio     */
+  /*    surface refreshed every 72 hours with persisted        */
+  /*    metadata. Purely wraps catalog order; adapter indexes  */
+  /*    remain the source of truth for SoundCloud playback.    */
+
+  var FEATURE_QUEUE_V6 = true;
+  var QUEUE_VERSION    = 1;
+
+  /* ── Feature gates (v6.1.0) ────────────────────────────── */
+  /*    Title strip — refines the crate-strip palette into a   */
+  /*    state-signaling composition: a deep navy field with    */
+  /*    bold pink bursts when audio is happening and electric  */
+  /*    yellow streaks when time is moving. Layers on          */
+  /*    FEATURE_QUEUE_V6 (the strip only renders when the      */
+  /*    queue UI is on). Pure CSS swap — flip to false to      */
+  /*    restore the v6.0 carnival palette bit-for-bit.         */
+
+  var FEATURE_TITLE_STRIP_V1 = true;
+
   var LOG_LEVEL = (function () {
     if (!FEATURE_OBSERVABILITY) return 0;
     try {
@@ -279,6 +302,37 @@
 
     function shelfClear() {
       try { sessionStorage.removeItem(SHELF_KEY); } catch (e) {}
+    }
+
+    function queueStorage() {
+      try {
+        if (typeof localStorage !== 'undefined') return localStorage;
+      } catch (e) {}
+      try {
+        if (typeof sessionStorage !== 'undefined') return sessionStorage;
+      } catch (e) {}
+      return null;
+    }
+
+    function queueRead() {
+      var storage = queueStorage();
+      if (!storage) return null;
+      try {
+        var raw = storage.getItem(QUEUE_KEY);
+        if (!raw) return null;
+        var obj = JSON.parse(raw);
+        if (!obj || obj.v !== QUEUE_VERSION || typeof obj.bucket !== 'number' || !obj.ids || !obj.ids.length) return null;
+        if (Date.now() - obj.ts > QUEUE_REFRESH_MS) return null;
+        return obj;
+      } catch (e) { return null; }
+    }
+
+    function queueWrite(payload) {
+      var storage = queueStorage();
+      if (!storage) return;
+      try {
+        storage.setItem(QUEUE_KEY, JSON.stringify(payload));
+      } catch (e) {}
     }
 
     function volumeRead() {
@@ -402,6 +456,8 @@
       shelfClear:        shelfClear,
       volumeRead:        volumeRead,
       volumeWrite:       volumeWrite,
+      queueRead:         queueRead,
+      queueWrite:        queueWrite,
       continuitySave:    continuitySave,
       continuityRestore: continuityRestore,
       continuityPeek:    continuityPeek,
@@ -1136,6 +1192,144 @@
     return m + ':' + (s < 10 ? '0' : '') + s;
   }
 
+  function hashString(str) {
+    var h = 0x811c9dc5;
+    str = String(str || '');
+    for (var i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 0x01000193);
+    }
+    return h >>> 0;
+  }
+
+  function mulberry32(seed) {
+    return function () {
+      seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = t + Math.imul(t ^ (t >>> 7), 61 | t) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function recordKey(rec) {
+    if (!rec) return '';
+    return String(rec.id || rec.permalink || rec.title || rec.index);
+  }
+
+  /* ══════════════════════════════════════════════════════════════
+     Queue (v6.0.0)
+
+     Owns the radio queue projection over the SoundCloud catalog.
+     The queue is deterministic per 72-hour bucket and persists
+     only stable record IDs; fresh catalog metadata is always used
+     at render time so titles, artists, and durations can improve
+     without invalidating playback continuity.
+     ══════════════════════════════════════════════════════════════ */
+
+  var queue = (function () {
+
+    function bucketForNow() {
+      return Math.floor(Date.now() / QUEUE_REFRESH_MS);
+    }
+
+    function queueIdForBucket(bucket) {
+      return 'abstraction.fm:' + bucket;
+    }
+
+    function mapRecords(records) {
+      var map = {};
+      for (var i = 0; i < records.length; i++) {
+        map[recordKey(records[i])] = records[i];
+      }
+      return map;
+    }
+
+    function idsUsable(ids, records) {
+      if (!ids || !ids.length || !records || !records.length) return false;
+      var map = mapRecords(records);
+      for (var i = 0; i < ids.length; i++) {
+        if (!map[ids[i]]) return false;
+      }
+      return true;
+    }
+
+    function deterministicIds(records, bucket) {
+      var pool = records.slice();
+      var rng = mulberry32(hashString(queueIdForBucket(bucket)));
+      for (var i = pool.length - 1; i > 0; i--) {
+        var j = Math.floor(rng() * (i + 1));
+        var tmp = pool[i];
+        pool[i] = pool[j];
+        pool[j] = tmp;
+      }
+      return pool.slice(0, Math.min(QUEUE_LIMIT, pool.length)).map(recordKey);
+    }
+
+    function materialize(ids, records) {
+      var map = mapRecords(records);
+      var out = [];
+      for (var i = 0; i < ids.length; i++) {
+        if (map[ids[i]]) out.push(map[ids[i]]);
+      }
+      return out;
+    }
+
+    function includeCurrent(resolved, records, currentSide) {
+      if (typeof currentSide !== 'number' || currentSide < 0) return resolved;
+      var current = records[currentSide];
+      if (!current) return resolved;
+      for (var i = 0; i < resolved.length; i++) {
+        if (resolved[i].index === currentSide) return resolved;
+      }
+      return [current].concat(resolved).slice(0, Math.min(QUEUE_LIMIT, records.length));
+    }
+
+    function resolve(records, currentSide) {
+      if (!FEATURE_QUEUE_V6 || !records || !records.length) return records || [];
+      var bucket = bucketForNow();
+      var cached = store.queueRead();
+      var ids = cached && cached.bucket === bucket && idsUsable(cached.ids, records)
+        ? cached.ids
+        : deterministicIds(records, bucket);
+
+      if (!ids || !ids.length) ids = records.slice(0, QUEUE_LIMIT).map(recordKey);
+
+      if (!cached || cached.bucket !== bucket || cached.ids.join('|') !== ids.join('|')) {
+        store.queueWrite({
+          v: QUEUE_VERSION,
+          ts: Date.now(),
+          bucket: bucket,
+          id: queueIdForBucket(bucket),
+          ids: ids
+        });
+      }
+
+      return includeCurrent(materialize(ids, records), records, currentSide);
+    }
+
+    function position(records, currentSide) {
+      var q = resolve(records, currentSide);
+      for (var i = 0; i < q.length; i++) {
+        if (q[i].index === currentSide) return i;
+      }
+      return -1;
+    }
+
+    function next(records, currentSide) {
+      var q = resolve(records, currentSide);
+      if (!q.length) return null;
+      var pos = position(records, currentSide);
+      if (pos < 0) return q[0];
+      return q[(pos + 1) % q.length] || null;
+    }
+
+    return {
+      resolve: resolve,
+      position: position,
+      next: next
+    };
+  })();
+
   /* ── Observability primitives (v1.2.0) ──────────────────── */
   /*    vlog(level, event, data?)  — structured console output  */
   /*    vmark(name)               — Performance Timeline marks  */
@@ -1213,6 +1407,7 @@
       phase = to;
       vlog(3, 'phase:' + to, { from: from, reason: reason });
       vmark('phase:' + to);
+      if (_ui && _ui.reflectStationStatus) _ui.reflectStationStatus();
       return true;
     }
 
@@ -1281,7 +1476,7 @@
       });
       vmark('continuity:restored');
       _ui.reflectTitle();
-      _ui.reflectCrate();
+      _ui.fillCrate();
     }
 
     function fetchSDK(cb, attempt) {
@@ -1376,6 +1571,7 @@
         _ui.reflectSpin();
         if (FEATURE_GROOVE_IMMERSIVE) groove.stopFlow();
         if (FEATURE_GROOVE) groove.update(1);
+        advanceQueue('finish');
       });
 
       adapter.on('progress', function (data) {
@@ -1394,7 +1590,7 @@
           if (side !== currentSide) {
             currentSide = side;
             _ui.reflectTitle();
-            _ui.reflectCrate();
+            _ui.fillCrate();
           }
         });
       });
@@ -1437,7 +1633,18 @@
           return;
         }
         records = sounds.map(function (s, i) {
-          var rec = { title: s.title || 'Track ' + (i + 1), index: i };
+          var artist = '';
+          if (s.user && s.user.username) artist = s.user.username;
+          else if (s.publisher_metadata && s.publisher_metadata.artist) artist = s.publisher_metadata.artist;
+          else if (s.publisher_metadata && s.publisher_metadata.label_name) artist = s.publisher_metadata.label_name;
+          var rec = {
+            title: s.title || 'Track ' + (i + 1),
+            index: i,
+            source: artist || 'SoundCloud'
+          };
+          if (s.id) rec.id = s.id;
+          if (s.permalink_url) rec.permalink = s.permalink_url;
+          if (artist) rec.artist = artist;
           if (FEATURE_CRATE_V2 && s.duration) rec.duration = s.duration;
           return rec;
         });
@@ -1478,6 +1685,36 @@
         groove.update(frac);
       }
       vlog(3, 'seek:fraction', { frac: frac, ms: ms, side: currentSide });
+      return true;
+    }
+
+    function selectSide(index, shouldPlay) {
+      if (!phaseAllowsInteraction()) return false;
+      var rec = records[index];
+      if (!rec) return false;
+      currentSide = index;
+      lastPosition = 0;
+      adapter.skip(index);
+      if (FEATURE_GROOVE) groove.update(0);
+      _ui.reflectTitle();
+      _ui.fillCrate();
+      if (shouldPlay) safePlay();
+      vlog(3, 'queue:select', { side: index, play: !!shouldPlay });
+      return true;
+    }
+
+    function advanceQueue(reason) {
+      if (!FEATURE_QUEUE_V6 || !records.length) return false;
+      var next = queue.next(records, currentSide);
+      if (!next) return false;
+      if (next.index === currentSide && records.length < 2) return false;
+      currentSide = next.index;
+      lastPosition = 0;
+      adapter.skip(next.index);
+      _ui.reflectTitle();
+      _ui.fillCrate();
+      safePlay();
+      vlog(2, 'queue:advance', { reason: reason || 'next', side: next.index });
       return true;
     }
 
@@ -1543,6 +1780,8 @@
       isHushed: function () { return hushed; },
       getSavedVolume: function () { return savedVolume; },
       getRecords: function () { return records; },
+      getQueue: function () { return queue.resolve(records, currentSide); },
+      getQueuePosition: function () { return queue.position(records, currentSide); },
       getCurrentSide: function () { return currentSide; },
       getCurrentRecord: function () { return records[currentSide]; },
       getLastPosition: function () { return lastPosition; },
@@ -1553,7 +1792,9 @@
       transition: transition,
       play: safePlay,
       pause: function () { adapter.pause(); },
-      skip: function (index) { adapter.skip(index); },
+      skip: function (index) { return selectSide(index, false); },
+      select: selectSide,
+      advanceQueue: advanceQueue,
       mute: mute,
       unmute: unmute,
       setVolume: setVolume,
@@ -2020,7 +2261,7 @@
 
         el.crate.addEventListener('keydown', function (e) {
           if (el.crate.hidden) return;
-          var items = el.crate.querySelectorAll('li');
+          var items = el.crate.querySelectorAll('[role="option"]');
           if (!items.length) return;
           var active = document.activeElement;
           var idx = -1;
@@ -2040,11 +2281,6 @@
           }
         });
 
-        var v2css = document.createElement('style');
-        v2css.textContent =
-          '.vinyl-upnext{display:block;font-size:0.55rem;color:var(--ink-lt,#999);' +
-          'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0.7;line-height:1.2}';
-        document.head.appendChild(v2css);
       }
     }
 
@@ -2187,6 +2423,7 @@
       el.spin.setAttribute('aria-label', s ? 'Pause' : 'Play');
       el.spin.title = s ? 'Pause' : 'Play';
       el.stage.classList.toggle('vinyl--spinning', s);
+      reflectStationStatus();
     }
 
     function reflectVolume() {
@@ -2204,11 +2441,12 @@
         if (FEATURE_GROOVE) groove.seed(rec.title);
       }
       reflectNowPlaying();
+      reflectStationStatus();
     }
 
     function reflectCrate() {
       var side = _ctrl.getCurrentSide();
-      var items = el.crate.querySelectorAll('li');
+      var items = el.crate.querySelectorAll('[role="option"]');
       for (var i = 0; i < items.length; i++) {
         var idx = parseInt(items[i].getAttribute('data-index'), 10);
         items[i].setAttribute('aria-selected', idx === side ? 'true' : 'false');
@@ -2217,14 +2455,36 @@
       if (active && !el.crate.hidden) active.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
 
+    function recordMeta(rec) {
+      var parts = [];
+      if (rec.artist) parts.push(rec.artist);
+      else if (rec.source) parts.push(rec.source);
+      else parts.push('SoundCloud');
+      if (rec.duration) parts.push(formatDuration(rec.duration));
+      return parts.join(' · ');
+    }
+
+    function displayQueue(recs, currentPos) {
+      if (!FEATURE_QUEUE_V6 || currentPos <= 0 || currentPos >= recs.length) return recs;
+      return recs.slice(currentPos).concat(recs.slice(0, currentPos));
+    }
+
     function reflectNowPlaying() {
       if (!FEATURE_CRATE_V2 || !el.upnext) return;
       if (!_ctrl.isSpinning() && _sync.getRemoteState() && _sync.getRemoteState().title && !_sync.isOwner()) return;
       var side = _ctrl.getCurrentSide();
-      var recs = _ctrl.getRecords();
-      var next = side + 1;
-      if (next < recs.length && recs[next]) {
-        el.upnext.textContent = 'Up next \u2014 ' + recs[next].title;
+      var recs = (FEATURE_QUEUE_V6 && FEATURE_CRATE_V2) ? _ctrl.getQueue() : _ctrl.getRecords();
+      var nextRec = null;
+      if (FEATURE_QUEUE_V6) {
+        var pos = _ctrl.getQueuePosition();
+        if (pos >= 0 && recs.length > 1) nextRec = recs[(pos + 1) % recs.length];
+        else if (recs.length) nextRec = recs[0];
+      } else {
+        var next = side + 1;
+        if (next < recs.length) nextRec = recs[next];
+      }
+      if (nextRec) {
+        el.upnext.textContent = 'Up next \u2014 ' + nextRec.title;
         el.upnext.hidden = false;
       } else {
         el.upnext.hidden = true;
@@ -2243,19 +2503,70 @@
       } else if (!rs && !_ctrl.isSpinning()) {
         reflectNowPlaying();
       }
+      reflectStationStatus();
     }
 
     function fillCrate() {
       el.crate.innerHTML = '';
-      var recs = _ctrl.getRecords();
+      var queueUi = FEATURE_QUEUE_V6 && FEATURE_CRATE_V2;
+      var currentPos = queueUi ? _ctrl.getQueuePosition() : -1;
+      var recs = queueUi ? displayQueue(_ctrl.getQueue(), currentPos) : _ctrl.getRecords();
       var side = _ctrl.getCurrentSide();
+
+      if (queueUi) {
+        var strip = document.createElement('li');
+        strip.className = 'vinyl-crate-strip' +
+          (FEATURE_TITLE_STRIP_V1 ? ' vinyl-crate-strip--energized' : '');
+        strip.setAttribute('role', 'presentation');
+        var stationStatus = document.createElement('button');
+        stationStatus.className = 'vinyl-station-status';
+        stationStatus.type = 'button';
+        var stationIcon = document.createElement('span');
+        stationIcon.className = 'vinyl-station-orb';
+        stationIcon.setAttribute('aria-hidden', 'true');
+        stationStatus.appendChild(stationIcon);
+        stationStatus.addEventListener('click', function (e) {
+          e.stopPropagation();
+          onSpin();
+        });
+        var stationCopy = document.createElement('span');
+        stationCopy.className = 'vinyl-station-copy';
+        var stationName = document.createElement('span');
+        stationName.className = 'vinyl-station-name';
+        stationName.textContent = 'abstraction.fm';
+        var stationLabel = document.createElement('span');
+        stationLabel.className = 'vinyl-station-label';
+        stationLabel.textContent = 'queue rotation';
+        var stationSignal = document.createElement('span');
+        stationSignal.className = 'vinyl-station-signal';
+        stationCopy.appendChild(stationName);
+        stationCopy.appendChild(stationLabel);
+        strip.appendChild(stationStatus);
+        strip.appendChild(stationCopy);
+        strip.appendChild(stationSignal);
+        el.stationStatus = stationStatus;
+        el.stationSignal = stationSignal;
+        reflectStationStatus();
+        el.crate.appendChild(strip);
+      }
+
+      if (!recs.length) {
+        var empty = document.createElement('li');
+        empty.className = 'vinyl-queue-empty';
+        empty.setAttribute('role', 'presentation');
+        empty.textContent = 'Signal warming';
+        el.crate.appendChild(empty);
+        return;
+      }
+
       recs.forEach(function (rec, i) {
         var li = document.createElement('li');
+        li.className = queueUi ? 'vinyl-queue-row' : '';
         var label = rec.title;
         if (FEATURE_CRATE_V2) {
           if (FEATURE_SLEEVE_V3) {
             label = rec.title;
-            if (rec.duration) label += '  ' + formatDuration(rec.duration);
+            if (rec.duration && !queueUi) label += '  ' + formatDuration(rec.duration);
           } else {
             var num = String(i + 1).padStart(2, '0');
             label = num + ' \u00b7 ' + rec.title;
@@ -2263,13 +2574,37 @@
           }
           li.setAttribute('tabindex', '0');
         }
-        li.textContent = label;
+        if (queueUi) {
+          var status = rec.index === side ? 'on air' : (i === 1 ? 'next' : 'upcoming');
+          var meta = recordMeta(rec);
+          var copy = document.createElement('span');
+          copy.className = 'vinyl-queue-copy';
+          var title = document.createElement('span');
+          title.className = 'vinyl-queue-title';
+          title.textContent = label;
+          var metaEl = document.createElement('span');
+          metaEl.className = 'vinyl-queue-meta';
+          metaEl.textContent = meta;
+          var state = document.createElement('span');
+          state.className = 'vinyl-queue-state';
+          state.textContent = status;
+          copy.appendChild(title);
+          copy.appendChild(metaEl);
+          li.appendChild(copy);
+          li.appendChild(state);
+          li.setAttribute('aria-label', label + ', ' + meta + (rec.index === side ? ', current track' : ', selectable'));
+        } else {
+          li.textContent = label;
+        }
         li.setAttribute('role', 'option');
         li.setAttribute('data-index', rec.index);
         if (rec.index === side) li.setAttribute('aria-selected', 'true');
         li.addEventListener('click', function () {
-          _ctrl.skip(rec.index);
-          _ctrl.play();
+          if (_ctrl.select) _ctrl.select(rec.index, true);
+          else {
+            _ctrl.skip(rec.index);
+            _ctrl.play();
+          }
           toggleCrate(false);
         });
         el.crate.appendChild(li);
@@ -2296,6 +2631,42 @@
     function onDial() {
       if (!_ctrl.isReady()) return;
       _ctrl.setVolume(parseInt(el.dial.value, 10));
+    }
+
+    function stationState() {
+      var remote = _sync && _sync.getRemoteState ? _sync.getRemoteState() : null;
+      var remotePlaying = _sync && !_sync.isOwner() && !_ctrl.isSpinning() && remote && remote.spinning !== false;
+      var phase = _ctrl.getPhase ? _ctrl.getPhase() : '';
+
+      if (_ctrl.isSpinning()) {
+        return { key: 'playing', signal: 'on air', label: 'Music playing. Pause playback' };
+      }
+      if (remotePlaying) {
+        return { key: 'remote-playing', signal: 'elsewhere', label: 'Music playing in another tab. Play here' };
+      }
+      if (phase === 'loading' || phase === 'dormant') {
+        return { key: 'loading', signal: 'warming', label: 'Music warming up' };
+      }
+      if (phase === 'errored') {
+        return { key: 'errored', signal: 'signal lost', label: 'Music unavailable' };
+      }
+      return {
+        key: 'idle',
+        signal: 'standby',
+        label: _ctrl.isReady() ? 'Music paused. Play' : 'Music standby'
+      };
+    }
+
+    function reflectStationStatus() {
+      if (!el.stationStatus || !el.stationSignal) return;
+      var state = stationState();
+      var canToggle = state.key !== 'loading' && state.key !== 'errored' && _ctrl.isReady();
+
+      el.stationStatus.setAttribute('data-vinyl-station-state', state.key);
+      el.stationStatus.setAttribute('aria-label', state.label);
+      el.stationStatus.title = state.label;
+      el.stationStatus.disabled = !canToggle;
+      el.stationSignal.textContent = state.signal;
     }
 
     function raiseStage() {
@@ -2340,6 +2711,7 @@
       reflectCrate: reflectCrate,
       reflectNowPlaying: reflectNowPlaying,
       reflectRemoteState: reflectRemoteState,
+      reflectStationStatus: reflectStationStatus,
       fillCrate: fillCrate,
       toggleCrate: toggleCrate,
       raiseStage: raiseStage,

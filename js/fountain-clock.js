@@ -727,7 +727,29 @@
     pendingFetch: null,
     pendingController: null,
     pendingKey: null,
-    lastGood: null
+    lastGood: null,
+
+    /* Mini Card — single source of truth for mode/timer/stopwatch.
+       The dominant .fc-time clock readout is never repurposed; the
+       Mini Card stage hosts secondary timer/stopwatch readouts only. */
+    mini: {
+      mode: 'time',           // 'time' | 'timer' | 'stopwatch'
+      isRunning: false,
+      startTime: null,        // epoch ms when last started
+      accumulated: 0,         // ms accumulated across pause/resume
+      duration: 5 * 60 * 1000,// timer target, ms
+      lastFinishedAt: null,   // for the brief "done" window
+      rafHandle: null,        // requestAnimationFrame id while running
+      tailTimer: null,        // settle-back timer after completion
+      hasPainted: false       // first-paint guard for ARIA noise
+    },
+
+    /* Sun Cycle Card — renderer-only, consumes state. */
+    sunCard: {
+      lastPhase: null,
+      lastNextEvent: null,
+      asideEl: null
+    }
   };
 
   /* ── DOM helpers ─────────────────────────────────────────── */
@@ -830,18 +852,18 @@
 
     setText(qs('[data-fc-phase]', root), phaseLabel(phase));
 
-    if (solar.sunrise) {
-      setText(qs('[data-fc-sunrise]', root), formatHM(solar.sunrise, state.location.tz, state.preferences.hour24));
-      setText(qs('[data-fc-sunset]',  root), formatHM(solar.sunset, state.location.tz, state.preferences.hour24));
-    } else {
-      setText(qs('[data-fc-sunrise]', root), '—');
-      setText(qs('[data-fc-sunset]',  root), '—');
-    }
-
-    var pct = Math.max(0, Math.min(1, solar.dayFraction));
-    root.style.setProperty('--fc-sun-x', (pct * 100).toFixed(2) + '%');
+    /* Sun rail rendering is owned by SunCycleCard now — it consumes
+       (now, solar, phase, location) and writes its own DOM + tokens.
+       The clock remains the single source of state. */
+    SunCycleCard.render(now, solar, phase);
 
     applyPhaseAttribute(phase, solar);
+
+    /* Mini Card paints once per tick to keep its readouts fresh in
+       'time' mode (where the wall-clock minute drives it). When the
+       Mini Card is running a timer/stopwatch, its rAF loop already
+       owns the cadence; this tick is a safe no-op there. */
+    MiniCard.onClockTick(now);
   }
 
   function phaseLabel(phase) {
@@ -1117,6 +1139,1174 @@
     }
   }
 
+  /* ── Sun Cycle Card (renderer; consumes state, never owns it) ──── */
+  /*
+     Scope: .fc-sun, .fc-sun-rail, .fc-sun-dot, [data-fc-sunrise],
+            [data-fc-sunset], plus a calm secondary line.
+
+     Public surface:
+       SunCycleCard.render(now, solar, phase)
+         · writes [data-fc-sunrise]/[data-fc-sunset] text + datetime
+         · writes --fc-sun-x (existing) and --sun-progress (new)
+         · scaffolds and updates [data-fc-sun-aside] if room allows
+         · sets data-fc-sun-phase / data-fc-sun-next on the .fc-sun root
+         · emits aria-live updates only on phase / next-event flips
+
+       SunCycleCard.unmount()
+         · clears its own state pointers; never destroys the DOM.
+
+     The Fountain Clock owns: solar math, location, time formatting,
+     and phase classification. SunCycleCard is a presentational layer.
+  */
+  var SunCycleCard = (function () {
+
+    function ensureAside(sunRoot) {
+      if (state.sunCard.asideEl && state.sunCard.asideEl.isConnected) {
+        return state.sunCard.asideEl;
+      }
+      var aside = qs('[data-fc-sun-aside]', sunRoot);
+      if (!aside) {
+        aside = document.createElement('p');
+        aside.className = 'fc-sun-aside';
+        aside.setAttribute('data-fc-sun-aside', '');
+        aside.setAttribute('role', 'status');
+        aside.setAttribute('aria-live', 'polite');
+        aside.textContent = '';
+        sunRoot.appendChild(aside);
+      }
+      state.sunCard.asideEl = aside;
+      return aside;
+    }
+
+    function nextEventDescriptor(now, solar, phase) {
+      var nMs = now.getTime();
+      var rise = solar.sunrise ? solar.sunrise.getTime() : null;
+      var set  = solar.sunset  ? solar.sunset.getTime()  : null;
+
+      /* Polar edge cases: solar may have no rise/set today. Surface a
+         calm "Daylight" reading instead of a phantom next-event. */
+      if (rise == null || set == null) {
+        return { kind: 'daylight', minutes: null };
+      }
+
+      if (nMs < rise) return { kind: 'sunrise', at: solar.sunrise };
+      if (nMs < set)  return { kind: 'sunset',  at: solar.sunset  };
+      return { kind: 'sunrise-tomorrow', at: null };
+    }
+
+    function asideLine(now, solar, phase) {
+      var ev = nextEventDescriptor(now, solar, phase);
+      var tz = state.location.tz;
+      var h24 = state.preferences.hour24;
+
+      if (ev.kind === 'sunrise' && ev.at) {
+        return 'Next · sunrise at ' + formatHM(ev.at, tz, h24);
+      }
+      if (ev.kind === 'sunset' && ev.at) {
+        return 'Next · sunset at ' + formatHM(ev.at, tz, h24);
+      }
+      if (ev.kind === 'sunrise-tomorrow') {
+        /* After today's sunset, the most legible read is daylight length. */
+        if (solar.sunrise && solar.sunset) {
+          var mins = Math.round((solar.sunset.getTime() - solar.sunrise.getTime()) / 60000);
+          if (mins > 0) {
+            var h = Math.floor(mins / 60);
+            var m = mins % 60;
+            return 'Daylight · ' + h + 'h ' + (m < 10 ? '0' + m : m) + 'm';
+          }
+        }
+        return 'Resting · sun is down';
+      }
+      if (ev.kind === 'daylight') {
+        return solar.isDay ? 'Long light · sun stays up' : 'Long night · sun stays down';
+      }
+      return '';
+    }
+
+    function render(now, solar, phase) {
+      var root = rootEl();
+      if (!root) return;
+      var sunRoot = qs('[data-fc-sun]', root);
+      if (!sunRoot) return;
+
+      var sunriseEl = qs('[data-fc-sunrise]', sunRoot);
+      var sunsetEl  = qs('[data-fc-sunset]',  sunRoot);
+
+      if (solar.sunrise) {
+        setText(sunriseEl, formatHM(solar.sunrise, state.location.tz, state.preferences.hour24));
+        setAttr(sunriseEl, 'datetime', solar.sunrise.toISOString());
+      } else {
+        setText(sunriseEl, '—');
+        removeAttr(sunriseEl, 'datetime');
+      }
+      if (solar.sunset) {
+        setText(sunsetEl, formatHM(solar.sunset, state.location.tz, state.preferences.hour24));
+        setAttr(sunsetEl, 'datetime', solar.sunset.toISOString());
+      } else {
+        setText(sunsetEl, '—');
+        removeAttr(sunsetEl, 'datetime');
+      }
+
+      /* Clamped 0..1 — before sunrise → 0, after sunset → 1, day → fraction. */
+      var pct = Math.max(0, Math.min(1, solar.dayFraction));
+
+      /* Existing public token, kept for back-compat with current CSS. */
+      root.style.setProperty('--fc-sun-x', (pct * 100).toFixed(2) + '%');
+      /* New token — mirrors the same value as a 0..1 normalized form so
+         CSS authors don't need to slice the percentage substring. */
+      sunRoot.style.setProperty('--sun-progress', pct.toFixed(4));
+
+      setAttr(sunRoot, 'data-fc-sun-phase', phase);
+
+      var ev = nextEventDescriptor(now, solar, phase);
+      setAttr(sunRoot, 'data-fc-sun-next', ev.kind);
+
+      var aside = ensureAside(sunRoot);
+      var line  = asideLine(now, solar, phase);
+
+      /* Only push aria-live updates on meaningful flips. The minute
+         tick can't be aria-live — that would be screen-reader noise. */
+      var phaseFlipped = state.sunCard.lastPhase !== phase;
+      var eventFlipped = state.sunCard.lastNextEvent !== ev.kind;
+      if (!phaseFlipped && !eventFlipped) {
+        aside.setAttribute('aria-live', 'off');
+      } else {
+        aside.setAttribute('aria-live', 'polite');
+      }
+      setText(aside, line);
+
+      state.sunCard.lastPhase = phase;
+      state.sunCard.lastNextEvent = ev.kind;
+    }
+
+    function unmount() {
+      state.sunCard.asideEl = null;
+      state.sunCard.lastPhase = null;
+      state.sunCard.lastNextEvent = null;
+    }
+
+    return { render: render, unmount: unmount };
+  })();
+
+  /* ── Mini Card (polymorphic time / timer / stopwatch) ──────────── */
+  /*
+     Design intent
+     -------------
+     The Fountain Clock quietly learns Timer and Stopwatch. The Mini
+     Card is additive: a small affordance docked inside .fc-face after
+     the ambient copy line. The dominant .fc-time wall-clock readout
+     is *never* repurposed. Mode swaps update text + data-* only.
+
+     State (single source of truth)
+       state.mini = {
+         mode: 'time' | 'timer' | 'stopwatch',
+         isRunning, startTime, accumulated, duration,
+         lastFinishedAt, rafHandle, tailTimer, hasPainted
+       }
+     Derived (via getters)
+       elapsed   — for stopwatch
+       remaining — for timer
+
+     Drift correction
+       All readouts are derived from (Date.now() - startTime + accumulated).
+       The rAF loop only paints; it never accumulates.
+
+     Persistence
+       fc:mini:v1 — { mode, duration }. Running state is restored only
+       when the gap between save and now is <= 10 minutes; otherwise we
+       degrade to idle in the saved mode.
+
+     DND
+       Completion is silent regardless. A subtle data-fc-mini-state="done"
+       window of ~6s lets CSS pulse the existing breathe keyframe;
+       reduced-motion users get only a static label change.
+
+     Teardown
+       unmount() cancels rAF, clears tailTimer, and frees DOM pointers.
+       SPA navigation hits unmount → mount, so nothing leaks.
+  */
+  var MiniCard = (function () {
+    var MINI_KEY = 'fc:mini:v1';
+    var DEFAULT_DURATION = 5 * 60 * 1000;
+    var MAX_DURATION = 24 * 60 * 60 * 1000 - 1000; // 23:59:59
+    var MIN_DURATION = 1000;
+    var DONE_WINDOW_MS = 6000;
+    var RUN_RESTORE_GRACE_MS = 10 * 60 * 1000;
+
+    /* ── Dial constants (precision-safe integer minutes) ─────────
+       The dial replaces the fixed preset pills. State lives in
+       integer minutes; the on-belt translateX is derived. Any
+       float drift can only enter via px math, never the value. */
+    var DIAL_MIN_MIN = 1;
+    var DIAL_MAX_MIN = 90;
+    var DIAL_STEP_PX = 14;          // pixels per minute on the belt
+    var DIAL_FRICTION = 0.92;       // momentum decay per frame
+    var DIAL_SETTLE_PX_PER_FRAME = 0.35;
+    var DIAL_SNAP_MS = 220;
+
+    /* ── persistence ───────────────────────────────────────── */
+
+    function readPersisted() {
+      /* Per spec: any parse failure or schema mismatch degrades the
+         Mini Card to 'time' mode. We surface that as null and the
+         mount() code keeps the in-memory defaults (mode='time'). */
+      try {
+        var raw = safeGet(localStorage, MINI_KEY);
+        if (!raw) return null;
+        var parsed = JSON.parse(raw);
+        if (!parsed || typeof parsed !== 'object') return null;
+        var modes = { time: 1, timer: 1, stopwatch: 1 };
+        if (!modes[parsed.mode]) return null;
+        var dur = Number(parsed.duration);
+        if (!isFinite(dur) || dur < MIN_DURATION || dur > MAX_DURATION) return null;
+        var acc = Number(parsed.accumulated);
+        if (!isFinite(acc) || acc < 0 || acc > MAX_DURATION * 2) return null;
+        var ts = Number(parsed.ts);
+        if (!isFinite(ts) || ts < 0) return null;
+        var phase = parsed.phase === 'running' ? 'running' : 'idle';
+        return {
+          mode: parsed.mode,
+          duration: dur,
+          phase: phase,
+          accumulated: acc,
+          ts: ts
+        };
+      } catch (e) { return null; }
+    }
+
+    function writePersisted() {
+      try {
+        var m = state.mini;
+        var payload = {
+          mode: m.mode,
+          duration: m.duration,
+          phase: m.isRunning ? 'running' : 'idle',
+          accumulated: m.accumulated,
+          ts: Date.now()
+        };
+        safeSet(localStorage, MINI_KEY, JSON.stringify(payload));
+      } catch (e) {}
+    }
+
+    /* ── time math ─────────────────────────────────────────── */
+
+    function elapsedMs() {
+      var m = state.mini;
+      var base = m.accumulated || 0;
+      if (m.isRunning && m.startTime != null) {
+        base += Date.now() - m.startTime;
+      }
+      return base < 0 ? 0 : base;
+    }
+
+    function remainingMs() {
+      var m = state.mini;
+      var rem = m.duration - elapsedMs();
+      return rem < 0 ? 0 : rem;
+    }
+
+    /* ── formatting ────────────────────────────────────────── */
+
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+    function formatTimerMs(ms) {
+      /* Timer shows the largest meaningful unit. Below 1h: MM:SS;
+         above 1h: H:MM:SS. Sub-second precision is a distraction —
+         and would invite per-frame text churn. */
+      var totalSec = Math.ceil(ms / 1000);
+      var h = Math.floor(totalSec / 3600);
+      var m = Math.floor((totalSec % 3600) / 60);
+      var s = totalSec % 60;
+      if (h > 0) return h + ':' + pad(m) + ':' + pad(s);
+      return pad(m) + ':' + pad(s);
+    }
+
+    function formatStopwatchMs(ms) {
+      /* Stopwatch shows tenths under one minute, MM:SS otherwise.
+         Tenths only — hundredths are visual jitter at this scale. */
+      var totalMs = Math.max(0, Math.floor(ms));
+      var h = Math.floor(totalMs / 3600000);
+      var m = Math.floor((totalMs % 3600000) / 60000);
+      var s = Math.floor((totalMs % 60000) / 1000);
+      var t = Math.floor((totalMs % 1000) / 100);
+      if (h > 0)             return h + ':' + pad(m) + ':' + pad(s);
+      if (m > 0 || s >= 10)  return pad(m) + ':' + pad(s);
+      return pad(m) + ':' + pad(s) + '.' + t;
+    }
+
+    function ariaLabelFor(mode, ms, isRunning) {
+      if (mode === 'timer') {
+        var s = Math.ceil(ms / 1000);
+        var hh = Math.floor(s / 3600), mm = Math.floor((s % 3600) / 60), ss = s % 60;
+        var parts = [];
+        if (hh) parts.push(hh + ' hour' + (hh === 1 ? '' : 's'));
+        if (mm) parts.push(mm + ' minute' + (mm === 1 ? '' : 's'));
+        if (ss || !parts.length) parts.push(ss + ' second' + (ss === 1 ? '' : 's'));
+        return (isRunning ? 'Timer running, ' : 'Timer paused, ') +
+               parts.join(' ') + ' remaining';
+      }
+      if (mode === 'stopwatch') {
+        var totalSec = Math.floor(ms / 1000);
+        var hhh = Math.floor(totalSec / 3600);
+        var mmm = Math.floor((totalSec % 3600) / 60);
+        var sss = totalSec % 60;
+        var p2 = [];
+        if (hhh) p2.push(hhh + ' hour' + (hhh === 1 ? '' : 's'));
+        if (mmm) p2.push(mmm + ' minute' + (mmm === 1 ? '' : 's'));
+        p2.push(sss + ' second' + (sss === 1 ? '' : 's'));
+        return (isRunning ? 'Stopwatch running, ' : 'Stopwatch paused, ') +
+               p2.join(' ');
+      }
+      return '';
+    }
+
+    /* ── Mini Dial — momentum-based scrollable selector ───────────
+       Replaces the fixed preset pills (1m / 5m / 10m / 25m) with a
+       continuous, accessible scrubber styled to rhyme with the sun
+       rail above it. The belt is wider than the track and translates
+       under a fixed center needle; on settle the dial snaps to the
+       nearest integer minute and commits via setDuration().
+
+       Inputs to the dial value: pointer drag (with momentum), wheel,
+       and keyboard. Reduced-motion users skip momentum and snap-anim
+       and get a direct settle. The dial is inert while the timer is
+       running — it becomes editable again on pause / reset.
+
+       State invariant: dial.value is always an integer in [DIAL_MIN_MIN,
+       DIAL_MAX_MIN]; translateX is derived. We never accumulate the
+       value in float space.
+     ────────────────────────────────────────────────────────────── */
+    var dial = {
+      el: null,
+      track: null,
+      belt: null,
+      readout: null,
+      hintEl: null,
+      value: 5,
+      trackWidth: 0,
+      translateX: 0,
+      isDragging: false,
+      pointerId: null,
+      startClientX: 0,
+      startTranslateX: 0,
+      velocity: 0,
+      lastMoveAt: 0,
+      lastMoveX: 0,
+      rafHandle: null,
+      resizeObserver: null,
+      bound: false
+    };
+
+    function dialClampValue(v) {
+      v = Math.round(v);
+      if (!isFinite(v)) v = DIAL_MIN_MIN;
+      if (v < DIAL_MIN_MIN) v = DIAL_MIN_MIN;
+      if (v > DIAL_MAX_MIN) v = DIAL_MAX_MIN;
+      return v;
+    }
+
+    function dialClampTranslate(tx) {
+      var halfW = dial.trackWidth / 2;
+      var txMax = halfW - DIAL_MIN_MIN * DIAL_STEP_PX; /* lowest value visible */
+      var txMin = halfW - DIAL_MAX_MIN * DIAL_STEP_PX; /* highest value visible */
+      if (tx > txMax) tx = txMax;
+      if (tx < txMin) tx = txMin;
+      return tx;
+    }
+
+    function dialTranslateForValue(v) {
+      return (dial.trackWidth / 2) - v * DIAL_STEP_PX;
+    }
+
+    function dialValueFromTranslate(tx) {
+      var v = ((dial.trackWidth / 2) - tx) / DIAL_STEP_PX;
+      return dialClampValue(v);
+    }
+
+    function dialMeasure() {
+      if (!dial.track) return;
+      var rect = dial.track.getBoundingClientRect();
+      dial.trackWidth = rect.width || 0;
+    }
+
+    function dialPaint() {
+      if (!dial.el) return;
+      dial.el.style.setProperty('--fc-dial-x', dial.translateX.toFixed(2) + 'px');
+      dial.el.style.setProperty('--fc-dial-step', DIAL_STEP_PX + 'px');
+      /* Fix the tick origin to the center so the value-1 tick visibly
+         lands under the needle when translateX = halfW - step. */
+      dial.el.style.setProperty('--fc-dial-origin', '0px');
+      setAttr(dial.el, 'aria-valuenow', String(dial.value));
+      setAttr(dial.el, 'aria-valuetext', dial.value + ' minute' + (dial.value === 1 ? '' : 's'));
+      if (dial.readout) {
+        setText(dial.readout, dial.value + ' min');
+      }
+    }
+
+    function dialCancelAnim() {
+      if (dial.rafHandle != null) {
+        if (typeof cancelAnimationFrame === 'function') {
+          try { cancelAnimationFrame(dial.rafHandle); } catch (e) {}
+        } else {
+          try { clearTimeout(dial.rafHandle); } catch (e) {}
+        }
+        dial.rafHandle = null;
+      }
+    }
+
+    function dialAnimateTo(targetTx) {
+      dialCancelAnim();
+      if (state.reducedMotion) {
+        dial.translateX = targetTx;
+        dialPaint();
+        return;
+      }
+      var startTx = dial.translateX;
+      var startedAt = (typeof performance !== 'undefined' && performance.now)
+        ? performance.now() : Date.now();
+      function step(now) {
+        var ts = (typeof now === 'number') ? now :
+          (typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now());
+        var t = Math.min(1, (ts - startedAt) / DIAL_SNAP_MS);
+        var eased = 1 - Math.pow(1 - t, 3);
+        dial.translateX = startTx + (targetTx - startTx) * eased;
+        dialPaint();
+        if (t < 1 && state.mounted) {
+          dial.rafHandle = requestAnimationFrame(step);
+        } else {
+          dial.rafHandle = null;
+        }
+      }
+      dial.rafHandle = requestAnimationFrame(step);
+    }
+
+    function dialSettleToValue(animate) {
+      var target = dialTranslateForValue(dial.value);
+      if (animate && !state.reducedMotion) {
+        dialAnimateTo(target);
+      } else {
+        dialCancelAnim();
+        dial.translateX = target;
+        dialPaint();
+      }
+    }
+
+    function dialCommitValue(opts) {
+      dialSettleToValue(!(opts && opts.silent));
+      var ms = dial.value * 60 * 1000;
+      if (state.mini.duration !== ms) setDuration(ms);
+    }
+
+    function dialSetValue(v, opts) {
+      var clamped = dialClampValue(v);
+      if (clamped === dial.value && !(opts && opts.force)) {
+        dialSettleToValue(true);
+        return;
+      }
+      dial.value = clamped;
+      dialCommitValue(opts);
+    }
+
+    function dialOnPointerDown(e) {
+      if (!dial.el) return;
+      if (state.mini.isRunning) return; /* inert while running */
+      try { dial.el.setPointerCapture(e.pointerId); } catch (_) {}
+      dialMeasure();
+      dialCancelAnim();
+      dial.isDragging = true;
+      dial.pointerId = e.pointerId;
+      dial.startClientX = e.clientX;
+      dial.startTranslateX = dial.translateX;
+      dial.velocity = 0;
+      dial.lastMoveAt = e.timeStamp || Date.now();
+      dial.lastMoveX = e.clientX;
+      setAttr(dial.el, 'data-dragging', 'true');
+      e.preventDefault();
+    }
+
+    function dialOnPointerMove(e) {
+      if (!dial.isDragging || e.pointerId !== dial.pointerId) return;
+      var dx = e.clientX - dial.startClientX;
+      var newTx = dialClampTranslate(dial.startTranslateX + dx);
+      dial.translateX = newTx;
+
+      /* Sample velocity in px-per-frame (≈ px/16ms). */
+      var now = e.timeStamp || Date.now();
+      var dt = now - dial.lastMoveAt;
+      if (dt > 0 && dt < 250) {
+        dial.velocity = ((e.clientX - dial.lastMoveX) / dt) * 16;
+      }
+      dial.lastMoveAt = now;
+      dial.lastMoveX = e.clientX;
+
+      var v = dialValueFromTranslate(newTx);
+      if (v !== dial.value) dial.value = v;
+      dialPaint();
+    }
+
+    function dialOnPointerUp(e) {
+      if (!dial.isDragging) return;
+      if (dial.pointerId != null && e.pointerId !== dial.pointerId) return;
+      dial.isDragging = false;
+      removeAttr(dial.el, 'data-dragging');
+      try { dial.el.releasePointerCapture(dial.pointerId); } catch (_) {}
+      dial.pointerId = null;
+
+      if (Math.abs(dial.velocity) > DIAL_SETTLE_PX_PER_FRAME && !state.reducedMotion) {
+        dialMomentumLoop();
+      } else {
+        dial.value = dialValueFromTranslate(dial.translateX);
+        dialCommitValue();
+      }
+    }
+
+    function dialMomentumLoop() {
+      dialCancelAnim();
+      function step() {
+        if (!state.mounted) { dial.rafHandle = null; return; }
+        dial.translateX = dialClampTranslate(dial.translateX + dial.velocity);
+        dial.velocity *= DIAL_FRICTION;
+        var v = dialValueFromTranslate(dial.translateX);
+        if (v !== dial.value) dial.value = v;
+        dialPaint();
+
+        var hitEdge =
+          dial.translateX === dialClampTranslate(dial.translateX + dial.velocity) ?
+          false : true;
+        if (Math.abs(dial.velocity) > DIAL_SETTLE_PX_PER_FRAME && !hitEdge) {
+          dial.rafHandle = requestAnimationFrame(step);
+        } else {
+          dial.rafHandle = null;
+          dialCommitValue();
+        }
+      }
+      dial.rafHandle = requestAnimationFrame(step);
+    }
+
+    function dialOnWheel(e) {
+      if (state.mini.isRunning) return;
+      var d = (Math.abs(e.deltaX) > Math.abs(e.deltaY)) ? e.deltaX : e.deltaY;
+      if (d === 0) return;
+      e.preventDefault();
+      var dir = d > 0 ? 1 : -1;
+      var mag = Math.max(1, Math.min(5, Math.round(Math.abs(d) / 30)));
+      dialSetValue(dial.value + dir * mag);
+    }
+
+    function dialOnKey(e) {
+      if (state.mini.isRunning) return;
+      var k = e.key, delta = 0;
+      if (k === 'ArrowLeft' || k === 'ArrowDown')      delta = -1;
+      else if (k === 'ArrowRight' || k === 'ArrowUp')  delta =  1;
+      else if (k === 'PageDown')                       delta = -5;
+      else if (k === 'PageUp')                         delta =  5;
+      else if (k === 'Home') { e.preventDefault(); dialSetValue(DIAL_MIN_MIN); return; }
+      else if (k === 'End')  { e.preventDefault(); dialSetValue(DIAL_MAX_MIN); return; }
+      else return;
+      e.preventDefault();
+      dialSetValue(dial.value + delta);
+    }
+
+    function dialBuild() {
+      var el = document.createElement('div');
+      el.className = 'fc-dial';
+      el.setAttribute('data-fc-mini-dial', '');
+      el.setAttribute('role', 'slider');
+      el.setAttribute('aria-label', 'Timer minutes');
+      el.setAttribute('aria-valuemin', String(DIAL_MIN_MIN));
+      el.setAttribute('aria-valuemax', String(DIAL_MAX_MIN));
+      el.setAttribute('aria-orientation', 'horizontal');
+      el.setAttribute('tabindex', '0');
+      el.innerHTML =
+        '<div class="fc-dial-track" data-fc-dial-track>' +
+          '<div class="fc-dial-belt" data-fc-dial-belt></div>' +
+          '<div class="fc-dial-needle" aria-hidden="true"></div>' +
+        '</div>' +
+        '<div class="fc-dial-readout">' +
+          '<span class="fc-dial-value" data-fc-dial-readout>5 min</span>' +
+          '<span class="fc-dial-hint" data-fc-dial-hint>Drag · scroll · arrows</span>' +
+        '</div>';
+      return el;
+    }
+
+    function dialBind(el) {
+      if (dial.bound) return;
+      dial.bound = true;
+      dial.el = el;
+      dial.track = qs('[data-fc-dial-track]', el);
+      dial.belt = qs('[data-fc-dial-belt]', el);
+      dial.readout = qs('[data-fc-dial-readout]', el);
+      dial.hintEl = qs('[data-fc-dial-hint]', el);
+
+      /* Sync initial value from the persisted timer duration. */
+      dial.value = dialClampValue(Math.round((state.mini.duration || (5 * 60 * 1000)) / 60000));
+
+      /* Track width may not be measurable until after layout; defer
+         the first paint to after a microtask so the dial doesn't
+         flash at the wrong position on mount. */
+      dialMeasure();
+      dialSettleToValue(false);
+      requestAnimationFrame(function () {
+        dialMeasure();
+        dialSettleToValue(false);
+      });
+
+      if (typeof ResizeObserver === 'function') {
+        try {
+          dial.resizeObserver = new ResizeObserver(function () {
+            if (!state.mounted) return;
+            dialMeasure();
+            dialSettleToValue(false);
+          });
+          dial.resizeObserver.observe(dial.track);
+        } catch (_) {}
+      }
+
+      el.addEventListener('pointerdown',   dialOnPointerDown);
+      el.addEventListener('pointermove',   dialOnPointerMove);
+      el.addEventListener('pointerup',     dialOnPointerUp);
+      el.addEventListener('pointercancel', dialOnPointerUp);
+      el.addEventListener('lostpointercapture', dialOnPointerUp);
+      el.addEventListener('wheel',         dialOnWheel, { passive: false });
+      el.addEventListener('keydown',       dialOnKey);
+    }
+
+    function dialUnbind() {
+      dialCancelAnim();
+      if (dial.resizeObserver) {
+        try { dial.resizeObserver.disconnect(); } catch (_) {}
+      }
+      dial.resizeObserver = null;
+      dial.bound = false;
+      dial.el = null;
+      dial.track = null;
+      dial.belt = null;
+      dial.readout = null;
+      dial.hintEl = null;
+    }
+
+    /* Sync dial when external code (mode flip, persistence restore,
+       reset) changed the canonical duration. Idempotent. We re-measure
+       on every sync because the dial may have been hidden until now —
+       a 0-width track yields a meaningless translateX. */
+    function dialSyncFromState() {
+      if (!dial.el) return;
+      var v = dialClampValue(Math.round((state.mini.duration || 0) / 60000));
+      var changed = v !== dial.value;
+      dial.value = v;
+      dialMeasure();
+      if (dial.trackWidth === 0) {
+        /* Layout not ready yet — defer one frame and retry. */
+        requestAnimationFrame(function () {
+          if (!state.mounted || !dial.el) return;
+          dialMeasure();
+          dialSettleToValue(false);
+        });
+        return;
+      }
+      dialSettleToValue(changed);
+    }
+
+    /* ── DOM scaffold (built once per mount) ──────────────── */
+
+    function ensureScaffold(face) {
+      if (face.__fcMiniScaffolded) return qs('[data-fc-mini-card]', face);
+      face.__fcMiniScaffolded = true;
+
+      var card = document.createElement('div');
+      card.className = 'fc-mini-card';
+      card.setAttribute('data-fc-mini-card', '');
+      card.setAttribute('data-fc-mini-mode', 'time');
+      card.setAttribute('data-fc-mini-state', 'idle');
+
+      /* Mode pills — segmented, role=tablist for AT clarity. */
+      var tabs = document.createElement('div');
+      tabs.className = 'fc-mini-tabs';
+      tabs.setAttribute('role', 'tablist');
+      tabs.setAttribute('aria-label', 'Clock mode');
+      tabs.setAttribute('data-fc-mini-tabs', '');
+
+      var modes = [
+        { key: 'time',      label: 'Time'      },
+        { key: 'timer',     label: 'Timer'     },
+        { key: 'stopwatch', label: 'Stopwatch' }
+      ];
+      for (var i = 0; i < modes.length; i++) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'fc-mini-tab';
+        b.setAttribute('role', 'tab');
+        b.setAttribute('data-fc-mini-tab', modes[i].key);
+        b.setAttribute('aria-selected', modes[i].key === 'time' ? 'true' : 'false');
+        b.setAttribute('tabindex', modes[i].key === 'time' ? '0' : '-1');
+        b.textContent = modes[i].label;
+        tabs.appendChild(b);
+      }
+
+      /* Stage — hosts readout, controls, and (for timer) presets. */
+      var stage = document.createElement('div');
+      stage.className = 'fc-mini-stage';
+      stage.setAttribute('data-fc-mini-stage', '');
+
+      var readout = document.createElement('div');
+      readout.className = 'fc-mini-readout';
+      readout.setAttribute('data-fc-mini-readout', '');
+      readout.setAttribute('aria-live', 'off');
+      readout.setAttribute('aria-atomic', 'true');
+      readout.textContent = '';
+
+      var controls = document.createElement('div');
+      controls.className = 'fc-mini-controls';
+      controls.setAttribute('data-fc-mini-controls', '');
+
+      var btnStart = document.createElement('button');
+      btnStart.type = 'button';
+      btnStart.className = 'fc-mini-btn fc-mini-btn-primary';
+      btnStart.setAttribute('data-fc-mini-action', 'toggle');
+      btnStart.setAttribute('aria-pressed', 'false');
+      btnStart.textContent = 'Start';
+
+      var btnReset = document.createElement('button');
+      btnReset.type = 'button';
+      btnReset.className = 'fc-mini-btn';
+      btnReset.setAttribute('data-fc-mini-action', 'reset');
+      btnReset.textContent = 'Reset';
+
+      controls.appendChild(btnStart);
+      controls.appendChild(btnReset);
+
+      /* The momentum dial replaces the preset-pill row. It sits
+         alongside the readout / controls in the stage and is shown
+         only in timer mode (controlled in render()). */
+      var dialEl = dialBuild();
+
+      stage.appendChild(readout);
+      stage.appendChild(controls);
+      stage.appendChild(dialEl);
+
+      card.appendChild(tabs);
+      card.appendChild(stage);
+
+      /* Append after .fc-ambient-copy if present, else end of face. */
+      var copy = qs('.fc-ambient-copy', face);
+      if (copy && copy.nextSibling) {
+        face.insertBefore(card, copy.nextSibling);
+      } else {
+        face.appendChild(card);
+      }
+      return card;
+    }
+
+    /* ── render ───────────────────────────────────────────── */
+
+    function render() {
+      var root = rootEl();
+      if (!root) return;
+      var face = qs('[data-fc-face]', root);
+      if (!face) return;
+      var card = ensureScaffold(face);
+      if (!card) return;
+
+      var m = state.mini;
+      setAttr(card, 'data-fc-mini-mode', m.mode);
+
+      /* Compute current state class — idle | running | paused | done. */
+      var miniState;
+      if (m.lastFinishedAt && (Date.now() - m.lastFinishedAt) < DONE_WINDOW_MS) {
+        miniState = 'done';
+      } else if (m.isRunning) {
+        miniState = 'running';
+      } else if (m.mode !== 'time' && (m.accumulated > 0)) {
+        miniState = 'paused';
+      } else {
+        miniState = 'idle';
+      }
+      setAttr(card, 'data-fc-mini-state', miniState);
+
+      /* Tab pressed states — single source of truth. */
+      var tabs = qsa('[data-fc-mini-tab]', card);
+      for (var i = 0; i < tabs.length; i++) {
+        var key = tabs[i].getAttribute('data-fc-mini-tab');
+        var sel = key === m.mode;
+        setAttr(tabs[i], 'aria-selected', sel ? 'true' : 'false');
+        setAttr(tabs[i], 'tabindex', sel ? '0' : '-1');
+      }
+
+      var readout = qs('[data-fc-mini-readout]', card);
+      var btnToggle = qs('[data-fc-mini-action="toggle"]', card);
+      var btnReset  = qs('[data-fc-mini-action="reset"]',  card);
+      var dialEl    = qs('[data-fc-mini-dial]', card);
+
+      /* Lazy-bind the dial — its track width can only be measured
+         after the scaffold is in the document. */
+      if (dialEl && !dial.bound) dialBind(dialEl);
+
+      /* In time mode the stage stays calm and decorative. */
+      if (m.mode === 'time') {
+        setText(readout, '');
+        setAttr(readout, 'aria-label', '');
+        setAttr(readout, 'aria-live', 'off');
+        if (btnToggle) {
+          setText(btnToggle, 'Start');
+          setAttr(btnToggle, 'aria-pressed', 'false');
+          btnToggle.disabled = true;
+        }
+        if (btnReset) btnReset.disabled = true;
+        if (dialEl)   dialEl.hidden = true;
+        return;
+      }
+
+      /* Timer / Stopwatch readouts. */
+      var ms = m.mode === 'timer' ? remainingMs() : elapsedMs();
+      var label = m.mode === 'timer'
+        ? formatTimerMs(ms)
+        : formatStopwatchMs(ms);
+      setText(readout, label);
+
+      /* aria-live: announce only meaningful transitions. We flip from
+         "off" to "polite" only at the moment the user interacts, then
+         back. Per-frame paint never re-announces. */
+      if (!m.hasPainted) {
+        setAttr(readout, 'aria-live', 'off');
+        setAttr(readout, 'aria-atomic', 'true');
+        m.hasPainted = true;
+      }
+      setAttr(readout, 'aria-label', ariaLabelFor(m.mode, ms, m.isRunning));
+
+      if (btnToggle) {
+        setText(btnToggle, m.isRunning ? 'Pause' : (m.accumulated > 0 ? 'Resume' : 'Start'));
+        setAttr(btnToggle, 'aria-pressed', m.isRunning ? 'true' : 'false');
+        btnToggle.disabled = false;
+      }
+      if (btnReset) {
+        btnReset.disabled = !m.isRunning && m.accumulated === 0;
+      }
+      if (dialEl) {
+        dialEl.hidden = (m.mode !== 'timer');
+        if (!dialEl.hidden) dialSyncFromState();
+      }
+    }
+
+    /* ── rAF loop (only when needed) ──────────────────────── */
+
+    function shouldAnimate() {
+      var m = state.mini;
+      return m.mode !== 'time' && m.isRunning && !document.hidden;
+    }
+
+    function loop() {
+      state.mini.rafHandle = null;
+      if (!state.mounted) return;
+
+      /* Timer completion check first — avoids painting a "0:00" frame
+         and then a separate "done" frame. */
+      var m = state.mini;
+      if (m.mode === 'timer' && m.isRunning && remainingMs() <= 0) {
+        completeTimer();
+        return;
+      }
+
+      render();
+
+      if (shouldAnimate()) {
+        scheduleFrame();
+      }
+    }
+
+    function scheduleFrame() {
+      if (state.mini.rafHandle != null) return;
+      if (typeof requestAnimationFrame !== 'function') {
+        /* Ancient fallback — unlikely to hit, but keeps the contract. */
+        state.mini.rafHandle = setTimeout(loop, 100);
+      } else {
+        state.mini.rafHandle = requestAnimationFrame(loop);
+      }
+    }
+
+    function cancelFrame() {
+      if (state.mini.rafHandle != null) {
+        if (typeof cancelAnimationFrame === 'function') {
+          try { cancelAnimationFrame(state.mini.rafHandle); } catch (e) {}
+        } else {
+          try { clearTimeout(state.mini.rafHandle); } catch (e) {}
+        }
+        state.mini.rafHandle = null;
+      }
+    }
+
+    /* ── transitions ──────────────────────────────────────── */
+
+    function setMode(next) {
+      var m = state.mini;
+      if (next !== 'time' && next !== 'timer' && next !== 'stopwatch') return;
+      if (m.mode === next) return;
+      /* Switching modes resets transient running state but keeps
+         duration so the user's last timer setup survives mode flips. */
+      cancelFrame();
+      clearTail();
+      m.mode = next;
+      m.isRunning = false;
+      m.startTime = null;
+      m.accumulated = 0;
+      m.lastFinishedAt = null;
+      writePersisted();
+      render();
+    }
+
+    function start() {
+      var m = state.mini;
+      if (m.mode === 'time') return;
+      if (m.isRunning) return;
+      if (m.mode === 'timer' && remainingMs() <= 0) {
+        /* Restart from full duration on a stale completion. */
+        m.accumulated = 0;
+        m.lastFinishedAt = null;
+      }
+      m.isRunning = true;
+      m.startTime = Date.now();
+      writePersisted();
+      scheduleFrame();
+      render();
+    }
+
+    function pause() {
+      var m = state.mini;
+      if (!m.isRunning) return;
+      m.accumulated += Date.now() - (m.startTime || Date.now());
+      m.isRunning = false;
+      m.startTime = null;
+      cancelFrame();
+      writePersisted();
+      render();
+    }
+
+    function reset() {
+      var m = state.mini;
+      cancelFrame();
+      clearTail();
+      m.isRunning = false;
+      m.startTime = null;
+      m.accumulated = 0;
+      m.lastFinishedAt = null;
+      writePersisted();
+      render();
+    }
+
+    function setDuration(ms) {
+      var m = state.mini;
+      var clamped = Math.max(MIN_DURATION, Math.min(MAX_DURATION, Number(ms) || 0));
+      if (clamped === m.duration) return;
+      m.duration = clamped;
+      /* If timer was idle, applying a new duration also resets accumulated. */
+      if (m.mode === 'timer' && !m.isRunning) {
+        m.accumulated = 0;
+        m.lastFinishedAt = null;
+      }
+      writePersisted();
+      render();
+    }
+
+    function clearTail() {
+      if (state.mini.tailTimer) {
+        clearTimeout(state.mini.tailTimer);
+        state.mini.tailTimer = null;
+      }
+    }
+
+    function completeTimer() {
+      var m = state.mini;
+      cancelFrame();
+      m.isRunning = false;
+      m.startTime = null;
+      m.accumulated = m.duration;
+      m.lastFinishedAt = Date.now();
+      writePersisted();
+
+      /* Subtle visual feedback — completion is silent, regardless of
+         DND. The CSS keys off data-fc-mini-state="done". */
+      render();
+
+      clearTail();
+      state.mini.tailTimer = setTimeout(function () {
+        if (!state.mounted) return;
+        /* Settle back to idle and reset accumulated so re-running is
+           a single tap. */
+        m.lastFinishedAt = null;
+        m.accumulated = 0;
+        writePersisted();
+        render();
+      }, DONE_WINDOW_MS);
+    }
+
+    /* Called from the per-minute clock tick — keeps the time-mode
+       footer synced and (when paused) keeps timer/stopwatch readouts
+       fresh once a minute even without a rAF loop. */
+    function onClockTick(/* now */) {
+      if (!state.mounted) return;
+      /* Only repaint if the card is in a static-but-displayed state. */
+      var m = state.mini;
+      if (m.mode === 'time' || !m.isRunning) {
+        render();
+      }
+    }
+
+    function onVisibilityChange() {
+      if (!state.mounted) return;
+      if (document.hidden) {
+        /* Pause the rAF; keep state running. Math is timestamp-based,
+           so when the tab returns the readout snaps back accurate. */
+        cancelFrame();
+        return;
+      }
+      var m = state.mini;
+      /* On return: if timer already crossed zero in the background,
+         complete now (silent visual). */
+      if (m.mode === 'timer' && m.isRunning && remainingMs() <= 0) {
+        completeTimer();
+        return;
+      }
+      if (shouldAnimate()) scheduleFrame();
+      render();
+    }
+
+    /* ── event binding ─────────────────────────────────────── */
+
+    function bind(card) {
+      if (card.__fcMiniBound) return;
+      card.__fcMiniBound = true;
+
+      card.addEventListener('click', function (event) {
+        var t = event.target;
+        if (!t || !t.closest) return;
+
+        var tab = t.closest('[data-fc-mini-tab]');
+        if (tab && card.contains(tab)) {
+          event.stopPropagation();
+          if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+          setMode(tab.getAttribute('data-fc-mini-tab'));
+          return;
+        }
+
+        /* Stop event bubbling for dial interactions so the parent
+           face-click-to-toggle-details handler doesn't double-fire. */
+        if (t.closest('[data-fc-mini-dial]')) {
+          event.stopPropagation();
+          if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+          return;
+        }
+
+        var action = t.closest('[data-fc-mini-action]');
+        if (action && card.contains(action)) {
+          event.stopPropagation();
+          if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+          var k = action.getAttribute('data-fc-mini-action');
+          if (k === 'toggle') {
+            if (state.mini.isRunning) pause(); else start();
+          } else if (k === 'reset') {
+            reset();
+          }
+          return;
+        }
+      });
+
+      /* Tablist keyboard model: ←/→ moves selection, Home/End jump. */
+      card.addEventListener('keydown', function (event) {
+        var t = event.target;
+        if (!t || !t.closest) return;
+        var tab = t.closest('[data-fc-mini-tab]');
+        if (!tab || !card.contains(tab)) return;
+
+        var keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End'];
+        if (keys.indexOf(event.key) === -1) return;
+        event.preventDefault();
+        var tabs = qsa('[data-fc-mini-tab]', card);
+        var idx = tabs.indexOf(tab);
+        var nextIdx = idx;
+        if (event.key === 'ArrowLeft')  nextIdx = (idx - 1 + tabs.length) % tabs.length;
+        if (event.key === 'ArrowRight') nextIdx = (idx + 1) % tabs.length;
+        if (event.key === 'Home') nextIdx = 0;
+        if (event.key === 'End')  nextIdx = tabs.length - 1;
+        var nextTab = tabs[nextIdx];
+        if (nextTab) {
+          setMode(nextTab.getAttribute('data-fc-mini-tab'));
+          try { nextTab.focus(); } catch (e) {}
+        }
+      });
+    }
+
+    /* ── lifecycle ─────────────────────────────────────────── */
+
+    function mount() {
+      var m = state.mini;
+      var saved = readPersisted();
+      if (saved) {
+        m.mode = saved.mode;
+        m.duration = saved.duration;
+        m.accumulated = saved.accumulated;
+        /* Only restore running state if the gap is plausibly
+           continuous. Browser refresh, SPA nav, or quick tab return
+           all fit comfortably under 10 minutes; anything longer is
+           safer to surface as "paused" so the user opts in again. */
+        var gap = saved.ts ? (Date.now() - saved.ts) : Infinity;
+        if (saved.phase === 'running' && gap >= 0 && gap < RUN_RESTORE_GRACE_MS) {
+          if (m.mode === 'timer') {
+            var rolled = saved.accumulated + gap;
+            if (rolled >= m.duration) {
+              m.accumulated = m.duration;
+              m.lastFinishedAt = Date.now();
+              m.isRunning = false;
+            } else {
+              m.accumulated = rolled;
+              m.startTime = Date.now();
+              m.isRunning = true;
+            }
+          } else if (m.mode === 'stopwatch') {
+            m.accumulated = saved.accumulated + gap;
+            m.startTime = Date.now();
+            m.isRunning = true;
+          }
+        } else {
+          /* Stale running state — degrade to paused with the work preserved. */
+          m.isRunning = false;
+          m.startTime = null;
+        }
+      }
+
+      var root = rootEl();
+      if (!root) return;
+      var face = qs('[data-fc-face]', root);
+      if (!face) return;
+      var card = ensureScaffold(face);
+      if (card) bind(card);
+
+      render();
+      if (shouldAnimate()) scheduleFrame();
+    }
+
+    function unmount() {
+      cancelFrame();
+      clearTail();
+      dialUnbind();
+      /* Retain mode + duration in memory so re-mount paints continuous,
+         but don't keep ticking. */
+    }
+
+    return {
+      mount: mount,
+      unmount: unmount,
+      onClockTick: onClockTick,
+      onVisibilityChange: onVisibilityChange,
+      /* Exposed for diagnostics / external triggers; not part of CE_AMBIENT. */
+      _internals: {
+        setMode: setMode,
+        start: start,
+        pause: pause,
+        reset: reset,
+        setDuration: setDuration
+      }
+    };
+  })();
+
   /* ── Weather load orchestration (SWR + coalesce + abort) ─── */
 
   function loadWeather(force) {
@@ -1284,6 +2474,10 @@
         setHour24(!state.preferences.hour24);
         return;
       }
+      /* Mini Card lives inside .fc-face. Its own handler stopped
+         propagation, but in case anything bubbles, swallow here so the
+         face-click-to-open-details affordance doesn't double-fire. */
+      if (t.closest('[data-fc-mini-card]')) return;
       if (t.closest('[data-fc-face]') || t.closest('[data-fc-weather]') ||
           t.closest('[data-fc-sun]')) {
         setDetailsOpen(!state.detailsOpen);
@@ -1302,6 +2496,9 @@
 
   /* Visibility handler is bound once — it no-ops when unmounted. */
   function handleVisibility() {
+    /* Mini Card cares about both directions of the visibility flip
+       (pause its rAF when hidden, snap back when visible). */
+    MiniCard.onVisibilityChange();
     if (document.hidden) return;
     if (!state.mounted) return;
     /* Returning to the tab: resync the clock face *now* and give the
@@ -1325,6 +2522,8 @@
       /* Page doesn't expose the ambient surface — go inert. */
       teardownTimers();
       abortPendingFetch();
+      MiniCard.unmount();
+      SunCycleCard.unmount();
       removeAttr(document.documentElement, 'data-phase');
       removeAttr(document.documentElement, 'data-clock-phase');
       removeAttr(document.documentElement, 'data-weather');
@@ -1349,6 +2548,9 @@
     renderClock();
     renderWeather();
     renderStatus();
+    /* Mini Card mounts after the clock has painted so its scaffold
+       slots into a settled .fc-face — no layout shift on first paint. */
+    MiniCard.mount();
     bindControls();
 
     loadWeather(false);
@@ -1365,6 +2567,11 @@
     state.mounted = false;
     teardownTimers();
     abortPendingFetch();
+    /* Tear down the additive subsystems before the clock root may be
+       swapped out by the SPA shell. They retain memory state but
+       release timers, rAF, and DOM pointers. */
+    MiniCard.unmount();
+    SunCycleCard.unmount();
     removeAttr(document.documentElement, 'data-phase');
     removeAttr(document.documentElement, 'data-clock-phase');
     removeAttr(document.documentElement, 'data-weather');
