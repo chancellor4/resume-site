@@ -479,25 +479,6 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   }
 }
 
-@media (max-width: 600px) {
-  .nav-shell {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "brand"
-      "links"
-      "mode";
-  }
-
-  .nav-mode {
-    justify-self: stretch;
-  }
-
-  .nav-mode-btn {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
 /* ─── HERO ──────────────────────────────────────────────────── */
 
 .hero {
