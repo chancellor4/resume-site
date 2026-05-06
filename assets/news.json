@@ -1,7 +1,97 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-05-06T10:07:54.213Z",
+  "generatedAt": "2026-05-06T12:13:32.596Z",
   "items": [
+    {
+      "title": "My Mother Left Me a Garage Full of Mysterious Ingredients—And So Much More",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/mother-garage-full-of-mysterious-ingredients",
+      "publishedAt": "2026-05-06T12:00:00.000Z",
+      "excerpt": "After immigrating to the U.S., my mother dispensed with some traditional cooking methods, but when she died she left behind an apothecary of TCM, dried herbs, and ancient ingredie…",
+      "imageUrl": "https://assets.vogue.com/photos/69fa3cfc3449376c9e09578b/master/pass/Mothers-Day_John.jpg"
+    },
+    {
+      "title": "The Influencers That Make Men Shop for Beauty",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/articles/beauty/mens-beauty-grooming-influencers/",
+      "publishedAt": "2026-05-06T12:00:00.000Z",
+      "excerpt": "They’re more likely to be athletes, stylists or dermatologists than traditional content creators.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/4FZL2S4AGVF6XEDB47HES75Y4E.png?auth=99b690108c77ee0fc9e113bef8f10306d68ca867ebe988e6c1cd69b4cb397c8c&amp;smart=true&amp;width=1800&amp;height=1013"
+    },
+    {
+      "title": "'A Magazine Curated By' Blurs the Line Between Beauty and Sports",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/4/a-magazine-curated-by-manual-for-living-life-curated-for-nike-editorial",
+      "publishedAt": "2026-05-06T12:02:28.000Z",
+      "excerpt": "A Magazine Curated By has unveiled its \"A Manual for Living Curated for Nike\" project including a previously unseen accessories collection created through Nike's Project Goddess -…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F04%2F17%2Fnike-fi.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Oil prices drop and stock markets rise after reports of deal to end Iran war",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/c4g8zejyyr3o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-05-06T11:14:45.000Z",
+      "excerpt": "Reports have raised hopes of an agreement between the US and Iran after days of escalation.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/4dd1/live/df595320-493a-11f1-861c-270dbba6d6ae.jpg"
+    },
+    {
+      "title": "Trump Again Shifts U.S. Focus on Strait, Pausing Day-Old Escort Mission",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/live/2026/05/05/world/iran-war-trump-hormuz",
+      "publishedAt": "2026-05-06T11:16:26.000Z",
+      "excerpt": "The president made the announcement in a social media post just hours after Secretary of State Marco Rubio had affirmed the newly created mission, which bore little connection to…",
+      "imageUrl": "https://static01.nyt.com/images/2026/06/05/multimedia/05mideast-blog-promo-0115-cwlm/05mideast-blog-promo-0115-cwlm-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "An Exclusive First Look at Baz Luhrmann and Catherine Martin’s Fantastical Belmond Train Carriage",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/celia-belmond-train-carriage-baz-luhrmann-catherine-martin-exclusive",
+      "publishedAt": "2026-05-06T11:00:00.000Z",
+      "excerpt": "The ‘Midsummer Night’s Dream’-inspired carriage on the Belmond British Pullman is an ode to a fictional actress named Celia—and comes complete with its own custom scent.",
+      "imageUrl": "https://assets.vogue.com/photos/69fab6c0af35ea5fd30e69ba/master/pass/Celia%20Lounge%20Aboard%20British%20Pullman,%20A%20Belmond%20Train,%20England_Credit_Ludovic%20Balay.jpg%20(1).jpg"
+    },
+    {
+      "title": "Inside Accademia del Lusso’s Master’s In Fashion Brand Management",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/articles/workplace-talent/inside-accademia-del-lusso-masters-fashion-brand-management-strategic-skills-fashion-industry/",
+      "publishedAt": "2026-05-06T10:15:40.000Z",
+      "excerpt": "The Milanese fashion and design school is preparing students to enter the industry with the strategic management skills required to tackle the demands of the evolving job market.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/DCNAAAMLCJHK3AUGVSMSXJVILE.jpg?auth=1f7fd4ccb841f6a8c4519a2ad8a820790174afd7717122216e89e4db4a0e253a&amp;smart=true&amp;width=1800&amp;height=1013"
+    },
+    {
+      "title": "Kiko Kostadinov Heads to Tokyo for SS26",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/5/kiko-kostadinov-ss26-accessories-campaign-where-to-buy",
+      "publishedAt": "2026-05-06T10:34:38.000Z",
+      "excerpt": "For Spring/Summer 2026, Kiko Kostadinov headed to the outskirts of Tokyo to capture its latest accessories campaign through the lens of longtime collaborator Kohei Kawatani. Shot…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F06%2FSplit.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Vivek Ramaswamy wins Republican nomination for Ohio governor",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/c4g0xe4qlzxo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-05-06T11:04:06.000Z",
+      "excerpt": "The staunch Trump ally emerged victorious in one of a series of closely-watched primary contests held in the US Midwest.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/52d8/live/09985ab0-4935-11f1-a36a-6bbcbd5b2296.jpg"
+    },
+    {
+      "title": "What We Know About ‘Project Freedom’ in the Strait of Hormuz",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/05/05/world/middleeast/trump-strait-hormuz-plan-project-freedom-iran.html",
+      "publishedAt": "2026-05-06T10:51:33.000Z",
+      "excerpt": "President Trump on Tuesday abruptly paused an American initiative to help guide stranded ships through the Strait of Hormuz.",
+      "imageUrl": "https://static01.nyt.com/images/2026/05/05/multimedia/05live-mideast-wwk-qpht/05live-mideast-wwk-qpht-mediumSquareAt3X.jpg"
+    },
     {
       "title": "30+ Best Ballet Flats to Shop in 2026, From Classic to Mary Janes",
       "source": "Vogue",
@@ -19,96 +109,6 @@
       "publishedAt": "2026-05-06T09:49:56.000Z",
       "excerpt": "Estimated costs related to the conflict in the Middle East tripled, with the UK retailer planning to mitigate them through measures including raising prices.",
       "imageUrl": "https://img.businessoffashion.com/resizer/v2/HNCIK4OQLFHMLEDKWJPZRK2BKQ.jpg?auth=431c75e3c4808ab7dacb4d68f66c6242b25bd70b37367f6e7e3be484cf9d5496&amp;smart=true&amp;width=1800&amp;height=1200"
-    },
-    {
-      "title": "No, Matthieu Blazy Did Not Put Bhavitha Mandava in \"Jeans\" for the Met Gala",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/5/bhavitha-mandava-met-gala-debut-chanel-outfit-jeans-controversy",
-      "publishedAt": "2026-05-06T08:21:00.000Z",
-      "excerpt": "Chanel's newest ambassador, Bhavitha Mandava, made her Met Gala debut this year, walking the green-hued carpet in a look that has since become the subject of widespread controvers…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F06%2Fchanel_gettyimages-2274583943-HD-scaled-e1778054504473.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "China calls for Strait to be reopened 'as soon as possible' in Iran talks",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/c0m21mndm71o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-05-06T09:35:39.000Z",
-      "excerpt": "Wang Yi is holding talks with Iran's foreign minister Aragchi who is on his first trip to China since the war began.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/eb8b/live/a0e743b0-492e-11f1-a36a-6bbcbd5b2296.jpg"
-    },
-    {
-      "title": "Trump Again Shifts U.S. Focus on Strait, Pausing Day-Old Escort Mission",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/05/05/world/iran-war-trump-hormuz",
-      "publishedAt": "2026-05-06T10:02:14.000Z",
-      "excerpt": "The president made the announcement in a social media post just hours after Secretary of State Marco Rubio had affirmed the newly created mission, which bore little connection to…",
-      "imageUrl": "https://static01.nyt.com/images/2026/06/05/multimedia/05mideast-blog-promo-0115-cwlm/05mideast-blog-promo-0115-cwlm-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Vogue First! Shop Dorsey’s Summer Enamel Capsule—Exclusively for the Next 24 Hours",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/dorsey-summer-enamel-capsule",
-      "publishedAt": "2026-05-06T10:00:00.000Z",
-      "excerpt": "Dorsey unveils its newest summer drop—an all-enamel capsule. With Vogue First, readers get exclusive access to shop it before anyone else.",
-      "imageUrl": "https://assets.vogue.com/photos/69f8e8f01cfa495a17acba54/master/pass/VF%20Dorsey%20Holding.jpg"
-    },
-    {
-      "title": "A.P.C. Names New Artistic Director Amid Flux",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/news/luxury/apc-names-new-artistic-director-amid-flux/",
-      "publishedAt": "2026-05-06T04:33:00.000Z",
-      "excerpt": "Ludivine Poiblanc is taking the creative reins at the brand founded by Jean Touitou six months after majority shareholder L Catterton installed Stephanie Phair as president.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/VQEIIQAYJRFGNNNSXL5DQEHVAQ.png?auth=2e7c4a7306ce046c385d664dbbc0217d24f9203e3951c3ea39cc716af817b1e3&amp;smart=true&amp;width=1200&amp;height=1800"
-    },
-    {
-      "title": "Ariana Grande Revists Her 'Dangerous Woman' Era With r.e.m. beauty's Latest Collection",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/5/r-e-m-beauty-ariana-grande-dangerous-woman-collection-where-to-buy",
-      "publishedAt": "2026-05-05T20:57:36.000Z",
-      "excerpt": "Just in time for the 10th year anniversary of Ariana Grande's Dangerous Woman, r.e.m. beauty has unveiled a four-piece collection inspired by the album. In addition to two limited…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F05%2Frembeauty-fi.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Vivek Ramaswamy wins Republican nomination for Ohio governor",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/c4g0xe4qlzxo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-05-06T08:38:01.000Z",
-      "excerpt": "He spent much of the race criticising the state's response to the Covid-19 pandemic led by the Democrat nominee.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/bb36/live/29ffa240-4926-11f1-9546-d74beef04f02.jpg"
-    },
-    {
-      "title": "Trump’s U-turn and hopes of a deal ease tensions in energy markets.",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/05/06/world/iran-us-hormuz-oil/us-iran-hormuz-pause",
-      "publishedAt": "2026-05-06T09:59:39.000Z",
-      "excerpt": "",
-      "imageUrl": "https://static01.nyt.com/images/2026/05/06/multimedia/06us-iran-latest-vhbc/06us-iran-latest-vhbc-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "A.P.C. Taps Ludivine Poiblanc as Artistic Director",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/apc-taps-ludivine-poiblanc-as-artistic-director",
-      "publishedAt": "2026-05-06T05:00:00.000Z",
-      "excerpt": "The French brand founded by Jean Touitou in 1987 is entering a new era, three years after it sold a stake to L Catterton.",
-      "imageUrl": "https://assets.vogue.com/photos/69fa3d63e9c9b8cf0ce4022a/master/pass/apc-vogue-business-story.jpg"
-    },
-    {
-      "title": "Coty Reinstates Annual Profit Target, Warns of Middle East Challenges",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/news/beauty/coty-reinstates-annual-profit-target-warns-of-middle-east-challenges/",
-      "publishedAt": "2026-05-05T21:30:18.000Z",
-      "excerpt": "The beauty company’s net loss grew as it continued a strategic review of its portfolio.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/NXAQOIFSFRHDPIKA7DFCO6FCT4.png?auth=c069eb2fae473a77921d515c49e452f0a3cfbfab2a6dd818c609fc4cd36bcf9a&amp;smart=true&amp;width=1800&amp;height=1013"
     }
   ],
   "sources": {
