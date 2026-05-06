@@ -1,5 +1,8 @@
 # Music Widget v5.3 — chancelloredwards.dev
 
+**working doc - prompt docs like these are meant to map features, micro functionalities and app versions 
+
+
 ## Goal in one line
 Version the vinyl widget to v5.3 as pure resilience — auto-advance, error recovery, and stall protection that turn the player into a station that never goes dead. No new UI surface, no new modules, no new persistence. The widget feels exactly like v5.2 until something tries to break it.
 
