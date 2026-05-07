@@ -1,24 +1,69 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-05-07T10:38:09.709Z",
+  "generatedAt": "2026-05-07T12:24:14.599Z",
   "items": [
     {
-      "title": "Coty Revenues Fall 7% in Q3",
+      "title": "The Vogue Business TikTok Trend Tracker",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/coty-revenues-fall-7-in-q3",
-      "publishedAt": "2026-05-07T10:12:43.000Z",
-      "excerpt": "Sales in the company’s prestige category decreased 5% in the third quarter of 2026.",
-      "imageUrl": "https://assets.vogue.com/photos/69fc57d441d07a3ecf4900ee/master/pass/coty-vogue-business-story%20(1).jpg"
+      "link": "https://www.vogue.com/article/the-vogue-business-tiktok-trend-tracker",
+      "publishedAt": "2026-05-07T12:13:48.000Z",
+      "excerpt": "Vogue Business brings you weekly exclusive data from TikTok, unpacking the latest creators and biggest trends sweeping its Gen Z user base.",
+      "imageUrl": "https://assets.vogue.com/photos/69f37bebcbffb43849c81295/master/pass/GettyImages-200445668-021.jpg"
     },
     {
-      "title": "Industry Leaders Gather in London for Exclusive AI Insights from The Business of Fashion",
+      "title": "Are We Anywhere Near Peak Lip Balm?",
       "source": "Business of Fashion",
       "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/articles/technology/london-industry-leaders-ai-insights-briefing/",
-      "publishedAt": "2026-05-07T09:43:48.000Z",
-      "excerpt": "Senior leaders from Bottega Veneta, Harrods, Bvlgari, Selfridges, Manolo Blahnik and Tiffany & Co, among others, attended an intimate aperitivo evening in London to explore the in…",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/JTASIZ23FBD3TGGNUJNJ2WLUQM.JPG?auth=e4af0d0bbbdcb851f52a2d4a9d5adf5403c2a5f1c8914c71df72e5c4e4a997ba&amp;smart=true&amp;width=1800&amp;height=1013"
+      "link": "https://www.businessoffashion.com/articles/beauty/lip-category-oils-balms-gloss-laneige-mac-gisou/",
+      "publishedAt": "2026-05-07T12:00:00.000Z",
+      "excerpt": "The ‘skinification’ of lip products is still driving the category, but consumer fatigue and cannibalisation are beginning to threaten its continued growth.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/FL2N462PHFEH3BCOETH2G5ZPK4.jpg?auth=962a0657662ee459f8e60195ca5a2c331b803e717f288440ea12694c7d42880d&amp;smart=true&amp;width=1800&amp;height=1013"
+    },
+    {
+      "title": "Victoria's Secret PINK and Frankies Bikinis Head to Laguna Beach",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/5/victorias-secret-pink-frankies-bikinis-collaboration-swimwear-underwear-where-to-buy",
+      "publishedAt": "2026-05-07T11:26:08.000Z",
+      "excerpt": "Victoria's Secret PINK and Frankies Bikinis are officially back together, and they've brought the ultimate California sunshine with them. Launching just in time for your summer tr…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F07%2FSingle-Image-11.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Three women linked to Islamic State arrested in Australia on return from Syria",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/czj2emlv2kjo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-05-07T12:23:45.000Z",
+      "excerpt": "Three women who allegedly supported IS were arrested after they flew home to Australia for the first time in years.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/ba4f/live/c30e7860-0c92-11f1-ab92-c5c4ffbfd0e0.jpg"
+    },
+    {
+      "title": "Netherlands Tests Flight Attendant for Hantavirus as Officials Track Cruise Ship Outbreak",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/05/07/world/europe/hantavirus-cruise-ship-outbreak.html",
+      "publishedAt": "2026-05-07T12:19:03.000Z",
+      "excerpt": "Global health officials are tracking people connected to a deadly outbreak on a cruise ship. One infected passenger had briefly boarded a flight from South Africa to the Netherlan…",
+      "imageUrl": "https://static01.nyt.com/images/2026/05/07/multimedia/07xp-cruise-02-zlbm/07xp-cruise-02-zlbm-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "A New Ralph Lauren Catwalk Book Proves We Really Are in the Midst of a “Ralphissance”",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/a-new-ralph-lauren-catwalk-book-proves-we-really-are-in-the-midst-of-a-ralphissance",
+      "publishedAt": "2026-05-07T12:00:00.000Z",
+      "excerpt": "The tome, written by Bridget Foley, covers all womenswear collections from 1976-2025.",
+      "imageUrl": "https://assets.vogue.com/photos/69fbb0a6d70511f28d513834/master/pass/2164278043"
+    },
+    {
+      "title": "Eli Lilly’s Mounjaro Becomes World’s Top-Selling Drug",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/news/beauty/mounjaro-worlds-top-selling-drug-eli-lilly-glp-1/",
+      "publishedAt": "2026-05-07T11:41:25.000Z",
+      "excerpt": "The GLP-1 medication has surpassed Merck & Co.’s cancer therapy Keytruda as the world’s best-selling medication.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/GRXB7K7PLVCJDOI3ZLMUWY6VZQ.png?auth=c8ff978eb276e0d4e6f63f39f072a5dcc138b7be9e9b9cb3c4423f23ee64cb10&amp;smart=true&amp;width=1800&amp;height=1013"
     },
     {
       "title": "You Can Now Wear Burberry to the Gym",
@@ -30,85 +75,40 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F07%2FSingle-Image-7.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "DR Congo president hints at extending his term and delaying polls",
+      "title": "US judge releases Jeffrey Epstein's purported suicide note",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/c202dkkk70po?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-05-07T10:06:39.000Z",
-      "excerpt": "\"If the people want me to have a third term, I will accept,\" Tshisekedi says, with him due to step down in 2028.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/c996/live/50ad0770-49f8-11f1-a9e7-0f8f590f205b.jpg"
+      "link": "https://www.bbc.com/news/articles/cd7pd0rqwreo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-05-07T11:14:59.000Z",
+      "excerpt": "Epstein's former cellmate claims he found the note, which has not been verified by the BBC.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/da69/live/1e350b00-48b1-11f1-90e6-350a323e11ac.jpg"
     },
     {
       "title": "World in Waiting Game Over Iran Peace Proposal Response",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/05/07/world/middleeast/world-in-waiting-game-over-iran-peace-proposal-response.html",
-      "publishedAt": "2026-05-07T10:10:13.000Z",
+      "link": "https://www.nytimes.com/2026/05/07/world/middleeast/iran-war-us-peace-plan-trump.html",
+      "publishedAt": "2026-05-07T12:02:40.000Z",
       "excerpt": "An Iranian official said that Tehran would convey its reply through Pakistan, a key mediator. Another Iranian official earlier dismissed a reported proposal to end the war as a “l…",
       "imageUrl": "https://static01.nyt.com/images/2026/05/07/multimedia/07int-iran-gjwp/07int-iran-gjwp-mediumSquareAt3X.jpg"
     },
     {
-      "title": "Larger Than Life, the Work of Helen Frankenthaler Takes Over Gagosian",
+      "title": "10 Mini Short Outfits I’m Wearing for Summer 2026",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/helen-frankenthaler-the-moment-and-the-distance-gagosian",
-      "publishedAt": "2026-05-07T10:00:00.000Z",
-      "excerpt": "“Helen Frankenthaler: The Moment and the Distance” is on view at Gagosian, 522 West 21st Street in New York City, through July 2.",
-      "imageUrl": "https://assets.vogue.com/photos/69fa2823af35ea5fd30e5fa3/master/pass/FRANK_1981.0006_CRP.jpg"
+      "link": "https://www.vogue.com/article/mini-short-outfits",
+      "publishedAt": "2026-05-07T11:58:34.000Z",
+      "excerpt": "From vintage terry cloth pairs to silky lace-trimmed styles, here are 10 mini short outfits I’m wearing for summer 2026.",
+      "imageUrl": "https://assets.vogue.com/photos/69fb65b74a6a1f4fc064d76a/master/pass/image7%20copy.png"
     },
     {
-      "title": "Tariff Refunds Have Started Being Paid by Trump Administration",
+      "title": "Tapestry Lifts Annual Targets, Beats Quarterly Estimates on Strong Demand for Tabby Bags",
       "source": "Business of Fashion",
       "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/news/retail/tariff-refunds-have-started-being-paid-by-trump-administration/",
-      "publishedAt": "2026-05-07T08:44:55.000Z",
-      "excerpt": "Refunds for the $166 billion in global tariffs that the US Supreme Court declared unlawful earlier this year have started hitting importers’ bank accounts.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/73XORGARGZEIPE6UIKP2P4UO5U.png?auth=bf6c9944483e8586eb4d75c489902481dd82e20313dba07d9c7a8fb026b687cd&amp;smart=true&amp;width=1800&amp;height=1013"
-    },
-    {
-      "title": "Joshua Samuels Drops Its Debut Homeware Collection",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/5/joshua-samuels-homeware-collection-bedding-interiors-release-date",
-      "publishedAt": "2026-05-07T08:52:30.000Z",
-      "excerpt": "What started in his mum's shed has now grown into a fully fledged fashion label dressing stars including Little Simz and Sekou. Joshua Samuels is the man behind the London-based s…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F06%2FSingle-Image-4.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Islamic State-linked women arrive home in Australia from Syria",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/czj2emlv2kjo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-05-07T10:04:50.000Z",
-      "excerpt": "A group of nine women and children has landed in Melbourne while another woman and her child arrived in Sydney.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/ba4f/live/c30e7860-0c92-11f1-ab92-c5c4ffbfd0e0.jpg"
-    },
-    {
-      "title": "What We Know About ‘Project Freedom’ in the Strait of Hormuz",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/05/05/world/middleeast/trump-strait-hormuz-plan-project-freedom-iran.html",
-      "publishedAt": "2026-05-07T10:03:03.000Z",
-      "excerpt": "President Trump on Tuesday abruptly paused an American initiative to help guide stranded ships through the Strait of Hormuz.",
-      "imageUrl": "https://static01.nyt.com/images/2026/05/05/multimedia/05live-mideast-wwk-qpht/05live-mideast-wwk-qpht-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Feels Like a Steal: Shop Vogue Favorite Under-$300 Finds",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/feels-like-a-steal",
-      "publishedAt": "2026-05-07T10:00:00.000Z",
-      "excerpt": "Love a good fashion find? Same. And while there’s plenty we recommend on a daily basis, what makes us play for keeps is in the name: when it feels like a steal.",
-      "imageUrl": "https://assets.vogue.com/photos/69fb7dbac7395d3400324e42/master/pass/050626_feelslikeasteal_holding.jpg"
-    },
-    {
-      "title": "Sustainable Fashion’s New Marketing Angle Is All About Wellness",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/articles/sustainability/sustainable-fashions-new-marketing-angle-is-wellness/",
-      "publishedAt": "2026-05-07T04:30:00.000Z",
-      "excerpt": "As sustainability loses its allure, brands are reframing their messaging around use of natural fibres or avoidance of chemicals to appeal to customers.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/56RU2OI5WFAN3GP2YRZUVQN4BM.jpg?auth=a4fbc5b39e562792158d78e3253300589b602a82ed04c7001db34775d231191b&amp;smart=true&amp;width=1800&amp;height=1016"
+      "link": "https://www.businessoffashion.com/news/luxury/tapestry-lifts-annual-targets-beats-quarterly-estimates-on-strong-demand-for-tabby-bags/",
+      "publishedAt": "2026-05-07T11:12:59.000Z",
+      "excerpt": "The Coach owner raised its annual forecasts for the third time this year as it continues to attract affluent Gen Z customers.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/KRGPD7GU6RG2HK6XCMBUKFLU2I.png?auth=1f063a044aa4c3b9f7d635011b0df324e3ae5dece9d2ceffbd0a5f7261d94adb&amp;smart=true&amp;width=1800&amp;height=1013"
     }
   ],
   "sources": {
