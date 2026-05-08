@@ -1,7 +1,52 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-05-08T14:30:57.266Z",
+  "generatedAt": "2026-05-08T16:08:45.705Z",
   "items": [
+    {
+      "title": "With Her First Solo Museum Show in the US, Widline Cadet Conjures Scenes She Can’t Quite Remember",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/widline-cadet-milwaukee-art-museum",
+      "publishedAt": "2026-05-08T16:00:00.000Z",
+      "excerpt": "In “Currents 40: Widline Cadet” at the Milwaukee Art Museum, the photographer presents a visual language that investigates what it means to live with a fractured sense of home sca…",
+      "imageUrl": "https://assets.vogue.com/photos/69fbd85f157fe7aa55055706/master/pass/WCadet_02.jpg"
+    },
+    {
+      "title": "Footwear’s Inflation Solution Is a Big Problem",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/briefings/sports/footwears-inflation-solution-is-a-big-problem/",
+      "publishedAt": "2026-05-08T15:00:27.000Z",
+      "excerpt": "US footwear sales have remained flat despite consumers buying less. Here’s why that’s a bad sign for the industry.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/SIBQGG6UNNAV3LWZ25KJN47XCM.jpg?auth=66c6dc508f165bf7eab511df3c31dd600d31cd282944d7dd053f98b5ae81c94c&amp;smart=true&amp;width=1800&amp;height=1013"
+    },
+    {
+      "title": "The Music Festivals on Our Summer Hit List",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/5/music-festivals-summer-lineups-jennie-addison-rae-tomorrowland-primavera",
+      "publishedAt": "2026-05-08T15:16:05.000Z",
+      "excerpt": "With Coachella behind us and summer creeping ever closer, there's one thing on every music lover’s mind: festival season. From vibrating basslines and sunrise DJ sets to indie ant…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F07%2FSingle-Image-19.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "International cyber attack disrupts swathe of universities and schools",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/ce3pq0136eqo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-05-08T16:04:01.000Z",
+      "excerpt": "A hacking group breached the academic software Canvas, used by thousands of schools and universities across the globe.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/7c9d/live/c19e8dd0-4ad1-11f1-92c1-4f69e4cb55db.jpg"
+    },
+    {
+      "title": "Live Updates: U.K. Local Election Results Point to Big Losses for Starmer’s Party",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/live/2026/05/08/world/uk-local-elections-results",
+      "publishedAt": "2026-05-08T16:07:38.000Z",
+      "excerpt": "With votes still being tallied, Prime Minister Keir Starmer took responsibility for Labour losing hundreds of municipal seats but insisted he would not resign.",
+      "imageUrl": "https://static01.nyt.com/images/2026/05/08/multimedia/08-uk-elections-promo-1040a/08-uk-elections-promo-1040a-mediumSquareAt3X.jpg"
+    },
     {
       "title": "24 Travel Dresses for Every Summer Vacation Occasion",
       "source": "Vogue",
@@ -30,22 +75,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F04%2Fkulfi-fi.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "International cyber attack disrupts swathe of universities and schools",
+      "title": "Iran accuses US of 'reckless military adventure'",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/ce3pq0136eqo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-05-08T14:16:04.000Z",
-      "excerpt": "A hacking group breached the academic software Canvas, used by thousands of schools and universities across the globe.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/7c9d/live/c19e8dd0-4ad1-11f1-92c1-4f69e4cb55db.jpg"
+      "link": "https://www.bbc.com/news/articles/c99lpn9ze8ro?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-05-08T15:13:55.000Z",
+      "excerpt": "Iran's Foreign Minister Abbas Araghchi says the US opts for a \"reckless military adventure\" every time a \"diplomatic solution is on the table\".",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/9c78/live/9157bc30-4add-11f1-9eb0-1940b1e77213.jpg"
     },
     {
-      "title": "Iran War Live Updates: Tehran Accuses U.S. of ‘Reckless’ Attacks After Exchange of Fire in Strait",
+      "title": "The Green Party gained ground in some of Labour’s London strongholds.",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/05/08/world/iran-strikes-trump-ceasefire-hormuz",
-      "publishedAt": "2026-05-08T14:26:08.000Z",
-      "excerpt": "Iran’s foreign minister said that the United States was undermining diplomacy, as Iranian officials said that Washington and Tehran were debating a peace proposal. Secretary of St…",
-      "imageUrl": "https://static01.nyt.com/images/2026/05/08/multimedia/08live-mideast-promo-qkmb/08live-mideast-promo-qkmb-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/live/2026/05/08/world/uk-local-elections-results/the-green-party-gained-ground-in-some-of-labours-london-strongholds",
+      "publishedAt": "2026-05-08T16:07:36.000Z",
+      "excerpt": "",
+      "imageUrl": "https://static01.nyt.com/images/2026/05/08/multimedia/08uk-elections-inner-london-gwzq/08uk-elections-inner-london-gwzq-mediumSquareAt3X.jpg"
     },
     {
       "title": "Eating This Refrigerator Staple Is an Easy Way To Strengthen Your Immune System",
@@ -64,51 +109,6 @@
       "publishedAt": "2026-05-08T11:56:31.000Z",
       "excerpt": "The fashion retailer denied infringing Estée Lauder’s Jo Malone trademark, saying in court filings that it uses the perfumer’s name on collaboration scents in line with principles…",
       "imageUrl": "https://img.businessoffashion.com/resizer/v2/PLGSDUCTBFGNBL4HOO6375CX7I.jpg?auth=4c1adea2f8f45ea81adc80aa09e403bca69c62b89bd72db2475c269aebec6166&amp;smart=true&amp;width=900&amp;height=1350"
-    },
-    {
-      "title": "Palm Angels Rides the Wave of Biking Culture for SS26",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/5/palm-angels-ss26-island-speed-campaign-motorbikes-skate-jamaica-la-where-to-buy",
-      "publishedAt": "2026-05-08T13:44:38.000Z",
-      "excerpt": "Palm Angels is shifting gears for Spring/Summer 2026 with \"Island Speed,\" a campaign that captures the high-octane energy of the Jamaican coastline. Built around the striking visu…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F08%2FCopy-of-FEATURE-SIZE-47.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Iran accuses US of 'reckless military adventure'",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/c99lpn9ze8ro?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-05-08T14:14:24.000Z",
-      "excerpt": "Iran's Foreign Minister Abbas Araghchi says the US opts for a \"reckless military adventure\" every time a \"diplomatic solution is on the table\".",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/9c78/live/9157bc30-4add-11f1-9eb0-1940b1e77213.jpg"
-    },
-    {
-      "title": "Live Updates: U.K. Local Election Results Point to Big Losses for Starmer’s Party",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/05/08/world/uk-local-elections-results",
-      "publishedAt": "2026-05-08T14:26:08.000Z",
-      "excerpt": "With votes still being tallied, Prime Minister Keir Starmer took responsibility for Labour losing hundreds of municipal seats but insisted he would not resign.",
-      "imageUrl": "https://static01.nyt.com/images/2026/05/08/multimedia/08live-ukelection-header-kgwv-promo/08live-ukelection-header-kgwv-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Preparing the Oula, My Mother and I Found Common Ground",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/preparing-the-oula",
-      "publishedAt": "2026-05-08T12:37:35.000Z",
-      "excerpt": "My mother had raised me to be independent. And yet, she was also attentive to the persistent social pressures of the village. She wanted both for me: freedom and conformity.",
-      "imageUrl": "https://assets.vogue.com/photos/69fdd6f6a9013e4b4c1cff7e/master/pass/Mothers-Day_Boutheina.jpg"
-    },
-    {
-      "title": "Schwarzkopf Maker Henkel Beats Organic Sales Forecasts Driven by Resilient Volumes",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/news/beauty/henkel-schwarzkopf-beats-organic-sales-forecasts/",
-      "publishedAt": "2026-05-08T09:17:13.000Z",
-      "excerpt": "German firm Henkel reported an organic 1.7 percent rise in first-quarter sales, beating market expectations and growing both its consumer goods and adhesives businesses.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/HSQBO5PMGNABDJGURW3XACHW3Y.jpg?auth=426ddb1d0dfd9d59770c7a5c23f56fae448d3d5e96a6ce964c6173f9d0c641e5&amp;smart=true&amp;width=1800&amp;height=1013"
     }
   ],
   "sources": {
