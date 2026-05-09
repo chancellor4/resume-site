@@ -1,13 +1,13 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-05-09T15:40:36.468Z",
+  "generatedAt": "2026-05-09T16:40:14.056Z",
   "items": [
     {
       "title": "Fashion Institute of Technology Fall 2026 Ready-to-Wear",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/fall-2026-ready-to-wear/fashion-institute-of-technology",
-      "publishedAt": "2026-05-09T15:36:12.000Z",
+      "publishedAt": "2026-05-09T16:35:36.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/69ff0a7f552320d9d865d26c/master/pass/00001-fashion-institute-of-technology-fall-2026-ready-to-wear-credit-getty-designer-Sebastian%20Matus.jpg"
     },
@@ -30,7 +30,52 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F08%2Ftelfar-new-utility-shopping-tote-bag-release-info-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "'I will serve not rule over Hungary,' says new PM",
+      "title": "Person killed after being hit by plane on runway at Denver airport",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/c5y95782wyko?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-05-09T16:21:48.000Z",
+      "excerpt": "The unidentified individual had jumped a perimeter fence two minutes before being struck by the airliner.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/8fcf/live/850f4fa0-4bab-11f1-a339-0992e1239801.jpg"
+    },
+    {
+      "title": "Here’s the latest.",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/live/2026/05/09/world/iran-strikes-trump-ceasefire-hormuz/heres-the-latest",
+      "publishedAt": "2026-05-09T16:14:32.000Z",
+      "excerpt": "",
+      "imageUrl": null
+    },
+    {
+      "title": "This New Cookbook by the Founder of Ghia Will Transport You Straight to a Mediterranean Summer",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/melanie-masarin-cookbook-interview",
+      "publishedAt": "2026-05-09T16:30:02.000Z",
+      "excerpt": "Mélanie Masarin shares a recipe for fig and yogurt cake from her new cookbook, Riviera.",
+      "imageUrl": "https://assets.vogue.com/photos/69ff60d601f89a80af0bec87/master/pass/Chous%20Farcis_credit%20Hugh%20Davison.jpg"
+    },
+    {
+      "title": "Examining Lauren Sánchez Bezos’s Emerging Influence on Fashion",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/briefings/this-week-in-fashion/examining-lauren-sanchez-bezoss-emerging-influence-on-fashion/",
+      "publishedAt": "2026-05-08T19:00:00.000Z",
+      "excerpt": "Robert Williams weighs in on the controversy kicked up by the wife of billionaire Jeff Bezos and what it reveals about media and power.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/QP2IFUWYBZGTZEP4XP7BQK6KKU.jpg?auth=e6dee2c8c4f92da106f1eb1f3d302a1dbc2d0bfac0fb8a91ba57f639d3a13253&amp;smart=true&amp;width=2406&amp;height=3375"
+    },
+    {
+      "title": "The Music Festivals on Our Summer Hit List",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/5/music-festivals-summer-lineups-jennie-addison-rae-tomorrowland-primavera",
+      "publishedAt": "2026-05-08T15:16:05.000Z",
+      "excerpt": "With Coachella behind us and summer creeping ever closer, there's one thing on every music lover’s mind: festival season. From vibrating basslines and sunrise DJ sets to indie ant…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F07%2FSingle-Image-19.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "I will serve - not rule over Hungary, says new PM",
       "source": "BBC World",
       "sourceType": "global-affairs",
       "link": "https://www.bbc.com/news/articles/ce3pqvvzgnko?at_medium=RSS&amp;at_campaign=rss",
@@ -55,51 +100,6 @@
       "publishedAt": "2026-05-09T15:00:02.000Z",
       "excerpt": "From Emma Chamberlain’s Art Deco-inspired nails to Havana Rose Liu’s pearlescent glow—this week in celebrity beauty proved glam is art too.",
       "imageUrl": "https://assets.vogue.com/photos/69fed341cb1c9e884f5a2079/master/pass/SnapInsta.to_686955663_18587622964011441_4755858069551420976_n.jpg"
-    },
-    {
-      "title": "Examining Lauren Sánchez Bezos’s Emerging Influence on Fashion",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/briefings/this-week-in-fashion/examining-lauren-sanchez-bezoss-emerging-influence-on-fashion/",
-      "publishedAt": "2026-05-08T19:00:00.000Z",
-      "excerpt": "Robert Williams weighs in on the controversy kicked up by the wife of billionaire Jeff Bezos and what it reveals about media and power.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/QP2IFUWYBZGTZEP4XP7BQK6KKU.jpg?auth=e6dee2c8c4f92da106f1eb1f3d302a1dbc2d0bfac0fb8a91ba57f639d3a13253&amp;smart=true&amp;width=2406&amp;height=3375"
-    },
-    {
-      "title": "The Music Festivals on Our Summer Hit List",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/5/music-festivals-summer-lineups-jennie-addison-rae-tomorrowland-primavera",
-      "publishedAt": "2026-05-08T15:16:05.000Z",
-      "excerpt": "With Coachella behind us and summer creeping ever closer, there's one thing on every music lover’s mind: festival season. From vibrating basslines and sunrise DJ sets to indie ant…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F07%2FSingle-Image-19.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Australia's right-wing One Nation party scores historic parliamentary win",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/cwy2e4z4npro?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-05-09T14:36:21.000Z",
-      "excerpt": "One Nation gains its first seat in the lower house, in a by-election seen as a key test for the populist party.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/cd0f/live/da918db0-4bb2-11f1-a339-0992e1239801.jpg"
-    },
-    {
-      "title": "China’s Exports and Imports Set Records in April Amid High Energy Costs",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/05/09/business/china-april-trade-exports-imports.html",
-      "publishedAt": "2026-05-09T15:24:47.000Z",
-      "excerpt": "The country’s exports surged and its trade surplus with the United States widened ahead of President Trump’s scheduled visit next week to Beijing.",
-      "imageUrl": "https://static01.nyt.com/images/2026/05/09/multimedia/09biz-china-trade-fmgh/09biz-china-trade-fmgh-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "What Was Lost When a Beloved Home Was Sold—and What Was Gained",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/beloved-home-was-sold",
-      "publishedAt": "2026-05-09T12:00:00.000Z",
-      "excerpt": "The house created the kind of boredom and stillness that forced me to create worlds out of rocks, sun, and sea—worlds that have stayed in much of my work and consciousness.",
-      "imageUrl": "https://assets.vogue.com/photos/69fdf5ebb3d0be18547d0d95/master/pass/Mothers-Day_Chiara.jpg"
     },
     {
       "title": "The Great Sustainability Rebrand",
