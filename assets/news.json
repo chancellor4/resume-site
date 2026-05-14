@@ -1,33 +1,78 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-05-14T15:38:32.545Z",
+  "generatedAt": "2026-05-14T17:30:05.317Z",
   "items": [
     {
       "title": "McQueen Pre-Fall 2026",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/pre-fall-2026/alexander-mcqueen",
-      "publishedAt": "2026-05-14T15:35:32.000Z",
+      "publishedAt": "2026-05-14T17:25:06.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a0439caa613662858c4f93e/master/pass/00001-mcqueen-pre-fall-2026-credit-brand.jpg"
     },
     {
-      "title": "Boots Appoints New CEO Amid IPO Speculation",
+      "title": "Can Luxury Bounce Back? The Bears Are Getting Louder",
       "source": "Business of Fashion",
       "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/news/beauty/boots-appoints-new-ceo/",
-      "publishedAt": "2026-05-14T15:15:16.000Z",
-      "excerpt": "The UK pharmacy chain has chosen Alex Baldock, formerly of the technology retailer Currys, to lead the company as it prepares for a listing on the London Stock Exchange.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/RZYPTV4M4JFOXNTUYZJKIPCHPE.jpg?auth=e234c1e30eec80fd618924a26e7f13f96acc9ebd67948039b0ecd68dd8b61e74&amp;smart=true&amp;width=900&amp;height=1350"
+      "link": "https://www.businessoffashion.com/briefings/luxury/can-luxury-bounce-back-the-bears-are-getting-louder/",
+      "publishedAt": "2026-05-14T17:02:20.000Z",
+      "excerpt": "‘Sell any rally,’ Berenberg says, as Barclays forecasts long-term stagnation. Plus: Burberry’s cautious outlook, Anderson’s Dior cruise show in LA, a renewed focus on placemaking.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/QKA55BN4LNEXJAQMG3V2TBWVPI.png?auth=6cce5eaaab8a49846958b65ba9342bc8ad166abbd6c4ae04c23e26371be99a8a&amp;smart=true&amp;width=1800&amp;height=1013"
     },
     {
-      "title": "Good Dye Young Taps Miranda Rae to Release Her Very Own Hair Dye",
+      "title": "Juicy Couture and ROXY Are Bringing Y2K to This Summer's Swimwear",
       "source": "Hypebae",
       "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/5/good-dye-young-miranda-rae-baddie-hair-dye-where-to-buy",
-      "publishedAt": "2026-05-14T14:38:10.000Z",
-      "excerpt": "Good Dye Young has released \"Baddie,\" a pink hair dye inspired by influencer Miranda Rae's signature hair color. Described by the brand as \"a bubble gum pink for anyone who's ever…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F14%2Fgdy-fi.jpg?w=800&cbr=1&q=90&fit=max"
+      "link": "https://hypebae.com/2026/5/juicy-couture-roxy-y2k-swim-collaboration-tracksuit-bikinis-release-info-where-to-buy",
+      "publishedAt": "2026-05-14T16:22:47.000Z",
+      "excerpt": "It's a Y2K link-up for the ages: ROXY and Juicy Couture just dropped a beachy collaboration for the summer. Bringing two icons of early 2000s fashion together for a sun-soaked col…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F14%2Fjuicy-couture-roxy-y2k-swim-collaboration-tracksuit-bikinis-release-info-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Cuba considers $100m US aid offer as energy crisis worsens",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/cd7pyrj0vx7o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-05-14T16:05:04.000Z",
+      "excerpt": "Cuba says it is unclear if the US aid offer would be in cash or assistance in-kind as shortages hit.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/c3a8/live/b2271bc0-4fad-11f1-b2ff-f5e2d2fddf7e.jpg"
+    },
+    {
+      "title": "Who Is Wes Streeting, the Cabinet Minister Who Just Resigned From Keir Starmer’s Government?",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/05/14/world/europe/uk-who-is-wes-streeting.html",
+      "publishedAt": "2026-05-14T16:49:20.000Z",
+      "excerpt": "Mr. Streeting has an unusual background for a British government minister. His grandfather went to prison for armed robbery, and he was the first in his family to graduate from co…",
+      "imageUrl": "https://static01.nyt.com/images/2026/05/14/multimedia/14int-UK-Streeting-wtk-HFO-chvk/14int-UK-Streeting-wtk-HFO-chvk-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Lee Mathews Australia Resort 2027",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/australia-resort-2027/lee-mathews",
+      "publishedAt": "2026-05-14T17:25:06.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a0572eeebf5454982aed0c2/master/pass/00001-lee-mathews-resort-2027-australia-credit-gorunway.jpg"
+    },
+    {
+      "title": "Ferragamo Quarterly Sales Down Slightly",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/news/luxury/ferragamo-quarterly-sales-down-slightly/",
+      "publishedAt": "2026-05-14T16:37:25.000Z",
+      "excerpt": "Efforts by the Italian label to streamline its product offer showed signs of paying off as sales increased in its own stores.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/6FUQQ63DWVGVPK4E2LBADQXYQM.jpg?auth=ad87838ff4b6266f75401a4c7f2093d3dc68478a88f7afeb99edcf8220d5c7c5&amp;smart=true&amp;width=1980&amp;height=1112"
+    },
+    {
+      "title": "Collina Strada and Stand Oil Just Dropped Your Next It-Accessories",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/5/stand-oil-collina-strada-collaboration-bags-accessories-release-date",
+      "publishedAt": "2026-05-14T15:51:10.000Z",
+      "excerpt": "Buzzy Korean label Stand Oil is teaming up with NYC favorite Collina Strada for a limited-edition accessories capsule that merges Seoul-born practicality with the experimental edg…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F14%2FSingle-Image-75.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
       "title": "In pictures: Trump hosted by Xi Jinping in Beijing on two-day summit",
@@ -39,76 +84,31 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/e7f2/live/a0f1c350-4f76-11f1-8b8c-6d33e1d5abb6.jpg"
     },
     {
-      "title": "After Xi’s Warning on Taiwan, He and Trump Strike Positive Tone",
+      "title": "Angela Rayner, Former U.K. Deputy Prime Minister, Cleared of Wrongdoing Over Taxes",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/05/13/world/trump-xi-summit-china",
-      "publishedAt": "2026-05-14T15:37:05.000Z",
-      "excerpt": "Xi Jinping, China’s leader, told President Trump that if the Taiwan issue were handled poorly, it could lead to a clash with the United States. Later, at a state dinner, they emph…",
-      "imageUrl": "https://static01.nyt.com/images/2026/06/13/multimedia/13trump-xi-landmarks-new-fptz-promo/13trump-xi-landmarks-new-fptz-promo-mediumSquareAt3X-v2.jpg"
-    },
-    {
-      "title": "Lee Mathews Australia Resort 2027",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/australia-resort-2027/lee-mathews",
-      "publishedAt": "2026-05-14T15:35:32.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a0572eeebf5454982aed0c2/master/pass/00001-lee-mathews-resort-2027-australia-credit-gorunway.jpg"
-    },
-    {
-      "title": "Beauty Is Inherently Political. In 2026, That’s a Problem.",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/briefings/beauty/beauty-is-inherently-political-in-2026-thats-a-problem/",
-      "publishedAt": "2026-05-14T15:00:52.000Z",
-      "excerpt": "This week, Priya Rao goes into it all: apolitical beauty brands, Armani sale rumours, Skky Partners’ undoing and more.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/LFFIQXFHOZF7PPR3SPP6FGMCDY.jpg?auth=66ad13694e2778891fdf5574f6587623053ffbea11f7856aa132bfce61bddd8e&amp;smart=true&amp;width=3442&amp;height=1937"
-    },
-    {
-      "title": "Inside Lucila Safdie and Angela Hill's Nostalgic Ode to Teenage Girlhood",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/5/lucila-safdie-angela-hill-zine-book-every-girl-for-herself-dover-street-market-photo-london-opening-dates-where-to-buy",
-      "publishedAt": "2026-05-14T13:41:56.000Z",
-      "excerpt": "Rainy afternoons walking with your best friend after school are core memories for many, with rituals of girlhood making up an intimate part of our psyche. Designer Lucila Safdie a…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F14%2FSingle-Image-74.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Warning of record global temperatures as chance of very strong El Niño grows",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/weather/articles/cvgzn11v421o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-05-14T13:56:57.000Z",
-      "excerpt": "As El Niño develops this year, scientists are increasingly confident it could be one of the strongest on record with global consequences, as Simon King explains.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/26ab/live/4af7c6f0-4fa0-11f1-a653-99be7c4b0ffa.jpg"
-    },
-    {
-      "title": "Russia Pummels Kyiv in the Largest Drone Attack of the War",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/05/14/world/europe/ukraine-strike-kyiv-russia-putin.html",
-      "publishedAt": "2026-05-14T15:28:50.000Z",
-      "excerpt": "At least seven people were killed and dozens were wounded in a drone and missile assault, days after President Vladimir Putin of Russia said the war could end soon.",
-      "imageUrl": "https://static01.nyt.com/images/2026/05/14/multimedia/14int-ukraine-strike-fmpw/14int-ukraine-strike-fmpw-mediumSquareAt3X-v2.jpg"
+      "link": "https://www.nytimes.com/2026/05/14/world/europe/angela-rayner-tax-uk-starmer.html",
+      "publishedAt": "2026-05-14T16:48:18.000Z",
+      "excerpt": "Angela Rayner, who resigned last year after paying the wrong rate of tax on an apartment purchase, said an investigation found she had not done so deliberately.",
+      "imageUrl": "https://static01.nyt.com/images/2026/05/14/multimedia/14int-uk-rayner-kzvj/14int-uk-rayner-kzvj-mediumSquareAt3X.jpg"
     },
     {
       "title": "Iordanes Spyridon Gogos Australia Resort 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/australia-resort-2027/iordanes-spyridon-gogos",
-      "publishedAt": "2026-05-14T15:35:32.000Z",
+      "publishedAt": "2026-05-14T17:25:06.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a055128ec02759a205b7e33/master/pass/00001-iordanes-spyridon-gogos-resort-2027-australia-credit-gorunway.jpg"
     },
     {
-      "title": "Watches of Switzerland Hits Record Driven by US Watch Collectors",
+      "title": "Boots Appoints New CEO Amid IPO Speculation",
       "source": "Business of Fashion",
       "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/news/luxury/watches-of-switzerland-hits-record-driven-by-us-watch-collectors/",
-      "publishedAt": "2026-05-14T13:38:32.000Z",
-      "excerpt": "Group revenues surged to a record last year and profit will come in higher than expected after strong sales in the vital US market.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/BBHZYSNDAZFHDEXTJVCOUDBDJQ.png?auth=c886e5fedde6395ecc9131fbd5edccb6be4523b0ddc410cdb70bfb19d0d4f065&amp;smart=true&amp;width=1800&amp;height=1013"
+      "link": "https://www.businessoffashion.com/news/beauty/boots-appoints-new-ceo/",
+      "publishedAt": "2026-05-14T15:15:16.000Z",
+      "excerpt": "The UK pharmacy chain has chosen Alex Baldock, formerly of the technology retailer Currys, to lead the company as it prepares for a listing on the London Stock Exchange.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/RZYPTV4M4JFOXNTUYZJKIPCHPE.jpg?auth=e234c1e30eec80fd618924a26e7f13f96acc9ebd67948039b0ecd68dd8b61e74&amp;smart=true&amp;width=900&amp;height=1350"
     }
   ],
   "sources": {
