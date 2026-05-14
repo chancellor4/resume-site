@@ -1,18 +1,90 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-05-14T08:40:47.575Z",
+  "generatedAt": "2026-05-14T11:08:37.534Z",
   "items": [
     {
       "title": "Lee Mathews Australia Resort 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/australia-resort-2027/lee-mathews",
-      "publishedAt": "2026-05-14T08:39:43.000Z",
+      "publishedAt": "2026-05-14T11:05:56.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a0572eeebf5454982aed0c2/master/pass/00001-lee-mathews-resort-2027-australia-credit-gorunway.jpg"
     },
     {
-      "title": "Burberry Sales Improve As Turnaround Bears Fruit",
+      "title": "Dior Goes to Hollywood a Year Into Anderson’s Revamp",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/reviews/fashion-week/dior-cruise-2027-jonathan-anderson/",
+      "publishedAt": "2026-05-14T09:54:57.000Z",
+      "excerpt": "The designer’s reboot of the French couture house landed in Los Angeles for a Cruise outing that was as electrifying and unresolved as ever, reports Angelo Flaccavento.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/3YUOLHRIHBAJHMZFLQUVBMLALE.png?auth=801ee1a236dc714f466d817e48eb0a2562d83880d8237e9d29a05ba574ad3edc&amp;smart=true&amp;width=1800&amp;height=1013"
+    },
+    {
+      "title": "Rescuers pull dead from rubble of Kyiv flats after massive Russian strikes",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/cq5p8yygq94o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-05-14T09:50:29.000Z",
+      "excerpt": "Children are among the injured after Russia launched drones and missiles across Ukraine, officials say.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/64cb/live/20a60940-4f7b-11f1-8b8c-6d33e1d5abb6.jpg"
+    },
+    {
+      "title": "Trump and Xi Discuss the Need to Open the Strait of Hormuz, U.S. Says",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/05/14/world/asia/trump-xi-iran.html",
+      "publishedAt": "2026-05-14T11:00:58.000Z",
+      "excerpt": "Earlier, Secretary of State Marco Rubio said in an interview that China should take a more active role in resolving a standoff over the strait.",
+      "imageUrl": "https://static01.nyt.com/images/2026/06/13/multimedia/13trump-xi-iran-zjkq/13trump-xi-iran-zjkq-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Iordanes Spyridon Gogos Australia Resort 2027",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/australia-resort-2027/iordanes-spyridon-gogos",
+      "publishedAt": "2026-05-14T11:05:56.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a055128ec02759a205b7e33/master/pass/00001-iordanes-spyridon-gogos-resort-2027-australia-credit-gorunway.jpg"
+    },
+    {
+      "title": "Violette Serrat, Andrew Dahling, Dr. Fatima Cody Stanford and Jane Hertzmark Hudis to Speak at The Business of Beauty Global Forum 2026",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/events/beauty/the-business-of-beauty-global-forum-california-global-wellness-industry-2026/",
+      "publishedAt": "2026-05-14T09:33:00.000Z",
+      "excerpt": "The Business of Beauty Global Forum 2026 returns to Napa Valley this June. Request your invitation to attend our annual gathering for leaders shaping the global beauty and wellnes…",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/HEO3TY7RWRBSPMNJCS5LSLCOO4.png?auth=b293fa6279c1645b14899450031cadf8f9e3097c5142aea4b4fe0d6f24ae3b93&amp;smart=true&amp;width=1800&amp;height=1013"
+    },
+    {
+      "title": "In pictures: Trump hosted by Xi Jinping in Beijing on two-day summit",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/cdxp0g4q3q2o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-05-14T09:44:23.000Z",
+      "excerpt": "President Trump was welcomed by President Xi Jinping in Beijing for what will be a whirlwind tour.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/e7f2/live/a0f1c350-4f76-11f1-8b8c-6d33e1d5abb6.jpg"
+    },
+    {
+      "title": "Key Moments From the First Day of Trump’s China Visit",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/05/14/world/asia/trump-first-day-china-xi.html",
+      "publishedAt": "2026-05-14T10:26:54.000Z",
+      "excerpt": "During the first round of two days of talks, Xi Jinping issued a stern warning about Taiwan while Trump touted all the top business leaders in his delegation.",
+      "imageUrl": "https://static01.nyt.com/images/2026/05/14/multimedia/14int-trump-moments-hcgz/14int-trump-moments-hcgz-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Christian Dior Resort 2027",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/resort-2027/christian-dior",
+      "publishedAt": "2026-05-14T11:05:56.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a056c313737c0214808df89/master/pass/00001-christian-dior-resort-2027-credit-gorunway.jpg"
+    },
+    {
+      "title": "Burberry’s Cautious Outlook Disappoints After Sales Boost",
       "source": "Business of Fashion",
       "sourceType": "fashion-business",
       "link": "https://www.businessoffashion.com/news/luxury/burberry-sales-improve-as-turnaround-bears-fruit/",
@@ -21,100 +93,28 @@
       "imageUrl": "https://img.businessoffashion.com/resizer/v2/25AWNHQDBNGKBCSLZ6GM22N65A.jpg?auth=8e4bef4b7630a4f67e3bcfa8262f49a0382fe4eb0dfb51c38ed7b0fa1ecb44dd&amp;smart=true&amp;width=4101&amp;height=2307"
     },
     {
-      "title": "The Coolest DJs To Add To Your Summer Playlist",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/5/best-female-djs-fashion-siobhan-bell-kitty-cash-instagram",
-      "publishedAt": "2026-05-14T08:30:50.000Z",
-      "excerpt": "At the forefront of electronic music's next era is a generation of female, queer and non-binary DJs reshaping the culture with fearless sound and a distinct perspective. From unde…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2019%2F01%2F14%2FSingle-Image-47-1.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Rescuers search rubble of Kyiv flats after massive Russian strikes kill two",
+      "title": "Cuba has run out of diesel and oil, energy minister says",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/cq5p8yygq94o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-05-14T08:01:36.000Z",
-      "excerpt": "Children are among the injured after Russia launched drones and missiles across Ukraine, officials say.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/851f/live/278490d0-4f60-11f1-bd52-e755d604ece4.jpg"
+      "link": "https://www.bbc.com/news/articles/cd7pyrj0vx7o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-05-14T09:06:23.000Z",
+      "excerpt": "The minister says the situation in Cuba is \"extremely tense\", as a US-led blockade of oil to the country causes widespread power cuts.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/b498/live/1e088000-4f44-11f1-a73b-7bd2f78c92c8.jpg"
     },
     {
-      "title": "Live Updates: China’s Xi Warns Trump on Taiwan at Beijing Summit",
+      "title": "Chinese Media Cast Trump’s Visit as a Sign of Beijing’s Rising Stature",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/05/13/world/trump-xi-summit-china",
-      "publishedAt": "2026-05-14T08:34:03.000Z",
-      "excerpt": "Xi Jinping, China’s leader, told President Trump that Taiwan, if handled poorly, could lead to a clash with the United States. The two leaders are also expected to discuss trade a…",
-      "imageUrl": "https://static01.nyt.com/images/2026/06/13/multimedia/13trump-xi-promo-0300-qgmh/13trump-xi-promo-0300-qgmh-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Iordanes Spyridon Gogos Australia Resort 2027",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/australia-resort-2027/iordanes-spyridon-gogos",
-      "publishedAt": "2026-05-14T08:39:43.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a055128ec02759a205b7e33/master/pass/00001-iordanes-spyridon-gogos-resort-2027-australia-credit-gorunway.jpg"
-    },
-    {
-      "title": "How the RaiseFashion Masterclass Helps Brand Founders Rethink Operations",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/articles/designers/raisefashion-masterclass-support-brand-founders-rethink-operations/",
-      "publishedAt": "2026-05-14T05:00:01.000Z",
-      "excerpt": "BoF speaks with seven designers from RaiseFashion’s 2026 cohort — Angelo Beato and Yamil Arbaje, Bianca Saunders, Brandon Murphy, Diarra Bousso, Dwarmis Concepción, and Reut Ringe…",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/WGXFT5CWKBDA5DFMTYBVWGO5IM.png?auth=c692b902a8b5e9017e39716ec03eecb8c157f3a3b4bdd55a205a59c340af550d&amp;smart=true&amp;width=1800&amp;height=1013"
-    },
-    {
-      "title": "KEEN and 114.index Celebrate the Art of the Trail Runner With a New Campaign",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/5/keen-114-index-seek-roam-trail-runner-sneaker-campaign-hiking-where-to-buy",
-      "publishedAt": "2026-05-13T20:08:48.000Z",
-      "excerpt": "KEEN is proving that true style is found in the most unlikely, and sometimes dirty places with its latest campaign for its SEEK and ROAM trail runners. To celebrate the new season…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F13%2Fkeen-114-index-seek-roam-trail-runner-sneaker-campaign-hiking-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Pomp and pageantry: Key moments from day one of Trump's visit to China",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/videos/c707xn4ew3po?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-05-14T07:13:24.000Z",
-      "excerpt": "China welcomed US President Donald Trump with cheering children and a troop parade on Thursday, before a nearly two-hour long meeting with Xi-Jinping.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/24d4/live/52f6eea0-4f62-11f1-ac78-2112837ce2aa.jpg"
-    },
-    {
-      "title": "Russia Pummels Kyiv After Putin Hints That War Could End Soon",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/05/14/world/europe/ukraine-strike-kyiv-russia-putin.html",
-      "publishedAt": "2026-05-14T08:24:44.000Z",
-      "excerpt": "At least one person was killed and dozens were wounded in a drone and missile strike, the latest in a series of attacks since a three-day truce expired on Monday.",
-      "imageUrl": "https://static01.nyt.com/images/2026/05/14/multimedia/14int-ukraine-strike-fmpw/14int-ukraine-strike-fmpw-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Christian Dior Resort 2027",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/resort-2027/christian-dior",
-      "publishedAt": "2026-05-14T08:39:43.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a056c313737c0214808df89/master/pass/00001-christian-dior-resort-2027-credit-gorunway.jpg"
-    },
-    {
-      "title": "You May Monetise the Bride",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/articles/marketing-pr/you-may-monetise-the-bride/",
-      "publishedAt": "2026-05-14T04:30:00.000Z",
-      "excerpt": "As weddings become content productions with viral potential, brands, stylists and publicists are cashing in.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/7OE3AFNU3FC3TFRIVQME32IMT4.png?auth=42982dc44180c11bf7ec40c7cc99786cc3909981221170a329e3e5d09fdfcbbc&amp;smart=true&amp;width=1800&amp;height=1013"
+      "link": "https://www.nytimes.com/2026/05/14/world/asia/china-trump-xi-media.html",
+      "publishedAt": "2026-05-14T10:20:59.000Z",
+      "excerpt": "Chinese state media is depicting the summit as an opportunity for the United States to accept that the “right way” for the two powers to engage is as equals.",
+      "imageUrl": "https://static01.nyt.com/images/2026/05/14/multimedia/14int-china-trump-media-gzml/14int-china-trump-media-gzml-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
     "Vogue": "ok",
     "BusinessOfFashion": "ok",
-    "Hypebae": "ok",
+    "Hypebae": "failed",
     "BBCWorld": "ok",
     "NYTWorld": "ok"
   }
