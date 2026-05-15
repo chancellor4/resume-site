@@ -1,7 +1,52 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-05-15T11:46:29.400Z",
+  "generatedAt": "2026-05-15T13:27:15.286Z",
   "items": [
+    {
+      "title": "7 Celeb-Inspired Flip-Flop Outfits to Try Right Now",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/celebrity-flip-flop-outfits",
+      "publishedAt": "2026-05-15T11:46:55.000Z",
+      "excerpt": "From classic flat options to trending micro wedges, see how our favorite celebrities style their flip-flops for spring and summer.",
+      "imageUrl": "https://assets.vogue.com/photos/6a05cf5959c381a4d2e1ae58/master/pass/051326_celebflipflopoutfits.jpg"
+    },
+    {
+      "title": "The Ordinary’s Stunts Are Getting Bolder. How Far Can They Go?",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/articles/beauty/the-ordinary-bus-markup-marche-pore-playground/",
+      "publishedAt": "2026-05-15T12:00:00.000Z",
+      "excerpt": "The Estée Lauder-owned skincare brand is staging immersive, local pop-ups all over the world. It’s newest, in New York, may be one of its most audacious yet.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2/2P4BJZLVY5GEJF5MRLNBSAKSMA.jpg?auth=6791eb1e23224c9700abc9c732527c5ffa70067230076eeba31f68364fb6de2d&amp;smart=true&amp;width=900&amp;height=1350"
+    },
+    {
+      "title": "The Best-Dressed Celebrities at the 2026 Cannes Film Festival, So Far",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/5/cannes-film-festival-best-dressed-celebrities-red-carpet-demi-moore-alton-mason-heidi-klum",
+      "publishedAt": "2026-05-15T13:18:57.000Z",
+      "excerpt": "And… action! The Cannes Film Festival has officially begun, once again bringing its signature blend of cinematic brilliance, star power and headline-making fashion to the French R…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F15%2FSingle-Image-88.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "New outbreak of Ebola kills 65 in eastern DR Congo",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/cze2wpk7y76o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-05-15T13:23:53.000Z",
+      "excerpt": "Africa's top health agency says around 246 cases have been reported.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/477c/live/0e4a0510-504a-11f1-a712-bdb9a88fa140.jpg"
+    },
+    {
+      "title": "Despite Tensions, China Greets Trump With Pomp and Pageantry",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/05/15/world/asia/trump-xi-china-meeting-beijing-reception.html",
+      "publishedAt": "2026-05-15T13:18:38.000Z",
+      "excerpt": "There was no major breakthrough in Beijing, but China pulled out all the stops for President Trump, with extravagant ceremonies and a state banquet.",
+      "imageUrl": "https://static01.nyt.com/images/2026/06/14/multimedia/14trump-china-pageantry-zhfk/14trump-china-pageantry-zhfk-mediumSquareAt3X.jpg"
+    },
     {
       "title": "All the Fashions From the 2026 Cannes Film Festival Red Carpet",
       "source": "Vogue",
@@ -30,22 +75,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2019%2F01%2F14%2FSingle-Image-47-1.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Trump and Xi conclude 'very successful' talks but no deals announced",
+      "title": "Trump and Xi conclude 'very successful' talks but no deals confirmed",
       "source": "BBC World",
       "sourceType": "global-affairs",
       "link": "https://www.bbc.com/news/articles/clypj01189lo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-05-15T11:18:32.000Z",
+      "publishedAt": "2026-05-15T13:00:24.000Z",
       "excerpt": "There were plenty of choreographed ceremonies but no trade breakthroughs after the two-day visit.",
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/85aa/live/3c9e1750-5052-11f1-89a3-d1f559421220.jpg"
     },
     {
-      "title": "Here’s the latest.",
+      "title": "‘For Example, Putin’: How Xi Used a Private Garden Walk to Charm Trump",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/05/14/world/trump-xi-summit-beijing/heres-the-latest",
-      "publishedAt": "2026-05-15T11:28:20.000Z",
-      "excerpt": "",
-      "imageUrl": null
+      "link": "https://www.nytimes.com/2026/05/15/world/asia/china-xi-trump-summit-garden-putin.html",
+      "publishedAt": "2026-05-15T13:15:56.000Z",
+      "excerpt": "Watch an exchange between the two men in which the Chinese leader sought to signal exclusivity and name-dropped Russia’s president.",
+      "imageUrl": "https://static01.nyt.com/images/2026/05/15/multimedia/2026-05-15-trump-xi-garden-index/2026-05-15-trump-xi-garden-index-mediumSquareAt3X.jpg"
     },
     {
       "title": "42 Wedding Shoes That Are Perfect for Your Walk Down the Aisle",
@@ -64,51 +109,6 @@
       "publishedAt": "2026-05-14T21:22:58.000Z",
       "excerpt": "Jacobs will remain in his role as creative director.",
       "imageUrl": "https://img.businessoffashion.com/resizer/v2/XEJCZACEFFD6PJID6KISA4MTEU.png?auth=e8f37a996760ca94da870cde79df393a44b05e8df8931fc63ea0ca3e7ebb2263&amp;smart=true&amp;width=2120&amp;height=1196"
-    },
-    {
-      "title": "Coach Dropped Its New Brain Dead Collab With a Flash Runway",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/5/coach-brain-dead-collaboration-runway-new-york-event-tabby-bag-troye-sivan-release-date",
-      "publishedAt": "2026-05-15T11:09:30.000Z",
-      "excerpt": "Coach just traded the traditional runway for a roller coaster, literally. To celebrate its new collab with LA's creative collective Brain Dead, the brand took over NYC's Meatpacki…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F15%2FTriptychs-4.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "New outbreak of Ebola kills 65 in eastern DR Congo",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/cze2wpk7y76o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-05-15T10:28:28.000Z",
-      "excerpt": "Africa's top health agency says around 246 cases have been reported.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/477c/live/0e4a0510-504a-11f1-a712-bdb9a88fa140.jpg"
-    },
-    {
-      "title": "What to Know About Day 2 of Trump and Xi’s Beijing Summit",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/05/15/world/asia/trump-china-xi-meeting-what-happened.html",
-      "publishedAt": "2026-05-15T10:20:08.000Z",
-      "excerpt": "President Trump and China’s leader, Xi Jinping, emphasized stability but announced no major breakthroughs on points of contention like trade, Taiwan and the war in Iran.",
-      "imageUrl": "https://static01.nyt.com/images/2026/05/15/multimedia/15trump-xi-secondday-wwk-lwcj/15trump-xi-secondday-wwk-lwcj-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "These ’80s Icons Inspired the Costumes in ‘Rivals’ Season 2",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/costumes-rivals-season-2-ray-holman-interview",
-      "publishedAt": "2026-05-15T10:00:00.000Z",
-      "excerpt": "The Jilly Cooper romp “Rivals” returns to Hulu for season two, bringing bigger shoulder pads, sharper suits, and even more eye-popping embellishment.",
-      "imageUrl": "https://assets.vogue.com/photos/6a068e1456c7c127e059a5cd/master/pass/2623_RIVALS2_Ep01_RV_100625.jpg"
-    },
-    {
-      "title": "Gap Names Lourdes Arocho as SVP and Head of Licensing",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/news/retail/gap-names-lourdes-arocho-as-svp-and-head-of-licensing/",
-      "publishedAt": "2026-05-14T17:53:00.000Z",
-      "excerpt": "The appointment comes as the retailer doubles down on its ‘fashiontainment’ strategy to bridge the gap between apparel and pop culture.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2/J2F6V5YVQRGI3AXJ7TH43AB7ZE.jpg?auth=16030911582a446fb3deda2ba0a43581028f81c30eff436dc33988a009d34a84&amp;smart=true&amp;width=1684&amp;height=945"
     }
   ],
   "sources": {
