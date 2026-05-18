@@ -1,15 +1,15 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-05-18T17:15:51.212Z",
+  "generatedAt": "2026-05-18T19:10:41.608Z",
   "items": [
     {
-      "title": "Carven Resort 2027",
+      "title": "Savannah College of Art and Design Fall 2026 Ready-to-Wear",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/resort-2027/carven",
-      "publishedAt": "2026-05-18T17:12:01.000Z",
+      "link": "https://www.vogue.com/fashion-shows/fall-2026-ready-to-wear/savannah-college-of-art-and-design",
+      "publishedAt": "2026-05-18T19:09:44.000Z",
       "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a04934a73209aeca8f665e7/master/pass/00001-carven-resort-2027-credit-brand.jpg"
+      "imageUrl": "https://assets.vogue.com/photos/6a0b1edc1b2c7044853917eb/master/pass/00001-savannah-college-of-art-and-design-fall-2026-ready-to-wear-credit-brand-designer-SophiaWilliams.jpg"
     },
     {
       "title": "Lululemon Criticises Chip Wilson, Sets Proxy Vote",
@@ -19,6 +19,51 @@
       "publishedAt": "2026-05-18T15:40:26.000Z",
       "excerpt": "The company rejected the overtures of founder Wilson to install new board members and set a shareholder vote for June.",
       "imageUrl": "https://img.businessoffashion.com/resizer/v2//NYQLOZYHGJEHFE7B4DXMOGS4NE.jpg?auth=39789ecb3ca20b783b91360361cb72a2dfadeb5aec55c2959320b65740bb1ce7&amp;smart=true&amp;width=1800&amp;height=1013"
+    },
+    {
+      "title": "Crocs Is Getting a Punk Makeover From Andersson Bell",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/5/crocs-andersson-bell-collaboration-punk-bae-classic-clog-release-info-where-to-buy",
+      "publishedAt": "2026-05-18T18:41:31.000Z",
+      "excerpt": "Crocs is officially entering its punk era, thanks to a bold new collaboration with Andersson Bell. First debuting on the Korean label's Spring/Summer 2026 runway, the collection r…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F18%2Fcrocs-andersson-bell-collaboration-punk-bae-classic-clog-release-info-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Jury tosses Elon Musk's lawsuit against OpenAI and its boss Sam Altman",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/cewpyv79pw1o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-05-18T18:22:03.000Z",
+      "excerpt": "Jurors spent nearly a month hearing and viewing evidence in the high-profile trial, where Musk had accused Altman of \"stealing a charity\".",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/dcc1/live/f8761210-52e2-11f1-b682-cf91850925ea.jpg"
+    },
+    {
+      "title": "Trump Warns Iran the ‘Clock Is Ticking’ as Tensions Surge Again in Middle East",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/05/18/world/middleeast/trump-iran-war-talks.html",
+      "publishedAt": "2026-05-18T18:51:43.000Z",
+      "excerpt": "The president has sought to force Iran to accept his terms on its nuclear program or else face renewed war. An emboldened Iran has rebuffed Trump’s demands.",
+      "imageUrl": "https://static01.nyt.com/images/2026/05/19/multimedia/19iran-trump-vfgk/19iran-trump-vfgk-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Carven Pre-Fall 2026",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/pre-fall-2026/carven",
+      "publishedAt": "2026-05-18T19:09:44.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a0b3afa9c6ad3992bbe9f59/master/pass/00001-carven-pre-fall-2026-credit-brand.jpg"
+    },
+    {
+      "title": "How to Win in India",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/articles/beauty/beauty-india-brands-how-to-launch/",
+      "publishedAt": "2026-05-18T12:00:00.000Z",
+      "excerpt": "Global brands are still flooding into India, hoping to secure a foothold as the country’s appetite for prestige beauty grows. But many premium players are leaving money on the tab…",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2//H7FP4KB2UFGUTPVQHIIX56RAD4.jpg?auth=3c1902e56c7c9320c8a87dfdaa70ba54a4be08097e92d3853526fafb11c316ea&amp;smart=true&amp;width=900&amp;height=1350"
     },
     {
       "title": "Emma Chamberlain Steps Into Mugler's Fragrance World",
@@ -39,67 +84,22 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/ec8a/live/e46b9940-503d-11f1-b682-cf91850925ea.jpg"
     },
     {
-      "title": "Trump Warns Iran the ‘Clock Is Ticking’ as Tensions Surge Again in Middle East",
+      "title": "Ebola Was Identified in Congo Weeks Before W.H.O. Declared an Emergency",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/05/18/world/middleeast/trump-iran-war-talks.html",
-      "publishedAt": "2026-05-18T17:11:35.000Z",
-      "excerpt": "The president has sought to force Iran to accept his terms on its nuclear program or else face renewed war. An emboldened Iran has rebuffed Trump’s demands.",
-      "imageUrl": "https://static01.nyt.com/images/2026/05/19/multimedia/19iran-trump-vfgk/19iran-trump-vfgk-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/05/18/world/africa/congo-ebola-testing.html",
+      "publishedAt": "2026-05-18T18:44:46.000Z",
+      "excerpt": "Early surveillance and testing failed to identify Bundibugyo, a rare species of Ebola responsible for the current outbreak.",
+      "imageUrl": "https://static01.nyt.com/images/2026/05/18/multimedia/18int-congo-ebola-1-kgbm/18int-congo-ebola-1-kgbm-mediumSquareAt3X.jpg"
     },
     {
       "title": "Albus Lumen Australia Resort 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/australia-resort-2027/albus-lumen",
-      "publishedAt": "2026-05-18T17:12:01.000Z",
+      "publishedAt": "2026-05-18T19:09:44.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a080d582a6552fe1d994833/master/pass/00001-albus-lumen-resort-2027-australia-credit-brand.JPG"
-    },
-    {
-      "title": "How to Win in India",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/articles/beauty/beauty-india-brands-how-to-launch/",
-      "publishedAt": "2026-05-18T12:00:00.000Z",
-      "excerpt": "Global brands are still flooding into India, hoping to secure a foothold as the country’s appetite for prestige beauty grows. But many premium players are leaving money on the tab…",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2//H7FP4KB2UFGUTPVQHIIX56RAD4.jpg?auth=3c1902e56c7c9320c8a87dfdaa70ba54a4be08097e92d3853526fafb11c316ea&amp;smart=true&amp;width=900&amp;height=1350"
-    },
-    {
-      "title": "adidas and Song for the Mute's New Collection Is an Ode to Youth",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/5/adidas-song-for-the-mute-007-collaboration-capsule-tokyo-samba-sneakers-info-where-to-buy",
-      "publishedAt": "2026-05-18T16:38:42.000Z",
-      "excerpt": "adidas and Song for the Mute are back for their seventh collaboration, and this one is a celebration of childhood. Rooted in the nostalgia of play clothes and hand-me-downs, the c…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F18%2Fadidas-song-for-the-mute-007-collaboration-capsule-tokyo-samba-sneakers-info-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Four killed in protests during Kenyan strikes over high fuel prices",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/cm2p0n44drvo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-05-18T16:49:45.000Z",
-      "excerpt": "Thousands of commuters are stranded, with key roads in the capital Nairobi largely empty due to the protests over fuel costs.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/5014/live/54ea3a70-5294-11f1-8a13-e989d3b4b6c8.jpg"
-    },
-    {
-      "title": "Catastrophe Is Emerging in the World’s Most Vulnerable Places",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/05/18/business/iran-war-somalia-usaid.html",
-      "publishedAt": "2026-05-18T17:05:49.000Z",
-      "excerpt": "The humanitarian relief system, decimated by cuts, faces a grave challenge as the Middle East war causes soaring costs for food, fuel and fertilizer.",
-      "imageUrl": "https://static01.nyt.com/images/2026/05/07/multimedia/00biz-somalia-aid-crisis-07-kqph/00biz-somalia-aid-crisis-07-kqph-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Gucci Resort 2027",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/resort-2027/gucci",
-      "publishedAt": "2026-05-18T17:12:01.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a0a06149b03d4f210f1054e/master/pass/00001-gucci-resort-2027-credit-brand.jpg"
     },
     {
       "title": "Reports: Shein Acquires Everlane",
