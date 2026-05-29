@@ -1462,7 +1462,7 @@ suite('v2.0.0 — Crate V2 Numbering & Duration (LOG_LEVEL=3)');
   // Crate items are appended as children of el.crate
   const crate = env.doc._elements['vinylCrate'];
   assert('crate has station strip + 3 queue rows', crate.children.length === 4);
-  assert('station strip names abstraction.sound', crate.children[0].textContent.includes('abstraction.sound'));
+  assert('station strip names lofi radio', crate.children[0].textContent.includes('lofi radio'));
 
   const playableRows = crate.children.slice(1);
   const first = playableRows.find(row => row.textContent.includes('Track A'));

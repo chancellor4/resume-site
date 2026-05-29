@@ -2533,7 +2533,7 @@
         stationCopy.className = 'vinyl-station-copy';
         var stationName = document.createElement('span');
         stationName.className = 'vinyl-station-name';
-        stationName.textContent = 'abstraction.sound';
+        stationName.textContent = 'lofi radio';
         var stationLabel = document.createElement('span');
         stationLabel.className = 'vinyl-station-label';
         stationLabel.textContent = 'queue rotation';
