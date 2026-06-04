@@ -1,15 +1,105 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-06-04T00:10:37.764Z",
+  "generatedAt": "2026-06-04T05:17:10.917Z",
   "items": [
     {
       "title": "Sea Resort 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/resort-2027/sea",
-      "publishedAt": "2026-06-04T00:08:10.000Z",
+      "publishedAt": "2026-06-04T05:16:06.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a1fe2d1a41510631847791e/master/pass/00001-sea-resort-2027-credit-brand.jpg"
+    },
+    {
+      "title": "Inside the Push Towards Footwear Manufacturing in Portugal",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/articles/footwear/inside-the-push-towards-footwear-manufacturing-in-portugal/",
+      "publishedAt": "2026-06-04T05:00:00.000Z",
+      "excerpt": "BoF and APICCAPS convened designers, brand leaders, and sourcing executives at The Hotel Chelsea in New York City to examine why Portugal has become a compelling answer to the sup…",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2//5PHPWJYGGFFQDF6C4FAZDMHJSE.png?auth=191b81f9aea98903251ab11610180bd9cea6d55e3f621a2c8caed501a2df1b81&amp;smart=true&amp;width=1800&amp;height=1013"
+    },
+    {
+      "title": "Aimé Leon Dore Launches Its First-Ever Womenswear Capsule",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/6/aime-leon-dore-ss26-womenswear-capsule-campaign-release-info-where-to-buy",
+      "publishedAt": "2026-06-03T18:48:09.000Z",
+      "excerpt": "It's the moment we’ve all been dreaming of, baes. New York’s cool girl aesthetic just got a major upgrade as Aimé Leon Dore officially introduces its first-ever womenswear collect…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F03%2Faime-leon-dore-ss26-womenswear-capsule-campaign-release-info-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "US House votes to rein in Trump's war powers in rebuke over Iran",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/cj6pldg39deo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-06-04T03:36:10.000Z",
+      "excerpt": "In the 215-208 vote, four Republicans joined Democrats to pass the measure, which had failed in three previous attempts.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/9757/live/80b94b40-5f9c-11f1-b682-cf91850925ea.jpg"
+    },
+    {
+      "title": "Africans Exploring Africa",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/06/03/world/africa-travel-iran-kuwait.html",
+      "publishedAt": "2026-06-04T05:00:45.000Z",
+      "excerpt": "A growing middle class is increasingly mobile — and changing African ideas about leisure, travel and even the continent itself.",
+      "imageUrl": "https://static01.nyt.com/images/2026/06/04/multimedia/04int-theworld-africa-travel-01-hmqt-promo/04int-theworld-africa-travel-01-hmqt-promo-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Officine Générale Resort 2027",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/resort-2027/officine-generale",
+      "publishedAt": "2026-06-04T05:16:06.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a1ef6312728ad0efddf0666/master/pass/00001-officine-generale-resort-2027-credit-brand.jpg"
+    },
+    {
+      "title": "Can Fashion Move Beyond Vanity Metrics?",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/articles/marketing-pr/can-fashion-move-beyond-vanity-metrics/",
+      "publishedAt": "2026-06-04T04:30:00.000Z",
+      "excerpt": "Visibility matters, but as metrics like ‘media impact value’ come under scrutiny, analytics providers including Launchmetrics and CreatorIQ are evolving their toolsets to measure…",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2//CCIZAIKZDFBUVBCFZ6D56QVZ5Y.jpg?auth=55180f32417eda5c355a6973b39629eb62811a210132b35f57af5fbf5789de6a&amp;smart=true&amp;width=1800&amp;height=1013"
+    },
+    {
+      "title": "Jordan Rand Fronts Calvin Klein's Pride Month Campaign",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/6/calvin-klein-pride-month-collection-campaign-jordan-rand-underwear-denim-where-to-buy",
+      "publishedAt": "2026-06-03T17:56:22.000Z",
+      "excerpt": "Pride Month is officially here, and Calvin Klein is celebrating in the most authentic, vibrant, CK way possible. The iconic brand has just launched its limited-edition Pride 2026…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F03%2Fcalvin-klein-pride-month-collection-campaign-jordan-rand-underwear-denim-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "China bans four New Zealand MPs over Taiwan visit",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/cx21r1y223ro?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-06-04T02:54:21.000Z",
+      "excerpt": "Upon their return from Taiwan last month, the lawmakers were told that China had banned them for a year.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/53f7/live/174f9600-5fbf-11f1-8bfb-e1d8bc1274bd.jpg"
+    },
+    {
+      "title": "Israel and Lebanon Agree to Renew Cease-Fire",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/live/2026/06/03/world/iran-war-trump-israel-lebanon",
+      "publishedAt": "2026-06-04T04:42:24.000Z",
+      "excerpt": "The U.S.-brokered agreement called for “a complete cessation” of fire from Hezbollah, an Iranian-backed militia that operates in southern Lebanon. A previous cease-fire has largel…",
+      "imageUrl": "https://static01.nyt.com/images/2026/06/03/multimedia/03mideast-promo9p/03mideast-promo9p-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Officine Générale Resort 2027 Menswear",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/resort-2027-menswear/officine-generale",
+      "publishedAt": "2026-06-04T05:16:06.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a1ef8c9644b60220c214bc0/master/pass/00001-officine-generale-resort-2027-menswear-credit-brand.jpg"
     },
     {
       "title": "Five Top CEOs Will Take the Stage at BoF VOICES 2026",
@@ -19,102 +109,12 @@
       "publishedAt": "2026-06-03T22:30:00.000Z",
       "excerpt": "In five separate, in-depth conversations, Kering’s Luca de Meo, LVMH’s Sidney Toledano, Levi’s Michelle Gass, Tapestry’s Joanne Crevoiserat and Saks Global’s Geoffroy van Raemdonc…",
       "imageUrl": "https://img.businessoffashion.com/resizer/v2//BYZRALENJNDXZJNYAAU6CIWTAI.png?auth=db3b2bec1bcf310aefece8a308b572459a8130e402bd443cfdeb94ddab56704a&amp;smart=true&amp;width=1800&amp;height=1013"
-    },
-    {
-      "title": "Why Canada has generic Ozempic, and the US doesn't",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/c142y4p2eyxo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-06-03T23:34:48.000Z",
-      "excerpt": "Canada is the first G7 country to approve the lower cost weight-loss drugs, which are rolling out in pharmacies this month.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/4d4b/live/ddd05340-5f61-11f1-8dad-8347ac6f73d8.jpg"
-    },
-    {
-      "title": "Iran War Live Updates: Israel and Lebanon Agree to Renew Cease-Fire",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/06/03/world/iran-war-trump-israel-lebanon",
-      "publishedAt": "2026-06-03T23:51:44.000Z",
-      "excerpt": "The U.S.-brokered agreement called for “a complete cessation” of fire from Hezbollah, an Iranian-backed militia that operates in southern Lebanon. A previous cease-fire has largel…",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/02/multimedia/02mideat-200-vqmb/02mideat-200-vqmb-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Officine Générale Resort 2027",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/resort-2027/officine-generale",
-      "publishedAt": "2026-06-04T00:08:10.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a1ef6312728ad0efddf0666/master/pass/00001-officine-generale-resort-2027-credit-brand.jpg"
-    },
-    {
-      "title": "Neiman Marcus to Close Dallas Flagship",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/news/retail/neiman-marcus-to-close-dallas-flagship/",
-      "publishedAt": "2026-06-03T13:36:30.000Z",
-      "excerpt": "The landmark department store, which is over 100 years old, is another casualty of Saks Global’s Chapter 11 restructuring.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2//XQXQ2PGXHFBDLKPPTRUZ3DIBSI.jpg?auth=9368d7c77accaf4540f72225daf6cb7f48a2342146dc0baffc34972c465d4f48&amp;smart=true&amp;width=4088&amp;height=2300"
-    },
-    {
-      "title": "Costly fuel pushes more Indians to buy electric cars but challenges remain",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/cx21181yq4no?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-06-03T23:28:31.000Z",
-      "excerpt": "High fuel prices are strengthening the case for EV adoption in the world's third largest auto market.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/c115/live/be5fda80-5f3e-11f1-ae51-c396b5163a64.jpg"
-    },
-    {
-      "title": "Here’s the latest.",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/06/03/world/iran-war-trump-israel-lebanon/heres-the-latest",
-      "publishedAt": "2026-06-03T23:45:41.000Z",
-      "excerpt": "",
-      "imageUrl": null
-    },
-    {
-      "title": "Officine Générale Resort 2027 Menswear",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/resort-2027-menswear/officine-generale",
-      "publishedAt": "2026-06-04T00:08:10.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a1ef8c9644b60220c214bc0/master/pass/00001-officine-generale-resort-2027-menswear-credit-brand.jpg"
-    },
-    {
-      "title": "The Mall Mainstay Clawing Back Sephora Tweens",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/articles/beauty/urban-outfitters-beauty-gen-z-gen-alpha/",
-      "publishedAt": "2026-06-03T12:00:00.000Z",
-      "excerpt": "The teen-favourite retailer Urban Outfitters is banking on Gen-Alpha influencers and brands like Sol de Janeiro and Yes Day in its bid to become a ‘beauty empire.’",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2//2LRUFOR6HVB6TALD2QKYMQYMOM.png?auth=7228ca9e521efa50b7d3179de40c852c63192046b4b3df9ffba981450859bf36&amp;smart=true&amp;width=2000&amp;height=1125"
-    },
-    {
-      "title": "US House votes to halt Iran war, in rebuke to Trump",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/cj6pldg39deo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-06-03T23:01:07.000Z",
-      "excerpt": "In the 215-208 vote, four Republicans joined Democrats to pass the measure, which had failed in three previous attempts.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/9757/live/80b94b40-5f9c-11f1-b682-cf91850925ea.jpg"
-    },
-    {
-      "title": "Trump Says Iran War Is ‘Not a Big Thing’ for U.S.",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/06/03/world/middleeast/trump-iran-war-remarks.html",
-      "publishedAt": "2026-06-03T23:41:05.000Z",
-      "excerpt": "It was the latest attempt by President Trump to flip the narrative on a conflict that he once said would lead to quick and decisive victory.",
-      "imageUrl": "https://static01.nyt.com/images/2026/06/03/multimedia/03mideast-trump-remarks1-vwgk/03mideast-trump-remarks1-vwgk-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
     "Vogue": "ok",
     "BusinessOfFashion": "ok",
-    "Hypebae": "failed",
+    "Hypebae": "ok",
     "BBCWorld": "ok",
     "NYTWorld": "ok"
   }
