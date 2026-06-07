@@ -1,15 +1,51 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-06-07T11:45:29.581Z",
+  "generatedAt": "2026-06-07T13:18:51.745Z",
   "items": [
     {
       "title": "House of Dagmar Fall 2026 Ready-to-Wear",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/fall-2026-ready-to-wear/dagmar",
-      "publishedAt": "2026-06-07T11:41:33.000Z",
+      "publishedAt": "2026-06-07T13:17:56.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a1fef0bf39da77f5b559045/master/pass/00014-dagmar-fall-2026-ready-to-wear-credit-brand.jpg"
+    },
+    {
+      "title": "The Multibillion Dollar Battle for a Fragmented World Cup",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/briefings/sports/the-multibillion-dollar-battle-for-a-fragmented-world-cup/",
+      "publishedAt": "2026-06-07T13:00:27.000Z",
+      "excerpt": "More teams, more countries and a massive push into the American mainstream. Here is how sportswear giants and fashion houses are lining up.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2//2267HIQB2JBYRH2QJUOUKS7CNQ.png?auth=ed39a5afbbca0a53097ae2001ccb08f9574a2279f7024cc74ff6d36623ce50c8&amp;smart=true&amp;width=1800&amp;height=1013"
+    },
+    {
+      "title": "Zelensky criticises 'vile' Chornobyl drone strike ahead of London talks",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/cr7xr1g3nvvo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-06-07T12:09:57.000Z",
+      "excerpt": "Ukrainian officials say a Russian drone hit a storage facility for spent nuclear fuel near the Chornobyl nuclear plant.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/8c12/live/9aaeaf20-626e-11f1-89a3-d1f559421220.jpg"
+    },
+    {
+      "title": "Despite Protest, Ye Takes the Stage for Thousands of European Fans",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/06/06/arts/music/ye-concert-bully-tour-netherlands.html",
+      "publishedAt": "2026-06-07T12:06:15.000Z",
+      "excerpt": "Nearly 40,000 fans came out to hear the rapper formerly known as Kanye West in the Netherlands on Saturday, even as other European countries had canceled his concerts.",
+      "imageUrl": "https://static01.nyt.com/images/2026/06/06/multimedia/06cul-kanye-concert-mjlw/06cul-kanye-concert-mjlw-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Ashlyn Resort 2027",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/resort-2027/ashlyn",
+      "publishedAt": "2026-06-07T13:17:56.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a22fd607703e7e6a3bae506/master/pass/00001-ashlyn-resort-2027-credit-brand.jpg"
     },
     {
       "title": "Zegna Lands in Los Angeles With ‘Villeggiatura’-Wear",
@@ -19,15 +55,6 @@
       "publishedAt": "2026-06-06T08:29:09.000Z",
       "excerpt": "Designer Alessandro Sartori tapped the Italian concept of retreating to a seaside or countryside villa for a cultured take on vacation dressing as the brand aims to extend its win…",
       "imageUrl": "https://img.businessoffashion.com/resizer/v2//YEBFZ5G62NBDJFLKHNLQ3YTTCI.jpg?auth=ce45166bc713986142d63999e032b35018e27788f20b9eafa5c7d908320a8d4e&amp;smart=true&amp;width=1800&amp;height=1013"
-    },
-    {
-      "title": "Paura and Vans' New Collab Is All About Piercings and Punk",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/6/paura-vans-authentic-collaborations-piercings-sneakers-release-info-where-to-buy",
-      "publishedAt": "2026-06-05T17:47:27.000Z",
-      "excerpt": "If your footwear rotation is craving a rebellious upgrade, your wish is Paura's command. The Italian label has teamed up with Vans to reimagine the brand favorite Authentic low-to…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F05%2Fpaura-vans-authentic-collaborations-piercings-sneakers-release-info-where-to-buy-1.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
       "title": "Hegseth attacks Europe over migration with beach 'invasion' D-Day speech",
@@ -48,13 +75,13 @@
       "imageUrl": "https://static01.nyt.com/images/2026/06/07/multimedia/07int-israel-shooting-bgmz/07int-israel-shooting-bgmz-mediumSquareAt3X.jpg"
     },
     {
-      "title": "Ashlyn Resort 2027",
+      "title": "Norma Kamali Resort 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/resort-2027/ashlyn",
-      "publishedAt": "2026-06-07T11:41:33.000Z",
+      "link": "https://www.vogue.com/fashion-shows/resort-2027/norma-kamali",
+      "publishedAt": "2026-06-07T13:17:56.000Z",
       "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a22fd607703e7e6a3bae506/master/pass/00001-ashlyn-resort-2027-credit-brand.jpg"
+      "imageUrl": "https://assets.vogue.com/photos/6a1e9b27164e25193c92274f/master/pass/00001-norma-kamali-resort-2027-credit-brand.jpg"
     },
     {
       "title": "Saks Wins Approval to Exit Bankruptcy After Reorganising",
@@ -64,15 +91,6 @@
       "publishedAt": "2026-06-05T19:55:50.000Z",
       "excerpt": "Under Saks Global’s plan, which US bankruptcy judge Alfredo Perez called ‘an extraordinary result,’ the company will reduce its funded debt from $3.4 billion to about $1.2 billion.",
       "imageUrl": "https://img.businessoffashion.com/resizer/v2//XPLOOA734JCAVJIOFFYOLYFU2A.png?auth=9f2bd71927fdd37318d1419cbd06e256435d52e3063f0a360b8b269040d67bae&amp;smart=true&amp;width=1800&amp;height=1013"
-    },
-    {
-      "title": "Mowalola and Jordan Brand Are Launching a Collaboration This Fall",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/6/mowalola-jordan-brand-collaboration-air-jordan-14-mule-sneakers-tracksuit-release-info",
-      "publishedAt": "2026-06-05T17:09:42.000Z",
-      "excerpt": "Summer just started, but fall can't get here soon enough. There's a major collaboration on the way, and we can't wait for it to drop. British-Nigerian designer Mowalola Ogunlesi i…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F05%2Fmowalola-jordan-brand-collaboration-air-jordan-14-mule-sneakers-tracksuit-release-info-ft.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
       "title": "Huge crowds throng Madrid streets for Pope's open-air Mass",
@@ -91,30 +109,12 @@
       "publishedAt": "2026-06-07T09:02:10.000Z",
       "excerpt": "Facing a surge in violence, voters will choose between a newly moderated left and a right-wing candidate representing an autocrat’s divisive legacy.",
       "imageUrl": "https://static01.nyt.com/images/2026/06/07/multimedia/07int-peru-election01-photo-mcfb/07int-peru-election01-photo-mcfb-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Norma Kamali Resort 2027",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/resort-2027/norma-kamali",
-      "publishedAt": "2026-06-07T11:41:33.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a1e9b27164e25193c92274f/master/pass/00001-norma-kamali-resort-2027-credit-brand.jpg"
-    },
-    {
-      "title": "America’s K-Shaped Market May Not Be What It Seems",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/briefings/retail/americas-k-shaped-market-may-not-be-what-it-seems/",
-      "publishedAt": "2026-06-05T19:00:00.000Z",
-      "excerpt": "The recent success of retailers from Coach to Zara may be powered by the surprising resilience of America’s middle class, many of whom have moved up, not down, the economic ladder.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2//4GOQTWE4FFAZTB6XNKPHLAZ3WA.png?auth=dfb0601503397d739794c367d01aa5298afa201a5149ec9ee06092e7d4e80adb&amp;smart=true&amp;width=4088&amp;height=2299"
     }
   ],
   "sources": {
     "Vogue": "ok",
     "BusinessOfFashion": "ok",
-    "Hypebae": "ok",
+    "Hypebae": "failed",
     "BBCWorld": "ok",
     "NYTWorld": "ok"
   }
