@@ -1,15 +1,60 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-06-08T11:24:00.399Z",
+  "generatedAt": "2026-06-08T14:53:29.526Z",
   "items": [
     {
-      "title": "Tanya Taylor Resort 2027",
+      "title": "Kallmeyer Resort 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/resort-2027/tanya-taylor",
-      "publishedAt": "2026-06-08T11:21:05.000Z",
+      "link": "https://www.vogue.com/fashion-shows/resort-2027/kallmeyer",
+      "publishedAt": "2026-06-08T14:49:57.000Z",
       "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a219d83486d749e03a04861/master/pass/00001-tanya-taylor-resort-2027-credit-brand.jpg"
+      "imageUrl": "https://assets.vogue.com/photos/6a26848129951d8abbdf0e82/master/pass/00001-kallmeyer-resort-2027-credit-brand.jpg"
+    },
+    {
+      "title": "Printemps Names Rémy Baume CEO",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/news/retail/printemps-names-remy-baume-ceo/",
+      "publishedAt": "2026-06-08T11:51:40.000Z",
+      "excerpt": "Printemps has appointed Rémy Baume its new chief executive, filling a position that had been vacant since September last year. Baume’s appointment is effective immediately, the Fr…",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2//GUZ7LSOKIJD67IV7YLLDHS2KLA.jpg?auth=d2ea6154ec10b159e3503a429e6d1f87fa8de8d91a829092aea458f942181365&amp;smart=true&amp;width=1080&amp;height=1342"
+    },
+    {
+      "title": "Inside Sofia Coppola and Marc Jacobs' Decades-Long Creative Friendship",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/6/sofia-coppola-marc-by-sofia-book-a24-mack-marc-jacobs-career-release-date-where-to-buy",
+      "publishedAt": "2026-06-08T14:23:59.000Z",
+      "excerpt": "A24 and publisher MACK officially dropped MARC BY SOFIA, the new book from Sofia Coppola that offers an intimate look into the world of Marc Jacobs. Created as a companion to Copp…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F08%2FSplit-266.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Friendship or leverage: Why is Xi Jinping in North Korea?",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/cdep497r256o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-06-08T14:22:38.000Z",
+      "excerpt": "Beijing is trying to reassert influence over a strategically vital yet deeply unpredictable partner.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/1ac8/live/dce70a90-6318-11f1-aecd-df176a37a192.jpg"
+    },
+    {
+      "title": "Live Updates: Iran and Israel Move to De-Escalate After Cease-Fire Breaks Down",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/live/2026/06/08/world/iran-israel-lebanon-attacks",
+      "publishedAt": "2026-06-08T14:49:50.000Z",
+      "excerpt": "Iran’s Revolutionary Guards Corps signaled that it had concluded its latest military operation against Israel. Prime Minister Benjamin Netanyahu pulled back from preparations for…",
+      "imageUrl": "https://static01.nyt.com/images/2026/06/08/multimedia/08mideast-promo-2am-ET-chzq/08mideast-promo-2am-ET-chzq-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Alberta Ferretti Resort 2027",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/resort-2027/alberta-ferretti",
+      "publishedAt": "2026-06-08T14:49:57.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a2183bffcb893695efbdfe4/master/pass/00001-alberta-ferretti-resort-2027-credit-brand.jpg"
     },
     {
       "title": "Prada Unveils New Garment for NASA",
@@ -30,31 +75,31 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F04%2FTriptychs-68.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Malawians repatriated from South Africa amid xenophobia concerns",
+      "title": "Stock market jitters remain amid tech fears and renewed Middle East attacks",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/cnv9dz3reego?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-06-08T11:19:58.000Z",
-      "excerpt": "Malawi is among several African nations transporting their citizens out of the country following reports of violence against migrants.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/1925/live/f87d2bf0-6312-11f1-aecd-df176a37a192.jpg"
+      "link": "https://www.bbc.com/news/articles/c78yd5g9qx0o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-06-08T14:14:11.000Z",
+      "excerpt": "Markets in Asia are hit by a tech sell-off, and oil is volatile as Iran and Israel launch attacks on each other.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/bfa4/live/426f4c70-62e1-11f1-9a4b-dd5933001427.jpg"
     },
     {
-      "title": "Live Updates: Iran and Israel Trade Strikes as Trump Calls on Them to Stop",
+      "title": "In Striking Israel, Iran Aims to Protect Its Regional Gains",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/06/08/world/iran-israel-lebanon-attacks",
-      "publishedAt": "2026-06-08T11:20:35.000Z",
-      "excerpt": "Iran launched waves of missiles at Israel, and Israel said it struck military targets and a petrochemical complex in Iran, as an uneasy two-month truce broke down. President Trump…",
-      "imageUrl": "https://static01.nyt.com/images/2026/06/08/multimedia/08mideast-promo-2am-ET-chzq/08mideast-promo-2am-ET-chzq-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/06/08/world/middleeast/israel-iran-strikes-regional-gains.html",
+      "publishedAt": "2026-06-08T14:49:48.000Z",
+      "excerpt": "For Tehran, retaliating for strikes against Hezbollah in Lebanon shows that it will stand by its regional allies and block attempts to shift the regional balance of power.",
+      "imageUrl": "https://static01.nyt.com/images/2026/06/08/multimedia/08mideast-iran-assess-gchq/08mideast-iran-assess-gchq-mediumSquareAt3X.jpg"
     },
     {
-      "title": "The Best Cos New Arrivals to Shop for Summer 2026 | Vogue",
+      "title": "Etro Resort 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/best-cos-finds",
-      "publishedAt": "2026-06-08T11:00:00.000Z",
-      "excerpt": "Relaxed tailoring and easy sundresses are a few Cos new arrivals we’re eyeing for right now.",
-      "imageUrl": "https://assets.vogue.com/photos/6a22d7d87703e7e6a3bae261/master/pass/image21.jpg"
+      "link": "https://www.vogue.com/fashion-shows/resort-2027/etro",
+      "publishedAt": "2026-06-08T14:49:57.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a1977b200f1491e81e6dc2b/master/pass/00001-etro-resort-2027-credit-brand.jpg"
     },
     {
       "title": "Novo Nordisk Looks Beyond Weight Loss to Longevity and Aesthetics",
@@ -64,51 +109,6 @@
       "publishedAt": "2026-06-08T09:10:06.000Z",
       "excerpt": "Novo's blockbuster drugs could pull it into buzzier areas of healthcare, chief executive Mike Doustdar said, as the Ozempic maker seeks to lessen its reliance on obesity and diabe…",
       "imageUrl": "https://img.businessoffashion.com/resizer/v2//3PMQAVJJBZHBXLSRNAU72AZEKE.png?auth=612c3695fc3d04e3a0aca16048d25a65de760b5915e2df5d63e052b612f93bfe&amp;smart=true&amp;width=1800&amp;height=1013"
-    },
-    {
-      "title": "The Best-Dressed Celebrities at the Tony Awards 2026",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/6/tony-awards-best-dressed-celebrities-red-carpet-queen-latifah-adrien-brody-rachel-zegler",
-      "publishedAt": "2026-06-08T10:33:53.000Z",
-      "excerpt": "It was lights, camera, action in New York City this weekend as the 2026 Tony Awards took place at Radio City Music Hall, hosted by singer-songwriter Pink. Celebrating the shining…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F08%2FSingle-Image-1203.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "At least 32 dead after major earthquake strikes southern Philippines",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/clyel78e6p5o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-06-08T11:10:07.000Z",
-      "excerpt": "The magnitude-7.8 quake triggered small tsunami waves in the Philippines, Indonesia and Japan.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/6ec7/live/fc4cdaf0-62f9-11f1-9f01-0f46b1df0d85.jpg"
-    },
-    {
-      "title": "Resuming War Is a Short-Term Political Boon for Netanyahu, but Grim Choices Await",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/06/08/world/middleeast/israel-netanyahu-iran-trump-lebanon.html",
-      "publishedAt": "2026-06-08T11:20:33.000Z",
-      "excerpt": "If President Trump forces Israel to stand down against Iran, analysts say, it could leave Israel hindered from responding forcefully to attacks by Hezbollah.",
-      "imageUrl": "https://static01.nyt.com/images/2026/06/08/multimedia/08int-israel-assess-clhk/08int-israel-assess-clhk-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "The Best Sneakers to Wear With Dresses: 25+ Chic Outfit Ideas",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/how-to-wear-the-summer-dress-and-sneaker-look",
-      "publishedAt": "2026-06-08T10:00:00.000Z",
-      "excerpt": "From polka dot prints to soft jersey T-shirt dresses, these are the best sneakers to wear with dresses, made to be worn together all summer.",
-      "imageUrl": "https://assets.vogue.com/photos/687a56843fe65ce5395a81bc/master/pass/Final_dresses_and_sneakers.jpg"
-    },
-    {
-      "title": "Kai Nesselrath Named Design Director of Carven",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/news/luxury/kai-nesselrath-named-design-director-of-carven/",
-      "publishedAt": "2026-06-08T04:50:00.000Z",
-      "excerpt": "Nesselrath, a designer from Anthony Vaccarello’s Saint Laurent studio, will present his debut runway collection for the ICCF-owned label at Paris Fashion Week in the autumn.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2//OMM2UEDL6FGI3AHO3KBOH7B7EU.jpg?auth=320f4d68adcb7b0de8ef468da51d89e4421b40f165fb5b594373fa97bf7dea61&amp;smart=true&amp;width=3700&amp;height=4877"
     }
   ],
   "sources": {
