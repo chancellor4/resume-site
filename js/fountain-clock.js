@@ -188,6 +188,7 @@
   var DEFAULT_LOCATION = LOCATIONS['houston-texas'] || LOCATIONS[Object.keys(LOCATIONS)[0]];
 
   var CACHE_KEY_PREFIX = 'fc:weather:';
+  var GREETING_TEXT    = 'Hi, welcome to my site';
   var PREFS_KEY        = 'fc:preferences:v2';
   var LOCATION_KEY     = 'fc:location';
   var DETAILS_KEY      = 'fc:details';
@@ -833,6 +834,7 @@
 
     var now = new Date();
 
+    setText(qs('[data-fc-greeting]', root), GREETING_TEXT);
     setText(qs('[data-fc-time-hm]', root), formatHM(now, state.location.tz, state.preferences.hour24));
 
     var timeEl = qs('[data-fc-time]', root);
