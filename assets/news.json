@@ -1,13 +1,58 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-06-10T18:45:29.406Z",
+  "generatedAt": "2026-06-10T21:22:14.298Z",
   "items": [
+    {
+      "title": "Atelier Prabal Gurung Fall 2026 Ready-to-Wear",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/fall-2026-ready-to-wear/atelier-prabal-gurung",
+      "publishedAt": "2026-06-10T21:17:18.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a2242d67703e7e6a3bad4a4/master/pass/00001-atelier-prabal-gurung-fall-2026-ready-to-wear-credit-mark-grgurich-brand.jpg"
+    },
+    {
+      "title": "The Debrief | Fashion’s Ozempic Reckoning",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/podcasts/retail/fashions-ozempic-reckoning-sizing-appearance/",
+      "publishedAt": "2026-06-10T19:50:59.000Z",
+      "excerpt": "As GLP-1 drugs reshape consumers’ bodies at unprecedented scale, BoF’s Diana Pearl and Brennan Kilbane examine how fashion and beauty brands are adapting to a profound shift in si…",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2//65ZPLC7K5RF7HDKEEWOEEJVB3Q.jpg?auth=5211fd59c7280fd8f9e41f54ffd2720de2300dd8b933c69487b30edcd5925eac&amp;smart=true&amp;width=1920&amp;height=1080"
+    },
+    {
+      "title": "Needles and Albino &amp; Preto's New Collaboration Makes Jiu Jitsu Chic",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/6/needles-nepenthes-albino-preto-new-collaboration-jiu-jitsu-tracksuits-where-to-buy",
+      "publishedAt": "2026-06-10T20:11:40.000Z",
+      "excerpt": "Just when you thought streetwear couldn't get any more inventive, Japanese cult label Needles is linking up with martial arts powerhouse Albino & Preto for a capsule that bridges…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F10%2Fneedles-nepenthes-albino-preto-new-collaboration-jiu-jitsu-tracksuits-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Bill Gates says Epstein wanted personal relationship, but he 'never reciprocated'",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/c0jy8v0ge66o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-06-10T19:31:24.000Z",
+      "excerpt": "The Microsoft co-founder spent hours talking to lawmakers behind closed doors, where he also said Epstein used his marital infidelities to pressure him.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/854b/live/6db43dd0-64f5-11f1-96e1-83394d865b23.jpg"
+    },
+    {
+      "title": "Iran War Live Updates: U.S. Will Strike Iran Again Tonight, Hegseth Says",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/live/2026/06/10/world/iran-war-trump-us",
+      "publishedAt": "2026-06-10T21:17:43.000Z",
+      "excerpt": "The secretary of defense, Pete Hegseth, said a new American attack would be launched on Wednesday night. Earlier, President Trump said more attacks were coming, a day after he pre…",
+      "imageUrl": "https://static01.nyt.com/images/2026/06/10/multimedia/10mideast-200/live-blog-20260610-iran-war-trump-us-header-fjmv-mediumSquareAt3X.jpg"
+    },
     {
       "title": "LoveShackFancy Resort 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/resort-2027/loveshackfancy",
-      "publishedAt": "2026-06-10T18:42:42.000Z",
+      "publishedAt": "2026-06-10T21:17:18.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a2685404996d2df7bcf906a/master/pass/00001-loveshackfancy-resort-2027-credit-brand.jpg"
     },
@@ -39,20 +84,20 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/a3e7/live/559dbf90-64f6-11f1-96e1-83394d865b23.jpg"
     },
     {
-      "title": "Iran War Live Updates: A Day After Predicting Peace, Trump Says U.S. Will Strike Iran Again",
+      "title": "Here’s the latest.",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/06/10/world/iran-war-trump-us",
-      "publishedAt": "2026-06-10T18:34:18.000Z",
-      "excerpt": "For weeks, the president has swung between predicting peace and threatening a return to full-scale war, leaving it unclear when or how the fight with Iran might end.",
-      "imageUrl": "https://static01.nyt.com/images/2026/06/10/multimedia/10mideast-200/live-blog-20260610-iran-war-trump-us-header-fjmv-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/live/2026/06/10/world/iran-war-trump-us/heres-the-latest",
+      "publishedAt": "2026-06-10T21:17:41.000Z",
+      "excerpt": "",
+      "imageUrl": null
     },
     {
       "title": "Carolina Herrera Resort 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/resort-2027/carolina-herrera",
-      "publishedAt": "2026-06-10T18:42:42.000Z",
+      "publishedAt": "2026-06-10T21:17:18.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a26e0ba595a3d31bbd13644/master/pass/00001-carolina-herrera-resort-2027-credit-brand.jpg"
     },
@@ -64,51 +109,6 @@
       "publishedAt": "2026-06-10T12:00:00.000Z",
       "excerpt": "As football becomes the next big sporting event for beauty marketing, brands are rushing to activate around the global event — with varying levels of investment.",
       "imageUrl": "https://img.businessoffashion.com/resizer/v2//IDVH72JNXRBCRFSSMCF6OX3FTA.jpg?auth=f8c526596e2765adc23900f97512328b309af852d03319724ff730ee3ad0a0d2&amp;smart=true&amp;width=1800&amp;height=1013"
-    },
-    {
-      "title": "Ariana Grande Is Bringing Back Matte Lips With r.e.m. beauty's Latest Launch",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/6/r-e-m-beauty-ariana-grande-blur-butter-lip-balm-where-to-buy",
-      "publishedAt": "2026-06-10T17:46:39.000Z",
-      "excerpt": "Ariana Grande and r.e.m. beauty just dropped the Blur Butter Lip Balm. Described as a hydrating balm that glides on smoothly and transforms into a lightweight blurred matte finish…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F10%2Frem-fi.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Three Indian sailors missing after US says it hit tanker in Gulf of Oman",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/c0rygjw1kqxo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-06-10T17:48:54.000Z",
-      "excerpt": "India's government said three Indian sailors were missing and 21 crew had been rescued after the hit on the Settebello off the coast of Oman.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/0c87/live/ab3d00b0-64eb-11f1-a1ac-711fb29896f6.png"
-    },
-    {
-      "title": "Violence in Belfast After Brutal Stabbing Attack: What to Know",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/06/10/world/europe/belfast-attack-riots-what-happened.html",
-      "publishedAt": "2026-06-10T18:34:07.000Z",
-      "excerpt": "There was unrest in Belfast and elsewhere after video of a brutal stabbing circulated online, amplified by far-right activists.",
-      "imageUrl": "https://static01.nyt.com/images/2026/06/10/multimedia/10nireland-wtk-01-ktgz/10nireland-wtk-01-ktgz-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "House of Dagmar Resort 2027",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/resort-2027/dagmar",
-      "publishedAt": "2026-06-10T18:42:42.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a1ff48afe68335702587de6/master/pass/00001-house-of-dagmar-resort-2027-credit-brand.jpg"
-    },
-    {
-      "title": "Asics To Spin Off Onitsuka Tiger Sneaker Brand",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/news/retail/asics-to-spin-off-onitsuka-tiger-sneaker-brand/",
-      "publishedAt": "2026-06-10T09:10:32.000Z",
-      "excerpt": "The spin off comes as the 77-year-old Japanese shoe label enjoys a resurgence in popularity amid a tourism boom and growing global demand for retro sneakers.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2//KSIZUHBVABBOXDT3KSLGUHAKJU.jpg?auth=a580054f6294e2b550739b1845d5e63a55fdef4da8a01944e28ab93980777043&amp;smart=true&amp;width=1080&amp;height=1349"
     }
   ],
   "sources": {
