@@ -2588,16 +2588,6 @@ body[data-page="playground"] .site-footer .site-wrap {
   max-width: 52ch;
 }
 
-/* ─── PLAYGROUND: RESUME LINK ──────────────────────────────── */
-
-.playground-resume-link {
-  margin-top: var(--sp-2xl);
-  color: var(--ink-muted);
-  font-size: 0.875rem;
-  text-align: center;
-  letter-spacing: var(--ls-tight);
-}
-
 /* ─── NOTES PAGE ────────────────────────────────────────────
    A local-first, offline-only micro-vault.
    Calm parchment tones; nothing here should demand attention. */
