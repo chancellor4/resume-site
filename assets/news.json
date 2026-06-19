@@ -1,24 +1,60 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-06-19T16:27:20.063Z",
+  "generatedAt": "2026-06-19T18:14:22.272Z",
   "items": [
     {
-      "title": "Staud Resort 2027",
+      "title": "Ralph Lauren Spring 2027 Menswear",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/resort-2027/staud",
-      "publishedAt": "2026-06-19T16:26:52.000Z",
+      "link": "https://www.vogue.com/fashion-shows/spring-2027-menswear/ralph-lauren",
+      "publishedAt": "2026-06-19T18:09:43.000Z",
       "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a33cbba4cba59da67a175c9/master/pass/00001-staud-resort-2027-credit-brand.jpg"
+      "imageUrl": "https://assets.vogue.com/photos/6a357fdc4d5a693e400fe39c/master/pass/ISI00019.jpg"
     },
     {
-      "title": "Why Traceability Is Becoming a Business Requirement for Fashion Brands",
+      "title": "The Business of Euro Summer",
       "source": "Business of Fashion",
       "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/briefings/sustainability/traceability-is-becoming-a-business-requirement-for-fashion-brands-next-gen-materials-seesaw-success-keellabs-bankruptcy-bangladesh-labour-reforms/",
-      "publishedAt": "2026-06-19T15:30:00.000Z",
-      "excerpt": "With the US, EU and Canada introducing measures on forced labour in supply chains, traceability is no longer just a sustainability initiative but a necessity for market access.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2//VRHPS2CTZFG3ZMYIH6MKDOJ57M.png?auth=81217bacc76a43d7bcb9e1940a468626434d5ec57e6410e262f845b721161e45&amp;smart=true&amp;width=1800&amp;height=1013"
+      "link": "https://www.businessoffashion.com/briefings/luxury/the-business-of-euro-summer/",
+      "publishedAt": "2026-06-19T17:41:17.000Z",
+      "excerpt": "MyTheresa, Gucci and Jacquemus have converged on Monaco for summer takeovers while Burberry sets up shop in Athens. As big luxury’s beach club era stretches into a ninth summer, h…",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2//4OGCUD57KVHBRET23F5JUVWUYM.jpg?auth=6d39c56b952b3d5e61f2d875ae171fe4d84714a4591cc1fe294c3b3edfd4b9e6&amp;smart=true&amp;width=4500&amp;height=5625"
+    },
+    {
+      "title": "US to end funding of South Africa's HIV programmes over claims of Afrikaner persecution",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.com/news/articles/cdr457lxr71o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-06-19T17:02:02.000Z",
+      "excerpt": "The US says South Africa is not doing enough to protect the white-minority Afrikaner community.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/6893/live/8c956090-6bf7-11f1-8bf6-931d18012412.jpg"
+    },
+    {
+      "title": "Here’s the latest.",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/live/2026/06/19/world/iran-trump-deal/heres-the-latest",
+      "publishedAt": "2026-06-19T18:11:09.000Z",
+      "excerpt": "",
+      "imageUrl": null
+    },
+    {
+      "title": "Hayley Kiyoko on Making Her Filmmaking Debut With Girls Like Girls",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/hayley-kiyoko-girls-like-girls-interview",
+      "publishedAt": "2026-06-19T17:56:50.000Z",
+      "excerpt": "Vogue spoke to Kiyoko about working with stylist Avigail Collins on a custom look for the film’s Los Angeles premiere, her dreams of continuing to direct while scoring her own fil…",
+      "imageUrl": "https://assets.vogue.com/photos/6a3581a4671dbb60524d5f8e/master/pass/GLG_FP_00162.jpg"
+    },
+    {
+      "title": "Adrian Appiolaza Exits Moschino",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/articles/luxury/adrian-appiolaza-exits-moschino/",
+      "publishedAt": "2026-06-19T16:57:27.000Z",
+      "excerpt": "The creative director’s departure after two years was a mutual decision, Moschino said on Friday.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2//R5SC4PY5PNFDNE74BMHDZTP4OM.jpg?auth=ed467791109c09e8e0a4620b10d139846e3cb9ff706f2f49abcfc13b025e311d&amp;smart=true&amp;width=1200&amp;height=1500"
     },
     {
       "title": "Six-year-old Ebola patient taken from DR Congo hospital found and 'doing well'",
@@ -30,31 +66,31 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/defa/live/2098db00-6be4-11f1-b1db-af71d47507d6.jpg"
     },
     {
-      "title": "Mideast Live Updates: Iran Delayed Talks After Israeli Attacks in Lebanon, Diplomats Say",
+      "title": "Mideast Live Updates: Diplomats Work to Preserve Iran Deal With a New Lebanon Cease-Fire",
       "source": "NYT World",
       "sourceType": "world-news",
       "link": "https://www.nytimes.com/live/2026/06/19/world/iran-trump-deal",
-      "publishedAt": "2026-06-19T16:25:51.000Z",
-      "excerpt": "Israel and Hezbollah have traded strikes in recent days. The Israeli military said it had targeted militants overnight after four of its soldiers were killed in southern Lebanon.",
-      "imageUrl": "https://static01.nyt.com/images/2026/06/19/multimedia/19mideast-promo-11EST-mtwb/19mideast-promo-11EST-mtwb-mediumSquareAt3X.jpg"
+      "publishedAt": "2026-06-19T18:10:28.000Z",
+      "excerpt": "Israel and Hezbollah agreed to the truce, three officials said, after trading strikes in recent days. The Israeli ambassador to the U.S. later said Israel had “halted all offensiv…",
+      "imageUrl": "https://static01.nyt.com/images/2026/06/19/multimedia/19mideast-promo-115EST-tmph/19mideast-promo-115EST-tmph-mediumSquareAt3X.jpg"
     },
     {
-      "title": "Anne Hathaway Reveals She Is Pregnant With Her Third Child",
+      "title": "Adrian Appiolaza to Exit Moschino",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/anne-hathaway-pregnant-with-her-third-child",
-      "publishedAt": "2026-06-19T15:15:21.000Z",
-      "excerpt": "Congratulations are in order for Anne Hathaway, who is expecting her third child with Adam Shulman.",
-      "imageUrl": "https://assets.vogue.com/photos/6a3558732f8624e2add14b13/master/pass/Screenshot%202026-06-19%20at%2015.48.29.png"
+      "link": "https://www.vogue.com/article/adrian-appiolaza-to-exit-moschino",
+      "publishedAt": "2026-06-19T16:30:00.000Z",
+      "excerpt": "The designer has left the brand after two and a half years.",
+      "imageUrl": "https://assets.vogue.com/photos/6a3171debc90d9116148487d/master/pass/MOSCHINO-STORY.jpg"
     },
     {
-      "title": "AI Transparency Rule Shouldn’t Apply to Ads, EU Retail Group Says",
+      "title": "I Am My Dad’s Son",
       "source": "Business of Fashion",
       "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/news/technology/ai-transparency-rule-shouldnt-apply-to-ads-eu-retail-group-says/",
-      "publishedAt": "2026-06-19T15:15:28.000Z",
-      "excerpt": "Eurocommerce, whose members include H&M and Inditex, argued AI-generated ads should be exempt from a rule requiring disclosure of AI use.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2//WN5A642MB5HV5LZPXNLMTVXIHE.png?auth=5d5163cfc0fef543536e10897bfe816b7f1f617faf0ba968c02785c8717bbb4f&amp;smart=true&amp;width=1800&amp;height=1013"
+      "link": "https://www.businessoffashion.com/briefings/letter-from-editor/i-am-my-dads-son/",
+      "publishedAt": "2026-06-19T16:26:16.000Z",
+      "excerpt": "Ismail Hussein Sidi Ahmed (aka Miles), 1947 – 2026",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2//RNIFI7L5VRGA3K7SXLKUSXGLTY.png?auth=bae5a1c3c17bb81f5a0c6e0d9d771ff91844a669354a7c6e563e8280dbaf5bcd&amp;smart=true&amp;width=1800&amp;height=1013"
     },
     {
       "title": "Italy's Meloni says Trump 'made up' story that she 'begged' him for photo at G7",
@@ -66,49 +102,13 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/467b/live/b8c74c90-6bf3-11f1-b1db-af71d47507d6.jpg"
     },
     {
-      "title": "Canadian Billionaire Frank Stronach Is Convicted of Sexual and Indecent Assault",
+      "title": "Moscow Refinery Blast May Have Been Caused by Friendly Fire, Video Suggests",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/06/19/world/canada/frank-stronach-trial-guilty-sex-charges.html",
-      "publishedAt": "2026-06-19T16:23:48.000Z",
-      "excerpt": "Mr. Stronach, 93, was found guilty of sexual assault and indecent assault in two cases and acquitted on three other charges.",
-      "imageUrl": "https://static01.nyt.com/images/2026/06/19/multimedia/19int-canada-stronach-ktgm/19int-canada-stronach-ktgm-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Marquise Cut Engagement Rings: What to Know About the Elongated Stone",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/marquise-cut-engagement-rings-guide",
-      "publishedAt": "2026-06-19T14:19:55.000Z",
-      "excerpt": "Marquise cut engagement rings are a stylish choice for a reason. We break down what to know about the cut from its history to setting choices for the stone.",
-      "imageUrl": "https://assets.vogue.com/photos/6a346537554510d1f390a32a/master/pass/2192180233"
-    },
-    {
-      "title": "Why Converse’s Future Is Now an Even Bigger Question",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/briefings/sports/why-converses-future-is-now-an-even-bigger-question/",
-      "publishedAt": "2026-06-19T15:00:30.000Z",
-      "excerpt": "NBA superstar Shai Gilgeous-Alexander was the headliner for Nike’s struggling Converse brand. Now, Nike is moving him under its own label, raising questions about its plans for it…",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2//BYREDS4QZNDBPDXSQX6LFIPCUQ.jpg?auth=f3c85b18f48a5802ec0f9ae009e7f057b818c671b17776eeaf144ada6bbf9464&amp;smart=true&amp;width=2400&amp;height=3000"
-    },
-    {
-      "title": "Obama moved to tears by wife Michelle's speech",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.com/news/articles/cly91eqyd0ko?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-06-19T10:35:08.000Z",
-      "excerpt": "The couple were opening a site in Chicago, which the former president described as a \"celebration of community\".",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/b514/live/c609d280-6bd3-11f1-8e1d-bbbb1017d210.jpg"
-    },
-    {
-      "title": "Burnham’s Stunning Victory in Makerfield Election May Trigger Starmer’s Last Stand",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/06/19/world/europe/andy-burnham-election-uk-starmer-makerfield.html",
-      "publishedAt": "2026-06-19T16:20:58.000Z",
-      "excerpt": "Andy Burnham, a Labour mayor, won a resounding majority in a special election on Thursday, making him eligible to challenge Prime Minister Keir Starmer for the country’s leadershi…",
-      "imageUrl": "https://static01.nyt.com/images/2026/06/19/multimedia/19int-UK-POLITICS-ASSESS-01-kjph/19int-UK-POLITICS-ASSESS-01-kjph-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/06/19/world/europe/russia-moscow-missile-refinery.html",
+      "publishedAt": "2026-06-19T17:57:00.000Z",
+      "excerpt": "Footage shows a Russian air defense missile traveling toward a fuel silo, which erupts in an explosion around the time of its arrival.",
+      "imageUrl": "https://static01.nyt.com/images/2026/06/19/world/europe/19vid-russia-tanker-AB-COVER/19vid-russia-tanker-AB-COVER-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
