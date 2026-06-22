@@ -32,6 +32,43 @@
   <meta name="twitter:image" content="https://chancelloredwards.dev/assets/social-card.png" />
   <meta name="twitter:image:alt" content="Fountain Clock — ambient time and weather on Chancellor Edwards's personal site" />
 
+  <script>
+  (function () {
+    var labels = {
+      'new-orleans-louisiana': 'New Orleans, Louisiana',
+      'houston-texas': 'Houston, Texas',
+      'dallas-texas': 'Dallas, Texas',
+      'williamsburg-kentucky': 'Williamsburg, Kentucky',
+      'baton-rouge-louisiana': 'Baton Rouge, Louisiana',
+      'new-york-new-york': 'New York, New York',
+      'los-angeles-california': 'Los Angeles, California'
+    };
+    var key = null;
+
+    try {
+      key = localStorage.getItem('fc:location');
+      if (!labels[key]) {
+        var prefs = JSON.parse(localStorage.getItem('fc:preferences:v2') || 'null');
+        key = prefs && prefs.location;
+      }
+      if (!labels[key]) {
+        var storedLocation = JSON.parse(localStorage.getItem('fc:location') || 'null');
+        key = storedLocation && storedLocation.key;
+      }
+    } catch (e) {}
+
+    if (labels[key]) {
+      var title = 'Home — ' + labels[key] + ' — Chancellor Edwards (Chance Edwards)';
+      document.title = title;
+
+      var ogTitle = document.querySelector('meta[property="og:title"]');
+      var twitterTitle = document.querySelector('meta[name="twitter:title"]');
+      if (ogTitle) ogTitle.setAttribute('content', title);
+      if (twitterTitle) twitterTitle.setAttribute('content', title);
+    }
+  })();
+  </script>
+
   <!-- Canonical -->
   <link rel="canonical" href="https://chancelloredwards.dev/" />
 
