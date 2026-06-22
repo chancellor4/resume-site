@@ -777,6 +777,21 @@
     if (el && el.hasAttribute(name)) el.removeAttribute(name);
   }
 
+  function homeTitleFor(location) {
+    var label = location && location.label ? location.label : DEFAULT_LOCATION.label;
+    return 'Home — ' + label + ' — Chancellor Edwards (Chance Edwards)';
+  }
+
+  function syncHomeTitle() {
+    var title = homeTitleFor(state.location);
+    if (document.title !== title) document.title = title;
+
+    var ogTitle = qs('meta[property="og:title"]');
+    var twitterTitle = qs('meta[name="twitter:title"]');
+    setAttr(ogTitle, 'content', title);
+    setAttr(twitterTitle, 'content', title);
+  }
+
   function rememberGoodState() {
     if (!state.location) return;
     state.lastGood = {
@@ -1104,6 +1119,8 @@
     if (!root) return;
 
     setAttr(root, 'data-fc-details', state.detailsOpen ? 'open' : 'closed');
+
+    syncHomeTitle();
 
     var locEl = qs('[data-fc-location]', root);
     setText(locEl, state.location.label);
