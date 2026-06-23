@@ -1,13 +1,58 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-06-23T14:26:24.958Z",
+  "generatedAt": "2026-06-23T16:59:27.298Z",
   "items": [
+    {
+      "title": "Études Studio Spring 2027 Menswear",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/spring-2027-menswear/etudes",
+      "publishedAt": "2026-06-23T16:56:49.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a3a9b60bf8d114e6dbad87f/master/pass/UMB00010.jpg"
+    },
+    {
+      "title": "Why Tech Wear Is Crashing Paris Fashion Week",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/briefings/sports/why-tech-wear-is-crashing-paris-fashion-week/",
+      "publishedAt": "2026-06-23T15:00:00.000Z",
+      "excerpt": "The running category will be more present than ever before at Paris Fashion Week, as brands like Hoka, Satisfy and more descend upon one of fashion’s biggest moments of the",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2//PVWABYCKTBBGJHGVR57XAVAE5E.png?auth=3e8e4e64585982e953c2eff77bdc270f8ac1db69dca43f0209a653ba5a9c204f&amp;smart=true&amp;width=1200&amp;height=1500"
+    },
+    {
+      "title": "Why Are Guava Beauty Products Everywhere Right Now?",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2025/6/guava-makeup-skincare-product-roundup-fenty-beauty-summer-fridays-where-to-buy",
+      "publishedAt": "2026-06-23T16:14:16.000Z",
+      "excerpt": "In 2025, strawberry and vanilla scents just don't cut it anymore. For beauty brands, scent is a vital part of the experience, and that's especially evident in the internet's affin…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2025%2F06%2F23%2Fguava-beauty-products-fi.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Ransom note claims Nancy Guthrie died after abduction",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/cvgm0mgzl33o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-06-23T16:52:33.000Z",
+      "excerpt": "On Tuesday, Today show presenter Savannah Guthrie begged people to come forward, saying, \"We are in agony.\"",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/0937/live/65772ef0-6e98-11f1-a98d-19c4cda006f8.jpg"
+    },
+    {
+      "title": "Mideast Live Updates: U.S. and Iran Offer Conflicting Accounts of Nuclear Discussions",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/live/2026/06/23/world/iran-us-trump-lebanon",
+      "publishedAt": "2026-06-23T16:55:48.000Z",
+      "excerpt": "President Trump said Iran had agreed to the “highest level” inspections, hours after an Iranian official said there were “no detailed discussions on the nuclear issue,” as the two…",
+      "imageUrl": "https://static01.nyt.com/images/2026/06/23/multimedia/23mideast-promo1/23mideast-promo1-mediumSquareAt3X.jpg"
+    },
     {
       "title": "Giorgio Armani Resort 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/resort-2027/giorgio-armani",
-      "publishedAt": "2026-06-23T14:22:38.000Z",
+      "publishedAt": "2026-06-23T16:56:49.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a3a91037cba7c0674f0e7d6/master/pass/00001-giorgio-armani-resort-2027-credit-gorunway.jpg"
     },
@@ -21,38 +66,38 @@
       "imageUrl": "https://img.businessoffashion.com/resizer/v2//JQG6XKXAIZHDLNSYBV4W7VNNCA.jpg?auth=ab5e46ce28256bd68701500a7cd5c188d3f6fc540ff0cd9a5e76da2743b1eb95&amp;smart=true&amp;width=1920&amp;height=1080"
     },
     {
-      "title": "Strawberry Western Is Making Swimwear Fun",
+      "title": "This Brand Is Making Hair Care Funner",
       "source": "Hypebae",
       "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/6/strawberry-western-swimwear-bikini-tankini-summer-where-to-buy",
-      "publishedAt": "2026-06-23T10:44:01.000Z",
-      "excerpt": "Strawberry Western is expanding its warm-weather lineup with a fresh swimwear drop. The New York City lifestyle brand, helmed by founders Kisa Shiga and Eli Libman, continues its…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F23%2FSingle-Image-1330-1.jpg?w=800&cbr=1&q=90&fit=max"
+      "link": "https://hypebae.com/2026/6/funner-hair-care-brand-where-to-buy",
+      "publishedAt": "2026-06-23T16:03:35.000Z",
+      "excerpt": "Funner is rewriting the rules of professional hair care. The new brand, founded by Jonah Kaner, Daniel Kaner and Sonia Kashuk, launches with a 21-product collection spanning clean…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F23%2Ffunner-fi.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Irish government to contribute £197m to cross-border rail services",
+      "title": "Drowning deaths soar in France as Europe buckles in peak of heatwave",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cd95yd1y050o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-06-23T13:39:03.000Z",
-      "excerpt": "The money will come from the last allocation from the Irish government's Shared Island Fund.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/13e2/live/f49071f0-6f06-11f1-87e9-1dc598ae70b3.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/c79yvw3j114o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-06-23T16:27:17.000Z",
+      "excerpt": "Forty people have drowned in heatwave-related deaths in France since last Thursday, Prime Minister Sébastien Lecornu says.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/2593/live/ebcebc30-6f05-11f1-8546-8f19e4fe30f4.jpg"
     },
     {
-      "title": "How Mark Rutte of NATO Manages an Unpredictable Trump",
+      "title": "Artist Pulls Work From London Museum After Clash Over Churchill’s Legacy",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/06/23/world/europe/mark-rutte-nato-trump.html",
-      "publishedAt": "2026-06-23T14:21:44.000Z",
-      "excerpt": "Secretary General Mark Rutte is headed to Washington. His style has at times frustrated the very European leaders who need him to hold the alliance together.",
-      "imageUrl": "https://static01.nyt.com/images/2026/06/23/multimedia/23Rutte-Trump-01-czgk/23Rutte-Trump-01-czgk-mediumSquareAt3X-v2.jpg"
+      "link": "https://www.nytimes.com/2026/06/23/arts/churchill-bengal-famine-national-portrait-gallery.html",
+      "publishedAt": "2026-06-23T16:42:37.000Z",
+      "excerpt": "A historian and others said that a video installation had incorrectly blamed Winston Churchill for a famine in colonial India.",
+      "imageUrl": "https://static01.nyt.com/images/2026/06/23/multimedia/23xp-churchill-2-lcmw/23xp-churchill-2-lcmw-mediumSquareAt3X.jpg"
     },
     {
       "title": "Eckhaus Latta Resort 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/resort-2027/eckhaus-latta",
-      "publishedAt": "2026-06-23T14:22:38.000Z",
+      "publishedAt": "2026-06-23T16:56:49.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a3502a14d5a693e400fdfac/master/pass/00001-eckhaus-latta-resort-2027-credit-ritsch-sisters-brand.jpg"
     },
@@ -64,51 +109,6 @@
       "publishedAt": "2026-06-23T12:36:06.000Z",
       "excerpt": "This week’s round-up of global markets fashion business news also features Panama’s luxury malls, Polish retail giant LPP and the Indian textile exporters hoping a Middle East pea…",
       "imageUrl": "https://img.businessoffashion.com/resizer/v2//VWY4HRV27ZC6DCFTWBYYH2VRJ4.png?auth=4bf2129119d7532b8d781d0a2326bde695ee429a681d122a0d3af5fac3a709c2&amp;smart=true&amp;width=1800&amp;height=1013"
-    },
-    {
-      "title": "The Aesop Queer Library Returns to the UK for Summer 2026",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/6/aesop-queer-library-london-uk-brighton-soho-lgbtqia-rights-activism-pride-month-details",
-      "publishedAt": "2026-06-23T09:11:43.000Z",
-      "excerpt": "The Aesop Queer Library is returning to London this summer to celebrate its sixth annual UK edition. Running for three days at the brand's Soho outpost, the literary project clear…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F23%2FSingle-Image-1326.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Ransom note claims Nancy Guthrie died after abduction",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cvgm0mgzl33o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-06-23T13:27:12.000Z",
-      "excerpt": "The note from the possible kidnappers reportedly stated that they did not mean for her to die and included an apology to the family.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/0937/live/65772ef0-6e98-11f1-a98d-19c4cda006f8.jpg"
-    },
-    {
-      "title": "Mideast Live Updates: U.S. and Iran Offer Conflicting Accounts of Nuclear Discussions",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/06/23/world/iran-us-trump-lebanon",
-      "publishedAt": "2026-06-23T14:20:09.000Z",
-      "excerpt": "President Trump said Iran had agreed to the “highest level” inspections, hours after an Iranian official said there were “no detailed discussions on the nuclear issue,” as the two…",
-      "imageUrl": "https://static01.nyt.com/images/2026/06/23/multimedia/23mideast-promo1/23mideast-promo1-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Institut Français de la Mode Spring 2027 Ready-to-Wear",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/spring-2027-ready-to-wear/institut-francais-de-la-mode",
-      "publishedAt": "2026-06-23T14:22:38.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a3a82674b2060275198b8b2/master/pass/ISI00016.jpg"
-    },
-    {
-      "title": "How India’s Aditya Birla Built a Billion-Dollar Fashion Empire",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/articles/global-markets/how-indias-aditya-birla-built-a-billion-dollar-fashion-empire/",
-      "publishedAt": "2026-06-23T12:28:25.000Z",
-      "excerpt": "The mining-to-textiles giant’s fashion arm has grown into one of India’s largest players, spanning dozens of homegrown brands and retail partnerships with global names like Reebok…",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2//MQRAHQLA2RG4DIDES552PZ6SL4.png?auth=7fbef9baa29959aba726050c2a68ea7c9759cb7f6e7c152c0613a6b47b78e15b&amp;smart=true&amp;width=1800&amp;height=1013"
     }
   ],
   "sources": {
