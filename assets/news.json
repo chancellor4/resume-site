@@ -1,15 +1,60 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-06-25T15:36:03.056Z",
+  "generatedAt": "2026-06-25T18:01:11.434Z",
   "items": [
+    {
+      "title": "Yohji Yamamoto Spring 2027 Menswear",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/spring-2027-menswear/yohji-yamamoto",
+      "publishedAt": "2026-06-25T17:58:29.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a3d50e5e55aa569bef944f8/master/pass/FIO00021.jpg"
+    },
+    {
+      "title": "Embodying the Moment: Paloma Elsesser on Beauty, Bodies and Business",
+      "source": "Business of Fashion",
+      "sourceType": "fashion-business",
+      "link": "https://www.businessoffashion.com/articles/beauty/paloma-elsesser-business-of-beauty-global-forum-2026/",
+      "publishedAt": "2026-06-25T15:45:06.000Z",
+      "excerpt": "The model and muse explained her supermodel origin story and her plans for her next act onstage at The Business of Beauty Global Forum.",
+      "imageUrl": "https://img.businessoffashion.com/resizer/v2//ZFVR6OXCJNAB5KI3GHEUWMFSSI.JPG?auth=0a41e9883c65522a0729be9e326c81a246b01b4d50ad11724287b89c3df72371&amp;smart=true&amp;width=2000&amp;height=1333"
+    },
+    {
+      "title": "Louis Vuitton and Pat McGrath Announce La Beauté's First-Ever Lip Liner",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/6/louis-vuitton-la-beaute-pat-mcgrath-lv-crayon-lip-liner-where-to-buy",
+      "publishedAt": "2026-06-25T17:30:17.000Z",
+      "excerpt": "Louis Vuitton is expanding La Beauté with a new addition to its growing makeup lineup. Following the debut collection of lipsticks, lip balms and eyeshadow palettes, the brand is…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F25%2Flv-fi.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Families lay flowers on barbed wire barricade on anniversary of deadly Kenya protests",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/cgqjl8kj8wpo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-06-25T16:53:51.000Z",
+      "excerpt": "Protesters demand justice for the dozens killed during the 2024 demonstrations and last year's anniversary protests.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/c823/live/d24fc9d0-70b2-11f1-8546-8f19e4fe30f4.jpg"
+    },
+    {
+      "title": "Photos: Venezuela Earthquakes Cause Death and Destruction in Caracas, La Guaira and Beyond",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/06/24/world/americas/earthquakes-venezuela-photos.html",
+      "publishedAt": "2026-06-25T17:58:13.000Z",
+      "excerpt": "Two powerful quakes shook the South American country, causing death and destruction.",
+      "imageUrl": "https://static01.nyt.com/images/2026/06/25/world/25int-venezuela-quake-photos-02/25int-venezuela-quake-photos-02-mediumSquareAt3X.jpg"
+    },
     {
       "title": "Amiri Spring 2027 Menswear",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/spring-2027-menswear/amiri",
-      "publishedAt": "2026-06-25T15:35:06.000Z",
+      "publishedAt": "2026-06-25T17:58:29.000Z",
       "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a3d40084a680d32c1714b8f/master/pass/OBY00019.jpg"
+      "imageUrl": "https://assets.vogue.com/photos/6a3d5d31e7349c94ffbe64d7/master/pass/00001-amiri-spring-2027-menswear-credit-gorunway.jpg"
     },
     {
       "title": "BoF and The Outsiders Perspective Unpack The New Talent Strategy For Global Growth",
@@ -21,13 +66,13 @@
       "imageUrl": "https://img.businessoffashion.com/resizer/v2//TV4SOO5JTFBPZCZZK2N7YSQ3EE.png?auth=23f1b87cd66bd7b6d76675398c2a6c5b8f1c837325edb9ca7be7ba04f9e3b017&amp;smart=true&amp;width=1800&amp;height=1013"
     },
     {
-      "title": "Balenciaga Just Announced a Partnership With Substack",
+      "title": "Our Favorite Shows From Men's Fashion Week SS27, So Far",
       "source": "Hypebae",
       "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/6/balenciaga-substack-partnership-newsletter-sponsorship-program",
-      "publishedAt": "2026-06-25T14:26:53.000Z",
-      "excerpt": "Balenciaga just dropped a collaboration none of us were expecting, and it's good. Teaming up with the home of the newsletter, aka Substack, the fashion house just announced a part…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F25%2FFEATURE-SIZE-73.jpg?w=800&cbr=1&q=90&fit=max"
+      "link": "https://hypebae.com/2026/6/mens-fashion-week-paris-milan-london-ss27-prada-dior-simone-rocha-raf-simons",
+      "publishedAt": "2026-06-25T15:58:01.000Z",
+      "excerpt": "Men's fashion week is officially underway, kicking things off in Milan before heading to Paris for the Spring/Summer 2027 season amid World Cup mania, soaring temperatures and a h…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F22%2FTriptychs-72.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
       "title": "Oil price falls back to pre-Iran war levels",
@@ -39,20 +84,20 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/7800/live/6edd4700-7086-11f1-b1db-af71d47507d6.jpg"
     },
     {
-      "title": "Turkey or Türkiye? Who Is the U.S. Playing?",
+      "title": "Venezuela Live Updates: Rescuers Search for Survivors After Worst Quakes in Decades",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/06/25/world/europe/turkiye-turkey-name-change-world-cup-usa.html",
-      "publishedAt": "2026-06-25T15:33:02.000Z",
-      "excerpt": "The push to rebrand the country, which started in the last decade, was inspired by politicians and coincided with an international public relations campaign.",
-      "imageUrl": "https://static01.nyt.com/images/2026/06/25/multimedia/25xp-turkiye-PROMO/25xp-turkiye-02-hqzk-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/live/2026/06/25/world/venezuela-earthquake",
+      "publishedAt": "2026-06-25T17:56:33.000Z",
+      "excerpt": "Back-to-back earthquakes left at least 164 dead, the authorities said. Residents of the port city of La Guaira estimated that hundreds of people were trapped in the rubble of coll…",
+      "imageUrl": "https://static01.nyt.com/images/2026/06/25/multimedia/25venezuela-quake-promo-130pm-kqtl/25venezuela-quake-laguaira-scene-topart-kqtl-mediumSquareAt3X.jpg"
     },
     {
       "title": "Bluemarble Spring 2027 Menswear",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/spring-2027-menswear/bluemarble",
-      "publishedAt": "2026-06-25T15:35:06.000Z",
+      "publishedAt": "2026-06-25T17:58:29.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a3bbf02c7f0e3e0eb7b50a3/master/pass/00001-bluemarble-spring-2027-menswear-credit-brand.jpg"
     },
@@ -64,51 +109,6 @@
       "publishedAt": "2026-06-25T10:47:40.000Z",
       "excerpt": "H&M reported weaker-than-expected second-quarter earnings, posing a fresh challenge to the Swedish fast-fashion retailer’s turnaround efforts amid intense competition and cautious…",
       "imageUrl": "https://img.businessoffashion.com/resizer/v2//ADOOL3LBLNG5LCQ6WX5NTPPX5U.png?auth=cef3350c130a242a5da9797d3fc94e5b1dff865c00e492b644b501f78d09be69&amp;smart=true&amp;width=1800&amp;height=1013"
-    },
-    {
-      "title": "Your Definitive Guide to Luxury Fashion's Game of Creative Director Musical Chairs",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2025/3/luxury-creative-directors-jonathan-anderson-loewe-announcements",
-      "publishedAt": "2026-06-25T12:06:30.000Z",
-      "excerpt": "After months and months of updates from the likes of Donatella Versace, Demna and Jonathan Anderson, it's safe to say that the term \"luxury slow-down\" doesn't refer to the recent…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F03%2F11%2Fimgi_141_https3A2F2Fbae.hypebeast.com2Ffiles2F20262F032F052FCopy-of-FEATURE-SIZE-13-1.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Families lay flowers on barbed wire barricade on anniversary of deadly Kenya protests",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cgqjl8kj8wpo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-06-25T15:31:23.000Z",
-      "excerpt": "Protesters demand justice for the dozens killed during the 2024 demonstrations and last year's anniversary protests.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/faed/live/7d1a33e0-70a5-11f1-8e1d-bbbb1017d210.jpg"
-    },
-    {
-      "title": "Venezuela Live Updates: Death Toll Rises as Rescuers Mount Frantic Search for Quake Survivors",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/06/25/world/venezuela-earthquake",
-      "publishedAt": "2026-06-25T15:28:25.000Z",
-      "excerpt": "The 7.2- and 7.5-magnitude earthquakes left at least 164 dead and hundreds missing, the authorities said. The full scale of the damage was still becoming clear.",
-      "imageUrl": "https://static01.nyt.com/images/2026/06/25/multimedia/25venezuela-quake-promo-1030am-ET-clfj/25venezuela-quake-promo-1030am-ET-clfj-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Feng Chen Wang Spring 2027 Menswear",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/spring-2027-menswear/feng-chen-wang",
-      "publishedAt": "2026-06-25T15:35:06.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a3d44014562d742e606248d/master/pass/00001-feng-chen-weng-spring-2027-menswear-credit-gorunway.jpg"
-    },
-    {
-      "title": "Bain Forecasts Luxury Growth But Trims Outlook",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/articles/luxury/bain-forecasts-luxury-growth-but-trims-outlook/",
-      "publishedAt": "2026-06-25T10:00:00.000Z",
-      "excerpt": "Personal luxury goods sales are now expected to rise 2 to 4 percent this year, as geopolitical tensions and higher interest rates weigh on the sector.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2//PIF33DBK4FHHPOXMKHGMUUGQKQ.png?auth=9e7775f24770f3a696bd46c3f985077b051c16db76764461b659bd99a9d80595&amp;smart=true&amp;width=1800&amp;height=1013"
     }
   ],
   "sources": {
