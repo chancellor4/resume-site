@@ -1,13 +1,13 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-06-27T22:53:18.619Z",
+  "generatedAt": "2026-06-27T23:52:47.529Z",
   "items": [
     {
       "title": "Magliano Spring 2027 Menswear",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/spring-2027-menswear/magliano",
-      "publishedAt": "2026-06-27T22:48:02.000Z",
+      "publishedAt": "2026-06-27T23:50:48.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a3f752a24787c7dfa0ace2b/master/pass/00001-magliano-spring-2027-menswear-credit-brand.jpg"
     },
@@ -39,20 +39,20 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/07a5/live/076a6550-7241-11f1-930d-75324f3b4c6e.jpg"
     },
     {
-      "title": "Live Updates: Hostilities Flare Between U.S. and Iran, Testing Truce",
+      "title": "Venezuela Live Updates: Window Narrowing to Find Survivors as Quake Death Toll Surpasses 1,400",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/06/27/world/us-iran-strikes-hormuz",
-      "publishedAt": "2026-06-27T22:41:46.000Z",
-      "excerpt": "U.S. forces carried out retaliatory airstrikes on Iran for the second straight night, after Bahrain said it had been targeted by Iranian drones and a ship came under attack in the…",
-      "imageUrl": "https://static01.nyt.com/images/2026/06/27/multimedia/27mideast-promo-4pm-hgkq-copy/27mideast-promo-12pm-hgkq-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/live/2026/06/27/world/venezuela-earthquake",
+      "publishedAt": "2026-06-27T23:37:27.000Z",
+      "excerpt": "International teams were joining search efforts on Saturday after twin earthquakes devastated northern Venezuela, leaving many people trapped under rubble.",
+      "imageUrl": "https://static01.nyt.com/images/2026/06/27/multimedia/27venezuela-quake-promo-4pm-vhqm-copy/27venezuela-quake-promo-230pm-vhqm-mediumSquareAt3X.jpg"
     },
     {
       "title": "Soshiotsuki Spring 2027 Menswear",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/spring-2027-menswear/soshiotsuki",
-      "publishedAt": "2026-06-27T22:48:02.000Z",
+      "publishedAt": "2026-06-27T23:50:48.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a402c308a1499b9ed897819/master/pass/00001-soshiotsuki-spring-2027-menswear-credit-gorunway.jpg"
     },
@@ -87,8 +87,8 @@
       "title": "Here’s the latest.",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/06/27/world/us-iran-strikes-hormuz/heres-the-latest",
-      "publishedAt": "2026-06-27T22:41:44.000Z",
+      "link": "https://www.nytimes.com/live/2026/06/27/world/venezuela-earthquake/heres-the-latest",
+      "publishedAt": "2026-06-27T23:37:25.000Z",
       "excerpt": "",
       "imageUrl": null
     },
@@ -97,7 +97,7 @@
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/spring-2027-menswear/hed-mayner",
-      "publishedAt": "2026-06-27T22:48:02.000Z",
+      "publishedAt": "2026-06-27T23:50:48.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a400a52d72c2825890944c6/master/pass/00001-hed-mayner-spring-2027-menswear-credit-gorunway.jpg"
     },
