@@ -1,15 +1,87 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-01T13:30:20.918Z",
+  "generatedAt": "2026-07-01T16:14:44.640Z",
   "items": [
+    {
+      "title": "Duckie Brown Spring 2027 Menswear",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/spring-2027-menswear/duckie-brown",
+      "publishedAt": "2026-07-01T16:10:15.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a429994759f129163006196/master/pass/00001-duckie-brown-spring-2027-menswear-credit-chloe-horseman-brand.jpg"
+    },
+    {
+      "title": "Dakota Johnson and Alexander Skarsgård Are the Newest Faces of Valentino Beauty",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/valentino-beauty-dakota-johnson-alexander-skarsgard-fragrance-announcement-campaign",
+      "publishedAt": "2026-07-01T15:54:33.000Z",
+      "excerpt": "Valentino Beauty is entering a new era of fragrance after announcing Dakota Johnson and Alexander Skarsgård as its latest faces. Leaning into the brand's ethos of lived-in intimac…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F01%2Fvalentino-fi.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Fire kills five at Antwerp apartment block",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/c621dx0vl7xo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-01T16:12:18.000Z",
+      "excerpt": "A man was seen clambering through a window to escape black smoke in the block where some 200 people live.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/3eb0/live/198a7900-7543-11f1-81d0-b57b06d692af.jpg"
+    },
+    {
+      "title": "Norway’s ‘Viking Row’ Is a Fan Phenomenon at the World Cup",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/06/30/world/europe/norway-fans-viking-row-cheer.html",
+      "publishedAt": "2026-07-01T14:45:53.000Z",
+      "excerpt": "Seas of red-clad Norwegian supporters are rowing shoulder to shoulder at stadiums, schools, even a nursing home. Not everyone is thrilled.",
+      "imageUrl": "https://static01.nyt.com/images/2026/06/26/multimedia/26int-norway-rowing-hgmb/26int-norway-rowing-hgmb-mediumSquareAt3X.jpg"
+    },
     {
       "title": "Lii Spring 2027 Menswear",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/spring-2027-menswear/lii",
-      "publishedAt": "2026-07-01T13:30:01.000Z",
+      "publishedAt": "2026-07-01T16:10:15.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a42968cd88c08c663a9bda5/master/pass/00001-lii-spring-2027-menswear-credit-brand.jpg"
+    },
+    {
+      "title": "Inside Geel’s New Collaboration With a Ceramic Artist",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/geel-us-analuisa-corrigan-collaboration-collection-interiors-furniture-clothing-where-to-buy",
+      "publishedAt": "2026-07-01T14:25:35.000Z",
+      "excerpt": "Independent cool-girl fashion label Geel teamed up with ceramic artist and designer Analuisa Corrigan for a limited-edition collaboration, bringing together ready-to-wear and coll…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F01%2FSingle-Image-245-1.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Trump made more than $1bn from crypto in first year back in office",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/cvgmv98ez3zo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-01T16:04:32.000Z",
+      "excerpt": "The president's crypto income far outpaces his earnings from real estate and Trump-themed items such as watches.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/1ba7/live/0575aa80-7510-11f1-8e1d-bbbb1017d210.jpg"
+    },
+    {
+      "title": "After Venezuela Earthquakes, Deportees from the U.S. Are Missing or Found Dead",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/07/01/world/americas/venezuela-earthquakes-deportees-us-deaths.html",
+      "publishedAt": "2026-07-01T14:44:30.000Z",
+      "excerpt": "Many of the 146 Venezuelans deported from the United States the day the earthquake struck are feared dead.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/01/multimedia/01int-venezuela-quake-deportees-4-bjgt/01int-venezuela-quake-deportees-4-bjgt-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Ranra Spring 2027 Menswear",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/spring-2027-menswear/arnar-mar-jonsson",
+      "publishedAt": "2026-07-01T16:10:15.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a4390078a63821c5505f7d0/master/pass/00001-ranra-spring-2027-menswear-credit-george-eyres-brand.jpg"
     },
     {
       "title": "Our Favorite Shows From Men's Fashion Week SS27",
@@ -21,94 +93,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F30%2FTriptychs-85.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Fire at Antwerp apartment block kills at least six",
+      "title": "Man guilty of attempted murder of three children in Dublin",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/c621dx0vl7xo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-01T13:10:23.000Z",
-      "excerpt": "A man is seen clambering through a window to escape black smoke in the block where some 200 people live.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/3eb0/live/198a7900-7543-11f1-81d0-b57b06d692af.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/c78yjgpr5j3o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-01T15:34:10.000Z",
+      "excerpt": "Riad Bouchaker denied attempting to murder three children and assaulting four other people on 23 November 2023.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/0884/live/5f53ece0-755d-11f1-bd47-e1ebd62de3b7.jpg"
     },
     {
       "title": "U.S. and Iran Set to Hold Indirect Talks After Trading Attacks: What to Know",
       "source": "NYT World",
       "sourceType": "world-news",
       "link": "https://www.nytimes.com/2026/07/01/world/middleeast/us-iran-diplomacy-qatar.html",
-      "publishedAt": "2026-07-01T13:18:37.000Z",
+      "publishedAt": "2026-07-01T14:37:18.000Z",
       "excerpt": "Negotiators are in Qatar for indirect talks and ship traffic has risen in the Strait of Hormuz, even as Tehran and Washington remain far apart on key issues. Here’s what to know.",
       "imageUrl": "https://static01.nyt.com/images/2026/07/01/multimedia/01int-iran-diplomacy-ctlj/01int-iran-diplomacy-ctlj-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Ranra Spring 2027 Menswear",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/spring-2027-menswear/arnar-mar-jonsson",
-      "publishedAt": "2026-07-01T13:30:01.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a4390078a63821c5505f7d0/master/pass/00001-ranra-spring-2027-menswear-credit-george-eyres-brand.jpg"
-    },
-    {
-      "title": "Leomie Anderson Stars in Oceanus' Latest Sun-Soaked Campaign",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/oceanus-leomie-anderson-collaboration-model-swimwear-resortwear-miami-dresses-where-to-buy",
-      "publishedAt": "2026-07-01T10:32:53.000Z",
-      "excerpt": "British model and all-round It-girl Leomie Anderson is the face of Oceanus' latest campaign, bringing the brand's signature high-glam aesthetic to life in a series of sun-drenched…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F01%2FSingle-Image-230.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Canada will take part in Eurovision Song Contest 2027",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/c8x2y2vwqn1o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-01T12:30:56.000Z",
-      "excerpt": "The country becomes the first new participant since Australia joined the contest in 2015.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/c6a5/live/b206a750-7550-11f1-9510-1546718f668b.jpg"
-    },
-    {
-      "title": "Underground Births, Under Bombardment: Childbearing in Ukraine",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/01/world/europe/ukraine-war-pregnant-women-hospitals.html",
-      "publishedAt": "2026-07-01T12:33:26.000Z",
-      "excerpt": "Bombings, blackouts and displacement compound maternal anxiety. Still, many women persevere. “We must bring new life,” one said.",
-      "imageUrl": "https://static01.nyt.com/images/2026/04/01/multimedia/00int-ukraine-maternal-health-promo-afanobnrjaq/00int-ukraine-maternal-health-01-cbtm-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "John Alexander Skelton Spring 2027 Menswear",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/spring-2027-menswear/john-alexander-skelton",
-      "publishedAt": "2026-07-01T13:30:01.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a44315abd9702d43d4054a1/master/pass/00001-john-alexander-skelton-spring-2027-menswear-credit-brand.jpg"
-    },
-    {
-      "title": "PinkPantheress on Gen Z, World Building... &amp;Coach",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/6/pinkpantheress-and-coach-campaign-collection-interview",
-      "publishedAt": "2026-07-01T09:43:38.000Z",
-      "excerpt": "Coach just launched its new &Coach platform, a space dedicated to the brand's Gen Z fanbase and influential creative partners, which puts them at the heart of it.Starring PinkPant…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F30%2FFEATURE-SIZE-77.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Trump made more than $1bn from crypto in first year back in office",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cvgmv98ez3zo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-01T11:41:13.000Z",
-      "excerpt": "The president's crypto income far outpaces his earnings from real estate and Trump-themed items such as watches.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/1ba7/live/0575aa80-7510-11f1-8e1d-bbbb1017d210.jpg"
-    },
-    {
-      "title": "After Venezuela Earthquakes, Deportees from the U.S. Are Missing or Found Dead",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/01/world/americas/venezuela-earthquakes-deportees-us-deaths.html",
-      "publishedAt": "2026-07-01T11:50:21.000Z",
-      "excerpt": "Many of the 146 Venezuelans deported from the United States the day the earthquake struck are feared dead.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/01/multimedia/01int-venezuela-quake-deportees-4-bjgt/01int-venezuela-quake-deportees-4-bjgt-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
