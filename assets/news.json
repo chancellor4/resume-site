@@ -1,15 +1,87 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-03T08:46:39.611Z",
+  "generatedAt": "2026-07-03T11:24:29.011Z",
   "items": [
     {
       "title": "Anna October Resort 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/resort-2027/anna-october",
-      "publishedAt": "2026-07-03T08:42:48.000Z",
+      "publishedAt": "2026-07-03T11:23:58.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a3a7c292f996aea7fc46acd/master/pass/00001-anna-october-resort-2027-credit-brand.jpg"
+    },
+    {
+      "title": "Bella Hadid Returns as the Face of Miss Sixty's Hot New Campaign",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/bella-hadid-miss-sixty-campaign-y2k-collection-information-where-to-buy",
+      "publishedAt": "2026-07-03T10:20:35.000Z",
+      "excerpt": "Bella Hadid is back with another campaign for Miss Sixty, continuing her ongoing partnership with the denim label in a series of cinematic new visuals.Lensed by acclaimed photogra…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F03%2FSingle-Image-250.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Ukrainian woman named by Interpol as main suspect in Monaco bomb attack",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/c4gy603z2qlo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-03T10:58:26.000Z",
+      "excerpt": "Monaco's prosecutor's office says the suspect is no longer in Monaco.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/259c/live/79fb4680-76cd-11f1-9510-1546718f668b.jpg"
+    },
+    {
+      "title": "Long Lines for Gas Shatter the Illusion of Normalcy in Wartime Russia",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/07/03/world/europe/russia-gas-shortages.html",
+      "publishedAt": "2026-07-03T10:47:14.000Z",
+      "excerpt": "“Are we in the Soviet Union now?” asked one Russian, stunned and frustrated by the waits at the pumps.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/02/multimedia/00int-russia-gas-shortages-wcfk/00int-russia-gas-shortages-wcfk-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Undercover Spring 2027 Menswear",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/spring-2027-menswear/undercover",
+      "publishedAt": "2026-07-03T11:23:58.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a3ed47022a20bc05d1e7628/master/pass/00001-undercover-spring-2027-menswear-credit-brand.jpg"
+    },
+    {
+      "title": "Rihanna Debuts Savage X Fenty's Dreamy Butter Yellow Drop",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/rihanna-savage-x-fenty-yellow-lingerie-underwear-bras-where-to-buy",
+      "publishedAt": "2026-07-03T09:34:53.000Z",
+      "excerpt": "Summer has officially landed at Savage X Fenty, and Rihanna is setting the tone with the brand's latest \"Daisy Riot\" collection. Unveiled by the multi-hyphenate on social media, t…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F03%2FSingle-Image-249.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Nasa launches mission to save falling space telescope",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/c0ry4xx7rk8o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-03T10:28:17.000Z",
+      "excerpt": "A Nasa-funded robot has blasted off to catch a falling telescope in mid-orbit and blast it back to safety before it burns up.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/1cef/live/163753a0-74c5-11f1-b3a4-17c48cb4ee82.jpg"
+    },
+    {
+      "title": "Allies Converge on Iran as Funeral Ceremonies for Supreme Leader Begin",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/07/03/world/middleeast/iran-funeral-supreme-leader.html",
+      "publishedAt": "2026-07-03T10:37:33.000Z",
+      "excerpt": "Foreign dignitaries from China, Russia, Pakistan and elsewhere are set to pay respects to Ayatollah Ali Khamenei on Friday as days of ceremonies get underway.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/03/multimedia/03int-iran-funeral-01-qtgl/03int-iran-funeral-01-qtgl-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Undercover Resort 2027",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/resort-2027/undercover",
+      "publishedAt": "2026-07-03T11:23:58.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a327fdf254dd14297b1e76a/master/pass/00001-undercover-resort-2027-credit-brand.jpg"
     },
     {
       "title": "Marta Kostyuk's Viral Wimbledon Dress Is Already Sold Out",
@@ -21,94 +93,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F02%2Fmarta-kostyuk-wimbledon-dress-wilson-tennis-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Taylor Swift's rumoured wedding celebrations begin with star-studded New York event",
+      "title": "France records 2,025 excess deaths at peak of heatwave as Europe braces for more extreme weather",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/crlw1eeez19o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-03T08:36:23.000Z",
-      "excerpt": "Actress Lena Dunham, model Gigi Hadid and longtime music collaborator Jack Antonoff were spotted in formal attire near Madison Square Garden.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/236d/live/cc2a4710-7675-11f1-9510-1546718f668b.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/c3ry307rxqro?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-03T10:23:32.000Z",
+      "excerpt": "Forecasters are warning of further extreme temperatures on the continent in the next few days.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/3780/live/a5443970-76c6-11f1-9510-1546718f668b.jpg"
     },
     {
-      "title": "Trump’s Huge Windfall Has Few Known Global Precedents",
+      "title": "Tibetan Activist Sets Self on Fire Outside U.N. in Protest Against China",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/02/world/europe/trump-world-leaders-corruption-wealth.html",
-      "publishedAt": "2026-07-03T08:21:03.000Z",
-      "excerpt": "President Trump’s earnings in office are at a level once unimaginable for any leader of a liberal democracy, particularly a sitting American president.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/03/multimedia/03trump-world-01-lpjc/03trump-world-01-lpjc-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Undercover Spring 2027 Menswear",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/spring-2027-menswear/undercover",
-      "publishedAt": "2026-07-03T08:42:48.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a3ed47022a20bc05d1e7628/master/pass/00001-undercover-spring-2027-menswear-credit-brand.jpg"
-    },
-    {
-      "title": "Vans Just Dropped the Perfect Low-Profile Sneaker Silhouette",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/vans-super-lowpro-ballet-sneaker-serio-collection-where-to-buy",
-      "publishedAt": "2026-07-02T18:21:24.000Z",
-      "excerpt": "If you've been searching for the perfect sneaker to take you into the new season, look no further than one of footwear's favorite brands. Vans has officially unveiled its latest i…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F02%2Fvans-super-lowpro-ballet-sneaker-serio-collection-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Bomb blast at Damascus cafe kills nine, Syrian state media say",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cn0vwxyz40zo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-03T06:42:14.000Z",
-      "excerpt": "There was no immediate claim for the bombing at a cafe close to the Palace of Justice, a major government building.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/bbab/live/7f056730-7639-11f1-a627-714adb4eed6e.jpg"
-    },
-    {
-      "title": "China Defends Widely Criticized ‘Ethnic Unity’ Law",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/03/world/asia/china-ethnic-unity-tibetan-uyghurs.html",
-      "publishedAt": "2026-07-03T08:18:22.000Z",
-      "excerpt": "Rights groups and Western officials have criticized the law as a threat to Tibetans, Uyghurs and other minorities. Beijing says the measure aims to protect them.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/03/multimedia/03int-china-minorities-mpth/03int-china-minorities-mpth-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Undercover Resort 2027",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/resort-2027/undercover",
-      "publishedAt": "2026-07-03T08:42:48.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a327fdf254dd14297b1e76a/master/pass/00001-undercover-resort-2027-credit-brand.jpg"
-    },
-    {
-      "title": "Tate McRae Fronts the New adidas Climacool Campaign",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/adidas-3d-printed-climacool-sneaker-campaign-tate-mcrae-rodrigo-de-paul-where-to-buy",
-      "publishedAt": "2026-07-02T16:51:18.000Z",
-      "excerpt": "If your footwear rotation is in need of a futuristic refresh, adidas has you covered. The Three Stripes is continuing the evolution of its 3D-printed Climacool range for Fall/Wint…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F02%2Fadidas-3d-printed-climacool-sneaker-campaign-tate-mcrae-rodrigo-de-paul-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Venezuela quake survivor pulled out alive after eight days",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/ce375v12z0qo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-03T06:38:45.000Z",
-      "excerpt": "Hernán Gil was trapped under a collapsed multi-storey car park.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/116a/live/fcec98d0-763e-11f1-a627-714adb4eed6e.jpg"
-    },
-    {
-      "title": "With Attacks on Crimea, Ukraine Hopes to Pressure Putin to End the War",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/02/world/europe/russia-crimea-ukraine.html",
-      "publishedAt": "2026-07-03T07:03:39.000Z",
-      "excerpt": "Escalating drone strikes, fuel shortages and power cuts in the region Russia annexed are among the factors turning up the heat on President Vladimir V. Putin.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/02/multimedia/02int-russia-crimea-mpkc/02int-russia-crimea-mpkc-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/07/03/world/asia/tibet-self-immolation-united-nations-china.html",
+      "publishedAt": "2026-07-03T09:38:09.000Z",
+      "excerpt": "Lobga Rangzen, a 52-year-old resident of Queens, died after the self-immolation. He said Beijing’s policies were “destroying the Tibetan people.”",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/03/multimedia/03INT-CHINA-UN-IMMOLATION-plbz/03INT-CHINA-UN-IMMOLATION-plbz-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
