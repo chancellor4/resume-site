@@ -8,14 +8,14 @@
 
   <!-- SEO -->
   <title>Notes — Chancellor Edwards</title>
-  <meta name="description" content="Notes — a local-first, offline-only micro-vault by Chancellor Edwards. Nothing syncs, nothing streams. The paper is always here." />
+  <meta name="description" content="Notes — a local-first, offline-only workspace by Chancellor Edwards for drafting prompts and thinking through ideas with LLMs. Write, shape the request, copy it out — no saving required." />
   <meta name="author" content="Chancellor Edwards" />
   <!-- Intentionally lightweight SEO: Notes is a private, client-side tool, not a content page. -->
   <meta name="robots" content="noindex, follow" />
 
   <!-- Open Graph -->
   <meta property="og:title" content="Notes — Chancellor Edwards" />
-  <meta property="og:description" content="A local-first, offline-only micro-vault. Nothing syncs, nothing streams." />
+  <meta property="og:description" content="A local-first, offline-only workspace for drafting prompts and thinking through ideas with LLMs. Copy the prompt out — saving is optional." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://chancelloredwards.dev/notes.html" />
   <meta property="og:site_name" content="Chancellor Edwards" />
@@ -25,7 +25,7 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Notes — Chancellor Edwards" />
-  <meta name="twitter:description" content="A local-first, offline-only micro-vault." />
+  <meta name="twitter:description" content="A local-first, offline-only workspace for drafting prompts and copying them into an LLM." />
   <meta name="twitter:image" content="https://chancelloredwards.dev/assets/social-card.png" />
 
   <!-- Canonical -->
@@ -46,7 +46,7 @@
     "@type": "WebPage",
     "@id": "https://chancelloredwards.dev/notes.html#webpage",
     "name": "Notes",
-    "description": "A local-first, offline-only micro-vault.",
+    "description": "A local-first, offline-only workspace for drafting prompts and thinking through ideas with LLMs.",
     "url": "https://chancelloredwards.dev/notes.html",
     "isPartOf": { "@id": "https://chancelloredwards.dev/#website" },
     "about": { "@id": "https://chancelloredwards.dev/#person" },
@@ -107,110 +107,98 @@
     </div>
   </nav>
 
-  <!-- ─── HEADER ───────────────────────────────────────────────── -->
-  <header class="notes-header">
-    <div class="site-wrap">
-      <p class="hero-eyebrow">Local-first</p>
-      <h1>Notes</h1>
-      <p>
-        A quiet drawer for ideas and fragments. Nothing syncs, nothing streams — everything you type stays on this device.
-        Press <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>&nbsp;+&nbsp;<kbd>Enter</kbd> to save.
-      </p>
-    </div>
-  </header>
+  <!-- Kept empty for the SPA shell's header/main swap contract. -->
+  <header class="notes-header notes-header-empty" hidden></header>
 
   <!-- ─── MAIN ──────────────────────────────────────────────────── -->
   <main>
     <div class="site-wrap">
       <div class="notes-root" id="notes-root">
+        <div class="notes-workspace-view" id="notes-workspace-view">
 
-        <!-- ── Compose ─────────────────────────────────────────── -->
-        <form class="notes-compose" id="notes-compose" autocomplete="off" novalidate>
-          <label class="visually-hidden" for="notes-compose-title">Title (optional)</label>
-          <input
-            id="notes-compose-title"
-            class="notes-compose-title"
-            type="text"
-            placeholder="Title (optional)"
-            maxlength="200"
-          />
-
-          <label class="visually-hidden" for="notes-compose-body">Note</label>
-          <textarea
-            id="notes-compose-body"
-            class="notes-compose-body"
-            rows="5"
-            placeholder="What are you thinking? Use #tags inline."
-            autofocus
-          ></textarea>
-
-          <div class="notes-compose-row">
-            <span class="notes-compose-hint" aria-hidden="true">Cmd/Ctrl + Enter to save</span>
-            <div class="notes-compose-actions">
-              <button
-                type="button"
-                class="notes-btn notes-btn-quiet"
-                id="notes-compose-cancel"
-                hidden
-              >Cancel</button>
-              <button
-                type="submit"
-                class="notes-btn notes-btn-primary"
-                id="notes-compose-submit"
-              >Save note</button>
+          <!-- ── Workspace ───────────────────────────────────────── -->
+          <section class="notes-workspace" aria-label="Prompt">
+            <div class="notes-bar">
+              <div class="notes-mode" id="notes-mode" role="group" aria-label="Drafting mode">
+                <button type="button" class="notes-mode-btn" data-mode="free" aria-pressed="true">Free-form</button>
+                <button type="button" class="notes-mode-btn" data-mode="structured" aria-pressed="false">Structured</button>
+              </div>
             </div>
-          </div>
-        </form>
 
-        <!-- ── Flash (imports/exports/errors) ──────────────────── -->
-        <div
-          class="notes-flash"
-          id="notes-flash"
-          role="status"
-          aria-live="polite"
-          hidden
-        ></div>
+            <!-- Free-form -->
+            <div class="notes-pane" data-notes-pane="free">
+              <label class="visually-hidden" for="notes-purpose">Purpose (optional)</label>
+              <input
+                id="notes-purpose"
+                class="notes-purpose"
+                type="text"
+                autocomplete="off"
+                placeholder="What are you trying to accomplish? (optional)"
+              />
+              <label class="visually-hidden" for="notes-body">Prompt</label>
+              <textarea
+                id="notes-body"
+                class="notes-body"
+                placeholder="Start writing your prompt…"
+              ></textarea>
+            </div>
 
-        <!-- ── Toolbar: search + filters ───────────────────────── -->
-        <div class="notes-toolbar">
-          <label class="visually-hidden" for="notes-search">Search notes</label>
-          <input
-            id="notes-search"
-            class="notes-search"
-            type="search"
-            placeholder="Search…"
-            autocomplete="off"
-          />
+            <!-- Structured -->
+            <div class="notes-pane" data-notes-pane="structured" hidden>
+              <label class="notes-field">
+                <span class="notes-field-label">Goal <em>what you're trying to accomplish</em></span>
+                <textarea id="notes-goal" class="notes-field-input" rows="2" placeholder="e.g. Write a clear summary of this design doc for my team."></textarea>
+              </label>
+              <label class="notes-field">
+                <span class="notes-field-label">Context <em>background, constraints, pasted material</em></span>
+                <textarea id="notes-context" class="notes-field-input" rows="6" placeholder="Relevant details, prior responses, anything the model should know…"></textarea>
+              </label>
+              <label class="notes-field">
+                <span class="notes-field-label">Request <em>the specific ask</em></span>
+                <textarea id="notes-request" class="notes-field-input" rows="3" placeholder="The precise thing you want the model to do."></textarea>
+              </label>
+            </div>
 
-          <div class="notes-filters" id="notes-filters" role="group" aria-label="Filter notes">
-            <button type="button" class="notes-pill notes-pill-active" data-filter="all" aria-pressed="true">All</button>
-            <button type="button" class="notes-pill" data-filter="pinned" aria-pressed="false">Pinned</button>
-            <button type="button" class="notes-pill" data-filter="archived" aria-pressed="false">Archived</button>
-          </div>
+            <div class="notes-bar-actions">
+              <span class="notes-shortcuts" aria-hidden="true"></span>
+              <span class="notes-status" id="notes-status" role="status" aria-live="polite"></span>
+              <a class="notes-btn notes-btn-quiet" id="notes-drafts-open" href="#drafts">Saved drafts</a>
+              <button type="button" class="notes-btn" id="notes-save">Save</button>
+              <button type="button" class="notes-btn notes-btn-primary" id="notes-copy">Copy prompt</button>
+            </div>
+          </section>
+
+          <!-- ── Responses scratch ───────────────────────────────── -->
+          <section class="notes-scratch" aria-label="Responses and scratch">
+            <label class="notes-scratch-label" for="notes-responses">Responses &amp; scratch</label>
+            <textarea
+              id="notes-responses"
+              class="notes-scratch-input"
+              placeholder="Paste useful model responses here, alongside your draft…"
+            ></textarea>
+          </section>
         </div>
 
-        <!-- ── Meta row: count + export/import ─────────────────── -->
-        <div class="notes-meta-row">
-          <span class="notes-count" id="notes-count" aria-live="polite">0 notes</span>
-          <div class="notes-io">
-            <button type="button" class="notes-btn" id="notes-export">Export JSON</button>
-            <button type="button" class="notes-btn" id="notes-import">Import</button>
-            <input
-              type="file"
-              id="notes-import-file"
-              class="notes-hidden-input"
-              accept="application/json,.json"
-              aria-hidden="true"
-              tabindex="-1"
-            />
+        <!-- ── Saved drafts nested view ─────────────────────────── -->
+        <section class="notes-drafts-view" id="notes-drafts-view" aria-label="Saved drafts" hidden>
+          <div class="notes-drafts-panel">
+            <div class="notes-sidebar-head">
+              <h1 class="notes-sidebar-title">Saved drafts</h1>
+              <a class="notes-btn notes-btn-quiet" id="notes-drafts-back" href="#workspace">Back to workspace</a>
+            </div>
+            <p class="notes-drafts-copy">
+              Reopen a saved draft to continue editing it in the prompt workspace.
+            </p>
+            <button type="button" class="notes-btn notes-btn-quiet" id="notes-new">+ New</button>
+            <ul class="notes-draft-list" id="notes-draft-list"></ul>
+            <p class="notes-draft-empty" id="notes-draft-empty">
+              Saved drafts appear here. Saving is optional — you can always just copy.
+            </p>
           </div>
-        </div>
+        </section>
 
-        <!-- ── Empty state ─────────────────────────────────────── -->
-        <p class="notes-empty" id="notes-empty" aria-live="polite" hidden></p>
-
-        <!-- ── List ────────────────────────────────────────────── -->
-        <div class="notes-list" id="notes-list" aria-label="Notes"></div>
+        <!-- ── Quiet confirmations ─────────────────────────────── -->
+        <div class="notes-toast" id="notes-toast" role="status" aria-live="polite" hidden></div>
 
       </div>
     </div>

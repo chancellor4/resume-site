@@ -1,53 +1,61 @@
 /*
   notes.js — Chancellor Edwards
 
-  Notes — a local-first, offline-only micro-vault.
+  Notes — a quiet, local-first surface for drafting LLM prompts.
 
-  Design intent (from docs/PLAN-v2.md):
-    Notes never asks for attention. Never makes a network request.
-    It is your desk drawer: the paper is always there, nothing syncs,
-    nothing streams. Capture is instant, search is fluid, persistence
-    is local.
+  Design intent:
+    A calm working surface between your thoughts and the model. Write what
+    you're trying to do, shape the request, copy it out, paste responses back,
+    revise. Copying is the primary action and is never gated behind saving.
+    Saving is optional — it only preserves drafts worth continuing later.
+    Nothing syncs, nothing streams; everything stays on this device.
 
-  Storage:
-    localStorage["ce-notes-v1"] → JSON array of note objects.
-    localStorage["ce-notes-prefs-v1"] → { filter, query } (UI memory).
+  Storage (localStorage):
+    "ce-notes-drafts-v1"  → JSON array of saved draft objects.
+    "ce-notes-working-v1" → the current (possibly unsaved) draft, autosaved so
+                            a reload or SPA re-entry never loses in-progress work.
 
-  Note shape:
+  Draft shape:
     {
-      id:        string   UUID (or fallback),
-      title:     string   first line, inferred if omitted,
-      body:      string   full note content,
-      tags:      string[] parsed from inline #hashtags,
-      createdAt: number   ms since epoch,
-      updatedAt: number   ms since epoch,
-      pinned:    boolean,
-      archived:  boolean
+      id:        string|null  null until explicitly saved,
+      mode:      'free' | 'structured',
+      purpose:   string        free-form lead line,
+      body:      string        free-form body,
+      goal:      string        structured: what you're trying to do,
+      context:   string        structured: background / pasted material,
+      request:   string        structured: the specific ask,
+      responses: string        scratch area for pasted model replies,
+      createdAt: number,
+      updatedAt: number
     }
 
-  The module exposes window.CE_NOTES = { mount } so the SPA shell can
-  re-mount on navigation re-entry. mount() is idempotent: it clears
-  prior listeners, re-reads the DOM, and re-binds fresh handlers.
+  The module exposes window.CE_NOTES = { mount } so the SPA shell can re-mount
+  on navigation re-entry. mount() is idempotent: it tears down prior listeners,
+  re-reads the swapped DOM, and re-binds fresh handlers. It no-ops when the
+  Notes root is absent (i.e. we're on another page).
 
-  v2.0.0
+  v3.0.0
 */
 (function () {
   'use strict';
 
   /* ── Config ────────────────────────────────────────────────── */
-  var STORE_KEY  = 'ce-notes-v1';
-  var PREFS_KEY  = 'ce-notes-prefs-v1';
-  var EXPORT_VER = 1;
+  var DRAFTS_KEY  = 'ce-notes-drafts-v1';
+  var WORKING_KEY = 'ce-notes-working-v1';
+
+  var IS_MAC = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
 
   /* ── Module state ──────────────────────────────────────────── */
   var state = {
-    notes:    [],
-    filter:   'all',       // 'all' | 'pinned' | 'archived'
-    query:    '',
-    editing:  null,        // note id currently being edited, or null
-    mounted:  false,
-    handlers: [],          // {el, type, fn} for clean teardown
-    storageListener: null
+    drafts:          [],
+    working:         null,   // current draft (emptyDraft() until populated)
+    handlers:        [],     // {el, type, fn} for clean teardown
+    storageListener: null,
+    hashListener:    null,
+    pendingUndo:     null,   // last-deleted draft, awaiting undo
+    toastTimer:      null,
+    statusTimer:     null,
+    mounted:         false
   };
 
   /* ── DOM helpers ──────────────────────────────────────────── */
@@ -67,20 +75,11 @@
     state.handlers = [];
   }
 
-  /* ── Safety: escape + attribute-safe URL ───────────────────── */
-  function esc(str) {
-    if (str === null || str === undefined) return '';
-    var el = document.createElement('span');
-    el.textContent = String(str);
-    return el.innerHTML;
-  }
-
   /* ── Identity ──────────────────────────────────────────────── */
   function uuid() {
     if (window.crypto && window.crypto.randomUUID) {
       try { return window.crypto.randomUUID(); } catch (e) { /* fall through */ }
     }
-    // RFC4122 v4 fallback
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
       var r = (Math.random() * 16) | 0;
       var v = c === 'x' ? r : (r & 0x3) | 0x8;
@@ -90,487 +89,477 @@
 
   /* ── Time formatting ───────────────────────────────────────── */
   function timeAgo(ts) {
-    if (!ts) return '';
+    if (!ts) return 'just now';
     var diff = Math.floor((Date.now() - ts) / 1000);
-    if (diff < 5)     return 'just now';
-    if (diff < 60)    return diff + 's ago';
-    if (diff < 3600)  return Math.floor(diff / 60)   + 'm ago';
-    if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+    if (diff < 60)      return 'just now';
+    if (diff < 3600)    return Math.floor(diff / 60)   + 'm ago';
+    if (diff < 86400)   return Math.floor(diff / 3600) + 'h ago';
     if (diff < 2592000) return Math.floor(diff / 86400) + 'd ago';
-    // Older than a month: show absolute date
     var d = new Date(ts);
     return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
   }
 
+  /* ── Draft model ──────────────────────────────────────────── */
+  function emptyDraft() {
+    return {
+      id: null,
+      mode: 'free',
+      purpose: '',
+      body: '',
+      goal: '',
+      context: '',
+      request: '',
+      responses: '',
+      createdAt: null,
+      updatedAt: null
+    };
+  }
+
+  // Normalise any persisted object back into a full draft shape.
+  function hydrate(obj) {
+    var d = emptyDraft();
+    if (obj && typeof obj === 'object') {
+      for (var k in d) {
+        if (Object.prototype.hasOwnProperty.call(d, k) && k in obj) d[k] = obj[k];
+      }
+    }
+    if (d.mode !== 'free' && d.mode !== 'structured') d.mode = 'free';
+    return d;
+  }
+
+  function isValidDraft(d) {
+    return d && typeof d === 'object' && typeof d.id === 'string';
+  }
+
+  function firstLine(text) {
+    var line = (text || '').replace(/\r/g, '').split('\n')[0].trim();
+    return line.length > 60 ? line.slice(0, 57) + '…' : line;
+  }
+
+  // A human label for the saved-drafts list.
+  function titleOf(d) {
+    var candidates = d.mode === 'structured'
+      ? [d.goal, d.request, d.context]
+      : [d.purpose, d.body];
+    for (var i = 0; i < candidates.length; i++) {
+      var line = firstLine(candidates[i]);
+      if (line) return line;
+    }
+    return 'Untitled draft';
+  }
+
+  // Assemble the clean prompt string that gets copied.
+  function buildPrompt(d) {
+    if (d.mode === 'structured') {
+      var sections = [];
+      if (d.goal.trim())    sections.push('# Goal\n' + d.goal.trim());
+      if (d.context.trim()) sections.push('# Context\n' + d.context.trim());
+      if (d.request.trim()) sections.push('# Request\n' + d.request.trim());
+      return sections.join('\n\n');
+    }
+    // Free-form: optional lead line, then body. No labels — free writing
+    // copies out exactly as written.
+    return [d.purpose.trim(), d.body.trim()].filter(Boolean).join('\n\n');
+  }
+
+  function currentIsEmpty() {
+    return buildPrompt(state.working) === '' && state.working.responses.trim() === '';
+  }
+
   /* ── Storage ───────────────────────────────────────────────── */
-  function loadNotes() {
+  function loadDrafts() {
     try {
-      var raw = localStorage.getItem(STORE_KEY);
+      var raw = localStorage.getItem(DRAFTS_KEY);
       if (!raw) return [];
       var parsed = JSON.parse(raw);
       if (!Array.isArray(parsed)) return [];
-      return parsed.filter(isValidNote);
+      return parsed.map(hydrate).filter(isValidDraft);
     } catch (e) {
-      console.warn('[notes] load failed, starting empty:', e);
+      console.warn('[notes] load drafts failed, starting empty:', e);
       return [];
     }
   }
 
-  function saveNotes() {
+  function saveDrafts() {
     try {
-      localStorage.setItem(STORE_KEY, JSON.stringify(state.notes));
+      localStorage.setItem(DRAFTS_KEY, JSON.stringify(state.drafts));
     } catch (e) {
-      // Quota, private mode, etc. — surface a quiet inline hint.
-      console.warn('[notes] save failed:', e);
-      showFlash('Could not save — local storage may be full or blocked.');
+      console.warn('[notes] save drafts failed:', e);
+      toast('Could not save — local storage may be full or blocked.');
     }
   }
 
-  function loadPrefs() {
+  function loadWorking() {
     try {
-      var raw = localStorage.getItem(PREFS_KEY);
-      if (!raw) return;
-      var p = JSON.parse(raw) || {};
-      if (p.filter === 'pinned' || p.filter === 'archived' || p.filter === 'all') {
-        state.filter = p.filter;
-      }
-      if (typeof p.query === 'string') state.query = p.query;
-    } catch (e) { /* silent */ }
+      var raw = localStorage.getItem(WORKING_KEY);
+      return raw ? hydrate(JSON.parse(raw)) : emptyDraft();
+    } catch (e) {
+      return emptyDraft();
+    }
   }
 
-  function savePrefs() {
+  function saveWorking() {
     try {
-      localStorage.setItem(PREFS_KEY, JSON.stringify({
-        filter: state.filter,
-        query:  state.query
-      }));
-    } catch (e) { /* silent */ }
+      localStorage.setItem(WORKING_KEY, JSON.stringify(state.working));
+    } catch (e) { /* silent — copying never depends on this */ }
   }
 
-  // Coalesce rapid pref writes (e.g. typing in search) so storage isn't
-  // touched on every keystroke. Trailing-edge debounce keeps the last
-  // value the user settled on.
-  var _savePrefsTimer = null;
-  function savePrefsDebounced() {
-    if (_savePrefsTimer) clearTimeout(_savePrefsTimer);
-    _savePrefsTimer = setTimeout(function () {
-      _savePrefsTimer = null;
-      savePrefs();
-    }, 300);
+  function clearWorking() {
+    try { localStorage.removeItem(WORKING_KEY); } catch (e) { /* noop */ }
   }
 
-  function isValidNote(n) {
-    return n && typeof n === 'object'
-      && typeof n.id === 'string'
-      && typeof n.body === 'string'
-      && typeof n.createdAt === 'number';
-  }
-
-  /* ── Note operations ──────────────────────────────────────── */
-  function parseTags(body) {
-    if (!body) return [];
-    var matches = body.match(/(?:^|\s)#([\w-]{1,48})/g);
-    if (!matches) return [];
-    var seen = {};
-    var out = [];
-    for (var i = 0; i < matches.length; i++) {
-      var tag = matches[i].trim().replace(/^#/, '').toLowerCase();
-      if (!seen[tag]) { seen[tag] = true; out.push(tag); }
+  function indexOfDraft(id) {
+    for (var i = 0; i < state.drafts.length; i++) {
+      if (state.drafts[i].id === id) return i;
     }
-    return out;
-  }
-
-  function inferTitle(body) {
-    if (!body) return '';
-    var firstLine = body.split(/\r?\n/)[0].trim();
-    if (firstLine.length > 80) return firstLine.slice(0, 80).trim() + '…';
-    return firstLine;
-  }
-
-  function createNote(title, body) {
-    var now = Date.now();
-    var note = {
-      id:        uuid(),
-      title:     (title || '').trim(),
-      body:      body || '',
-      tags:      parseTags(body),
-      createdAt: now,
-      updatedAt: now,
-      pinned:    false,
-      archived:  false
-    };
-    state.notes.unshift(note);
-    saveNotes();
-    return note;
-  }
-
-  function updateNote(id, patch) {
-    for (var i = 0; i < state.notes.length; i++) {
-      if (state.notes[i].id === id) {
-        var n = state.notes[i];
-        if ('title' in patch) n.title = (patch.title || '').trim();
-        if ('body'  in patch) { n.body = patch.body || ''; n.tags = parseTags(n.body); }
-        if ('pinned' in patch)   n.pinned   = !!patch.pinned;
-        if ('archived' in patch) n.archived = !!patch.archived;
-        n.updatedAt = Date.now();
-        saveNotes();
-        return n;
-      }
-    }
-    return null;
-  }
-
-  function removeNote(id) {
-    var before = state.notes.length;
-    state.notes = state.notes.filter(function (n) { return n.id !== id; });
-    if (state.notes.length !== before) saveNotes();
-  }
-
-  /* ── Filtering ────────────────────────────────────────────── */
-  function matchesQuery(n, q) {
-    if (!q) return true;
-    var haystack = (n.title + ' ' + n.body + ' ' + n.tags.join(' ')).toLowerCase();
-    // Multi-term AND: each whitespace-separated term must appear.
-    var terms = q.toLowerCase().split(/\s+/).filter(Boolean);
-    for (var i = 0; i < terms.length; i++) {
-      if (haystack.indexOf(terms[i]) === -1) return false;
-    }
-    return true;
-  }
-
-  function visibleNotes() {
-    var filter = state.filter;
-    var q      = state.query;
-    var out    = state.notes.filter(function (n) {
-      if (filter === 'pinned'   && !n.pinned)   return false;
-      if (filter === 'archived' && !n.archived) return false;
-      if (filter === 'all'      && n.archived)  return false;
-      return matchesQuery(n, q);
-    });
-
-    // Pinned first (within "all" and "pinned"), then most-recently-updated.
-    out.sort(function (a, b) {
-      if (a.pinned !== b.pinned) return a.pinned ? -1 : 1;
-      return b.updatedAt - a.updatedAt;
-    });
-    return out;
+    return -1;
   }
 
   /* ── Rendering ────────────────────────────────────────────── */
-  function renderNote(n) {
-    var tagsHtml = '';
-    if (n.tags && n.tags.length) {
-      var bits = [];
-      for (var i = 0; i < n.tags.length; i++) {
-        bits.push('<span class="notes-tag">#' + esc(n.tags[i]) + '</span>');
-      }
-      tagsHtml = '<div class="notes-card-tags">' + bits.join('') + '</div>';
+  function syncEditor() {
+    var d = state.working;
+    setField('notes-purpose',   d.purpose);
+    setField('notes-body',      d.body);
+    setField('notes-goal',      d.goal);
+    setField('notes-context',   d.context);
+    setField('notes-request',   d.request);
+    setField('notes-responses', d.responses);
+    applyMode(d.mode);
+  }
+
+  function setField(id, value) {
+    var el = $(id);
+    if (el) el.value = value || '';
+  }
+
+  function applyMode(mode) {
+    var btns = document.querySelectorAll('.notes-mode-btn');
+    for (var i = 0; i < btns.length; i++) {
+      var on = btns[i].getAttribute('data-mode') === mode;
+      btns[i].setAttribute('aria-pressed', on ? 'true' : 'false');
     }
-
-    var title = n.title || inferTitle(n.body) || 'Untitled';
-    var previewBody = n.body;
-    // Strip the first line if it matches the inferred title (avoids dup).
-    var firstLine = (n.body || '').split(/\r?\n/)[0].trim();
-    if (!n.title && firstLine && firstLine.indexOf(title.replace(/…$/, '')) === 0) {
-      previewBody = (n.body || '').split(/\r?\n/).slice(1).join('\n').trim();
+    var panes = document.querySelectorAll('[data-notes-pane]');
+    for (var j = 0; j < panes.length; j++) {
+      panes[j].hidden = panes[j].getAttribute('data-notes-pane') !== mode;
     }
-
-    var pinLabel     = n.pinned   ? 'Unpin'    : 'Pin';
-    var archiveLabel = n.archived ? 'Restore'  : 'Archive';
-
-    return (
-      '<article class="notes-card' + (n.pinned ? ' is-pinned' : '') +
-                                    (n.archived ? ' is-archived' : '') +
-        '" data-note-id="' + esc(n.id) + '">' +
-        '<header class="notes-card-head">' +
-          '<h3 class="notes-card-title">' + esc(title) + '</h3>' +
-          '<time class="notes-card-time" datetime="' + new Date(n.updatedAt).toISOString() + '">' +
-            esc(timeAgo(n.updatedAt)) +
-          '</time>' +
-        '</header>' +
-        (previewBody ? '<p class="notes-card-body">' + esc(previewBody) + '</p>' : '') +
-        tagsHtml +
-        '<footer class="notes-card-actions">' +
-          '<button type="button" class="notes-btn" data-act="pin">' + pinLabel + '</button>' +
-          '<button type="button" class="notes-btn" data-act="archive">' + archiveLabel + '</button>' +
-          '<button type="button" class="notes-btn" data-act="edit">Edit</button>' +
-          '<button type="button" class="notes-btn notes-btn-quiet" data-act="delete">Delete</button>' +
-        '</footer>' +
-      '</article>'
-    );
   }
 
   function renderList() {
-    var list  = $('notes-list');
-    var empty = $('notes-empty');
-    var count = $('notes-count');
+    var list  = $('notes-draft-list');
+    var empty = $('notes-draft-empty');
     if (!list) return;
 
-    var items = visibleNotes();
+    list.innerHTML = '';
+    if (empty) empty.hidden = state.drafts.length > 0;
 
-    if (!items.length) {
-      list.innerHTML = '';
-      if (empty) {
-        empty.hidden = false;
-        empty.textContent = state.query
-          ? 'Nothing matches “' + state.query + '”.'
-          : (state.filter === 'archived'
-              ? 'No archived notes yet.'
-              : (state.filter === 'pinned'
-                  ? 'Nothing pinned yet.'
-                  : 'No notes yet. Write the first one above.'));
-      }
-    } else {
-      if (empty) empty.hidden = true;
-      var html = '';
-      for (var i = 0; i < items.length; i++) html += renderNote(items[i]);
-      list.innerHTML = html;
-    }
-
-    if (count) {
-      var total   = state.notes.length;
-      var visible = items.length;
-      count.textContent = visible === total
-        ? total + (total === 1 ? ' note' : ' notes')
-        : visible + ' of ' + total;
-    }
-
-    // Update filter pill active states
-    var pills = document.querySelectorAll('[data-filter]');
-    for (var p = 0; p < pills.length; p++) {
-      var f = pills[p].getAttribute('data-filter');
-      var on = f === state.filter;
-      pills[p].classList.toggle('notes-pill-active', on);
-      pills[p].setAttribute('aria-pressed', on ? 'true' : 'false');
+    for (var i = 0; i < state.drafts.length; i++) {
+      list.appendChild(renderDraftItem(state.drafts[i]));
     }
   }
 
-  function showFlash(msg) {
-    var flash = $('notes-flash');
-    if (!flash) return;
-    flash.textContent = msg;
-    flash.hidden = false;
-    clearTimeout(flash._t);
-    flash._t = setTimeout(function () { flash.hidden = true; }, 4000);
+  function currentView() {
+    return location.hash === '#drafts' ? 'drafts' : 'workspace';
   }
 
-  /* ── Compose ──────────────────────────────────────────────── */
-  function handleCompose(e) {
-    if (e && e.preventDefault) e.preventDefault();
-    var titleEl = $('notes-compose-title');
-    var bodyEl  = $('notes-compose-body');
-    if (!bodyEl) return;
+  function applyView(view) {
+    var root = $('notes-root');
+    var workspace = $('notes-workspace-view');
+    var drafts = $('notes-drafts-view');
+    if (!root || !workspace || !drafts) return;
 
-    var body  = bodyEl.value;
-    var title = titleEl ? titleEl.value : '';
+    var showDrafts = view === 'drafts';
+    root.setAttribute('data-view', showDrafts ? 'drafts' : 'workspace');
+    workspace.hidden = showDrafts;
+    drafts.hidden = !showDrafts;
+  }
 
-    if (!body.trim() && !title.trim()) {
-      // Nothing to save — keep things calm, no error.
-      bodyEl.focus();
+  function focusView(view) {
+    var target = view === 'drafts' ? $('notes-drafts-back') : $('notes-body');
+    if (target) {
+      try { target.focus(); } catch (e) { /* noop */ }
+    }
+  }
+
+  function showWorkspace() {
+    if (location.hash) {
+      history.pushState(null, '', location.pathname + location.search);
+    }
+    applyView('workspace');
+  }
+
+  function renderDraftItem(draft) {
+    var active = state.working.id != null && state.working.id === draft.id;
+
+    var li = document.createElement('li');
+    li.className = 'notes-draft-item' + (active ? ' is-active' : '');
+
+    var open = document.createElement('button');
+    open.type = 'button';
+    open.className = 'notes-draft-open';
+    open.setAttribute('data-act', 'open');
+    open.setAttribute('data-id', draft.id);
+    if (active) open.setAttribute('aria-current', 'true');
+
+    var title = document.createElement('span');
+    title.className = 'notes-draft-title';
+    title.textContent = titleOf(draft);
+
+    var meta = document.createElement('span');
+    meta.className = 'notes-draft-meta';
+    meta.textContent = (draft.mode === 'structured' ? 'Structured' : 'Free-form') +
+      ' · ' + timeAgo(draft.updatedAt);
+
+    open.appendChild(title);
+    open.appendChild(meta);
+
+    var del = document.createElement('button');
+    del.type = 'button';
+    del.className = 'notes-draft-delete';
+    del.setAttribute('data-act', 'delete');
+    del.setAttribute('data-id', draft.id);
+    del.setAttribute('aria-label', 'Delete draft: ' + titleOf(draft));
+    del.innerHTML = '&times;';
+
+    li.appendChild(open);
+    li.appendChild(del);
+    return li;
+  }
+
+  /* ── Actions ──────────────────────────────────────────────── */
+  function updateField(field, value) {
+    state.working[field] = value;
+    state.working.updatedAt = Date.now();
+    saveWorking();
+  }
+
+  function setMode(mode) {
+    if (mode !== 'free' && mode !== 'structured') return;
+    state.working.mode = mode;
+    saveWorking();
+    applyMode(mode);
+    var focusEl = mode === 'structured' ? $('notes-goal') : $('notes-body');
+    if (focusEl) focusEl.focus();
+  }
+
+  function newDraft() {
+    state.working = emptyDraft();
+    clearWorking();
+    syncEditor();
+    renderList();
+    showWorkspace();
+    var body = $('notes-body');
+    if (body) body.focus();
+    flashStatus('New draft');
+  }
+
+  function saveDraft() {
+    if (currentIsEmpty()) {
+      toast('Nothing to save yet');
       return;
     }
-
-    if (state.editing) {
-      updateNote(state.editing, { title: title, body: body });
-      state.editing = null;
-      var submitBtn = $('notes-compose-submit');
-      if (submitBtn) submitBtn.textContent = 'Save note';
-      var cancelBtn = $('notes-compose-cancel');
-      if (cancelBtn) cancelBtn.hidden = true;
+    var d = state.working;
+    var now = Date.now();
+    if (d.id) {
+      d.updatedAt = now;
+      var idx = indexOfDraft(d.id);
+      if (idx >= 0) state.drafts[idx] = cloneDraft(d);
+      else state.drafts.unshift(cloneDraft(d)); // was deleted elsewhere; re-add
     } else {
-      createNote(title, body);
+      d.id = d.id || uuid();
+      d.createdAt = now;
+      d.updatedAt = now;
+      state.drafts.unshift(cloneDraft(d));
     }
-
-    if (titleEl) titleEl.value = '';
-    bodyEl.value = '';
+    saveDrafts();
+    saveWorking();
     renderList();
-    bodyEl.focus();
+    flashStatus('Saved');
+    toast('Draft saved');
   }
 
-  function cancelEdit() {
-    state.editing = null;
-    var titleEl   = $('notes-compose-title');
-    var bodyEl    = $('notes-compose-body');
-    var submitBtn = $('notes-compose-submit');
-    var cancelBtn = $('notes-compose-cancel');
-    if (titleEl) titleEl.value = '';
-    if (bodyEl)  bodyEl.value  = '';
-    if (submitBtn) submitBtn.textContent = 'Save note';
-    if (cancelBtn) cancelBtn.hidden = true;
+  function cloneDraft(d) {
+    return hydrate(d); // shallow copy via the normaliser
   }
 
-  function startEdit(id) {
-    var n = null;
-    for (var i = 0; i < state.notes.length; i++) {
-      if (state.notes[i].id === id) { n = state.notes[i]; break; }
+  function copyPrompt() {
+    var text = buildPrompt(state.working);
+    if (!text) {
+      toast('Nothing to copy yet — write a prompt first');
+      return;
     }
-    if (!n) return;
-
-    state.editing = id;
-    var titleEl   = $('notes-compose-title');
-    var bodyEl    = $('notes-compose-body');
-    var submitBtn = $('notes-compose-submit');
-    var cancelBtn = $('notes-compose-cancel');
-
-    if (titleEl) titleEl.value = n.title || '';
-    if (bodyEl)  { bodyEl.value = n.body || ''; bodyEl.focus(); }
-    if (submitBtn) submitBtn.textContent = 'Update note';
-    if (cancelBtn) cancelBtn.hidden = false;
-
-    // Scroll compose into view gently for clarity.
-    var form = $('notes-compose');
-    if (form && form.scrollIntoView) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    writeClipboard(text).then(function () {
+      toast('Prompt copied to clipboard');
+      flashStatus('Copied');
+    }, function () {
+      toast('Could not copy — your browser blocked clipboard access');
+    });
   }
 
-  /* ── Card action dispatcher ───────────────────────────────── */
-  function handleCardClick(e) {
+  function openDraft(id) {
+    var idx = indexOfDraft(id);
+    if (idx < 0) return;
+    state.working = hydrate(state.drafts[idx]);
+    saveWorking();
+    syncEditor();
+    renderList();
+    showWorkspace();
+    var body = $('notes-body');
+    if (body) body.focus();
+    flashStatus('Opened');
+  }
+
+  function deleteDraft(id) {
+    var idx = indexOfDraft(id);
+    if (idx < 0) return;
+    var wasActive = state.working.id === id;
+    var removed = state.drafts.splice(idx, 1)[0];
+    saveDrafts();
+    if (wasActive) { state.working.id = null; saveWorking(); } // keep text, detach
+    renderList();
+
+    state.pendingUndo = removed;
+    toast('Draft deleted', 'Undo', function () {
+      // Re-insert, newest-updated first.
+      state.drafts.unshift(removed);
+      state.drafts.sort(function (a, b) { return (b.updatedAt || 0) - (a.updatedAt || 0); });
+      saveDrafts();
+      if (wasActive) { state.working.id = removed.id; saveWorking(); }
+      state.pendingUndo = null;
+      renderList();
+      flashStatus('Restored');
+    });
+  }
+
+  /* ── Clipboard ────────────────────────────────────────────── */
+  function writeClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      // Prefer the async API, but fall back if it's blocked rather than failing.
+      return navigator.clipboard.writeText(text)['catch'](function () {
+        return legacyCopy(text);
+      });
+    }
+    return legacyCopy(text);
+  }
+
+  function legacyCopy(text) {
+    return new Promise(function (resolve, reject) {
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        var ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        if (ok) resolve(); else reject();
+      } catch (err) { reject(err); }
+    });
+  }
+
+  /* ── Feedback ─────────────────────────────────────────────── */
+  function flashStatus(text) {
+    var el = $('notes-status');
+    if (!el) return;
+    el.textContent = text;
+    clearTimeout(state.statusTimer);
+    state.statusTimer = setTimeout(function () { el.textContent = ''; }, 1800);
+  }
+
+  function toast(message, actionLabel, onAction) {
+    var el = $('notes-toast');
+    if (!el) return;
+    el.innerHTML = '';
+    var span = document.createElement('span');
+    span.textContent = message;
+    el.appendChild(span);
+
+    if (actionLabel) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'notes-toast-action';
+      btn.textContent = actionLabel;
+      btn.addEventListener('click', function () {
+        hideToast();
+        if (onAction) onAction();
+      });
+      el.appendChild(btn);
+    }
+
+    el.hidden = false;
+    void el.offsetWidth; // restart transition
+    el.classList.add('is-visible');
+
+    clearTimeout(state.toastTimer);
+    state.toastTimer = setTimeout(hideToast, actionLabel ? 6000 : 2400);
+  }
+
+  function hideToast() {
+    var el = $('notes-toast');
+    if (!el) return;
+    el.classList.remove('is-visible');
+    clearTimeout(state.toastTimer);
+    state.toastTimer = setTimeout(function () { el.hidden = true; }, 200);
+  }
+
+  /* ── Event handlers ───────────────────────────────────────── */
+  var FIELD_MAP = {
+    'notes-purpose':   'purpose',
+    'notes-body':      'body',
+    'notes-goal':      'goal',
+    'notes-context':   'context',
+    'notes-request':   'request',
+    'notes-responses': 'responses'
+  };
+
+  function handleFieldInput(e) {
+    var field = FIELD_MAP[e.target.id];
+    if (field) updateField(field, e.target.value);
+  }
+
+  function handleModeClick(e) {
+    var btn = e.target.closest ? e.target.closest('.notes-mode-btn') : null;
+    if (!btn) return;
+    setMode(btn.getAttribute('data-mode'));
+  }
+
+  function handleListClick(e) {
     var btn = e.target.closest ? e.target.closest('[data-act]') : null;
     if (!btn) return;
-    var card = btn.closest ? btn.closest('[data-note-id]') : null;
-    if (!card) return;
-    var id  = card.getAttribute('data-note-id');
+    var id  = btn.getAttribute('data-id');
     var act = btn.getAttribute('data-act');
-    if (!id || !act) return;
-
-    switch (act) {
-      case 'pin':
-        var n = findNote(id);
-        if (n) updateNote(id, { pinned: !n.pinned });
-        renderList();
-        break;
-      case 'archive':
-        var m = findNote(id);
-        if (m) updateNote(id, { archived: !m.archived });
-        renderList();
-        break;
-      case 'edit':
-        startEdit(id);
-        break;
-      case 'delete':
-        // Soft confirm — native prompt is calm enough for a single action.
-        if (window.confirm('Delete this note? This cannot be undone.')) {
-          removeNote(id);
-          if (state.editing === id) cancelEdit();
-          renderList();
-        }
-        break;
-    }
+    if (!id) return;
+    if (act === 'open') openDraft(id);
+    else if (act === 'delete') deleteDraft(id);
   }
 
-  function findNote(id) {
-    for (var i = 0; i < state.notes.length; i++) {
-      if (state.notes[i].id === id) return state.notes[i];
-    }
-    return null;
+  function handleHashChange() {
+    var view = currentView();
+    applyView(view);
+    focusView(view);
   }
 
-  /* ── Filter + search ──────────────────────────────────────── */
-  function handleFilterClick(e) {
-    var btn = e.target.closest ? e.target.closest('[data-filter]') : null;
-    if (!btn) return;
-    var f = btn.getAttribute('data-filter');
-    if (f !== 'all' && f !== 'pinned' && f !== 'archived') return;
-    state.filter = f;
-    savePrefs();
-    renderList();
-  }
-
-  function handleSearchInput(e) {
-    state.query = e.target.value || '';
-    savePrefsDebounced();
-    renderList();
-  }
-
-  /* ── Keyboard: Cmd/Ctrl+Enter to save ─────────────────────── */
-  function handleComposeKeydown(e) {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+  // Scoped to the Notes root, so shortcuts never leak to other pages.
+  function handleKeydown(e) {
+    var mod = IS_MAC ? e.metaKey : e.ctrlKey;
+    if (!mod) return;
+    if (e.key === 'Enter') {
       e.preventDefault();
-      handleCompose(e);
-    } else if (e.key === 'Escape' && state.editing) {
+      copyPrompt();
+    } else if (e.key === 's' || e.key === 'S') {
       e.preventDefault();
-      cancelEdit();
+      saveDraft();
+    } else if (e.shiftKey && (e.key === 'n' || e.key === 'N')) {
+      e.preventDefault();
+      newDraft();
     }
-  }
-
-  /* ── Export / Import ──────────────────────────────────────── */
-  function handleExport() {
-    var payload = {
-      version:  EXPORT_VER,
-      exportedAt: new Date().toISOString(),
-      notes:    state.notes
-    };
-    try {
-      var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-      var url  = URL.createObjectURL(blob);
-      var a    = document.createElement('a');
-      var stamp = new Date().toISOString().slice(0, 10);
-      a.href     = url;
-      a.download = 'notes-' + stamp + '.json';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
-      showFlash('Exported ' + state.notes.length + (state.notes.length === 1 ? ' note.' : ' notes.'));
-    } catch (e) {
-      console.warn('[notes] export failed:', e);
-      showFlash('Export failed. Try a different browser.');
-    }
-  }
-
-  function handleImportClick() {
-    var input = $('notes-import-file');
-    if (input) input.click();
-  }
-
-  function handleImportFile(e) {
-    var file = e.target.files && e.target.files[0];
-    if (!file) return;
-    var reader = new FileReader();
-    reader.onload = function () {
-      try {
-        var data = JSON.parse(reader.result);
-        var incoming = Array.isArray(data) ? data : (data && data.notes);
-        if (!Array.isArray(incoming)) throw new Error('unrecognised shape');
-
-        var existingIds = {};
-        for (var i = 0; i < state.notes.length; i++) existingIds[state.notes[i].id] = true;
-
-        var added = 0;
-        for (var j = 0; j < incoming.length; j++) {
-          var n = incoming[j];
-          if (!n || typeof n !== 'object') continue;
-          // Regenerate id if missing or colliding — import is additive, not merging.
-          if (!n.id || existingIds[n.id]) n.id = uuid();
-          if (typeof n.body !== 'string') n.body = '';
-          if (typeof n.title !== 'string') n.title = '';
-          if (typeof n.createdAt !== 'number') n.createdAt = Date.now();
-          if (typeof n.updatedAt !== 'number') n.updatedAt = n.createdAt;
-          n.pinned   = !!n.pinned;
-          n.archived = !!n.archived;
-          n.tags = Array.isArray(n.tags) ? n.tags.slice(0, 32) : parseTags(n.body);
-          state.notes.unshift(n);
-          existingIds[n.id] = true;
-          added++;
-        }
-        saveNotes();
-        renderList();
-        showFlash('Imported ' + added + (added === 1 ? ' note.' : ' notes.'));
-      } catch (err) {
-        console.warn('[notes] import failed:', err);
-        showFlash('That file wasn’t a recognised notes export.');
-      } finally {
-        // Reset so the same file can be re-imported if needed.
-        e.target.value = '';
-      }
-    };
-    reader.onerror = function () { showFlash('Couldn’t read that file.'); };
-    reader.readAsText(file);
   }
 
   /* ── Cross-tab sync ───────────────────────────────────────── */
   function handleStorage(e) {
-    if (!e || e.key !== STORE_KEY) return;
-    state.notes = loadNotes();
+    if (!e || e.key !== DRAFTS_KEY) return;
+    state.drafts = loadDrafts();
     renderList();
   }
 
@@ -585,46 +574,48 @@
       try { window.removeEventListener('storage', state.storageListener); } catch (e) { /* noop */ }
       state.storageListener = null;
     }
+    if (state.hashListener) {
+      try { window.removeEventListener('hashchange', state.hashListener); } catch (e) { /* noop */ }
+      state.hashListener = null;
+    }
+    clearTimeout(state.toastTimer);
+    clearTimeout(state.statusTimer);
 
-    loadPrefs();
-    state.notes   = loadNotes();
-    state.editing = null;
+    // Restore data. The working draft survives reloads and SPA re-entry.
+    state.drafts  = loadDrafts();
+    state.working = loadWorking();
 
-    // Hydrate search box + filter pills from prefs.
-    var searchEl = $('notes-search');
-    if (searchEl) searchEl.value = state.query || '';
+    syncEditor();
+    renderList();
+    applyView(currentView());
 
-    // Wire events.
-    var form      = $('notes-compose');
-    var bodyEl    = $('notes-compose-body');
-    var cancelBtn = $('notes-compose-cancel');
-    var list      = $('notes-list');
-    var filters   = $('notes-filters');
-    var exportBtn = $('notes-export');
-    var importBtn = $('notes-import');
-    var importEl  = $('notes-import-file');
+    // Wire events. Field inputs are bound individually; container clicks and
+    // shortcuts are delegated. Everything is tracked for clean teardown.
+    for (var id in FIELD_MAP) {
+      if (Object.prototype.hasOwnProperty.call(FIELD_MAP, id)) {
+        on($(id), 'input', handleFieldInput);
+      }
+    }
+    on($('notes-mode'),       'click',   handleModeClick);
+    on($('notes-save'),       'click',   saveDraft);
+    on($('notes-copy'),       'click',   copyPrompt);
+    on($('notes-new'),        'click',   newDraft);
+    on($('notes-draft-list'), 'click',   handleListClick);
+    on(root,                  'keydown', handleKeydown);
 
-    on(form,      'submit',   handleCompose);
-    on(bodyEl,    'keydown',  handleComposeKeydown);
-    on(cancelBtn, 'click',    cancelEdit);
-    on(list,      'click',    handleCardClick);
-    on(filters,   'click',    handleFilterClick);
-    on(searchEl,  'input',    handleSearchInput);
-    on(exportBtn, 'click',    handleExport);
-    on(importBtn, 'click',    handleImportClick);
-    on(importEl,  'change',   handleImportFile);
-
-    // Cross-tab: if another tab writes, we refresh.
+    // Cross-tab: if another tab writes the saved list, refresh ours.
     state.storageListener = handleStorage;
     window.addEventListener('storage', state.storageListener);
 
-    renderList();
+    state.hashListener = handleHashChange;
+    window.addEventListener('hashchange', state.hashListener);
 
-    // Autofocus for instant capture — only if nothing else is focused
-    // and the user hasn't already interacted.
+    // Zero-friction start: focus the body on a cold load. On SPA navigation the
+    // shell deliberately focuses the page heading for screen-reader orientation,
+    // so only take focus when nothing else has claimed it.
     setTimeout(function () {
-      if (document.activeElement === document.body && bodyEl) {
-        try { bodyEl.focus(); } catch (e) { /* noop */ }
+      if (document.activeElement === document.body) {
+        focusView(currentView());
       }
     }, 0);
 
