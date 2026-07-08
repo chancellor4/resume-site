@@ -1,15 +1,51 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-08T11:40:46.617Z",
+  "generatedAt": "2026-07-08T13:28:04.055Z",
   "items": [
     {
-      "title": "Max Mara Atelier Fall 2026 Ready-to-Wear",
+      "title": "Elie Saab Fall 2026 Couture",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/fall-2026-ready-to-wear/max-mara-atelier",
-      "publishedAt": "2026-07-08T11:39:17.000Z",
+      "link": "https://www.vogue.com/fashion-shows/fall-2026-couture/elie-saab",
+      "publishedAt": "2026-07-08T13:27:13.000Z",
       "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a4d02fe2888dc153e5e7f6f/master/pass/00001-max-mara-atelier-fall-2026-ready-to-wear-credit-brand.jpg"
+      "imageUrl": "https://assets.vogue.com/photos/6a4e4d8a536e4b3d1ab0485f/master/pass/FIO00007.jpg"
+    },
+    {
+      "title": "MIKIOSAKABE Dropped a Capsule Inspired by the Anime World of 'Evangelion'",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/mikio-sakabe-anime-evangelion-collaboration-collection-where-to-buy",
+      "publishedAt": "2026-07-08T13:22:56.000Z",
+      "excerpt": "Japanese designer Mikio Sakabe is bringing the world of Neon Genesis Evangelion into fashion with a new capsule collection inspired by the iconic sci-fi anime. The collection feat…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F08%2FSingle-Image-270.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Nigeria's president demands to know how fake agency was allegedly set up in his office",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/c621xrrp6jeo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-08T13:05:14.000Z",
+      "excerpt": "Adeniyi Adeyemi allegedly forged a letter of appointment and secured funding for an agency the presidency knew nothing about.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/c5ab/live/fc9f67d0-7a9f-11f1-932b-1f29e7985956.jpg"
+    },
+    {
+      "title": "Iran Live Updates: Trump Casts Doubt on Future of Cease-Fire After Latest Strikes",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/live/2026/07/08/world/iran-war-us-trump",
+      "publishedAt": "2026-07-08T13:25:00.000Z",
+      "excerpt": "“I think it’s over,” President Trump said, referring to the preliminary truce, and threatened to strike Iran again. The two sides traded attacks as their truce appeared to edge cl…",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/08/multimedia/08mideast-promo-gmpz/08mideast-promo-gmpz-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Antonio Grimaldi Fall 2026 Couture",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/fall-2026-couture/antonio-grimaldi",
+      "publishedAt": "2026-07-08T13:27:13.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a4e3639ef70436404a2a470/master/pass/00001-antonio-grimaldi-fall-2026-couture-credit-brand.jpg"
     },
     {
       "title": "Miu Miu Revisits Its Roots With a Vintage-Inspired Denim Selection",
@@ -30,22 +66,22 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/303b/live/574a8a30-7ab8-11f1-b976-0b9c15b0ccfc.jpg"
     },
     {
-      "title": "Iran Live Updates: Trump Casts Doubt on Future of Cease-Fire After Latest Strikes",
+      "title": "Iraqis Turn Out in Droves to Mourn Khamenei and Show Solidarity",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/07/08/world/iran-war-us-trump",
-      "publishedAt": "2026-07-08T11:29:02.000Z",
-      "excerpt": "“I think it’s over,” President Trump said, referring to the preliminary truce. Iran’s armed forces earlier said they had targeted U.S. military sites in Bahrain and Kuwait in resp…",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/08/multimedia/08mideast-promo-gmpz/08mideast-promo-gmpz-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/07/08/world/middleeast/iraq-funeral-ayatollah-khamenei.html",
+      "publishedAt": "2026-07-08T13:24:58.000Z",
+      "excerpt": "In the cities of Najaf and Karbala, home to two of Shiite Islam’s holiest sites, hundreds of thousands attended commemorations for Ayatollah Ali Khamenei, who extended Iran’s infl…",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/08/multimedia/08int-promo-funeral-ayatollah-mqkl/08int-promo-funeral-ayatollah-mqkl-mediumSquareAt3X.jpg"
     },
     {
-      "title": "Balenciaga Fall 2026 Couture",
+      "title": "Max Mara Atelier Fall 2026 Ready-to-Wear",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/fall-2026-couture/balenciaga",
-      "publishedAt": "2026-07-08T11:39:17.000Z",
+      "link": "https://www.vogue.com/fashion-shows/fall-2026-ready-to-wear/max-mara-atelier",
+      "publishedAt": "2026-07-08T13:27:13.000Z",
       "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a4e1d46480e5eb1be874a21/master/pass/OBY00060.jpg"
+      "imageUrl": "https://assets.vogue.com/photos/6a4d02fe2888dc153e5e7f6f/master/pass/00001-max-mara-atelier-fall-2026-ready-to-wear-credit-brand.jpg"
     },
     {
       "title": "Chanel Turned the Runway Into a Whimsical Fairytale for Haute Couture FW26",
@@ -66,49 +102,13 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/60ff/live/24425700-7ab6-11f1-9f11-71e192f5293a.jpg"
     },
     {
-      "title": "Here’s the latest.",
+      "title": "Iran targets sites in Bahrain and Kuwait.",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/07/08/world/iran-war-us-trump/heres-the-latest",
-      "publishedAt": "2026-07-08T11:29:00.000Z",
+      "link": "https://www.nytimes.com/live/2026/07/08/world/iran-war-us-trump/iran-targets-sites-in-bahrain-and-kuwait",
+      "publishedAt": "2026-07-08T13:19:50.000Z",
       "excerpt": "",
-      "imageUrl": null
-    },
-    {
-      "title": "Ashi Studio Fall 2026 Couture",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/fall-2026-couture/ashi-studio",
-      "publishedAt": "2026-07-08T11:39:17.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a4d7a3c679d13d0e0ec1bd3/master/pass/00001-ashi-studio-fall-2026-couture-credit-gorunway.jpg"
-    },
-    {
-      "title": "The Manufactured Rivalry of Blue Ivy and North West",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/blue-ivy-north-west-tours-internet-rivalry-commentary-comparisons-adultification-opinion",
-      "publishedAt": "2026-07-07T17:55:52.000Z",
-      "excerpt": "Since they were babies, Blue Ivy Carter and North West have been compared to each other by millions of people online. The first-born daughters of some of the most prominent celebr…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F07%2Fblue-ivy-north-west-tours-internet-rivalry-commentary-comparisons-adultification-opinion-ft.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Trains and emergency calls affected after major outage at Australia's largest telecoms company",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cgevw0d95pdo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-08T07:53:37.000Z",
-      "excerpt": "Servers at data centres in Sydney and Melbourne were to blame but the exact cause remains unknown.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/f43d/live/8e1bb6a0-7a96-11f1-932b-1f29e7985956.jpg"
-    },
-    {
-      "title": "Live Updates: Trump Lashes Out at Europe at NATO Summit",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/07/08/world/nato-summit-turkey-trump-ukraine",
-      "publishedAt": "2026-07-08T11:28:49.000Z",
-      "excerpt": "President Trump assailed allies for not joining the war in Iran, called Spain “hopeless” and repeated his desire to control Greenland. His criticism cast a pall over a meeting cri…",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/08/multimedia/08nato-promo/08nato-promo-mediumSquareAt3X.jpg"
+      "imageUrl": "https://static01.nyt.com/images/2026/07/08/multimedia/08mideast-iran-attacks-cpfm/08mideast-iran-attacks-cpfm-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
