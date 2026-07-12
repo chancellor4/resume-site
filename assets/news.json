@@ -1,13 +1,13 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-12T17:55:59.474Z",
+  "generatedAt": "2026-07-12T18:52:46.273Z",
   "items": [
     {
       "title": "Ambush Spring 2027 Ready-to-Wear",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/spring-2027-ready-to-wear/ambush",
-      "publishedAt": "2026-07-12T17:51:22.000Z",
+      "publishedAt": "2026-07-12T18:47:51.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a44d47dbae68cec74a0e0b0/master/pass/00001-ambush-spring-2027-ready-to-wear-credit-brand.jpg"
     },
@@ -30,12 +30,12 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/0992/live/576e9b70-7dc2-11f1-b976-0b9c15b0ccfc.jpg"
     },
     {
-      "title": "Live Updates: Iran Targets Gulf States After Night of Intense U.S. Strikes",
+      "title": "Live Updates: Cease-Fire Unraveling as U.S. and Iran Trade Strikes Again",
       "source": "NYT World",
       "sourceType": "world-news",
       "link": "https://www.nytimes.com/live/2026/07/12/us/iran-war-trump-hormuz",
-      "publishedAt": "2026-07-12T17:28:54.000Z",
-      "excerpt": "U.S. Central Command said it had hit about 140 targets in Iran overnight after Tehran attacked a ship in the Strait of Hormuz. Iran’s military said it had responded by firing at U…",
+      "publishedAt": "2026-07-12T18:46:48.000Z",
+      "excerpt": "A fresh round of attacks by the U.S. on Sunday was the latest volley in a familiar pattern of back-and-forth strikes fueled by disputes over the Strait of Hormuz.",
       "imageUrl": "https://static01.nyt.com/images/2026/07/12/multimedia/12mideast-live-promo-0300ET/12mideast-live-promo-0300ET-mediumSquareAt3X-v2.jpg"
     },
     {
@@ -43,7 +43,7 @@
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/resort-2027/isabel-marant",
-      "publishedAt": "2026-07-12T17:51:22.000Z",
+      "publishedAt": "2026-07-12T18:47:51.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a4623e69955a348c724930b/master/pass/00001-isabel-marant-resort-2027-credit-brand.jpg"
     },
@@ -70,7 +70,7 @@
       "source": "NYT World",
       "sourceType": "world-news",
       "link": "https://www.nytimes.com/live/2026/07/12/us/iran-war-trump-hormuz/heres-the-latest",
-      "publishedAt": "2026-07-12T17:26:41.000Z",
+      "publishedAt": "2026-07-12T18:32:42.000Z",
       "excerpt": "",
       "imageUrl": null
     },
@@ -102,13 +102,13 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/d015/live/7ee2a4e0-7df8-11f1-9800-45cddfec00b9.jpg"
     },
     {
-      "title": "Typhoon Bavi Hits China, Causing Evacuations, Floods and Flight Delays",
+      "title": "Inside Herat, Where a Taliban Campaign Targets a Cosmopolitan Outpost",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/12/world/asia/typhoon-bavi-china.html",
-      "publishedAt": "2026-07-12T17:13:47.000Z",
-      "excerpt": "Typhoon Bavi made landfall in China after killing 17 in the Philippines, skirting Japan and hitting Taiwan. At its largest, the storm was about the width of France.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/12/multimedia/12int-china-typhoon-hwtk/12int-china-typhoon-hwtk-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/07/12/world/asia/taliban-morality-police-herat-protests.html",
+      "publishedAt": "2026-07-12T18:26:13.000Z",
+      "excerpt": "Afghanistan’s leader has exerted full control over a city that once enjoyed looser social norms, even under Taliban rule.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/08/multimedia/08int-herat-crackdown-mhpz/08int-herat-crackdown-mhpz-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
