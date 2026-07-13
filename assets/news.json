@@ -1,15 +1,51 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-13T05:24:30.582Z",
+  "generatedAt": "2026-07-13T08:29:46.122Z",
   "items": [
     {
       "title": "Ambush Spring 2027 Ready-to-Wear",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/spring-2027-ready-to-wear/ambush",
-      "publishedAt": "2026-07-13T05:22:48.000Z",
+      "publishedAt": "2026-07-13T08:26:27.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a44d47dbae68cec74a0e0b0/master/pass/00001-ambush-spring-2027-ready-to-wear-credit-brand.jpg"
+    },
+    {
+      "title": "Shenseea and TWICE's JIHYO Collaborate on a New Track, \"Distant Lover\"",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/twice-jihyo-k-pop-shenseea-collaboration-distant-lover-song-video-release-information-interview",
+      "publishedAt": "2026-07-13T07:51:23.000Z",
+      "excerpt": "JIHYO from K-pop group sensation TWICE is stepping into a new era of global collaboration with Jamaican artist Shenseea for \"Distant Lover,\" a genre-blending track that brings tog…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F09%2FSingle-Image-288-1.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "The SpaceX IPO made history. One month on has it lost momentum?",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/c3wyj6e4210o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-13T07:19:57.000Z",
+      "excerpt": "A month on from the firm's stock market debut, the reality of how SpaceX currently makes money has seemed to come into clearer focus.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/2ab1/live/ee081470-7c79-11f1-b976-0b9c15b0ccfc.png"
+    },
+    {
+      "title": "Middle East Updates: Cease-Fire Unraveling as U.S. and Iran Trade Strikes Again",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/live/2026/07/12/us/iran-war-trump-hormuz",
+      "publishedAt": "2026-07-13T08:25:23.000Z",
+      "excerpt": "The U.S. military said that it had hit dozens of Iranian targets in its latest salvo. Iran’s army said that it had fired more drones at American military sites in the region, as t…",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/12/multimedia/12mideast-2130ET/12mideast-2130ET-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Dakota Johnson and Alexander Skårsgard on Their “Fiery” New Partnership",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/dakota-johnson-and-alexander-skarsgard-interview-valentino",
+      "publishedAt": "2026-07-13T07:00:00.000Z",
+      "excerpt": "The actors had never collaborated—until Alessandro Michele brought the two together for Valentino Vendetta.",
+      "imageUrl": "https://assets.vogue.com/photos/6a515d0b8a4792323da76cce/master/pass/1.%20MAIN%20HERO%20KEY%20VISUAL.jpg"
     },
     {
       "title": "ASICS Unveils the Sensory Bloom Collection",
@@ -21,22 +57,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F10%2Fasics-sensory-bloom-collection-hypersync-gel-cumulus-16-sneakers-where-to-buy-1.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "The SpaceX IPO made history. Is the excitement still there?",
+      "title": "At least 27 killed, 22 critically injured after fire engulfs Bangkok bar",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/c3wyj6e4210o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-13T05:01:54.000Z",
-      "excerpt": "A month on from the firm's stock market debut, the reality of how SpaceX currently makes money has seemed to come into clearer focus.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/2ab1/live/ee081470-7c79-11f1-b976-0b9c15b0ccfc.png"
+      "link": "https://www.bbc.co.uk/news/articles/c24yev53q06o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-13T06:07:17.000Z",
+      "excerpt": "Firefighters arrived at the scene in the Chatuchak district to find patrons running through flames to escape.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/1848/live/dc8219e0-7e85-11f1-926f-c90d1bcfbc84.jpg"
     },
     {
-      "title": "Live Updates: Cease-Fire Unraveling as U.S. and Iran Trade Strikes Again",
+      "title": "Here’s a look at the heavy strikes in recent days.",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/07/12/us/iran-war-trump-hormuz",
-      "publishedAt": "2026-07-13T05:04:23.000Z",
-      "excerpt": "The U.S. military said that it had hit dozens of Iranian targets in its latest salvo. Iran’s army said that it had fired more drones at American military sites in the region, as t…",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/12/multimedia/12mideast-2130ET/12mideast-2130ET-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/live/2026/07/12/us/iran-war-trump-hormuz/us-and-iranian-strikes",
+      "publishedAt": "2026-07-13T08:15:22.000Z",
+      "excerpt": "",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/12/multimedia/12mideast-live-week-of-strike-00001-vwbz/12mideast-live-week-of-strike-00001-vwbz-mediumSquareAt3X.jpg"
     },
     {
       "title": "Local vs Global: How to Price an African Fashion Brand",
@@ -57,42 +93,6 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2025%2F11%2F03%2Famber-perfumes-fi.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "US and Iran trade fire as tensions rise over Strait of Hormuz",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cevlr112pmgo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-13T05:00:46.000Z",
-      "excerpt": "Within hours of fresh US attacks, Iran said it had struck US military bases in Kuwait, Jordan and Bahrain.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/c03f/live/5cc84d20-7e6a-11f1-bee8-53ce494e1abc.jpg"
-    },
-    {
-      "title": "Venezuela’s Post-Quake Politics",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/12/world/venezuela-earthquake-iran.html",
-      "publishedAt": "2026-07-13T04:51:38.000Z",
-      "excerpt": "People are openly and forcefully voicing their anger at the government for the first time in years.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/13/multimedia/13int-theworld-asia-nl-ptqj/13int-theworld-asia-nl-ptqj-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Kate Middleton, the Princess of Wales’s Best Fashion Moments at Wimbledon",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/slideshow/kate-middleton-wimbledon-outfits",
-      "publishedAt": "2026-07-12T22:02:57.000Z",
-      "excerpt": "From grass court greens to polka-dots and tennis whites: Vogue looks back at all of Kate Middleton, the Princess of Wales’s best fashion moments at Wimbledon.",
-      "imageUrl": "https://assets.vogue.com/photos/6a540e8ee58e31759757d46d/master/pass/2285796948"
-    },
-    {
-      "title": "Beauty of Joseon's Newest Sunscreen Might Be Its Best One Yet",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/beauty-of-joseon-tinted-mineral-dayscreen-sunscreen-review-where-to-buy",
-      "publishedAt": "2026-07-10T17:04:54.000Z",
-      "excerpt": "By now, we all know that SPF is an essential step in our daytime skincare routines. However, with a little trial and error it's clear to see that not all sunscreens are made equal…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F10%2Fdayscreen-fi.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
       "title": "Watch: At the scene where Bangkok's deadly bar fire unfolded",
       "source": "BBC World",
       "sourceType": "global-affairs",
@@ -102,13 +102,13 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/d7b9/live/b3499260-7e76-11f1-926f-c90d1bcfbc84.jpg"
     },
     {
-      "title": "Japan Is Building a New Intelligence Agency With Help From the West",
+      "title": "It’s the Scent of Manure to Most, but ‘the Smell of Money’ to Them",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/13/world/asia/japan-intelligence-agency.html",
-      "publishedAt": "2026-07-13T04:37:31.000Z",
-      "excerpt": "Facing threats from Russia and China, Prime Minister Sanae Takaichi is breaking with World War II-era limits on security.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/08/multimedia/00int-japan-intelligence-phqg/00int-japan-intelligence-phqg-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/07/13/world/europe/its-the-scent-of-manure-to-most-but-the-smell-of-money-to-them.html",
+      "publishedAt": "2026-07-13T07:19:46.000Z",
+      "excerpt": "The Netherlands has been trying to figure out what to do with manure it can no longer use thanks to environmental rules. Volatile fertilizer costs may help.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/13/multimedia/13int-europe-manure-promo-HP-bax/13int-europe-manure-promo-HP-bax-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
