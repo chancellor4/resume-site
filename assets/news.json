@@ -1,15 +1,51 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-14T08:58:07.504Z",
+  "generatedAt": "2026-07-14T10:42:38.572Z",
   "items": [
     {
-      "title": "What Fashion Tech Leaders Are Reading This Summer",
+      "title": "On the Podcast: What We Are Watching, Reading, and Listening to This Summer",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/what-fashion-tech-leaders-are-reading-this-summer",
-      "publishedAt": "2026-07-14T08:30:00.000Z",
-      "excerpt": "From how tech fits into our broader culture and political power structures to how to cultivate a brand that resonates in the age of AI, leaders from Substack, Nothing, Daydream, a…",
-      "imageUrl": "https://assets.vogue.com/photos/6a54fe6081689bdfa84f5917/master/pass/tech-reading-list-vogue-business-story.jpg"
+      "link": "https://www.vogue.com/article/on-the-podcast-what-we-are-watching-reading-and-listening-to-this-summer",
+      "publishedAt": "2026-07-14T10:30:00.000Z",
+      "excerpt": "To break down the season’s standout books, movies, and music, Chloe was joined in the studio by Vogue’s deputy editor, Taylor Antrim, and Senior Fashion Writer Hannah Jackson.",
+      "imageUrl": "https://assets.vogue.com/photos/6a55724940824b46b3a50e17/master/pass/MCDODYS_UV018.jpg"
+    },
+    {
+      "title": "GCDS Just Turned a High-Fashion Campaign Into a Meme",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/gcds-ss26-meme-campaign-giuliano-calza-information",
+      "publishedAt": "2026-07-14T10:05:39.000Z",
+      "excerpt": "GCDS is one of those brands that knows exactly how to tap into internet culture and do it right. For its SS26 campaign, the Italian label celebrates its Milanese heritage and also…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F14%2FSplit-92.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Yemen's Houthis launch missiles at Saudi Arabia after strikes on Sanaa airport",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/cp9ldle3d3xo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-14T10:02:43.000Z",
+      "excerpt": "The Iran-backed Houthis blame Saudi Arabia for the attack in Yemen's capital and say they targeted Abha airport in response.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/ddfb/live/25ca1c70-7ebc-11f1-8439-ebc9c5f19300.jpg"
+    },
+    {
+      "title": "Trump’s Plan to Charge a Toll in the Strait of Hormuz: What to Know",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/07/14/world/middleeast/trump-iran-strait-hormuz-toll-oil.html",
+      "publishedAt": "2026-07-14T10:32:30.000Z",
+      "excerpt": "President Trump announced a 20 percent fee on cargo through the waterway, despite his own administration’s position that such fees violate international law.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/14/multimedia/14xp-trump-hormuz-wwk-bctj/14xp-trump-hormuz-wwk-bctj-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Meet the Vogue &amp; Condé Nast PhotoVogue Committee",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/meet-the-vogue-and-conde-nast-photovogue-committee",
+      "publishedAt": "2026-07-14T10:08:02.000Z",
+      "excerpt": "Discover the expansive creative community of Vogue and Condé Nast talent from around the world collaborating with PhotoVogue",
+      "imageUrl": "https://assets.vogue.com/photos/67e428aa3b55dd439af7220d/master/pass/The%20Vogue%20&amp;%20Conde%CC%81%20Nast%20Committee.jpg"
     },
     {
       "title": "Miu Miu Beauty Taps Little Simz to Be Its Newest Ambassador",
@@ -21,31 +57,31 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F13%2Flittlesimz-fi.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "How India's Lord's win echoes the legacy of its pioneering women cricketers",
+      "title": "'If we die, we die together': Wife of man nearly sucked out of Ryanair plane speaks of ordeal",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cd0m1rjyxmmo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-14T08:12:32.000Z",
-      "excerpt": "India won the first women's Test at Lord's, 142 years after its first men's Test.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/07d6/live/bc919ae0-7e92-11f1-8c82-ff770b17755a.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/cly8yjnw822o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-14T09:40:23.000Z",
+      "excerpt": "Svetlana Grković told Serbian media that her husband is \"seriously injured and in shock\".",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/80c3/live/89cc6310-7f5f-11f1-a97a-9b1029617ccb.jpg"
     },
     {
       "title": "Here’s the latest.",
       "source": "NYT World",
       "sourceType": "world-news",
       "link": "https://www.nytimes.com/live/2026/07/14/world/iran-war-trump-hormuz/heres-the-latest",
-      "publishedAt": "2026-07-14T08:15:33.000Z",
+      "publishedAt": "2026-07-14T10:29:58.000Z",
       "excerpt": "",
       "imageUrl": null
     },
     {
-      "title": "Of Goddesses and Mortals—Dolce &amp; Gabbana Take Alta Moda to Taormina",
+      "title": "The 34 Best Simple Wedding Dresses for Minimalist Brides",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/of-goddesses-and-mortals-dolce-and-gabbana-take-alta-moda-to-taormina",
-      "publishedAt": "2026-07-14T06:28:58.000Z",
-      "excerpt": "For their 14th Alta Moda show, Dolce & Gabbana return to the place where it all began: Taormina, Sicily.",
-      "imageUrl": "https://assets.vogue.com/photos/6a55c843e7b790d057b4c8be/master/pass/ALTA-MODA-TAORMINA-2026-AM-BTS-PH-MARCO-PIONATO-031.jpg"
+      "link": "https://www.vogue.com/slideshow/simple-wedding-dresses",
+      "publishedAt": "2026-07-14T10:00:00.000Z",
+      "excerpt": "Calling all minimalist brides: We found the best satin slips, crepe column gowns, and more simple wedding dresses perfect for your big day or courthouse ceremony.",
+      "imageUrl": "https://assets.vogue.com/photos/6a51446f86a4de7ab74418a6/master/pass/Rohe-WeddingCampaign--41.jpg"
     },
     {
       "title": "Dakota Johnson and Alexander Skarsgård Unveil Two New Valentino Beauty Scents",
@@ -57,58 +93,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F13%2Fvalentinobeauty-featured.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "How US commerce secretary's Epstein links were uncovered by British whistleblower",
+      "title": "EU bans gold imports from Sudan to curb money financing the war",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/c9q28dlyxrzo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-14T05:00:03.000Z",
-      "excerpt": "Simon Andriesz made the discovery about Howard Lutnick in publicly released Epstein files.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/c2b7/live/dad63ca0-7e9b-11f1-bee8-53ce494e1abc.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/ce3e3nqwr5do?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-14T08:32:49.000Z",
+      "excerpt": "The ban also restricts exports of mercury and cyanide to Sudan, chemicals widely used in gold mining.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/e6a5/live/d6cd2350-7f52-11f1-a97a-9b1029617ccb.jpg"
     },
     {
-      "title": "U.S. Strikes Iran for 3rd Night, in Return to Open Conflict",
+      "title": "China Purges Top Official Over Corruption and Sex Charges",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/07/13/world/iran-war-us-trump-hormuz",
-      "publishedAt": "2026-07-14T07:59:13.000Z",
-      "excerpt": "President Trump announced a 20 percent fee on cargo shipped through the Strait of Hormuz. Iran said it had attacked two tankers transiting the waterway as the battle to control it…",
-      "imageUrl": "https://static01.nyt.com/images/2026/08/13/multimedia/13mideast-blog-promo0110-qwlc/13mideast-blog-promo0110-qwlc-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Rabanne Names Olivier Rousteing Creative Director",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/rabanne-names-olivier-rousteing-creative-director",
-      "publishedAt": "2026-07-14T05:00:00.000Z",
-      "excerpt": "The designer’s appointment “marks a significant new step in Rabanne's evolution,” the Puig-owned house said on Tuesday.",
-      "imageUrl": "https://assets.vogue.com/photos/6a5519d61237755c6138215c/master/pass/OLIVIER-ROUSTEING.jpg"
-    },
-    {
-      "title": "Beauty of Joseon's Newest Sunscreen Might Be Its Best One Yet",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/beauty-of-joseon-tinted-mineral-dayscreen-sunscreen-review-where-to-buy",
-      "publishedAt": "2026-07-13T13:02:41.000Z",
-      "excerpt": "By now, we all know that SPF is an essential step in our daytime skincare routines. However, with a little trial and error it's clear to see that not all sunscreens are made equal…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F10%2Fdayscreen-fi.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Bangkok fire investigation finds locked doors and flammable decor as deaths climb to 30",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/clyxyzlp9p2o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-14T03:47:41.000Z",
-      "excerpt": "Survivors and first responders reported locked doors and a lack of signage marking emergency exits.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/73c6/live/00a8bbe0-7f52-11f1-b976-0b9c15b0ccfc.jpg"
-    },
-    {
-      "title": "Deportations by India Cause Tension Along Border with Bangladesh",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/14/world/asia/india-bangladesh-border-migration.html",
-      "publishedAt": "2026-07-14T07:12:27.000Z",
-      "excerpt": "India is driving out Bangladeshi immigrants it says are in the country illegally. Bangladesh is pushing back, leaving people stranded along the border amid increasing tensions bet…",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/04/multimedia/00INT-INDIA-BANGLADESH-01-fpkw/00INT-INDIA-BANGLADESH-01-fpkw-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/07/14/world/asia/china-expels-politburo-official-sex-corruption.html",
+      "publishedAt": "2026-07-14T10:23:29.000Z",
+      "excerpt": "Ma Xingrui is the third member of the Politburo to be purged since 2022. He once led the Xinjiang region and was previously head of China’s space program.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/14/multimedia/14int-china-politburo-mcvh/14int-china-politburo-mcvh-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
