@@ -1,15 +1,51 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-15T08:39:29.814Z",
+  "generatedAt": "2026-07-15T10:40:52.229Z",
   "items": [
     {
       "title": "Celia Kritharioti Fall 2026 Couture",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/fall-2026-couture/celia-kritharioti",
-      "publishedAt": "2026-07-15T08:36:02.000Z",
+      "publishedAt": "2026-07-15T10:36:41.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a563c79e7b790d057b4d7c0/master/pass/00001-celia-kritharioti-fall-2026-couture-credit-brand.jpg"
+    },
+    {
+      "title": "UNDERDAYS Just Launched Its First-Ever Bra Collection",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/underdays-first-bra-collection-underwear-release-date-where-to-buy",
+      "publishedAt": "2026-07-15T10:02:22.000Z",
+      "excerpt": "The moment all UNDERDAYS fans have been waiting for... the launch of its first bra. The brand is expanding beyond its bestselling underwear, marking a new chapter for the wellness…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F15%2FUNDERDAYS-FILM-BYJADELEE-25.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "China economic growth falls sharply, missing target",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/cd959x4edy8o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-15T10:21:48.000Z",
+      "excerpt": "Weak demand domestically and the impact of the Iran war on oil prices overshadowed the country's strong exports.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/c8de/live/7e6a3480-7f40-11f1-ba68-9b76167cb04b.jpg"
+    },
+    {
+      "title": "Here’s the latest.",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/live/2026/07/15/world/iran-war-trump-hormuz/heres-the-latest",
+      "publishedAt": "2026-07-15T10:18:35.000Z",
+      "excerpt": "",
+      "imageUrl": null
+    },
+    {
+      "title": "The Perfectly Peculiar Art of Gladys Nilsson Gets a Long-Overdue Retrospective",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/the-perfectly-peculiar-art-of-gladys-nilsson",
+      "publishedAt": "2026-07-15T10:31:17.000Z",
+      "excerpt": "“Gleefully Askew: A Gladys Nilsson Retrospective” is on view at the Crocker Art Museum in Sacramento, California, from July 19 to November 29, 2026.",
+      "imageUrl": "https://assets.vogue.com/photos/6a565fd050857a088c23bb98/master/pass/Nilsson-Vogue-final-001.jpg"
     },
     {
       "title": "Meet Patricia Zhou, the Dancer Taking on Her Next Challenge in 'Cats'",
@@ -21,31 +57,31 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F14%2FSingle-Image-305-1.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Kenyan court dismisses Rastafarians' bid to legalise cannabis",
+      "title": "Celebrations as Gibraltar-Spain border fence removed",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/c0lyl5ryyr4o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-15T08:25:53.000Z",
-      "excerpt": "The court acknowledged the need for a broader national debate on cannabis policy in Kenya.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/eb9d/live/a4f76250-8024-11f1-bee8-53ce494e1abc.jpg"
+      "link": "https://www.bbc.co.uk/news/videos/cpd3d0d6zqzo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-15T10:19:34.000Z",
+      "excerpt": "The symbolic midnight ceremony was followed by large crowds crossing between Gibraltar and Spain without border checks.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/4799/live/09be09a0-8034-11f1-bee8-53ce494e1abc.jpg"
     },
     {
-      "title": "Here’s the latest.",
+      "title": "Ukraine Pounds Russian Ships in Its Campaign to Cut Off Crimea",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/07/15/world/iran-war-trump-hormuz/heres-the-latest",
-      "publishedAt": "2026-07-15T08:22:20.000Z",
-      "excerpt": "",
-      "imageUrl": null
+      "link": "https://www.nytimes.com/2026/07/15/world/europe/ukraine-russia-crimea-azov-sea.html",
+      "publishedAt": "2026-07-15T09:38:52.000Z",
+      "excerpt": "After striking roads and railways, Kyiv is now focusing on sea routes as it tries to disrupt fuel supplies and pressure Russia to end the war.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/15/world/15int-ukraine-crimea-ships-angua/15int-ukraine-crimea-ships-angua-mediumSquareAt3X.jpg"
     },
     {
-      "title": "How to Secure a Fashion Internship",
+      "title": "Richemont’s Jewelry Sales Rise 24% in Q1",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/how-to-secure-a-fashion-internship",
-      "publishedAt": "2026-07-15T04:30:00.000Z",
-      "excerpt": "It’s gotten harder to break into the fashion industry. Here, we break down the new ways to get a foot in the door.",
-      "imageUrl": "https://assets.vogue.com/photos/6a5618d5ac87b37da7d54aef/master/pass/internship-vogue-business-story.jpg"
+      "link": "https://www.vogue.com/article/richemonts-jewelry-sales-rise-24-in-q1",
+      "publishedAt": "2026-07-15T10:16:12.000Z",
+      "excerpt": "The Cartier owner smashed expectations as the jewelry’s supercycle surges on.",
+      "imageUrl": "https://assets.vogue.com/photos/6a575485493121ebc2eb547f/master/pass/richemont-vogue-business-story.jpg"
     },
     {
       "title": "We Went Behind the Quilting to See How Miu Miu's Matelassé Bags Are Made",
@@ -57,58 +93,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F14%2Fmm0.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Trump threatens to bomb bridges and power plants unless Iran resumes talks",
+      "title": "Three killed as Russian bombing of Odesa continues",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cy0608wy8pro?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-15T08:17:28.000Z",
-      "excerpt": "Trump's comments aired as the two countries exchanged fire for the fourth day in a row and the US resumed blockading Iranian ports.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/d6c0/live/e8f90230-7fb4-11f1-926f-c90d1bcfbc84.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/c8929jv8kdzo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-15T10:17:38.000Z",
+      "excerpt": "In recent days, Russia and Ukraine have launched attacks on each others' infrastructure for shipping goods.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/d14b/live/76285910-802f-11f1-a2a1-e90920ef9667.jpg"
     },
     {
-      "title": "As Argentina Tries to Win the World Cup, the Rest of Latin America Cheers Against It",
+      "title": "Missing From Prince Harry’s UK Trip: A Reunion With Prince William",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/15/world/americas/argentina-world-cup-semifinals.html",
-      "publishedAt": "2026-07-15T07:32:33.000Z",
-      "excerpt": "Rather than rally behind the tournament’s last Latin American team, other countries in the region are confronting Argentina’s fraught claims to its own identity.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/15/multimedia/15int-argentina-hate01-photo-vlpm/15int-argentina-hate01-photo-vlpm-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Swatch CEO Nick Hayek Addresses That Crazy Royal Pop Rollout",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/swatch-ceo-nick-hayek-addresses-that-crazy-royal-pop-rollout",
-      "publishedAt": "2026-07-15T04:30:00.000Z",
-      "excerpt": "The Swatch x Audemars Piguet pocket watch is arguably the most sought-after collaboration of the year. Swatch Group CEO Nick Hayek sits down exclusively with Vogue Business to unp…",
-      "imageUrl": "https://assets.vogue.com/photos/6a54eec0a6d36314ef554ea6/master/pass/swatch-CEO-vogue-business-story.jpg"
-    },
-    {
-      "title": "Dr. Martens and MHL. by Margaret Howell's New Drop Is a Minimalist Dream",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/dr-martens-mhl-by-margaret-howell-collaboration-1461-shoe-info-where-to-buy",
-      "publishedAt": "2026-07-14T20:23:57.000Z",
-      "excerpt": "For the girls who live in oversized tailoring, crisp linens and understated styles, your dream footwear drop has officially arrived. MHL. by Margaret Howell has joined forces with…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F14%2Fdr-martens-mhl-by-margaret-howell-collaboration-1461-shoe-info-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "China economic growth falls sharply, missing target",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cd959x4edy8o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-15T05:12:55.000Z",
-      "excerpt": "Weak demand domestically and the impact of the Iran war on oil prices overshadowed the country's strong exports.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/c8de/live/7e6a3480-7f40-11f1-ba68-9b76167cb04b.jpg"
-    },
-    {
-      "title": "In Bangkok Bar Blaze, Signs of Fatal Lapses Repeated Across the World",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/14/world/asia/bangkok-bar-fire-flammable-foam.html",
-      "publishedAt": "2026-07-15T07:24:10.000Z",
-      "excerpt": "After a fire killed 30 people, the scrutiny has turned to whether the venue used flammable foam on its ceilings and had blocked exits.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/14/multimedia/14int-thailand-fire-01-pbgz/14int-thailand-fire-01-pbgz-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/07/15/world/europe/prince-harry-uk-visit-william-king-charles.html",
+      "publishedAt": "2026-07-15T09:36:31.000Z",
+      "excerpt": "Harry is clearly repairing his relationship with King Charles III, but the rift with his brother remains unresolved.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/13/multimedia/13INT-UK-HARRY-WILLIAM-01-bgtz/13INT-UK-HARRY-WILLIAM-01-bgtz-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
