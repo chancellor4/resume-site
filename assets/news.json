@@ -1,22 +1,94 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-16T12:13:34.695Z",
+  "generatedAt": "2026-07-16T14:29:27.118Z",
   "items": [
     {
-      "title": "The Vogue Business People Moves Tracker",
+      "title": "How to Tie a Scarf Like a Belt",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/the-vogue-business-people-moves-tracker",
-      "publishedAt": "2026-07-16T11:28:09.000Z",
-      "excerpt": "Bringing you the latest hires and exits, and highlighting the leaders shaping the industry of tomorrow.",
-      "imageUrl": "https://assets.vogue.com/photos/6942d832d405f1aa30a2559f/master/pass/people-moves-vogue-business-story.jpg"
+      "link": "https://www.vogue.com/article/scarf-belt-styling",
+      "publishedAt": "2026-07-16T14:05:46.000Z",
+      "excerpt": "Printed, silk, fringe—the best scarves of the season do more than embellish your neck. Here, discover 6 ways to tie your scarf like a belt.",
+      "imageUrl": "https://assets.vogue.com/photos/6a56610fb1574b772781cd30/master/pass/image23.png"
     },
     {
-      "title": "The Timberland Boat Shoe Just Got a Jacquemus Makeover",
+      "title": "Jordan Brand Unveils Napheesa Collier's First-Ever Signature Shoe",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/jordan-brand-napheesa-collier-queen-phee-heir-series-2-wnba-basketball-sneakers-where-to-buy",
+      "publishedAt": "2026-07-16T14:17:40.000Z",
+      "excerpt": "Jordan Brand is officially giving WNBA superstar Napheesa Collier her flowers with her first-ever player exclusive sneaker: the Jordan Heir Series 2 “Queen Phee.” This launch is m…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F16%2Fjordan-brand-napheesa-collier-queen-phee-heir-series-2-wnba-basketball-sneakers-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Children amongst dead at Algeria foster care home blaze - president",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/cvgwd4nz344o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-16T14:27:15.000Z",
+      "excerpt": "Eleven people have died and 19 other have suffered injuries in the overnight blaze, the authorities say.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/dac8/live/b562b090-80f6-11f1-bee8-53ce494e1abc.jpg"
+    },
+    {
+      "title": "Ukraine’s Ousted Defense Minister Attacks the Military’s Old Guard",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/07/16/world/europe/ukraine-fedorov-protests.html",
+      "publishedAt": "2026-07-16T14:22:03.000Z",
+      "excerpt": "Mykhailo Fedorov defended his efforts to modernize the Ukrainian armed forces as thousands of people protested his dismissal.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/16/multimedia/16int-ukraine-protests-01-kclt/16int-ukraine-protests-01-kclt-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "The Founder of Aman Just Opened Japan’s Most Stylish New Farm Retreat",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/azuma-farm-koiwai-hotel-japan",
+      "publishedAt": "2026-07-16T13:53:32.000Z",
+      "excerpt": "Adrian Zecha, the 93-year-old hotelier behind Aman Resorts, just opened Azuma Farm in the sleepy rural region of Iwate—a “slow luxury” farm hotel in an underexplored corner of the…",
+      "imageUrl": "https://assets.vogue.com/photos/6a58e14fad05c5c75d4337b2/master/pass/02_Rooms_Forest%20Villa02.jpg"
+    },
+    {
+      "title": "Maria Grazia Chiuri Debuts Her First FENDI FW26 Campaign",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/fendi-fw26-campaign-maria-grazia-chiuri-jo-ann-callis-photography",
+      "publishedAt": "2026-07-16T13:42:17.000Z",
+      "excerpt": "FENDI unveiled the campaign for Maria Grazia Chiuri's debut Fall/Winter 2026 collection, exploring the complexities of human connection through a cinematic visual narrative captur…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F16%2FSingle-Image-328.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Protests in Ukrainian cities against Zelensky's removal of defence minister",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/cdx76069n3do?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-16T14:22:11.000Z",
+      "excerpt": "Ukraine's president has not explained Mykhailo Fedorov's dismissal, which is causing great upset among civil society and the military.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/4cba/live/4b6416b0-810b-11f1-926f-c90d1bcfbc84.jpg"
+    },
+    {
+      "title": "Iran War Live Updates: U.S. and Iran Escalate Attacks, While Hinting at Diplomacy",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/live/2026/07/16/world/iran-war-trump-hormuz",
+      "publishedAt": "2026-07-16T13:59:10.000Z",
+      "excerpt": "As the renewed fighting entered its sixth day, both sides appeared to leave the door open to more negotiations to end the war.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/16/multimedia/16live-mideast-promo-lgwh/16live-mideast-promo-lgwh-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Easy Ways To Regulate Your Cortisol Levels in the Morning and Have a Stress-Free Day",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/regulate-your-cortisol-levels-in-the-morning",
+      "publishedAt": "2026-07-16T13:49:12.000Z",
+      "excerpt": "Cortisol helps to wake you up—but high levels can lead to fatigue, digestive problems, and more. Here’s how to regulate cortisol levels to stay safe and sufficient.",
+      "imageUrl": "https://assets.vogue.com/photos/686bf4f20c57b3017e25ddde/master/pass/AdobeStock_1376943850%20copy.jpg"
+    },
+    {
+      "title": "The Timberland Boat Shoe Got Another Jacquemus Makeover",
       "source": "Hypebae",
       "sourceType": "youth-culture",
       "link": "https://hypebae.com/2026/7/jacquemus-timberland-collaboration-authentic-boat-shoe-lagoon-blue-release-date-where-to-buy",
-      "publishedAt": "2026-07-16T10:19:09.000Z",
+      "publishedAt": "2026-07-16T12:36:09.000Z",
       "excerpt": "Dream team Timberland and Jacquemus are teaming up once again. Following the success of their first collaboration in 2025, the two brands reunited to deliver a fresh take on Timbe…",
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F16%2FSplit-96.jpg?w=800&cbr=1&q=90&fit=max"
     },
@@ -25,90 +97,18 @@
       "source": "BBC World",
       "sourceType": "global-affairs",
       "link": "https://www.bbc.co.uk/news/articles/c0m7n427xd8o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-16T12:09:13.000Z",
+      "publishedAt": "2026-07-16T13:56:54.000Z",
       "excerpt": "The air quality in large parts of Michigan, Minneapolis and Minnesota is deemed \"hazardous\" by authorities.",
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/7192/live/519f5000-8109-11f1-b8b2-1fedac836136.jpg"
     },
     {
-      "title": "Mass Protests Across Ukraine Oppose Ouster of Defense Minister",
+      "title": "Pakistan, a mediator in the war, struggles to make itself heard.",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/16/world/europe/ukraine-fedorov-protests.html",
-      "publishedAt": "2026-07-16T12:11:39.000Z",
-      "excerpt": "Demonstrators demanded the reinstatement of Mykhailo Fedorov, who had come to symbolize Ukraine’s success in using drones to strike back against Russia.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/16/multimedia/16int-ukraine-protests-01-kclt/16int-ukraine-protests-01-kclt-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Long Before the Movie, Fashion Has Taken Its Cues From The Odyssey",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/odyssey-fashion-archive-history",
-      "publishedAt": "2026-07-16T11:05:00.000Z",
-      "excerpt": "A look at the ways the epic Greek tale has been an enduring inspiration on designers.",
-      "imageUrl": "https://assets.vogue.com/photos/6a56b88d20c4939a70345850/master/pass/odyssey_collage_FI.jpg"
-    },
-    {
-      "title": "Tyler, The Creator and Converse Give the Pro Leather a Bold, Chunky Upgrade",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/tyler-the-creator-converse-pro-leather-1908-jogger-sneakers-where-to-buy",
-      "publishedAt": "2026-07-15T21:40:25.000Z",
-      "excerpt": "Tyler, The Creator and Converse are back at it, and they are bringing a fresh, chunky energy to our sneaker rotations. The duo’s ongoing Converse 1908 program is expanding with it…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F15%2Ftyler-the-creator-converse-pro-leather-1908-jogger-sneakers-where-to-buy-1.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Argentina face action over Falklands banner",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/sport/football/articles/c935pgr4dklo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-16T12:01:37.000Z",
-      "excerpt": "Argentina face the prospect of disciplinary action from Fifa after their players celebrate the World Cup semi-final win against England with a banner in support of their country's…",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/4aa5/live/ab442060-80e9-11f1-bee8-53ce494e1abc.jpg"
-    },
-    {
-      "title": "The Quest for ‘Technological Sovereignty’ in Europe (and Why It’s So Hard)",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/16/world/europe/digital-autonomy-ai.html",
-      "publishedAt": "2026-07-16T12:10:17.000Z",
-      "excerpt": "France and Germany want to quit relying on America and China for key technology like artificial intelligence, but they’re having to choose where to do it.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/11/multimedia/11int-Europe-AI-hzbl/11int-Europe-AI-hzbl-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "“The Most Surprising Twist of My Life”: Savannah Miller on Pregnancy at 47",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/savannah-miller-on-pregnancy-at-47",
-      "publishedAt": "2026-07-16T10:21:04.000Z",
-      "excerpt": "Twenty-one years after having her first baby, designer Savannah Miller is getting ready to do it all again—at 47. Here, she reflects on the unexpected joys of a midlife pregnancy.",
-      "imageUrl": "https://assets.vogue.com/photos/6a563d4440824b46b3a51bdd/master/pass/Savannah-Miller-vogue-august26-credit-Sian-Davey-1.jpeg"
-    },
-    {
-      "title": "Sperry and Colbo's New Collab Is the Coastal Drop of the Summer",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/sperry-colbo-boat-shoe-collaboration-linen-leather-release-info-where-to-buy",
-      "publishedAt": "2026-07-15T17:53:16.000Z",
-      "excerpt": "If your summer moodboard leans heavily into sun-drenched days, effortless styling and quiet luxury, you are in luck. It's a boat shoe summer, and heritage footwear brand Sperry an…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F15%2Fsperry-colbo-boat-shoe-collaboration-linen-leather-release-info-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Iran targets military bases as US launches wave of strikes",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/c2lq1ed28jxo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-16T11:48:49.000Z",
-      "excerpt": "Explosions were heard across Iran overnight, shortly after neighbouring Gulf states began to report attacks.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/b67e/live/039382d0-80de-11f1-a5c2-db1656c1a0a8.jpg"
-    },
-    {
-      "title": "As Argentina Holds Up Falklands Banner on Defeating England, Here’s What to Know About the War",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/16/world/americas/falklands-malvinas-england-argentina-war.html",
-      "publishedAt": "2026-07-16T12:08:00.000Z",
-      "excerpt": "Argentina and Britain fought a bloody war over the islands in 1982. Decades later, the dispute suffuses matches between England and Argentina.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/16/multimedia/16xp-falklands-jtcl/16xp-falklands-jtcl-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/live/2026/07/16/world/iran-war-trump-hormuz/pakistan-a-mediator-in-the-war-struggles-to-make-itself-heard",
+      "publishedAt": "2026-07-16T13:55:28.000Z",
+      "excerpt": "",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/16/multimedia/16mideast-live-pakistan-ctzm/16mideast-live-pakistan-ctzm-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
