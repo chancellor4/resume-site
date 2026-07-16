@@ -1,7 +1,43 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-16T14:29:27.118Z",
+  "generatedAt": "2026-07-16T15:55:15.503Z",
   "items": [
+    {
+      "title": "Discover the Best Dresses for Every July Occasion",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/dresses",
+      "publishedAt": "2026-07-16T15:02:19.000Z",
+      "excerpt": "Explore the best dresses of the month, from silk maxi dresses to practical striped shirtdresses. Shop a wide selection of handpicked Vogue dresses.",
+      "imageUrl": "https://assets.vogue.com/photos/6933385a1f0b66a190e015e4/master/pass/00027-khaite-pre-fall-2026-credit-brand.jpg"
+    },
+    {
+      "title": "Inside Vivienne Westwood's Opulent FW26 Campaign",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/vivienne-westwood-fw26-campaign-juergen-teller-andreas-kronthaler-ilona-staller",
+      "publishedAt": "2026-07-16T15:15:58.000Z",
+      "excerpt": "Vivienne Westwood heads to Italy for its Fall/Winter 2026 campaign. Captured by longtime collaborator Juergen Teller, the latest visuals unfold inside the historic Belloni showroo…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F16%2FSingle-Image-332.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "More than 800 Canadian wildfires burning as air quality alerts extend to US",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/c0m7n427xd8o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-16T15:30:43.000Z",
+      "excerpt": "The air quality in large parts of Michigan, Minneapolis and Minnesota is deemed \"hazardous\" by authorities.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/7192/live/519f5000-8109-11f1-b8b2-1fedac836136.jpg"
+    },
+    {
+      "title": "As Argentina Holds Up Falklands Banner on Defeating England, Here’s What to Know About the War",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/07/16/world/americas/falklands-malvinas-england-argentina-war.html",
+      "publishedAt": "2026-07-16T15:39:51.000Z",
+      "excerpt": "Argentina and Britain fought a bloody war over the islands in 1982. Decades later, the dispute suffuses matches between England and Argentina.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/16/multimedia/16xp-falklands-jtcl/16xp-falklands-jtcl-mediumSquareAt3X.jpg"
+    },
     {
       "title": "How to Tie a Scarf Like a Belt",
       "source": "Vogue",
@@ -21,22 +57,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F16%2Fjordan-brand-napheesa-collier-queen-phee-heir-series-2-wnba-basketball-sneakers-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Children amongst dead at Algeria foster care home blaze - president",
+      "title": "Italian officials handed jail terms for Genoa bridge disaster that killed 43",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cvgwd4nz344o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-16T14:27:15.000Z",
-      "excerpt": "Eleven people have died and 19 other have suffered injuries in the overnight blaze, the authorities say.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/dac8/live/b562b090-80f6-11f1-bee8-53ce494e1abc.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/c36dnz1zez5o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-16T14:57:13.000Z",
+      "excerpt": "The ex-head of Italy's motorway operator Giovanni Castellucci was handed a 12-year term over the 2018 bridge collapse.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/84eb/live/b075cfc0-8125-11f1-bee8-53ce494e1abc.jpg"
     },
     {
-      "title": "Ukraine’s Ousted Defense Minister Attacks the Military’s Old Guard",
+      "title": "The Essentials About Mykhailo Fedorov, the Ousted Ukrainian Minister",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/16/world/europe/ukraine-fedorov-protests.html",
-      "publishedAt": "2026-07-16T14:22:03.000Z",
-      "excerpt": "Mykhailo Fedorov defended his efforts to modernize the Ukrainian armed forces as thousands of people protested his dismissal.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/16/multimedia/16int-ukraine-protests-01-kclt/16int-ukraine-protests-01-kclt-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/07/16/world/europe/who-mykhailo-fedorov-ukraine-defense-minister.html",
+      "publishedAt": "2026-07-16T15:34:12.000Z",
+      "excerpt": "Mr. Fedorov became the youthful face of Ukraine’s successful drone warfare program. The move to replace him has prompted street protests.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/16/multimedia/16int-ukraine-fedorov-01-pcvl/16int-ukraine-fedorov-01-pcvl-mediumSquareAt3X.jpg"
     },
     {
       "title": "The Founder of Aman Just Opened Japan’s Most Stylish New Farm Retreat",
@@ -57,58 +93,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F16%2FSingle-Image-328.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Protests in Ukrainian cities against Zelensky's removal of defence minister",
+      "title": "Children among dead at Algeria foster care home blaze - president",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cdx76069n3do?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-16T14:22:11.000Z",
-      "excerpt": "Ukraine's president has not explained Mykhailo Fedorov's dismissal, which is causing great upset among civil society and the military.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/4cba/live/4b6416b0-810b-11f1-926f-c90d1bcfbc84.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/cvgwd4nz344o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-16T14:27:15.000Z",
+      "excerpt": "Eleven people have died and 19 other have suffered injuries in the overnight fire, the authorities say.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/dac8/live/b562b090-80f6-11f1-bee8-53ce494e1abc.jpg"
     },
     {
       "title": "Iran War Live Updates: U.S. and Iran Escalate Attacks, While Hinting at Diplomacy",
       "source": "NYT World",
       "sourceType": "world-news",
       "link": "https://www.nytimes.com/live/2026/07/16/world/iran-war-trump-hormuz",
-      "publishedAt": "2026-07-16T13:59:10.000Z",
+      "publishedAt": "2026-07-16T15:11:54.000Z",
       "excerpt": "As the renewed fighting entered its sixth day, both sides appeared to leave the door open to more negotiations to end the war.",
       "imageUrl": "https://static01.nyt.com/images/2026/07/16/multimedia/16live-mideast-promo-lgwh/16live-mideast-promo-lgwh-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Easy Ways To Regulate Your Cortisol Levels in the Morning and Have a Stress-Free Day",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/regulate-your-cortisol-levels-in-the-morning",
-      "publishedAt": "2026-07-16T13:49:12.000Z",
-      "excerpt": "Cortisol helps to wake you up—but high levels can lead to fatigue, digestive problems, and more. Here’s how to regulate cortisol levels to stay safe and sufficient.",
-      "imageUrl": "https://assets.vogue.com/photos/686bf4f20c57b3017e25ddde/master/pass/AdobeStock_1376943850%20copy.jpg"
-    },
-    {
-      "title": "The Timberland Boat Shoe Got Another Jacquemus Makeover",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/jacquemus-timberland-collaboration-authentic-boat-shoe-lagoon-blue-release-date-where-to-buy",
-      "publishedAt": "2026-07-16T12:36:09.000Z",
-      "excerpt": "Dream team Timberland and Jacquemus are teaming up once again. Following the success of their first collaboration in 2025, the two brands reunited to deliver a fresh take on Timbe…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F16%2FSplit-96.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "More than 800 Canadian wildfires burning as air quality alerts extend to US",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/c0m7n427xd8o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-16T13:56:54.000Z",
-      "excerpt": "The air quality in large parts of Michigan, Minneapolis and Minnesota is deemed \"hazardous\" by authorities.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/7192/live/519f5000-8109-11f1-b8b2-1fedac836136.jpg"
-    },
-    {
-      "title": "Pakistan, a mediator in the war, struggles to make itself heard.",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/07/16/world/iran-war-trump-hormuz/pakistan-a-mediator-in-the-war-struggles-to-make-itself-heard",
-      "publishedAt": "2026-07-16T13:55:28.000Z",
-      "excerpt": "",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/16/multimedia/16mideast-live-pakistan-ctzm/16mideast-live-pakistan-ctzm-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
