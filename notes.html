@@ -107,8 +107,10 @@
     </div>
   </nav>
 
-  <!-- Kept empty for the SPA shell's header/main swap contract. -->
-  <header class="notes-header notes-header-empty" hidden></header>
+  <!-- Visually hidden, but retained as the page identity and SPA focus target. -->
+  <header class="notes-header-empty">
+    <h1 class="visually-hidden">Notes</h1>
+  </header>
 
   <!-- ─── MAIN ──────────────────────────────────────────────────── -->
   <main>
@@ -117,52 +119,31 @@
         <div class="notes-workspace-view" id="notes-workspace-view">
 
           <!-- ── Workspace ───────────────────────────────────────── -->
-          <section class="notes-workspace" aria-label="Prompt">
-            <div class="notes-bar">
-              <div class="notes-mode" id="notes-mode" role="group" aria-label="Drafting mode">
-                <button type="button" class="notes-mode-btn" data-mode="free" aria-pressed="true">Free-form</button>
-                <button type="button" class="notes-mode-btn" data-mode="structured" aria-pressed="false">Structured</button>
+          <section class="notes-workspace" aria-label="Mission and thoughts">
+            <div class="notes-editor">
+              <div class="notes-pad-section notes-pad-mission">
+                <label class="notes-prompt-label" for="notes-mission">Mission</label>
+                <textarea
+                  id="notes-mission"
+                  class="notes-mission"
+                  autocomplete="off"
+                  rows="2"
+                  placeholder="What should this prompt accomplish?"
+                ></textarea>
               </div>
-            </div>
-
-            <!-- Free-form -->
-            <div class="notes-pane" data-notes-pane="free">
-              <label class="visually-hidden" for="notes-purpose">Purpose (optional)</label>
-              <input
-                id="notes-purpose"
-                class="notes-purpose"
-                type="text"
-                autocomplete="off"
-                placeholder="What are you trying to accomplish? (optional)"
-              />
-              <label class="visually-hidden" for="notes-body">Prompt</label>
-              <textarea
-                id="notes-body"
-                class="notes-body"
-                placeholder="Start writing your prompt…"
-              ></textarea>
-            </div>
-
-            <!-- Structured -->
-            <div class="notes-pane" data-notes-pane="structured" hidden>
-              <label class="notes-field">
-                <span class="notes-field-label">Goal <em>what you're trying to accomplish</em></span>
-                <textarea id="notes-goal" class="notes-field-input" rows="2" placeholder="e.g. Write a clear summary of this design doc for my team."></textarea>
-              </label>
-              <label class="notes-field">
-                <span class="notes-field-label">Context <em>background, constraints, pasted material</em></span>
-                <textarea id="notes-context" class="notes-field-input" rows="6" placeholder="Relevant details, prior responses, anything the model should know…"></textarea>
-              </label>
-              <label class="notes-field">
-                <span class="notes-field-label">Request <em>the specific ask</em></span>
-                <textarea id="notes-request" class="notes-field-input" rows="3" placeholder="The precise thing you want the model to do."></textarea>
-              </label>
+              <div class="notes-pad-section notes-pad-body">
+                <label class="notes-prompt-label" for="notes-body">Thoughts</label>
+                <textarea
+                  id="notes-body"
+                  class="notes-body"
+                  placeholder="Start crafting your prompt…"
+                ></textarea>
+              </div>
             </div>
 
             <div class="notes-bar-actions">
               <span class="notes-shortcuts" aria-hidden="true"></span>
               <span class="notes-status" id="notes-status" role="status" aria-live="polite"></span>
-              <a class="notes-btn notes-btn-quiet" id="notes-drafts-open" href="#drafts">Saved drafts</a>
               <button type="button" class="notes-btn" id="notes-save">Save</button>
               <button type="button" class="notes-btn notes-btn-primary" id="notes-copy">Copy prompt</button>
             </div>
@@ -177,25 +158,24 @@
               placeholder="Paste useful model responses here, alongside your draft…"
             ></textarea>
           </section>
-        </div>
 
-        <!-- ── Saved drafts nested view ─────────────────────────── -->
-        <section class="notes-drafts-view" id="notes-drafts-view" aria-label="Saved drafts" hidden>
-          <div class="notes-drafts-panel">
-            <div class="notes-sidebar-head">
-              <h1 class="notes-sidebar-title">Saved drafts</h1>
-              <a class="notes-btn notes-btn-quiet" id="notes-drafts-back" href="#workspace">Back to workspace</a>
+          <!-- ── Saved drafts ───────────────────────────────────── -->
+          <section class="notes-drafts-view" id="notes-drafts-view" aria-label="Saved drafts">
+            <div class="notes-drafts-panel">
+              <div class="notes-sidebar-head">
+                <h2 class="notes-sidebar-title">Saved drafts</h2>
+              </div>
+              <p class="notes-drafts-copy">
+                Reopen a saved draft to continue editing it in the workspace.
+              </p>
+              <button type="button" class="notes-btn notes-btn-quiet" id="notes-new">+ New</button>
+              <ul class="notes-draft-list" id="notes-draft-list"></ul>
+              <p class="notes-draft-empty" id="notes-draft-empty">
+                Saved drafts appear here. Saving is optional — you can always just copy.
+              </p>
             </div>
-            <p class="notes-drafts-copy">
-              Reopen a saved draft to continue editing it in the prompt workspace.
-            </p>
-            <button type="button" class="notes-btn notes-btn-quiet" id="notes-new">+ New</button>
-            <ul class="notes-draft-list" id="notes-draft-list"></ul>
-            <p class="notes-draft-empty" id="notes-draft-empty">
-              Saved drafts appear here. Saving is optional — you can always just copy.
-            </p>
-          </div>
-        </section>
+          </section>
+        </div>
 
         <!-- ── Quiet confirmations ─────────────────────────────── -->
         <div class="notes-toast" id="notes-toast" role="status" aria-live="polite" hidden></div>

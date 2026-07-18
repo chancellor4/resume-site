@@ -15,15 +15,11 @@
     "ce-notes-working-v1" → the current (possibly unsaved) draft, autosaved so
                             a reload or SPA re-entry never loses in-progress work.
 
-  Draft shape:
+  Current draft shape (legacy fields remain for compatibility):
     {
       id:        string|null  null until explicitly saved,
-      mode:      'free' | 'structured',
-      purpose:   string        free-form lead line,
-      body:      string        free-form body,
-      goal:      string        structured: what you're trying to do,
-      context:   string        structured: background / pasted material,
-      request:   string        structured: the specific ask,
+      objective: string        what the prompt should accomplish,
+      prompt:    string        the main prompt,
       responses: string        scratch area for pasted model replies,
       createdAt: number,
       updatedAt: number
@@ -51,7 +47,6 @@
     working:         null,   // current draft (emptyDraft() until populated)
     handlers:        [],     // {el, type, fn} for clean teardown
     storageListener: null,
-    hashListener:    null,
     pendingUndo:     null,   // last-deleted draft, awaiting undo
     toastTimer:      null,
     statusTimer:     null,
@@ -109,6 +104,9 @@
       goal: '',
       context: '',
       request: '',
+      objective: '',
+      prompt: '',
+      desiredResult: '',
       responses: '',
       createdAt: null,
       updatedAt: null
@@ -118,13 +116,50 @@
   // Normalise any persisted object back into a full draft shape.
   function hydrate(obj) {
     var d = emptyDraft();
+    var hasPrompt = obj && typeof obj === 'object' &&
+      Object.prototype.hasOwnProperty.call(obj, 'prompt');
+    var hasObjective = obj && typeof obj === 'object' &&
+      Object.prototype.hasOwnProperty.call(obj, 'objective');
     if (obj && typeof obj === 'object') {
       for (var k in d) {
         if (Object.prototype.hasOwnProperty.call(d, k) && k in obj) d[k] = obj[k];
       }
     }
     if (d.mode !== 'free' && d.mode !== 'structured') d.mode = 'free';
+
+    // Legacy migration is intentionally derived during hydration: existing
+    // storage keys and fields stay intact, while repeated hydration is stable.
+    if (!hasPrompt) {
+      if (d.mode === 'structured') {
+        d.prompt = textValue(d.request);
+        d.desiredResult = textValue(d.goal);
+      } else {
+        d.prompt = [textValue(d.purpose).trim(), textValue(d.body).trim()]
+          .filter(Boolean)
+          .join('\n\n');
+      }
+    }
+    d.prompt = textValue(d.prompt);
+    d.context = textValue(d.context);
+    d.desiredResult = textValue(d.desiredResult);
+    if (!hasObjective) {
+      d.objective = d.desiredResult;
+      d.prompt = mergeContext(d.context, d.prompt);
+    }
+    d.objective = textValue(d.objective);
+    d.responses = textValue(d.responses);
     return d;
+  }
+
+  function textValue(value) {
+    return typeof value === 'string' ? value : '';
+  }
+
+  function mergeContext(context, prompt) {
+    var sections = [];
+    if (context.trim()) sections.push('# Context\n' + context);
+    if (prompt.trim()) sections.push(prompt);
+    return sections.join('\n\n');
   }
 
   function isValidDraft(d) {
@@ -138,9 +173,7 @@
 
   // A human label for the saved-drafts list.
   function titleOf(d) {
-    var candidates = d.mode === 'structured'
-      ? [d.goal, d.request, d.context]
-      : [d.purpose, d.body];
+    var candidates = [d.prompt, d.objective];
     for (var i = 0; i < candidates.length; i++) {
       var line = firstLine(candidates[i]);
       if (line) return line;
@@ -150,16 +183,12 @@
 
   // Assemble the clean prompt string that gets copied.
   function buildPrompt(d) {
-    if (d.mode === 'structured') {
-      var sections = [];
-      if (d.goal.trim())    sections.push('# Goal\n' + d.goal.trim());
-      if (d.context.trim()) sections.push('# Context\n' + d.context.trim());
-      if (d.request.trim()) sections.push('# Request\n' + d.request.trim());
-      return sections.join('\n\n');
-    }
-    // Free-form: optional lead line, then body. No labels — free writing
-    // copies out exactly as written.
-    return [d.purpose.trim(), d.body.trim()].filter(Boolean).join('\n\n');
+    var sections = [];
+    var objective = textValue(d.objective);
+    var prompt = textValue(d.prompt);
+    if (objective.trim()) sections.push('# Mission\n' + objective);
+    if (prompt.trim()) sections.push(prompt);
+    return sections.join('\n\n');
   }
 
   function currentIsEmpty() {
@@ -218,13 +247,10 @@
   /* ── Rendering ────────────────────────────────────────────── */
   function syncEditor() {
     var d = state.working;
-    setField('notes-purpose',   d.purpose);
-    setField('notes-body',      d.body);
-    setField('notes-goal',      d.goal);
-    setField('notes-context',   d.context);
-    setField('notes-request',   d.request);
+    setField('notes-mission',   d.objective);
+    setField('notes-body',      d.prompt);
     setField('notes-responses', d.responses);
-    applyMode(d.mode);
+    resizeMission();
   }
 
   function setField(id, value) {
@@ -232,16 +258,18 @@
     if (el) el.value = value || '';
   }
 
-  function applyMode(mode) {
-    var btns = document.querySelectorAll('.notes-mode-btn');
-    for (var i = 0; i < btns.length; i++) {
-      var on = btns[i].getAttribute('data-mode') === mode;
-      btns[i].setAttribute('aria-pressed', on ? 'true' : 'false');
-    }
-    var panes = document.querySelectorAll('[data-notes-pane]');
-    for (var j = 0; j < panes.length; j++) {
-      panes[j].hidden = panes[j].getAttribute('data-notes-pane') !== mode;
-    }
+  function resizeMission() {
+    var el = $('notes-mission');
+    if (!el) return;
+
+    el.style.height = 'auto';
+    var maxHeight = parseFloat(window.getComputedStyle(el).maxHeight);
+    var nextHeight = Number.isFinite(maxHeight)
+      ? Math.min(el.scrollHeight, maxHeight)
+      : el.scrollHeight;
+
+    el.style.height = nextHeight + 'px';
+    el.style.overflowY = el.scrollHeight > nextHeight + 1 ? 'auto' : 'hidden';
   }
 
   function renderList() {
@@ -255,36 +283,6 @@
     for (var i = 0; i < state.drafts.length; i++) {
       list.appendChild(renderDraftItem(state.drafts[i]));
     }
-  }
-
-  function currentView() {
-    return location.hash === '#drafts' ? 'drafts' : 'workspace';
-  }
-
-  function applyView(view) {
-    var root = $('notes-root');
-    var workspace = $('notes-workspace-view');
-    var drafts = $('notes-drafts-view');
-    if (!root || !workspace || !drafts) return;
-
-    var showDrafts = view === 'drafts';
-    root.setAttribute('data-view', showDrafts ? 'drafts' : 'workspace');
-    workspace.hidden = showDrafts;
-    drafts.hidden = !showDrafts;
-  }
-
-  function focusView(view) {
-    var target = view === 'drafts' ? $('notes-drafts-back') : $('notes-body');
-    if (target) {
-      try { target.focus(); } catch (e) { /* noop */ }
-    }
-  }
-
-  function showWorkspace() {
-    if (location.hash) {
-      history.pushState(null, '', location.pathname + location.search);
-    }
-    applyView('workspace');
   }
 
   function renderDraftItem(draft) {
@@ -306,8 +304,7 @@
 
     var meta = document.createElement('span');
     meta.className = 'notes-draft-meta';
-    meta.textContent = (draft.mode === 'structured' ? 'Structured' : 'Free-form') +
-      ' · ' + timeAgo(draft.updatedAt);
+    meta.textContent = timeAgo(draft.updatedAt);
 
     open.appendChild(title);
     open.appendChild(meta);
@@ -332,21 +329,11 @@
     saveWorking();
   }
 
-  function setMode(mode) {
-    if (mode !== 'free' && mode !== 'structured') return;
-    state.working.mode = mode;
-    saveWorking();
-    applyMode(mode);
-    var focusEl = mode === 'structured' ? $('notes-goal') : $('notes-body');
-    if (focusEl) focusEl.focus();
-  }
-
   function newDraft() {
     state.working = emptyDraft();
     clearWorking();
     syncEditor();
     renderList();
-    showWorkspace();
     var body = $('notes-body');
     if (body) body.focus();
     flashStatus('New draft');
@@ -402,7 +389,6 @@
     saveWorking();
     syncEditor();
     renderList();
-    showWorkspace();
     var body = $('notes-body');
     if (body) body.focus();
     flashStatus('Opened');
@@ -505,23 +491,15 @@
 
   /* ── Event handlers ───────────────────────────────────────── */
   var FIELD_MAP = {
-    'notes-purpose':   'purpose',
-    'notes-body':      'body',
-    'notes-goal':      'goal',
-    'notes-context':   'context',
-    'notes-request':   'request',
+    'notes-mission':   'objective',
+    'notes-body':      'prompt',
     'notes-responses': 'responses'
   };
 
   function handleFieldInput(e) {
     var field = FIELD_MAP[e.target.id];
     if (field) updateField(field, e.target.value);
-  }
-
-  function handleModeClick(e) {
-    var btn = e.target.closest ? e.target.closest('.notes-mode-btn') : null;
-    if (!btn) return;
-    setMode(btn.getAttribute('data-mode'));
+    if (e.target.id === 'notes-mission') resizeMission();
   }
 
   function handleListClick(e) {
@@ -532,12 +510,6 @@
     if (!id) return;
     if (act === 'open') openDraft(id);
     else if (act === 'delete') deleteDraft(id);
-  }
-
-  function handleHashChange() {
-    var view = currentView();
-    applyView(view);
-    focusView(view);
   }
 
   // Scoped to the Notes root, so shortcuts never leak to other pages.
@@ -574,10 +546,6 @@
       try { window.removeEventListener('storage', state.storageListener); } catch (e) { /* noop */ }
       state.storageListener = null;
     }
-    if (state.hashListener) {
-      try { window.removeEventListener('hashchange', state.hashListener); } catch (e) { /* noop */ }
-      state.hashListener = null;
-    }
     clearTimeout(state.toastTimer);
     clearTimeout(state.statusTimer);
 
@@ -587,7 +555,6 @@
 
     syncEditor();
     renderList();
-    applyView(currentView());
 
     // Wire events. Field inputs are bound individually; container clicks and
     // shortcuts are delegated. Everything is tracked for clean teardown.
@@ -596,26 +563,24 @@
         on($(id), 'input', handleFieldInput);
       }
     }
-    on($('notes-mode'),       'click',   handleModeClick);
     on($('notes-save'),       'click',   saveDraft);
     on($('notes-copy'),       'click',   copyPrompt);
     on($('notes-new'),        'click',   newDraft);
     on($('notes-draft-list'), 'click',   handleListClick);
     on(root,                  'keydown', handleKeydown);
+    on(window,                'resize',  resizeMission);
 
     // Cross-tab: if another tab writes the saved list, refresh ours.
     state.storageListener = handleStorage;
     window.addEventListener('storage', state.storageListener);
-
-    state.hashListener = handleHashChange;
-    window.addEventListener('hashchange', state.hashListener);
 
     // Zero-friction start: focus the body on a cold load. On SPA navigation the
     // shell deliberately focuses the page heading for screen-reader orientation,
     // so only take focus when nothing else has claimed it.
     setTimeout(function () {
       if (document.activeElement === document.body) {
-        focusView(currentView());
+        var body = $('notes-body');
+        if (body) body.focus();
       }
     }, 0);
 
