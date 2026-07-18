@@ -49,13 +49,8 @@
     format*    — convert raw values to display strings
     overture   — boot sequence
 
-  v5.0.0-rc — Release candidate
-    Phase 1: Persistence Engine extracted (store closure)
-    Phase 2: Media Adapter extracted (adapter closure)
-    Phase 3: Groove visualization added (groove closure)
-    Phase 4-5: Controller, Sync, UI extracted for modular decomposition
-    All SC.Widget access confined to adapter. Zero direct widget
-    touchpoints outside the adapter boundary.
+  All SC.Widget access confined to adapter. Zero direct widget
+  touchpoints outside the adapter boundary.
 */
 
 (function () {
@@ -179,7 +174,7 @@
   var GROOVE_MIN_HEIGHT  = 0.15;                 // minimum bar height (fraction of canvas)
   var GROOVE_DPR         = (function () { try { return Math.min(window.devicePixelRatio || 1, 3); } catch (e) { return 1; } })();
 
-  /* ── Feature gates (v5.1.0) ────────────────────────────── */
+  /* ── Feature gates ────────────────────────────── */
   /*    Interactive groove: click/drag/touch to seek within    */
   /*    the waveform progress bar. Layers on FEATURE_GROOVE.  */
   /*    Flip to false to restore passive-only waveform.       */
@@ -232,27 +227,12 @@
   })();
 
   /* ══════════════════════════════════════════════════════════════
-     Persistence Engine (v5.0.0 — Phase 1 extraction)
+     Persistence Engine
 
      Pure data layer owning all sessionStorage reads and writes.
      No DOM access, no side effects, no network calls.
      Every function wraps in try/catch — storage unavailability
      returns null/false, never throws.
-
-     Extracted from:
-       shelfRead, shelfWrite           → store.shelfRead, store.shelfWrite
-       saveState (storage portion)     → store.continuitySave
-       restoreState (storage portion)  → store.continuityRestore
-       initTabId                       → store.getTabId
-       initClaimEpoch                  → store.getClaimEpoch
-       persistClaimEpoch               → store.persistEpoch
-       NAV_MARKER_KEY read/write       → store.consumeNavMarker, store.setNavMarker
-
-     Backward compatibility:
-       - All storage keys unchanged (SHELF_KEY, CONT_KEY, TAB_ID_KEY, etc.)
-       - Schema versions unchanged (SHELF_VERSION, CONT_SCHEMA)
-       - TTL enforcement unchanged (SHELF_TTL, CONT_TTL)
-       - Feature gate behavior unchanged (FEATURE_ENHANCED_PERSISTENCE, FEATURE_OWNERSHIP_V3, etc.)
      ══════════════════════════════════════════════════════════════ */
 
   var store = (function () {
@@ -282,7 +262,7 @@
         var raw = sessionStorage.getItem(SHELF_KEY);
         if (!raw) return null;
         var obj = JSON.parse(raw);
-        /* v1.3.0: reject cache if shelf schema version doesn't match */
+        /* Reject cache if shelf schema version doesn't match */
         if (FEATURE_ENHANCED_PERSISTENCE && obj.v !== SHELF_VERSION) {
           vlog(3, 'shelf:version-mismatch', { cached: obj.v, expected: SHELF_VERSION });
           return null;
@@ -426,7 +406,7 @@
       try { sessionStorage.setItem(CLAIM_EPOCH_KEY, String(epoch)); } catch (e) {}
     }
 
-    /* ── Navigation marker (v4.0.0) ──────────────────────────
+    /* ── Navigation marker ──────────────────────────
        Key:  NAV_MARKER_KEY ('ce-vinyl-nav')
        Set before pagehide when owner navigates within site.
        Consumed on the new page's boot to reclaim ownership
@@ -470,7 +450,7 @@
   })();
 
   /* ══════════════════════════════════════════════════════════════
-     SoundCloud Adapter (v5.0.0 — Phase 2 extraction)
+     SoundCloud Adapter
 
      Thin abstraction layer over SC.Widget. Owns the raw widget
      instance and every direct SDK call. No external code touches
@@ -650,14 +630,14 @@
   })();
 
   /* ══════════════════════════════════════════════════════════════
-     Groove — waveform progress visualization (v5.0.0 → v5.2.0)
+     Groove — waveform progress visualization
 
      Canvas-based progress bar that renders a seeded pseudo-random
      waveform for each track. The seed is derived from the track
      title, so the waveform is deterministic and consistent across
      page loads. Progress fill is driven by PLAY_PROGRESS events.
 
-     v5.2.0 additions (FEATURE_GROOVE_IMMERSIVE):
+     Additions gated by FEATURE_GROOVE_IMMERSIVE:
        - Smooth progress interpolation via rAF (no discrete jumps)
        - Soft waveform pulse near the playhead (time-based, deterministic)
        - Elastic seek feedback (spring overshoot on commit)
@@ -673,10 +653,7 @@
        groove.update(fraction)  — repaints with progress fill [0..1]
        groove.clear()           — resets to empty state
        groove.destroy()         — removes canvas from DOM
-       groove.startFlow()       — begin rAF interpolation loop (v5.2.0)
-       groove.stopFlow()        — stop rAF loop (v5.2.0)
-       groove.elasticSeek(frac) — trigger elastic snap to position (v5.2.0)
-     ══════════════════════════════════════════════════════════════ */
+       groove.startFlow()       — begin rAF interpolation loop       groove.stopFlow()        — stop rAF loop       groove.elasticSeek(frac) — trigger elastic snap to position     ══════════════════════════════════════════════════════════════ */
 
   var groove = (function () {
     if (!FEATURE_GROOVE) return {
@@ -703,24 +680,24 @@
     var lastFrac = -1;       // last rendered fraction (avoids redundant paints)
     var hoverFrac = -1;      // hover preview position (-1 = no preview)
 
-    /* ── v5.2.0: Interpolation state ──────────────────────── */
+    /* ── Interpolation state ──────────────────────── */
     var targetFrac   = 0;    // where progress should be (set by update())
     var displayFrac  = 0;    // where progress appears (smoothed toward target)
     var rafId        = null; // requestAnimationFrame handle
     var flowing      = false;// true while the rAF loop is active
     var lastFrameT   = 0;    // timestamp of last rAF frame
 
-    /* ── v5.2.0: Elastic seek state ──────────────────────── */
+    /* ── Elastic seek state ──────────────────────── */
     var elasticActive  = false;
     var elasticTarget  = 0;
     var elasticVel     = 0;    // spring velocity
     var elasticDisplay = 0;    // current elastic position
 
-    /* ── v5.2.0: Hover time tooltip state ─────────────────── */
+    /* ── Hover time tooltip state ─────────────────── */
     var hoverTimeEl  = null;   // tooltip DOM element
     var hoverTimeFrac = -1;    // fraction for time display
 
-    /* ── v5.2.0: Reduced motion detection ─────────────────── */
+    /* ── Reduced motion detection ─────────────────── */
     var prefersReducedMotion = (function () {
       try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
       catch (e) { return false; }
@@ -763,7 +740,7 @@
       return b;
     }
 
-    /* ── v5.2.0: Pulse calculation ────────────────────────── */
+    /* ── Pulse calculation ────────────────────────── */
     /*    Returns a height multiplier [1.0 − intensity .. 1.0 + intensity]  */
     /*    based on bar proximity to the playhead and wall-clock time.       */
     /*    Deterministic: same (barIndex, fillFrac, time) → same result.    */
@@ -812,13 +789,13 @@
       var unfilled = 'rgba(192, 178, 190, 0.2)';     // muted lavender — whisper
       var hovered  = 'rgba(155, 126, 155, 0.3)';     // hover preview tint — gentle
 
-      /* v5.2.0: time for deterministic pulse (seconds since page load) */
+      /* Time for deterministic pulse (seconds since page load) */
       var pulseSec = (typeof nowSec === 'number') ? nowSec : 0;
 
       for (var i = 0; i < total; i++) {
         var x     = i * (barW + gap);
 
-        /* v5.2.0: Apply pulse modulation to bar height */
+        /* Apply pulse modulation to bar height */
         var pMul = (flowing && frac > 0) ? pulseMultiplier(i, total, frac, pulseSec) : 1.0;
         var barH  = bars[i] * h * pMul;
         var y     = (h - barH) / 2;                   // vertically centred
@@ -869,7 +846,7 @@
       }
     }
 
-    /* ── v5.2.0: rAF interpolation loop ───────────────────── */
+    /* ── rAF interpolation loop ───────────────────── */
     /*    Smoothly lerps displayFrac → targetFrac each frame.  */
     /*    Drives pulse animation when playing. Deterministic:   */
     /*    same inputs produce same visual regardless of tab.    */
@@ -936,7 +913,7 @@
       vlog(3, 'groove:flow-stop');
     }
 
-    /* ── v5.2.0: Elastic seek ─────────────────────────────── */
+    /* ── Elastic seek ─────────────────────────────── */
     /*    Trigger a spring animation toward the seek target.    */
     /*    The overshoot is subtle — creates a "landing" feel    */
     /*    that communicates the seek has arrived.               */
@@ -997,7 +974,7 @@
       springRafId = requestAnimationFrame(springStep);
     }
 
-    /* ── v5.2.0: Hover time tooltip ───────────────────────── */
+    /* ── Hover time tooltip ───────────────────────── */
 
     function ensureHoverTimeEl(container) {
       if (hoverTimeEl) return;
@@ -1141,7 +1118,7 @@
       return canvas;
     }
 
-    /* ── v5.2.0 (fix): Immediate scrub snap ──────────────────
+    /* ── Immediate scrub snap ──────────────────
        During drag, display must track the cursor 1:1 with no
        interpolation lag. snap() sets both displayFrac and
        targetFrac so the rAF loop has nothing to chase.        */
@@ -1217,7 +1194,7 @@
   }
 
   /* ══════════════════════════════════════════════════════════════
-     Queue (v6.0.0)
+     Queue
 
      Owns the radio queue projection over the SoundCloud catalog.
      The queue is deterministic per 72-hour bucket and persists
@@ -1330,7 +1307,7 @@
     };
   })();
 
-  /* ── Observability primitives (v1.2.0) ──────────────────── */
+  /* ── Observability primitives ──────────────────── */
   /*    vlog(level, event, data?)  — structured console output  */
   /*    vmark(name)               — Performance Timeline marks  */
   /*    Both are noops when FEATURE_OBSERVABILITY is false or   */
@@ -1350,7 +1327,7 @@
   }
 
   /* ══════════════════════════════════════════════════════════════
-     Controller (v5.0.0 — Phase 4 extraction)
+     Controller
 
      Playback state machine and FSM logic. Owns:
        - Playback state (spinning, phase, currentSide, lastPosition)
@@ -1379,7 +1356,7 @@
     var lastSidePoll  = 0;
     var lastPosition  = 0;
     var phase         = 'dormant';
-    var scrubbing     = false;                    // v5.1.0: true during groove drag
+    var scrubbing     = false;                    // true during groove drag
 
     var LEGAL_MOVES = {
       dormant:  ['loading'],
@@ -1658,7 +1635,7 @@
       });
     }
 
-    /* ── Scrub lock (v5.1.0) ───────────────────────────────── */
+    /* ── Scrub lock ───────────────────────────────── */
     /*    When true, PLAY_PROGRESS events skip groove.update()  */
     /*    so the user's drag position isn't overwritten by the  */
     /*    stream. Released when the seek commit lands.           */
@@ -1666,7 +1643,7 @@
     function setScrubbing(v) { scrubbing = v; }
     function isScrubbing()   { return scrubbing; }
 
-    /* ── Seek to fraction (v5.1.0) ─────────────────────────── */
+    /* ── Seek to fraction ─────────────────────────── */
     /*    Converts a [0..1] fraction to ms using the current     */
     /*    record's duration, then seeks. Returns false if the    */
     /*    seek can't be performed (no record, no duration).      */
@@ -1812,7 +1789,7 @@
   })();
 
   /* ══════════════════════════════════════════════════════════════
-     Sync (v5.0.0 — Phase 5 extraction)
+     Sync
 
      Cross-tab coordination via BroadcastChannel. Owns:
        - Ownership state and remote state tracking
@@ -2174,7 +2151,7 @@
   })();
 
   /* ══════════════════════════════════════════════════════════════
-     UI (v5.0.0 — Phase 5 extraction)
+     UI
 
      DOM interaction and rendering. Owns:
        - Element references (el.*, glyph.*)
@@ -2220,7 +2197,7 @@
         if (el.groove) groove.mount(el.groove);
       }
 
-      /* ── Groove seek: interactive waveform (v5.1.0) ─────── */
+      /* ── Groove seek: interactive waveform ─────── */
       if (FEATURE_GROOVE_SEEK && el.groove) {
         mountGrooveSeek(el.groove);
       }
@@ -2284,7 +2261,7 @@
       }
     }
 
-    /* ── Groove seek interaction (v5.1.0) ───────────────────── */
+    /* ── Groove seek interaction ───────────────────── */
     /*    Handles click-to-seek, drag-to-scrub, touch support,  */
     /*    and hover preview. All events gated behind phase       */
     /*    checks — inert when widget isn't ready.                */
@@ -2385,7 +2362,7 @@
         if (FEATURE_GROOVE_IMMERSIVE) groove.clearHoverTime();
       }
 
-      /* ── Hover: preview indicator + time tooltip (v5.2.0) ─ */
+      /* ── Hover: preview indicator + time tooltip ─ */
       function onHover(e) {
         if (dragging || !_ctrl.isReady()) return;
         var frac = fracFromEvent(e);
