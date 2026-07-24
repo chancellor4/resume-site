@@ -1,15 +1,87 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-24T13:40:02.186Z",
+  "generatedAt": "2026-07-24T15:19:22.009Z",
   "items": [
     {
       "title": "Attachment Tokyo Spring 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/tokyo-spring-2027/attachment",
-      "publishedAt": "2026-07-24T13:36:35.000Z",
+      "publishedAt": "2026-07-24T15:16:42.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a61fd19b3478adb6eea1082/master/pass/00001-attachment-spring-2027-menswear-tokyo-credit-brand.jpg"
+    },
+    {
+      "title": "The Best Heat Wave-Proof Makeup Products to Add to Your Rotation",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/5/best-transfer-proof-longwear-makeup-products-haus-labs-rare-beauty-sacheu",
+      "publishedAt": "2026-07-24T14:42:54.000Z",
+      "excerpt": "The cold is finally behind us. Although the spring and summer seasons mean the days are longer and hotter, it also means it's harder than ever to lock your makeup in place. Whethe…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F05%2F20%2Fheatwave-fi.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Watch: Wildfires rage across Spain and France",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/videos/cz641jd4p4lo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-24T15:13:46.000Z",
+      "excerpt": "Spain's government declares national emergency as French authorities order evacuations in tourist hot spot.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/f1b5/live/c3089370-873d-11f1-a10e-a5d4f08bc20c.jpg"
+    },
+    {
+      "title": "Iran War Live Updates: Strikes Persist After Iran Is Said to Reject U.S. Proposal",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/live/2026/07/24/world/iran-war-us-strikes-trump-oil",
+      "publishedAt": "2026-07-24T15:15:18.000Z",
+      "excerpt": "American forces conducted another round of attacks on Iran, which launched drone strikes at U.S. targets in the Gulf. Iran was said to have rejected a cease-fire proposal from Pre…",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/24/multimedia/24mideast-blog-promo-mzcl/24mideast-blog-promo-mzcl-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "10 Ways to Style Tank-Tops for Summer, Inspired by Celebs",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/celebrity-tank-top-outfits",
+      "publishedAt": "2026-07-24T14:39:26.000Z",
+      "excerpt": "Discover new ways to style tank tops for summer, with these celebrity-inspired outfits featuring the wardrobe hero item.",
+      "imageUrl": "https://assets.vogue.com/photos/6a340566a118c4c74580a262/master/pass/TID_EXCLUSIVE__JOE_1411525.jpg"
+    },
+    {
+      "title": "Mattel Turned Angel Reese Into a Real-Life Bayou Barbie",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/angel-reese-barbie-doll-reebok-angel-reese-1-sneaker-mattel-info-where-to-buy",
+      "publishedAt": "2026-07-24T14:27:54.000Z",
+      "excerpt": "Angel Reese continues to cement her status as a cultural powerhouse on and off the court, and now the Bayou Barbie is being immortalized in her truest form. Mattel and Reebok have…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F24%2Fangel-reese-barbie-doll-reebok-angel-reese-1-sneaker-mattel-info-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Tens of thousands evacuated from French tourist spot and near Madrid as wildfires spread",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/cdx82rl5g0do?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-24T14:59:24.000Z",
+      "excerpt": "The fire has raged in the region for several days with officials now ordering the evacuation of the entire Cap Ferret peninsula.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/cb06/live/2f9183e0-8738-11f1-a10e-a5d4f08bc20c.jpg"
+    },
+    {
+      "title": "Argentines Facing Surge of Criticism After World Cup Loss Have Something to Say",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/07/24/world/americas/argentina-world-cup-racism-players.html",
+      "publishedAt": "2026-07-24T15:07:51.000Z",
+      "excerpt": "Many Argentines condemned their players’ racist chants and aggressive behavior, but rejected what felt like a sweeping stigmatization of their entire nation.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/23/multimedia/00-int-argentina-hate-mqfz/00-int-argentina-hate-mqfz-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "The Vogue Business People Moves Tracker",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/the-vogue-business-people-moves-tracker",
+      "publishedAt": "2026-07-24T14:19:40.000Z",
+      "excerpt": "Bringing you the latest hires and exits, and highlighting the leaders shaping the industry of tomorrow.",
+      "imageUrl": "https://assets.vogue.com/photos/6942d832d405f1aa30a2559f/master/pass/people-moves-vogue-business-story.jpg"
     },
     {
       "title": "Your Next It-Bag Might Be From OSOI",
@@ -21,94 +93,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F24%2FSingle-Image-19.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Indonesian babies were trafficked to Singapore. What happens to them now?",
+      "title": "Four Palestinians and two Israelis killed in West Bank shooting",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/c7vgeredvlgo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-24T13:33:06.000Z",
-      "excerpt": "At least 12 babies have been trafficked from Indonesia to Singapore, but what will happen to them remains unclear.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/d9a4/live/b3961660-8666-11f1-93cb-95d7eb12ec49.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/cx2rxmye4k3o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-24T14:41:32.000Z",
+      "excerpt": "Palestinians say villagers came under attack by settlers, while the Israeli military says a Palestinian stole a weapon and opened fire on hikers.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/c838/live/07344060-8759-11f1-a0f1-fd76e1e0297b.jpg"
     },
     {
-      "title": "On Instagram, Travelers Are Taking Risky Cross-Continental Journeys. What Could Go Wrong?",
+      "title": "Here’s the latest.",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/24/travel/risky-trips-instagram-tiktok-social-media.html",
-      "publishedAt": "2026-07-24T13:31:49.000Z",
-      "excerpt": "Travel accounts that feature risky, cross-continental journeys are proliferating on social media. Security experts have serious concerns.",
+      "link": "https://www.nytimes.com/live/2026/07/24/world/iran-war-us-strikes-trump-oil/heres-the-latest",
+      "publishedAt": "2026-07-24T15:04:28.000Z",
+      "excerpt": "",
       "imageUrl": null
-    },
-    {
-      "title": "Keeping the PhotoVogue spirit alive! The PhotoVogue Monday Story",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/keeping-the-spirit-alive-more-than-a-month-in-pictures-the-pvmonday-story",
-      "publishedAt": "2026-07-24T13:32:59.000Z",
-      "excerpt": "Join us in celebrating the pics of the day since June 2025 until today",
-      "imageUrl": "https://assets.vogue.com/photos/69a5bcb06d2c2d7aba589946/master/pass/Untitled-1%20copy.png"
-    },
-    {
-      "title": "Tate McRae Fronts adidas' New Originals Sport Collection",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/adidas-originals-sport-tate-mcrae-emilia-mernes-harper-murray-activewear-where-to-buy",
-      "publishedAt": "2026-07-24T10:16:59.000Z",
-      "excerpt": "adidas is blurring the lines between performance and personal style with the launch of Originals Sport, a new training collection that brings the brand's streetwear heritage into…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F24%2FSingle-Image-18.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Tanzanian lecturer arrested over anti-government protests charged with terrorism",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cd9w2xnxe1qo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-24T12:55:58.000Z",
-      "excerpt": "He is among more than 130 people detained over planned protests calling for democratic reforms.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/ab3c/live/0297d810-875d-11f1-b8ee-9b3c26ad07bb.jpg"
-    },
-    {
-      "title": "Iran Rejects U.S. Cease-Fire Deal Presented by Iraqi Leader",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/23/world/middleeast/iran-iraq-cease-fire-proposal.html",
-      "publishedAt": "2026-07-24T13:31:28.000Z",
-      "excerpt": "The details of the proposal were not immediately clear, but Iranian officials said that it was the only offer on the table.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/23/multimedia/23mideast-live-iran-iraq-proposal-flwt/23mideast-live-iran-iraq-proposal-flwt-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "The Vogue Business Funding Tracker",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/the-vogue-business-funding-tracker",
-      "publishedAt": "2026-07-24T13:23:24.000Z",
-      "excerpt": "Bringing you the latest fashion and beauty financing news, including investments and acquisitions.",
-      "imageUrl": "https://assets.vogue.com/photos/69e0ca9595c2b15af7b51179/master/pass/ICICLE-STORY.jpg"
-    },
-    {
-      "title": "Chloé's FW26 Campaign Is an Ode to Nature",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/chloe-fw26-campaign-chemena-kamali-collection-release-date",
-      "publishedAt": "2026-07-24T09:03:22.000Z",
-      "excerpt": "Chloé is embracing the beauty of the natural world for its Fall/Winter 2026 campaign. Conceived by creative director Chemena Kamali and photographed by renowned duo Inez van Lamsw…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F24%2FSingle-Image-11.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "US hits dozens of countries with new wave of tariffs",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cvgj61j6l08o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-24T12:40:44.000Z",
-      "excerpt": "Imposed citing forced labour concerns, the levies replace a temporary global duty brought in after the US Supreme Court struck down tariffs in February.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/78a1/live/d9a08500-875d-11f1-b2ab-0dd01740f9f6.jpg"
-    },
-    {
-      "title": "Russia and Ukraine Trade Deadly Blows With Missiles and Drones",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/24/world/europe/russia-ukraine-war-attacks.html",
-      "publishedAt": "2026-07-24T13:07:37.000Z",
-      "excerpt": "Ukrainian strikes set fire to warehouses and other sites in Russia, and Russian bombing rocked Ukraine’s capital, as the two countries escalated an air campaign.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/24/24-vid-wilberries-top-art-1-25978-cover/24-vid-wilberries-top-art-1-25978-cover-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
