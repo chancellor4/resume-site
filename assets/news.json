@@ -1,15 +1,87 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-27T08:50:54.214Z",
+  "generatedAt": "2026-07-27T12:09:47.540Z",
   "items": [
     {
-      "title": "Nordic Walking Is the Whole-Body Workout Everyone Needs",
+      "title": "Facial Hair Removal: Everything You Need To Know About Doing It At Home",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/what-is-nordic-walking",
-      "publishedAt": "2026-07-26T21:42:41.000Z",
-      "excerpt": "Experts break down all the health benefits of Nordic walking and how to incorporate it into your routine.",
-      "imageUrl": "https://assets.vogue.com/photos/6a667ec2c5eaf17273431e72/master/pass/2285834907"
+      "link": "https://www.vogue.com/article/ways-to-remove-unwanted-facial-hair",
+      "publishedAt": "2026-07-27T12:00:00.000Z",
+      "excerpt": "We called in the experts to find out exactly which hair removal method is best, from waxing to dermaplaning, threading and more.",
+      "imageUrl": "https://assets.vogue.com/photos/687591bf20c4b48ee0a4daf2/master/pass/2168041282"
+    },
+    {
+      "title": "I.AM.GIA Teamed up With Artist T-Rex for a Mixed-Media Inspired Capsule",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/iamgia-t-rex-collaboration-gia-gta-collection-los-angeles-bikinis-where-to-buy",
+      "publishedAt": "2026-07-27T09:55:22.000Z",
+      "excerpt": "I.AM.GIA is bringing together fashion, art and Los Angeles culture with its latest collection, \"GIA GTA,\" created in collaboration with visual artist T-Rex. The second instalment…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F27%2FSingle-Image-24.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Oil price dives as US and Iran pause attacks",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/clyj834jn5lo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-27T11:50:23.000Z",
+      "excerpt": "The US says attacks on Iran have been halted to give \"talks some space\", raising hopes of a resolution to the conflict.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/92a8/live/d2b46450-89a6-11f1-a85a-79136c2d298e.jpg"
+    },
+    {
+      "title": "Wildfire Smoke Chokes Skies in Spain and France",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/07/25/world/europe/wildfires-photos-spain-france.html",
+      "publishedAt": "2026-07-27T12:05:02.000Z",
+      "excerpt": "Hundreds of thousands of people have been forced to evacuate or told to take shelter inside.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/27/00vid-visualstack-wildfires-5-31458-cover/00vid-visualstack-wildfires-5-31458-cover-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "The Vogue Business People Moves Tracker",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/the-vogue-business-people-moves-tracker",
+      "publishedAt": "2026-07-27T10:04:50.000Z",
+      "excerpt": "Bringing you the latest hires and exits, and highlighting the leaders shaping the industry of tomorrow.",
+      "imageUrl": "https://assets.vogue.com/photos/6942d832d405f1aa30a2559f/master/pass/people-moves-vogue-business-story.jpg"
+    },
+    {
+      "title": "Miu Miu Is Bringing Back an Archival Favorite With an Update",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/miu-miu-bubble-shoe-sneaker-fw26-footwear-where-to-buy-release-date",
+      "publishedAt": "2026-07-27T09:01:30.000Z",
+      "excerpt": "Miu Miu is once again diving into the archives, and this time, it's bringing back the early 2000s. Introducing the Bubble shoe, a reimagined take on an original model that channel…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F27%2FSplit-7.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Biden, Carney and Oasis: How the world is celebrating Mayo's All-Ireland win",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/cqx74qw9ggjo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-27T11:23:03.000Z",
+      "excerpt": "Mayo finally ended a 75-year wait for the county's fourth All-Ireland Senior Football title on Sunday.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/05bb/live/9e40d9f0-89a7-11f1-a85a-79136c2d298e.jpg"
+    },
+    {
+      "title": "How Cubans Are Surviving a Fuel Crisis",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/video/world/americas/100000011024495/cuba-power-crisis-oil-solutions.html",
+      "publishedAt": "2026-07-27T11:39:55.000Z",
+      "excerpt": "Cubans are inventing ways to survive without fuel or electricity, using solar panels, makeshift generators and batteries to endure a devastating oil blockade imposed by the Trump…",
+      "imageUrl": null
+    },
+    {
+      "title": "12 Quintessential Lake Tahoe Airbnbs for a True Alpine Experience",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/best-airbnbs-in-lake-tahoe",
+      "publishedAt": "2026-07-27T10:00:00.000Z",
+      "excerpt": "Escape to the Sierra Nevada Mountains with one of the best Airbnbs in Lake Tahoe, from waterfront cabins to stylish A-frames.",
+      "imageUrl": "https://assets.vogue.com/photos/6938305c2b886007db7b349a/master/pass/3d96a18b-7aa1-4b66-ac0d-7763175f.jpg"
     },
     {
       "title": "Here's What Went Down at FP Movement's Soccer-Centric NYC Pop-Up",
@@ -21,94 +93,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F13%2Ffp-movement-soccer-kit-check-pop-up-world-cup-event-info-free-people-ft.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Infantino tells Fifa critics to 'meditate, pray or watch football'",
+      "title": "How 'fire-generated thunderstorms' make wildfires more deadly",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/sport/football/articles/cz0515973gpo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-27T08:07:28.000Z",
-      "excerpt": "Fifa president Gianni Infantino tells critics to \"meditate, pray or watch a football match\" instead of \"spreading hate and false rumours\" about him and the World Cup.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/d0be/live/28678820-8987-11f1-88b2-635548373e92.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/c2350xnl4j5o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-27T11:11:07.000Z",
+      "excerpt": "Certain types of severe wildfire can create pyrocumulonimbus - something that Nasa calls the \"fire-breathing dragon of clouds\".",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/af41/live/297ba580-89ae-11f1-a7ab-8b30adf0800a.jpg"
     },
     {
-      "title": "What to Know About the Deadly Wildfires Raging in Western Europe",
+      "title": "Heat From France’s Wildfires Creates a ‘Fire Cloud,’ or Pyrocumulonimbus",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/25/world/europe/europe-fires-france-spain-what-to-know.html",
-      "publishedAt": "2026-07-27T08:29:28.000Z",
-      "excerpt": "Hundreds of thousands of people in France and Spain have been forced to evacuate from huge blazes fueled by soaring temperatures and tinder-dry conditions.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/25/multimedia/25int-europe-fires-wtk-mjqc/25int-europe-fires-wtk-mjqc-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Post-World Cup, Kylian Mbappé and Ester Expósito Find Their Cool Couple Style",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/kylian-mbappe-and-ester-exposito-find-their-cool-couple-style",
-      "publishedAt": "2026-07-26T17:46:13.000Z",
-      "excerpt": "The French soccer star and Spanish actress are back in Paris–and while their relationship has been kept relatively quiet, their coordinating fashions are far from it.",
-      "imageUrl": "https://assets.vogue.com/photos/6a6646eb06959d6bea265b43/master/pass/BGUS_3646141_003.jpg"
-    },
-    {
-      "title": "Free People and Rusty Hang Ten With a New Surf Collab",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/free-people-rusty-surf-collaboration-y2k-swim-info-where-to-buy",
-      "publishedAt": "2026-07-24T19:30:52.000Z",
-      "excerpt": "Free People is riding the nostalgic wave of surf culture with its latest collaboration, partnering with alternative surf brand Rusty for a special collection. Blending four decade…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F24%2Ffree-people-rusty-surf-collaboration-y2k-swim-info-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Rapper Yung Filly tells trial 'vibes were good' with woman who accuses him of rape",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cm2g044ydl4o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-27T07:37:11.000Z",
-      "excerpt": "The rapper takes the witness stand at his trial in Australia where he denies raping a fan in a hotel room.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/609a/live/478992b0-482a-11f0-b3bf-c9f452e3175b.jpg"
-    },
-    {
-      "title": "A South African Identity Crisis",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/26/world/south-africa-identity-crisis-wildfires.html",
-      "publishedAt": "2026-07-27T04:57:43.000Z",
-      "excerpt": "Anti-immigrant activism reveals the contradictions of a country that projects itself as a bastion of human rights.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/27/multimedia/27int-theworld-south-africa-xenophobia-01-tpgz-promo/27int-theworld-south-africa-xenophobia-01-tpgz-promo-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Bermudas Might Be In, but the It Girls Make the Case for a Teeny-Tiny Shorts Summer",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/teeny-tiny-shorts-trend",
-      "publishedAt": "2026-07-26T17:01:51.000Z",
-      "excerpt": "From Charli XCX to Zoe Kravitz and Hailey Bieber, the mini-short has proved itself a summer 2026 staple.",
-      "imageUrl": "https://assets.vogue.com/photos/6a65e169b8a624ef17bca875/master/pass/2286845306"
-    },
-    {
-      "title": "Nike ACG Heads to the French Alps for Terrain-Inspired \"Chamo Camo\" Collection",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/nike-acg-chamo-camo-collection-chamonix-france-gorpcore-trail-where-to-buy",
-      "publishedAt": "2026-07-24T17:55:25.000Z",
-      "excerpt": "Nike ACG is officially turning the rugged landscapes of Mont Blanc into technical luxury with its latest release: the \"Chamo Camo\" collection. Grounded in Chamonix, France, the bi…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F24%2Fnike-acg-chamo-camo-collection-chamonix-france-gorpcore-trail-where-to-buy-1.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Chinese chipmaker shares surge 470% in blockbuster stock market debut",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/c9q9w3x9qn2o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-27T07:34:59.000Z",
-      "excerpt": "The company's shares soared by 470% in its market debut, as the AI boom drives chip demand.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/0377/live/bb1db120-896a-11f1-a3ae-0dbbd1718109.jpg"
-    },
-    {
-      "title": "Wildfire Smoke Chokes Skies in Spain and France",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/25/world/europe/wildfires-photos-spain-france.html",
-      "publishedAt": "2026-07-26T22:18:22.000Z",
-      "excerpt": "Hundreds of thousands of people, residents as well as vacationers, were forced to evacuate or told to remain indoors.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/26/26vid-europe-fires-27249-cover/26vid-europe-fires-27249-cover-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/07/27/world/europe/pyrocumulonimbus-fire-cloud-france-wildfires.html",
+      "publishedAt": "2026-07-27T11:26:23.000Z",
+      "excerpt": "A pyrocumulonimbus — a thundercloud created by intense heat — is a phenomenon that can spark new blazes and is “unprecedented in France,” officials said.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/27/multimedia/27europe-wildfires-fireclouds-tpbv/27europe-wildfires-fireclouds-tpbv-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
