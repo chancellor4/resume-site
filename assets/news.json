@@ -1,15 +1,51 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-28T07:31:15.359Z",
+  "generatedAt": "2026-07-28T10:22:16.797Z",
   "items": [
     {
-      "title": "The Vogue Business AI Tracker",
+      "title": "6 Bridal Shower Outfit Ideas for Every Bride and Theme",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/story/technology/the-vogue-business-ai-tracker",
-      "publishedAt": "2026-07-28T05:00:00.000Z",
-      "excerpt": "Vogue Business brings you a weekly update of the most interesting stories in the world of AI that you need on your radar.Stay tuned as we spotlight AI initiatives in the fashion a…",
-      "imageUrl": "https://assets.vogue.com/photos/687913fa7c80ebe6dfc9d153/master/pass/AItracker-holder-25-story.jpg"
+      "link": "https://www.vogue.com/article/bridal-shower-outfits",
+      "publishedAt": "2026-07-28T10:00:00.000Z",
+      "excerpt": "Before you tie the knot, consider these six bridal shower outfit ideas for every theme, from garden showers to beach destinations and classic brunches.",
+      "imageUrl": "https://assets.vogue.com/photos/6a316f442de584e829c26dee/master/pass/rose-teddy-kthompson-vogue-6.jpeg"
+    },
+    {
+      "title": "Miu Miu Is Bringing Back an Archival Favorite",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/miu-miu-bubble-shoe-sneaker-fw26-footwear-where-to-buy-release-date",
+      "publishedAt": "2026-07-28T09:57:35.000Z",
+      "excerpt": "Miu Miu is once again diving into the archives, and this time, it's bringing back the early 2000s. Introducing the Bubble shoe, a reimagined take on an original model that channel…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F27%2FSplit-7.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Odyssey translator writes scathing review of Nolan film adaptation",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/cd692n215ndo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-28T09:45:10.000Z",
+      "excerpt": "The film has won rave reviews from film critics but a translator of Homer's work was less than impressed.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/7e39/live/98b7fd70-8a69-11f1-b8ee-9b3c26ad07bb.jpg"
+    },
+    {
+      "title": "Live Updates: 6.8-Magnitude Earthquake Strikes Japan",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/live/2026/07/28/world/japan-earthquake-kumamoto-tsunami",
+      "publishedAt": "2026-07-28T10:15:10.000Z",
+      "excerpt": "Fires and injuries were reported after the quake in the southwestern prefecture of Kumamoto, according to Japan’s state broadcaster. A tsunami warning was lifted.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/28/multimedia/28japan-quake-promo/28xp-japan-quake-qptv-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "The 2026 Dogue Cover Star Competition is Back",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/dogue-competition-2026",
+      "publishedAt": "2026-07-28T10:00:00.000Z",
+      "excerpt": "Download the Vogue App now for the chance for your dog to be on the cover of Dogue.",
+      "imageUrl": "https://assets.vogue.com/photos/6a6787ec6112f597a136f51f/master/pass/DOGUE26_Cane3.jpg"
     },
     {
       "title": "Nike and Hyperice Just Revolutionized Recovery With the New Air Zoom Hyperslide",
@@ -21,31 +57,31 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F27%2Fnike-hyperice-air-zoom-hyperslide-heat-massage-therapy-slides-info-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Confronting gang members at the heart of Ecuador's drug battle",
+      "title": "US walks out of UN Security Council meeting during France's remarks",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/videos/c1l1d429m8eo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-28T05:01:35.000Z",
-      "excerpt": "Orla Guerin speaks to a gang leader about violence, drugs and infiltrating the police.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/c4e5/live/dc9fec70-8a49-11f1-a7ab-8b30adf0800a.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/c87nj3w9gxjo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-28T09:32:25.000Z",
+      "excerpt": "The row sparked after the US joined North Korea and Russia in voting against extending the term of the UN high commissioner for human rights.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/6172/live/97bbb000-8a51-11f1-8aea-37a02a7d69e8.jpg"
     },
     {
-      "title": "Europe Wildfires Updates: New Heat Wave Could Worsen France and Spain’s ‘Unprecedented’ Fire Season",
+      "title": "Here’s the latest.",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/07/27/world/france-spain-wildfires-evacutions",
-      "publishedAt": "2026-07-28T06:52:18.000Z",
-      "excerpt": "Firefighters and volunteers raced to contain wildfires on Monday. The crisis has forced hundreds of thousands to evacuate in central Spain and southwest France.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/27/multimedia/27europe-wildfires-promo615p-pczg/27europe-wildfires-promo615p-pczg-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/live/2026/07/28/world/japan-earthquake-kumamoto-tsunami/japan-earthquake-kumamoto-tsunami",
+      "publishedAt": "2026-07-28T10:01:08.000Z",
+      "excerpt": "The quake struck near the coastal city of Uto in southern Japan. There were no immediate reports of damage.",
+      "imageUrl": null
     },
     {
-      "title": "How Jeanerica Is Taking Scandi Denim Global",
+      "title": "The Vogue Business AI Tracker",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/how-jeanerica-is-taking-scandi-denim-global",
-      "publishedAt": "2026-07-28T04:30:00.000Z",
-      "excerpt": "Founders Lena Patriksson Keller and Jonas Clason on cracking the denim market with a profitable label that leans into American savvy and European heritage.",
-      "imageUrl": "https://assets.vogue.com/photos/6a676dd8f52fa3209a6adaef/master/pass/jeanerica-vogue-business-story.jpg"
+      "link": "https://www.vogue.com/story/technology/the-vogue-business-ai-tracker",
+      "publishedAt": "2026-07-28T05:00:00.000Z",
+      "excerpt": "Vogue Business brings you a weekly update of the most interesting stories in the world of AI that you need on your radar.Stay tuned as we spotlight AI initiatives in the fashion a…",
+      "imageUrl": "https://assets.vogue.com/photos/687913fa7c80ebe6dfc9d153/master/pass/AItracker-holder-25-story.jpg"
     },
     {
       "title": "Alex Zono Made the Perfect Running Capsule",
@@ -57,58 +93,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F27%2Falex-zono-dance-like-a-runner-running-capsule-activewear-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Confronting gang members at the heart of Ecuador's drug battle",
+      "title": "Zidane confirmed as France head coach",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/videos/c1l1d429m8eo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-28T05:01:35.000Z",
-      "excerpt": "Orla Guerin speaks to a gang leader about violence, drugs and infiltrating the police.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/c4e5/live/dc9fec70-8a49-11f1-a7ab-8b30adf0800a.jpg"
+      "link": "https://www.bbc.co.uk/sport/football/articles/cpd741qn2y9o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-28T09:03:49.000Z",
+      "excerpt": "Former Real Madrid manager Zinedine Zidane has been confirmed as the head coach of the France national team.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/ef95/live/876e9fa0-8a65-11f1-ac9f-1f034932402d.jpg"
     },
     {
-      "title": "Drilling for Oil the Old-Fashioned Way in ‘Little Texas,’ Indonesia",
+      "title": "France and Spain Race to Tamp Down Wildfires Before Heat Wave Hits",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/28/world/asia/indonesia-crude-oil-wells-drilling.html",
-      "publishedAt": "2026-07-28T05:35:52.000Z",
-      "excerpt": "Small pumps and truck engines are used to extract crude from the ground in parts of the country, which has tens of thousands of community-run oil wells.",
-      "imageUrl": null
-    },
-    {
-      "title": "How to Style Summer’s Hottest Shoe Trends, From Ballet Sneakers to Rope Sandals",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/summer-shoe-trend-styling",
-      "publishedAt": "2026-07-27T23:46:06.000Z",
-      "excerpt": "Discover the season’s top-trending shoe trends—from jelly flats to ballerinas and rope sandals—plus how to wear them.",
-      "imageUrl": "https://assets.vogue.com/photos/6a679674b30bbe2e0fcc2de8/master/pass/16x9_6_summershoetrends.jpg"
-    },
-    {
-      "title": "Pharrell Williams and adidas Are Dropping a New VIRGINIA Adistar Jellyfish",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/pharrell-williams-adidas-virginia-adistar-jellyfish-triple-white-release-date-where-to-buy",
-      "publishedAt": "2026-07-27T16:43:04.000Z",
-      "excerpt": "Pharrell Williams and adidas Originals are expanding their ever-growing VIRGINIA universe with a sleek new colorway of the Adistar Jellyfish, now available in \"Triple White\". Step…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F27%2Fpharrell-williams-adidas-virginia-adistar-jellyfish-triple-white-release-date-where-to-buy-1.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "On the front line of Ecuador's drugs war, police fight gangs, guns and corruption",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cdx7n1r54nno?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-28T05:01:19.000Z",
-      "excerpt": "The BBC goes on patrol with Ecuador's police, who are grappling with a huge surge in drug crime.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/ee77/live/c385c6d0-89bb-11f1-965a-d70ca8fc6275.jpg"
-    },
-    {
-      "title": "The Iran War Is Making Asia’s Street Food More Expensive",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/28/world/asia/iran-war-price-inflation-street-food-asia.html",
-      "publishedAt": "2026-07-28T05:03:09.000Z",
-      "excerpt": "Some staple dishes in Asia are no longer as affordable to purchase or prepare. Customers and food sellers alike are feeling the pinch.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/07/multimedia/00xp-streetfood-khtp/00xp-streetfood-khtp-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/07/28/world/europe/wildfires-france-spain.html",
+      "publishedAt": "2026-07-28T10:01:03.000Z",
+      "excerpt": "Faced with unprecedented blazes, firefighters in both countries are using a brief window of opportunity to bring the flames under control before temperatures spike.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/28/multimedia/28int-europe-fires-01-bjtw/28int-europe-fires-01-bjtw-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
