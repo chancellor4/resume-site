@@ -1,15 +1,15 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-28T23:49:33.171Z",
+  "generatedAt": "2026-07-29T01:27:30.390Z",
   "items": [
     {
-      "title": "The Shards Cast Partied Like it was 1981 at the World Premiere of the New TV Series",
+      "title": "18 Iconic Photographs of Brigitte Bardot at the Beach",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/slideshow/the-shards-premiere-kaia-gerber-homer-gere",
-      "publishedAt": "2026-07-28T22:54:48.000Z",
-      "excerpt": "“I wanted to be an actor since I was a baby, and working on The Shards has really been one of the best experiences of my life,” Kaia Gerber told Vogue at the world premiere of her…",
-      "imageUrl": "https://assets.vogue.com/photos/6a692e094e8db1ed5e9e4dff/master/pass/FX_Shards_SA_285.JPG"
+      "link": "https://www.vogue.com/article/iconic-photographs-of-brigitte-bardot-at-the-beach",
+      "publishedAt": "2026-07-29T00:24:35.000Z",
+      "excerpt": "From Cannes to Saint-Tropez and all the way to Andalusia, here are 18 lesser-seen pictures of the French screen legend Brigitte Bardot to inspire your summer style.",
+      "imageUrl": "https://assets.vogue.com/photos/6a6946b3d39f35295a8cb0e0/master/pass/010_FRN04019_063.jpg"
     },
     {
       "title": "Dilara Findikoglu Is Entering The Bridal Space",
@@ -21,13 +21,49 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F28%2FSingle-Image-387.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "'A lover of life' - Seattle pays tribute to food festival shooting victims",
+      "title": "Trump administration bans new Chinese humanoid robots",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cvgv7m5z4n0o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-28T23:12:09.000Z",
-      "excerpt": "Families grieved on Monday as they remembered the three people killed in a shooting at a food festival.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/9d93/live/2033abe0-8a75-11f1-a7ab-8b30adf0800a.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/cp9e2ex3ekyo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-29T01:22:14.000Z",
+      "excerpt": "The US and China are locked in a race to the lead the world in robotics and artificial intelligence.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/3b8e/live/23eaf6d0-8ade-11f1-b889-f97dd2fdd738.jpg"
+    },
+    {
+      "title": "Houthis Claim Strike on Another Saudi Oil Tanker",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/07/28/world/middleeast/houthis-strike-saudi-tanker.html",
+      "publishedAt": "2026-07-29T01:08:39.000Z",
+      "excerpt": "With their ally, Iran, bottling up the Strait of Hormuz, the Houthi group in Yemen is escalating its declared blockade of Saudi shipping in another vital waterway, the Red Sea.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/28/multimedia/28int-houthis-saudi-1-jklp/28int-houthis-saudi-1-jklp-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "The Shards Cast Partied Like It Was 1981 at the World Premiere of the New TV Series",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/slideshow/the-shards-premiere-kaia-gerber-homer-gere",
+      "publishedAt": "2026-07-28T22:54:48.000Z",
+      "excerpt": "“I wanted to be an actor since I was a baby, and working on The Shards has really been one of the best experiences of my life,” Kaia Gerber told Vogue at the world premiere of her…",
+      "imageUrl": "https://assets.vogue.com/photos/6a692e094e8db1ed5e9e4dff/master/pass/FX_Shards_SA_285.JPG"
+    },
+    {
+      "title": "Louis Vuitton and Pat McGrath Announce La Beauté's First-Ever Lip Liner",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/6/louis-vuitton-la-beaute-pat-mcgrath-lv-crayon-lip-liner-where-to-buy",
+      "publishedAt": "2026-07-28T16:04:22.000Z",
+      "excerpt": "Louis Vuitton is expanding La Beauté with a new addition to its growing makeup lineup. Following the debut collection of lipsticks, lip balms and eyeshadow palettes, the brand is…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F25%2Flv-fi-1.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Iran and US trade strikes, shattering brief lull in fighting",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/c70g6y24d76o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-29T00:51:45.000Z",
+      "excerpt": "US Central Command says it intercepted \"multiple\" ballistic missiles fired by Iran.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/3265/live/39c93850-8add-11f1-b889-f97dd2fdd738.jpg"
     },
     {
       "title": "Japan Mounts Rescues in Buildings That Collapsed After Strong Quake",
@@ -48,42 +84,6 @@
       "imageUrl": "https://assets.vogue.com/photos/6a68e12f7dda55071498a4c1/master/pass/072826_holding_celebsummerlooks.jpg"
     },
     {
-      "title": "Louis Vuitton and Pat McGrath Announce La Beauté's First-Ever Lip Liner",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/6/louis-vuitton-la-beaute-pat-mcgrath-lv-crayon-lip-liner-where-to-buy",
-      "publishedAt": "2026-07-28T16:04:22.000Z",
-      "excerpt": "Louis Vuitton is expanding La Beauté with a new addition to its growing makeup lineup. Following the debut collection of lipsticks, lip balms and eyeshadow palettes, the brand is…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F25%2Flv-fi-1.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "'A narcissist' - victim's family blasts Kohberger for challenging Idaho murder conviction",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cgewg57rq2ro?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-28T21:43:30.000Z",
-      "excerpt": "The man accused of killing four students in Idaho is taking back his plea, which was made to avoid the death penalty.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/fe07/live/6e9c3450-8a7a-11f1-82f1-411b076ec7a9.jpg"
-    },
-    {
-      "title": "Clashes Erupt in Pakistani Kashmir as Voting in Local Election Begins",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/28/world/asia/pakistan-kashmir-election-violence.html",
-      "publishedAt": "2026-07-28T21:20:39.000Z",
-      "excerpt": "Dozens have died in recent weeks ahead of a weekslong regional election, officials said. A banned civil rights group said supporters died in conflicts with the police.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/28/multimedia/28int-pakistan-violence-jkmf/28int-pakistan-violence-jkmf-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Anne Hathaway Embarks on an Odyssey of Maternity Style",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/slideshow/anne-hathaway-the-odyssey-maternity-style",
-      "publishedAt": "2026-07-28T20:04:41.000Z",
-      "excerpt": "Anne Hathaway’s sheer top was the natural continuation of her maternity style from ‘The Odyssey’ press tour.",
-      "imageUrl": "https://assets.vogue.com/photos/6a6905ea95dcfe6c0c5bc809/master/pass/BGUS_3648754_001.jpg"
-    },
-    {
       "title": "Billie Eilish Drops a Bold Version of Her Beloved Perfume",
       "source": "Hypebae",
       "sourceType": "youth-culture",
@@ -93,22 +93,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F28%2Fbillie-fi.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Bystander video shows teen lifeguard's dramatic ocean rescue",
+      "title": "How Mexican drug cartels have outsourced meth labs to Nigeria",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/videos/c4g3600xw5ko?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-28T21:09:21.000Z",
-      "excerpt": "The 16-year-old lifeguard rescued a 10-year-old who had been swept offshore at a California beach.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/7911/live/cd9efdf0-8ac7-11f1-b2ab-0dd01740f9f6.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/crmrnxp4nllo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-28T23:25:53.000Z",
+      "excerpt": "West Africa is becoming increasingly attractive to those who want to make and export illicit drugs.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/5c1e/live/5bc42500-87a9-11f1-b2ab-0dd01740f9f6.jpg"
     },
     {
-      "title": "Houthis Claim Strike on Another Saudi Oil Tanker",
+      "title": "Clashes Erupt in Pakistani Kashmir as Voting in Local Election Begins",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/28/world/middleeast/houthis-strike-saudi-tanker.html",
-      "publishedAt": "2026-07-28T21:09:30.000Z",
-      "excerpt": "With their ally, Iran, bottling up the Strait of Hormuz, the Houthi group in Yemen is escalating its declared blockade of Saudi shipping in another vital waterway, the Red Sea.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/28/multimedia/28int-houthis-saudi-1-jklp/28int-houthis-saudi-1-jklp-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/07/28/world/asia/pakistan-kashmir-election-violence.html",
+      "publishedAt": "2026-07-28T21:20:39.000Z",
+      "excerpt": "Dozens have died in recent weeks ahead of a weekslong regional election, officials said. A banned civil rights group said supporters died in conflicts with the police.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/28/multimedia/28int-pakistan-violence-jkmf/28int-pakistan-violence-jkmf-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
