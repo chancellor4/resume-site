@@ -1,15 +1,15 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-29T10:28:15.764Z",
+  "generatedAt": "2026-07-29T12:28:20.007Z",
   "items": [
     {
-      "title": "Hermès Reports 6.7% Sales Uplift in Q2",
+      "title": "The Vogue Business People Moves Tracker",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/hermes-reports-67-sales-uplift-in-q2",
-      "publishedAt": "2026-07-29T10:24:42.000Z",
-      "excerpt": "Sales growth at the French house slightly accelerated in the second quarter.",
-      "imageUrl": "https://assets.vogue.com/photos/6a69cd79daeca95f17cb0a68/master/pass/hermes-earnings-vogue-business-story.jpg"
+      "link": "https://www.vogue.com/article/the-vogue-business-people-moves-tracker",
+      "publishedAt": "2026-07-29T10:29:29.000Z",
+      "excerpt": "Bringing you the latest hires and exits, and highlighting the leaders shaping the industry of tomorrow.",
+      "imageUrl": "https://assets.vogue.com/photos/6942d832d405f1aa30a2559f/master/pass/people-moves-vogue-business-story.jpg"
     },
     {
       "title": "Dilara Findikoglu Is Entering the Bridal Space",
@@ -21,21 +21,57 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F28%2FSingle-Image-387.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Russia charges Telegram founder Durov with facilitating terrorism",
+      "title": "Zelensky and Netanyahu meet Trump as wars in Ukraine and Iran drag on",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cj4kexqkpzno?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-29T10:23:29.000Z",
-      "excerpt": "The FSB claims the messenger app, created by Pavel Durov, has failed to remove accounts and channels used for recruitment by Ukraine's secret service.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/4aab/live/599f9370-8b2f-11f1-b2c5-873bffcd48e7.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/cj4k2z8z45ro?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-29T12:17:42.000Z",
+      "excerpt": "The two leaders sound encouraged after holding back-to-back bilaterals at the White House.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/2012/live/eaaad6c0-8abe-11f1-9997-a1a12b7801e6.jpg"
     },
     {
-      "title": "Iran War Live Updates: U.S. and Saudi Arabia Target Iranian Proxies",
+      "title": "How Cubans Are Surviving",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/07/28/world/cuba-us-trump-ukraine-iran-japan-quake.html",
+      "publishedAt": "2026-07-29T12:22:58.000Z",
+      "excerpt": "It’s been six months since the U.S. cut off the island’s fuel sources. Our reporters went there and found remarkable stories of resilience.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/29/multimedia/29int-theworld-cuba-promo-qbzf/29int-theworld-cuba-promo-qbzf-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Hermès Reports 6.7% Sales Uplift in Q2",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/hermes-reports-67-sales-uplift-in-q2",
+      "publishedAt": "2026-07-29T10:24:42.000Z",
+      "excerpt": "Sales growth at the French house slightly accelerated in the second quarter.",
+      "imageUrl": "https://assets.vogue.com/photos/6a69cd79daeca95f17cb0a68/master/pass/hermes-earnings-vogue-business-story.jpg"
+    },
+    {
+      "title": "Louis Vuitton and Pat McGrath Announce La Beauté's First-Ever Lip Liner",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/6/louis-vuitton-la-beaute-pat-mcgrath-lv-crayon-lip-liner-where-to-buy",
+      "publishedAt": "2026-07-28T16:04:22.000Z",
+      "excerpt": "Louis Vuitton is expanding La Beauté with a new addition to its growing makeup lineup. Following the debut collection of lipsticks, lip balms and eyeshadow palettes, the brand is…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F25%2Flv-fi-1.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Ghana hit by nationwide blackout as power plants fail",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/crmrkgr4z0jo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-29T12:10:40.000Z",
+      "excerpt": "The massive outage has left homes, businesses and some essential services severely disrupted.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/aee4/live/081676d0-8b3a-11f1-b2d7-b96c6bc9d7f5.png"
+    },
+    {
+      "title": "Iran War Live Updates: U.S. and Saudi Airstrikes Drag More Countries Into Fighting",
       "source": "NYT World",
       "sourceType": "world-news",
       "link": "https://www.nytimes.com/live/2026/07/28/world/iran-us-strikes-iraq-trump",
-      "publishedAt": "2026-07-29T10:24:10.000Z",
-      "excerpt": "Global oil prices jumped on Wednesday after the U.S. and Saudi Arabia said they had carried out joint airstrikes on Iranian proxies in Iraq, dragging more countries into the fight…",
+      "publishedAt": "2026-07-29T12:04:55.000Z",
+      "excerpt": "Global oil prices jumped on Wednesday after the U.S. and Saudi Arabia said they had carried out joint airstrikes on Iranian proxies in Iraq.",
       "imageUrl": "https://static01.nyt.com/images/2026/07/29/multimedia/29mideast-prom-245-zwpg/29mideast-prom-245-zwpg-mediumSquareAt3X.jpg"
     },
     {
@@ -48,42 +84,6 @@
       "imageUrl": "https://assets.vogue.com/photos/6a67c3749e63362134ac3342/master/pass/SCANDI_SSS_FI.jpg"
     },
     {
-      "title": "Louis Vuitton and Pat McGrath Announce La Beauté's First-Ever Lip Liner",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/6/louis-vuitton-la-beaute-pat-mcgrath-lv-crayon-lip-liner-where-to-buy",
-      "publishedAt": "2026-07-28T16:04:22.000Z",
-      "excerpt": "Louis Vuitton is expanding La Beauté with a new addition to its growing makeup lineup. Following the debut collection of lipsticks, lip balms and eyeshadow palettes, the brand is…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F06%2F25%2Flv-fi-1.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "FA 'deeply concerned' by Fifa plan as Uefa to meet",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/sport/football/articles/cvg7vglq9wpo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-29T09:46:28.000Z",
-      "excerpt": "The Football Association says it is concerned by Fifa's proposals to sell stakes in its major competitions as Uefa's 55 member associations hold an emergency meeting to discuss th…",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/8597/live/49e2a200-8b2b-11f1-b8ee-9b3c26ad07bb.jpg"
-    },
-    {
-      "title": "Here’s the latest.",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/live/2026/07/28/world/iran-us-strikes-iraq-trump/heres-the-latest",
-      "publishedAt": "2026-07-29T10:24:09.000Z",
-      "excerpt": "",
-      "imageUrl": null
-    },
-    {
-      "title": "The Simple Exercise Jennifer Aniston Won’t Skip, Even on Vacation",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/jennifer-aniston-vacation-exercise",
-      "publishedAt": "2026-07-29T09:33:17.000Z",
-      "excerpt": "Aboard a yacht with boyfriend Jim Curtis, Courteney Cox, and Pedro Pascal off the coast of Mallorca, Jennifer Aniston made time for a quick workout.",
-      "imageUrl": "https://assets.vogue.com/photos/6a69c1c1255c5bfee746d83d/master/pass/2234597202"
-    },
-    {
       "title": "Billie Eilish Drops a Bold Version of Her Beloved Perfume",
       "source": "Hypebae",
       "sourceType": "youth-culture",
@@ -93,22 +93,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F28%2Fbillie-fi.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Saudi Arabia joins US in strikes on Iran-backed militias in Iraq",
+      "title": "Oscar-winning songwriter Glen Hansard killed in crash",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/c70g6y24d76o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-29T09:39:56.000Z",
-      "excerpt": "US Central Command says proxy groups launched attacks against US bases and Saudi energy infrastructure.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/0514/live/6249cdc0-8b29-11f1-841c-ef08db9db338.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/c3ekn9d37qvo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-29T12:01:44.000Z",
+      "excerpt": "Hansard, who was 56, won the best song Oscar for the 2007 low-budget musical film Once.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/07c7/live/9fa6bb50-8b43-11f1-a205-290436224ccc.jpg"
     },
     {
-      "title": "Russia Charges Telegram’s Founder Pavel Durov With Facilitating Terrorism",
+      "title": "Here’s the latest.",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/29/world/europe/telegram-russia-pavel-durov.html",
-      "publishedAt": "2026-07-29T10:17:27.000Z",
-      "excerpt": "The charges against Pavel Durov reflected an ongoing fight over one of the most popular messaging and media apps in the country.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/29/world/29int-russia-telegram/29int-russia-telegram-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/live/2026/07/28/world/iran-us-strikes-iraq-trump/heres-the-latest",
+      "publishedAt": "2026-07-29T12:04:53.000Z",
+      "excerpt": "",
+      "imageUrl": null
     }
   ],
   "sources": {
