@@ -1,15 +1,87 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-30T13:01:35.697Z",
+  "generatedAt": "2026-07-30T15:28:39.849Z",
   "items": [
     {
-      "title": "On the Podcast: Dominic Sessa on Creativity, Cooking, and Becoming a Young Bourdain in ‘Tony’",
+      "title": "Maria Spadoni Battistoni",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/on-the-podcast-dominic-sessa-on-creativity-cooking-and-becoming-a-young-bourdain-in-tony",
-      "publishedAt": "2026-07-30T11:47:18.000Z",
-      "excerpt": "“Every day I believed I was living some version of what this person really experienced,” actor Dominic Sessa tells guest hosts Marley Marius and Hannah Jackson of playing Anthony…",
-      "imageUrl": "https://assets.vogue.com/photos/6a6b386b8dfb97d130f821be/master/pass/2288069866"
+      "link": "https://www.vogue.com/article/maria-spadoni-battistoni",
+      "publishedAt": "2026-07-30T15:18:35.000Z",
+      "excerpt": "Maria Spadoni Battistoni is Visual Editor of Global PhotoVogue",
+      "imageUrl": "https://assets.vogue.com/photos/6a6b6aba51fe9909900b51e3/master/pass/IMM032.jpg"
+    },
+    {
+      "title": "Kylie Jenner Unveils Three New Perfumes",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/kylie-jenner-cosmetics-mood-stones-perfume-collection-cashmere-blush-wood-velvet-brew-where-to-buy",
+      "publishedAt": "2026-07-30T14:49:22.000Z",
+      "excerpt": "Kylie Jenner has announced the newest addition to her fragrance line: \"Mood Stones,\" a three-piece collection following the success of her \"Cosmic\" perfumes. Rather than being bui…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F30%2Fkylie-fi.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "At least five members of same family killed in Russian missile attack, Zelensky says",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/cy8mk59l5jzo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-30T15:20:19.000Z",
+      "excerpt": "A six-year-old girl and two boys, aged 11 and 17, were among six killed in a village near the central city of Kryvyi Rih.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/7ce2/live/9f464590-8c24-11f1-bdac-871e920411eb.jpg"
+    },
+    {
+      "title": "Iran War Live Updates: Drone Attack in Egypt Threatens to Expand Fighting",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/live/2026/07/30/world/iran-war-strikes-trump",
+      "publishedAt": "2026-07-30T15:21:48.000Z",
+      "excerpt": "The United States and Iran exchanged strikes overnight, after Saudi Arabia acknowledged direct involvement in the war for the first time.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/30/multimedia/30mideast-live-promo-gcht/30mideast-live-promo-gcht-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Meet the Vogue &amp; Condé Nast PhotoVogue Committee",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/meet-the-vogue-and-conde-nast-photovogue-committee",
+      "publishedAt": "2026-07-30T15:13:29.000Z",
+      "excerpt": "Discover the expansive creative community of Vogue and Condé Nast talent from around the world collaborating with PhotoVogue",
+      "imageUrl": "https://assets.vogue.com/photos/67e428aa3b55dd439af7220d/master/pass/The%20Vogue%20&amp;%20Conde%CC%81%20Nast%20Committee.jpg"
+    },
+    {
+      "title": "Nike Taps Alysa Liu, Sha'Carri Richardson and More for Its New Studio Fleece Campaign",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/nike-studio-fleece-collection-campaign-alysa-liu-karina-yeat-release-info-where-to-buy",
+      "publishedAt": "2026-07-30T13:50:12.000Z",
+      "excerpt": "It’s official: your daily uniform just received a major upgrade. Nike just dropped the new Studio Fleece collection, a minimalist, performance-driven sportswear system crafted thr…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F30%2Fnike-studio-fleece-collection-campaign-alysa-liu-karina-yeat-release-info-where-to-buy-1.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Missile that left crater deep inside Poland was probably Russian - Polish PM",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/cwymkgenv2ro?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-07-30T13:38:50.000Z",
+      "excerpt": "The missile left a 10m-wide (33ft) crater a short distance from the village of Tarnawa Kolonia, about 100km from the border with Ukraine.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/58b9/live/31742360-8c16-11f1-b2ab-0dd01740f9f6.jpg"
+    },
+    {
+      "title": "Attack on Egyptian Port Shows Suez Canal’s Vulnerability",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/07/30/world/middleeast/egyptian-port-attack-suez-canal-vulnerability.html",
+      "publishedAt": "2026-07-30T15:21:46.000Z",
+      "excerpt": "The port where the Wednesday strike occurred is near the Suez Canal, through which a significant amount of the world’s shipping moves.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/30/multimedia/30mideast-live-suez-hjgp/30mideast-live-suez-hjgp-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Prada Group Grows 7% in Q2 as Prada Outpaces Miu Miu",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/article/prada-group-grows-7-in-q2-as-prada-outpaces-miu-miu",
+      "publishedAt": "2026-07-30T15:05:57.000Z",
+      "excerpt": "Prada Group’s growth streak continues across the first half of fiscal 2026, driven by the Americas, Japan and Asia-Pacific.",
+      "imageUrl": "https://assets.vogue.com/photos/6a6a6330b8d74b6ddcb27d4f/master/pass/prada-earnings-vogue-business-story.jpg"
     },
     {
       "title": "NikeSKIMS' New Studio Edit Is Back, Blue and Better Than Ever",
@@ -21,94 +93,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F29%2Fnike-skims-studio-02-edit-activewear-collection-release-where-to-buy-1.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Thousands evacuated in Crete but Spanish PM ends wildfire emergency",
+      "title": "Thousands evacuated in Crete as Europe battles wildfires",
       "source": "BBC World",
       "sourceType": "global-affairs",
       "link": "https://www.bbc.co.uk/news/articles/c9w01781981o?at_medium=RSS&amp;at_campaign=rss",
       "publishedAt": "2026-07-30T12:46:16.000Z",
       "excerpt": "Strong winds have fanned the flames in the Rethymno region as wildfires continue to ravage the Greek island.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/b6d0/live/fcd90940-8c15-11f1-b8ee-9b3c26ad07bb.jpg"
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/eae4/live/ffd46200-8be0-11f1-b2ab-0dd01740f9f6.jpg"
     },
     {
-      "title": "U.S. Aircraft Carrier Makes a Rare Port Call in Vietnam",
+      "title": "Wildfire in Suffolk, UK, Breaks Out a Few Miles From Nuclear Power Station",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/30/world/asia/vietnam-aircraft-carrier.html",
-      "publishedAt": "2026-07-30T12:56:22.000Z",
-      "excerpt": "The visit, the longest since the two countries restored relations, is a show of mutual cooperation and a signal from the U.S. to China. But it comes during tensions over tariffs.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/30/multimedia/30int-vietnam-portcall-tpkc/30int-vietnam-portcall-tpkc-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Order Up! Vanilla Latte Glaze Nails Are Your Next Mani Fix",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/vanilla-latte-glaze-nails",
-      "publishedAt": "2026-07-30T11:18:46.000Z",
-      "excerpt": "If it’s got Hailey Bieber’s fave Zola Ganzorigt doing it on repeat, then it’s one to note for your next manicure appointment. Meet: vanilla latte glaze nails.",
-      "imageUrl": "https://assets.vogue.com/photos/6a6b2a88d7a280fc9146793d/master/pass/Screenshot%202026-07-30%20at%2012.42.00.png"
-    },
-    {
-      "title": "Miss Claire Sullivan on Blending Couture Fantasy With adidas Sport Performance",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/miss-claire-sullivan-couture-new-york-interview-adidas-adizero-evo-sl-zip-collaboration-info",
-      "publishedAt": "2026-07-29T17:34:07.000Z",
-      "excerpt": "New York’s favorite couturier is blending performance footwear with high fashion and theatrical style. Miss Claire Sullivan, the independent NYC-based atelier known for cultivatin…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F13%2Fmiss-claire-sullivan-couture-new-york-interview-adidas-adizero-evo-sl-zip-collaboration-info-ft.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Missile that left crater deep inside Poland was probably Russian - Polish PM",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cwymkgenv2ro?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-30T11:48:50.000Z",
-      "excerpt": "The missile left a 10m-wide (33ft) crater a short distance from the village of Tarnawa Kolonia, about 100km from the border with Ukraine.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/58b9/live/31742360-8c16-11f1-b2ab-0dd01740f9f6.jpg"
-    },
-    {
-      "title": "As Wildfires Plague Europe, Scotland Races to Save a Cherished National Park",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/30/world/europe/scotland-wildfire-cairngorms-highlands.html",
-      "publishedAt": "2026-07-30T12:49:16.000Z",
-      "excerpt": "As Europe’s climate warms, even moorlands and forests in the Cairngorms, in the Scottish Highlands, have fallen victim to rapidly spreading flames.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/30/multimedia/30int-uk-scotland-wildfires-01-qmkl/30int-uk-scotland-wildfires-01-qmkl-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Meghan Markle Upgraded Her Favorite Summer Flats",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/meghan-markle-upgraded-her-favorite-summer-flats",
-      "publishedAt": "2026-07-30T10:31:00.000Z",
-      "excerpt": "Meghan Markle has made her smallest style switch yet, swapping her beloved Hermès Oran sandals for the house’s Santorini style.",
-      "imageUrl": "https://assets.vogue.com/photos/6a69fde6124b3f3818d648c7/master/pass/GettyImages-2288098612.jpg"
-    },
-    {
-      "title": "Prada Beauty Taps Zendaya as Its Latest Global Ambassador",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/prada-beauty-zendaya-global-ambassador-paradoxe-perfume-campaign",
-      "publishedAt": "2026-07-29T14:38:58.000Z",
-      "excerpt": "Prada Beauty has named Zendaya the newest face of \"Prada Paradoxe,\" tapping her as the fragrance's global ambassador. Citing her era-defining run in film and her ever-shifting, ha…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F29%2Fz-fi.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Watch: Giant iceberg turns over near  Greenland's coast",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/videos/cdx7lg950gdo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-30T10:54:36.000Z",
-      "excerpt": "Video captured by a passerby showed the moment the iceberg collapsed, creating a big wave.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/b1a9/live/d8003bf0-8c12-11f1-b8ee-9b3c26ad07bb.jpg"
-    },
-    {
-      "title": "China, Its Economy Stumbling, Signals Only Cautious Support",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/30/business/china-economy-politburo.html",
-      "publishedAt": "2026-07-30T12:32:33.000Z",
-      "excerpt": "The ruling Politburo called for “more proactive” tax and spending policies but did not endorse broad action to address weak consumer spending.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/30/multimedia/30Biz-China-Econ-01-vhqc/30Biz-China-Econ-01-vhqc-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/07/30/world/europe/suffolk-wildfire-uk.html",
+      "publishedAt": "2026-07-30T15:16:54.000Z",
+      "excerpt": "A large fire engulfed almost 250 acres of land in Suffolk, a scenic area on the coast. It was a few miles from a nuclear power station.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/30/multimedia/30uk-wildfire-01-hjpv/30uk-wildfire-01-hjpv-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
