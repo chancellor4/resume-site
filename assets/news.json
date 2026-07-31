@@ -1,42 +1,60 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-07-31T11:02:52.961Z",
+  "generatedAt": "2026-07-31T13:10:35.549Z",
   "items": [
     {
       "title": "16Arlington Fall 2026 Ready-to-Wear",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/fall-2026-ready-to-wear/16arlington",
-      "publishedAt": "2026-07-31T11:00:51.000Z",
+      "publishedAt": "2026-07-31T13:07:05.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a5f345271f141af89800a20/master/pass/00001-16arlington-fall-2026-ready-to-wear-credit-brand.jpg"
     },
     {
-      "title": "About 49,000 migrants enter Spanish territory of Ceuta in 24 hours, officials say",
+      "title": "This Parisian Brand Is Making Mosquito Repellent Chic",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/misaj-emerging-brand-hand-cream-mosquito-repellent-summer",
+      "publishedAt": "2026-07-31T11:28:42.000Z",
+      "excerpt": "Misaj is the Parisian beauty brand tackling warm-weather struggles with the release of its flagship body cream. Dubbed Glow Protect, the chicly packaged cream offers a summer glow…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F31%2FSplit-2026-07-31T121813.420.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "About 60,000 migrants arrive in Ceuta in 24 hours, Spanish territory's leader says",
       "source": "BBC World",
       "sourceType": "global-affairs",
       "link": "https://www.bbc.co.uk/news/articles/cx2kp639yx4o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-31T10:46:03.000Z",
-      "excerpt": "The estimated number of arrivals is more than half of the population of the city, which is about 83,600.",
+      "publishedAt": "2026-07-31T13:04:04.000Z",
+      "excerpt": "The estimated number of arrivals is more than 70% of the population of the city, which is about 83,600.",
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/1205/live/c66b3870-8cb9-11f1-b49b-bb9fc846a015.jpg"
     },
     {
-      "title": "Live Updates: Spanish Leader Rushes to Ceuta After Thousands of Migrants Burst Into Territory",
+      "title": "Live Updates: Tens of Thousands Crossed Into Spanish Territory, Officials Say",
       "source": "NYT World",
       "sourceType": "world-news",
       "link": "https://www.nytimes.com/live/2026/07/31/world/spain-ceuta-migrants-morocco",
-      "publishedAt": "2026-07-31T10:45:17.000Z",
-      "excerpt": "Prime Minister Pedro Sánchez was set to arrive in Ceuta, a Spanish exclave in North Africa, amid an escalating crisis for his pro-immigration government.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/31/multimedia/31europe-migrants-promo-6am-et-wzhm/31europe-migrants-promo-6am-et-wzhm-mediumSquareAt3X.jpg"
+      "publishedAt": "2026-07-31T13:06:49.000Z",
+      "excerpt": "As many as 60,000 people were estimated to have surged from Morocco into Ceuta, the small exclave at the center of a crisis for Spain’s pro-immigration government.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/31/multimedia/31europe-migrants-promo830am-ET-vlqf/31europe-migrants-promo830am-ET-vlqf-mediumSquareAt3X.jpg"
     },
     {
-      "title": "The Best Zara New Arrivals to Shop for Summer 2026",
+      "title": "Merlot! Burnt Cherry! Oxblood! 10+ Burgundy Bags to Add to Your Handbag Collection",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/best-zara-finds",
-      "publishedAt": "2026-07-31T10:30:00.000Z",
-      "excerpt": "Summer essentials and off-duty staples are a few of the best Zara new arrival finds we’re eyeing this week.",
-      "imageUrl": "https://assets.vogue.com/photos/6a6baa4e88daf65064f75e8a/master/pass/04772702250-p.jpg"
+      "link": "https://www.vogue.com/article/burgundy-bags",
+      "publishedAt": "2026-07-31T12:41:35.000Z",
+      "excerpt": "From rich merlots to burnt cherry to beetroot and everything in between, Fall 2026's runway made a strong case for this hue.",
+      "imageUrl": "https://assets.vogue.com/photos/6a625771d1d304acc75e972e/master/pass/burgundybags_holding3x4.jpg"
+    },
+    {
+      "title": "Kylie Cantrall Perfected Her Winged Liner at Only Six Years Old",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/kylie-cantrall-beauty-buys-interview-rhode-laneige-charlotte-tilbury",
+      "publishedAt": "2026-07-30T20:48:50.000Z",
+      "excerpt": "While spending hours in a makeup chair might be a grueling task to some, Kylie Cantrall says it's her favorite part of the process. For the Descendants star, beauty details reach…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F30%2Fkylietop5-fi.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
       "title": "Peru's ex-president has 15-year jail sentence for corruption charges overturned",
@@ -48,22 +66,31 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/fc3f/live/410af750-8cab-11f1-a1f4-f50057266998.jpg"
     },
     {
-      "title": "Archaeologists Find Hundreds of Ancient Glyphs in the Amazon",
+      "title": "Trump’s Announcement of Gaza Deal Raises Many Unanswered Questions",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/31/world/americas/amazon-archaeology-geoglyphs.html",
-      "publishedAt": "2026-07-31T10:44:34.000Z",
-      "excerpt": "The geometric earthwork structures, carved into the ground with embankments and ditches, are in some cases more than 2,500 years old, researchers said.",
-      "imageUrl": null
+      "link": "https://www.nytimes.com/2026/07/31/world/middleeast/trump-gaza-hamas-deal-disarm.html",
+      "publishedAt": "2026-07-31T12:59:56.000Z",
+      "excerpt": "Neither Hamas nor the Israeli government has issued an official statement acknowledging the deal, raising concerns about their eagerness to implement its clauses.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/31/multimedia/31int-gaza-trump-czfl/31int-gaza-trump-czfl-mediumSquareAt3X.jpg"
     },
     {
-      "title": "The 7 Best Airbnbs in Biarritz for a Sun-Soaked Basque Escape",
+      "title": "The Best Gladiator Sandals Return! Refresh Your Wardrobe With Our Top 18 Picks",
       "source": "Vogue",
       "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/airbnbs-in-biarritz",
-      "publishedAt": "2026-07-31T10:00:00.000Z",
-      "excerpt": "Heading to France's Basque coast? Stay in one of the best Airbnbs in Biarritz, and situate yourself right in with the locals.",
-      "imageUrl": "https://assets.vogue.com/photos/6a6b67b7791bcf190b66bb55/master/pass/63357b29-ab23-47ac-814f-03b623ee9ed4.jpg"
+      "link": "https://www.vogue.com/slideshow/gladiator-sandals",
+      "publishedAt": "2026-07-31T12:39:11.000Z",
+      "excerpt": "The shoe has taken on many forms, from Paco Rabanne’s Space Age chic modettes to the bohemian-centric designs patented by Sienna Miller’s iconic festival style.",
+      "imageUrl": "https://assets.vogue.com/photos/6a68ba6c309ae71f74077e3a/master/pass/072826_gladiatorsandals_tryp.jpg"
+    },
+    {
+      "title": "Byredo's Newest Fragrance Is Inspired by Fleeting Moments",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/byredo-future-memories-eau-de-parfum-where-to-buy",
+      "publishedAt": "2026-07-30T16:01:14.000Z",
+      "excerpt": "Drawing inspiration from the instant just before a memory takes shape, Byredo introduces its newest fragrance, \"Future Memories.\" Composed by perfumer Quentin Bisch, the Eau de Pa…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F30%2Fbyredo-fi.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
       "title": "Anthropic's Claude AI escapes to hack into three organisations",
@@ -75,46 +102,19 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/73c5/live/4de13040-8c72-11f1-a862-d9831bf8751b.jpg"
     },
     {
-      "title": "Trump’s Announcement of Gaza Deal Raises Many Unanswered Questions",
+      "title": "A Ton of Space Junk Tumbles Unpredictably to Earth Every Week",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/31/world/middleeast/trump-gaza-hamas-deal-disarm.html",
-      "publishedAt": "2026-07-31T10:35:17.000Z",
-      "excerpt": "Neither Hamas nor the Israeli government has issued an official statement acknowledging the deal, raising concerns about their eagerness to implement its clauses.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/31/multimedia/31int-gaza-trump-czfl/31int-gaza-trump-czfl-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Katie Holmes Triples up on Summer It-Bags",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/katie-holmes-triples-up-on-summer-it-bags",
-      "publishedAt": "2026-07-31T09:55:10.000Z",
-      "excerpt": "Why settle for one it-bag, when you could be schleppin’ around New York City with three of your best? Katie Holmes has the collection to make that happen.",
-      "imageUrl": "https://assets.vogue.com/photos/6a6c6f4ce8589bff3630a8e7/master/pass/BGUS_3650415_012.jpg"
-    },
-    {
-      "title": "AC Milan and Italy great Baresi dies aged 66",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/sport/football/articles/ckgvlz45l3eo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-07-31T09:44:48.000Z",
-      "excerpt": "AC Milan and Italy great Franco Baresi has died at the age of 66, the Italian club announces.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/a661/live/91ce3570-8cac-11f1-a1f4-f50057266998.jpg"
-    },
-    {
-      "title": "In Area Hit by Blaze, French Officials Failed to Enforce Wildfire Rules",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/07/31/france-heat-firebreak-buffer-wildfire.html",
-      "publishedAt": "2026-07-31T10:25:47.000Z",
-      "excerpt": "Under French rules, homeowners must clear vegetation within roughly 50 yards of their houses. In the forests affected by France’s worst fire in decades, that didn’t happen.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/31/multimedia/31France-Heat-Accountability-hlqm/31France-Heat-Accountability-hlqm-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/07/31/world/asia/space-debris-falling-crashing-earth-risk.html",
+      "publishedAt": "2026-07-31T12:57:22.000Z",
+      "excerpt": "Flaming chunks of metal crash into homes, farms and parking lots. Who’s to blame? And who pays for the damage?",
+      "imageUrl": null
     }
   ],
   "sources": {
     "Vogue": "ok",
     "BusinessOfFashion": "failed",
-    "Hypebae": "failed",
+    "Hypebae": "ok",
     "BBCWorld": "ok",
     "NYTWorld": "ok"
   }
