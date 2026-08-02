@@ -1,7 +1,43 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-08-02T21:14:52.683Z",
+  "generatedAt": "2026-08-02T22:23:19.839Z",
   "items": [
+    {
+      "title": "Every Time Kate Middleton Referenced Princess Diana’s Iconic Style",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/slideshow/every-time-kate-middleton-referenced-princess-diana-style",
+      "publishedAt": "2026-08-02T21:54:02.000Z",
+      "excerpt": "Catherine Walker coat-dresses, Alexander McQueen moments, and shared jewels: though Diana and Catherine never net, their connection through style runs deep.",
+      "imageUrl": "https://assets.vogue.com/photos/6a6fbb35a95a2596455dccec/master/pass/Kate%20Middleton%20and%20Princess%20Diana%20fashion%20moments.jpg"
+    },
+    {
+      "title": "Miss Claire Sullivan on Blending Couture Fantasy With adidas Sport Performance",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/7/miss-claire-sullivan-couture-new-york-interview-adidas-adizero-evo-sl-zip-collaboration-info",
+      "publishedAt": "2026-08-02T21:17:55.000Z",
+      "excerpt": "New York's favorite couturier is blending performance footwear with high fashion and theatrical style. Miss Claire Sullivan, the independent NYC-based atelier known for cultivatin…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F13%2Fmiss-claire-sullivan-couture-new-york-interview-adidas-adizero-evo-sl-zip-collaboration-info-ft.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Two crew killed after firefighting helicopters collide in Greece, as British pilot survives",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/c1417713ve6o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-08-02T20:36:37.000Z",
+      "excerpt": "One Danish and one Greek national died in the incident, while a British pilot and another Greek crew member survived.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/04be/live/be742720-8ea4-11f1-a7ab-8b30adf0800a.jpg"
+    },
+    {
+      "title": "Tourist Plane Crashes in Peru, Killing All 13 Aboard",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/08/01/world/americas/peru-tourist-plane-crash-nazca.html",
+      "publishedAt": "2026-08-02T22:07:46.000Z",
+      "excerpt": "The flight had taken off from the coastal city of Pisco to view the ancient geoglyphs in the desert, a popular tourist attraction.",
+      "imageUrl": "https://static01.nyt.com/images/2026/09/01/multimedia/01int-peru-plane-crash-chfj/01int-peru-plane-crash-chfj-mediumSquareAt3X.jpg"
+    },
     {
       "title": "The Benefits of Vitamin B6",
       "source": "Vogue",
@@ -21,22 +57,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F31%2Fwilly-chavarria-adidas-pink-megaride-ag-sneakers-collab-info-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Two crew killed after firefighting helicopters collide in Greece, as British pilot survives",
+      "title": "At the scene of deadly Moscow bomb blast",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/c1417713ve6o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-08-02T20:36:37.000Z",
-      "excerpt": "One Danish and one Greek national died in the incident, while a British pilot and another Greek crew member survived.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/04be/live/be742720-8ea4-11f1-a7ab-8b30adf0800a.jpg"
+      "link": "https://www.bbc.co.uk/news/videos/c1719pk0xq8o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-08-02T16:52:35.000Z",
+      "excerpt": "Three people have been killed and 21 injured after an explosive device detonated at an Italian restaurant, Russian media reports.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/96bd/live/9c600170-8e88-11f1-b2ab-0dd01740f9f6.jpg"
     },
     {
-      "title": "Unraveling the Chaos in Ceuta",
+      "title": "In Ceuta, Far-Right Leaders Call on Spain to Expel Migrants",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/08/02/world/spain-morocco-migration-iran.html",
-      "publishedAt": "2026-08-02T20:54:07.000Z",
-      "excerpt": "Whatever caused the migrant surge in the Spanish territory, it’s already shaking up European politics.",
-      "imageUrl": "https://static01.nyt.com/images/2026/08/03/multimedia/03int-theworld-ceuta-migration-01-fgmb-promo/03int-theworld-ceuta-migration-01-fgmb-promo-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/08/02/world/europe/spain-ceuta-far-right.html",
+      "publishedAt": "2026-08-02T21:49:47.000Z",
+      "excerpt": "Far-right politicians and activists are flocking to the Spanish territory on the northern coast of Africa, fueling tensions there days after thousands of migrants entered the excl…",
+      "imageUrl": "https://static01.nyt.com/images/2026/08/02/multimedia/02int-spain-ceuta-promo/02int-spain-ceuta-02-gjhm-mediumSquareAt3X.jpg"
     },
     {
       "title": "Kate Middleton Styles Her Staples for a Rare All-Family Outing to the Commonwealth Games",
@@ -57,42 +93,6 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F31%2Fkarol-g-reebok-classics-collection-sneaker-campaign-mexico-info-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "At the scene of deadly Moscow bomb blast",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/videos/c1719pk0xq8o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-08-02T16:52:35.000Z",
-      "excerpt": "Three people have been killed and 21 injured after an explosive device detonated at an Italian restaurant, Russian media reports.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/96bd/live/9c600170-8e88-11f1-b2ab-0dd01740f9f6.jpg"
-    },
-    {
-      "title": "Canada’s WestJet Cancels Trips Amid Strike By Flight Attendants",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/08/02/world/canada/westjet-flight-attendants-strike-canada.html",
-      "publishedAt": "2026-08-02T20:32:25.000Z",
-      "excerpt": "Labor talks resumed on Sunday between the airline and union representing 4,400 flight attendants, who want improved wages and compensation for unpaid work.",
-      "imageUrl": "https://static01.nyt.com/images/2026/08/02/multimedia/02int-WestJet-vwlq/02int-WestJet-vwlq-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "Hailey Bieber Is Healing Her Blisters With…Pimple Patches?",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/article/hailey-bieber-feet-blisters-pimple-patches",
-      "publishedAt": "2026-08-02T17:27:43.000Z",
-      "excerpt": "Rhode beauty mogul Hailey Bieber has found multiple uses for one of her latest product launches—here’s exactly why it works.",
-      "imageUrl": "https://assets.vogue.com/photos/6a6f73cae7d3090bc0c98f92/master/pass/hailey%20bieber%20justin%20bieber%20pimple%20patches.jpeg"
-    },
-    {
-      "title": "This Parisian Brand Is Making Mosquito Repellent Chic",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/7/misaj-emerging-brand-hand-cream-mosquito-repellent-summer",
-      "publishedAt": "2026-07-31T11:28:42.000Z",
-      "excerpt": "Misaj is the Parisian beauty brand tackling warm-weather struggles with the release of its flagship body cream. Dubbed Glow Protect, the chicly packaged cream offers a summer glow…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F07%2F31%2FSplit-2026-07-31T121813.420.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
       "title": "Uganda unveils statue of Israel PM's brother who died in Entebbe rescue mission",
       "source": "BBC World",
       "sourceType": "global-affairs",
@@ -102,13 +102,13 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/618e/live/1b88d040-8e8d-11f1-b2ab-0dd01740f9f6.png"
     },
     {
-      "title": "Iran Plotted Wider War With Help of Its Proxies",
+      "title": "Unraveling the Chaos in Ceuta",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/08/01/world/middleeast/iran-proxies-war-oil.html",
-      "publishedAt": "2026-08-02T18:36:29.000Z",
-      "excerpt": "During a fleeting truce, Iranians covertly devised a plan to raise the war’s costs for President Trump if U.S. forces attacked anew.",
-      "imageUrl": "https://static01.nyt.com/images/2026/08/02/multimedia/02int-Iran-Proxies-wkpm/02int-Iran-Proxies-wkpm-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/08/02/world/spain-morocco-migration-iran.html",
+      "publishedAt": "2026-08-02T20:54:07.000Z",
+      "excerpt": "Whatever caused the migrant surge in the Spanish territory, it’s already shaking up European politics.",
+      "imageUrl": "https://static01.nyt.com/images/2026/08/03/multimedia/03int-theworld-ceuta-migration-01-fgmb-promo/03int-theworld-ceuta-migration-01-fgmb-promo-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
