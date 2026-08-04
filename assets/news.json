@@ -1,15 +1,51 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-08-04T15:14:43.477Z",
+  "generatedAt": "2026-08-04T17:09:57.207Z",
   "items": [
+    {
+      "title": "Paolo Carzana Fall 2026 Ready-to-Wear",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/fall-2026-ready-to-wear/paolo-carzana",
+      "publishedAt": "2026-08-04T17:08:48.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a7090d72b334ea7e07aff47/master/pass/00001-paolo-carzana-fall-2026-ready-to-wear-credit-joseph-rigby-brand.jpg"
+    },
+    {
+      "title": "Louis Tomlinson’s 28 Returns With a Sport-Infused Drop",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/8/louis-tomlinson-28-clothing-drop-6-rugby-shirt-info-where-to-buy",
+      "publishedAt": "2026-08-04T16:50:31.000Z",
+      "excerpt": "Clear some space in your wardrobe, because British label 28 is back with its newest drop, blending streetwear with a retro, sporty aesthetic. Founded in 2023 by Louis Tomlinson, t…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F08%2F04%2Flouis-tomlinson-28-clothing-drop-6-rugby-shirt-info-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Oil prices fall on hopes Strait of Hormuz could reopen",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/cpw9v0gnzxwo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-08-04T17:06:17.000Z",
+      "excerpt": "US Secretary of State Marco Rubio and Treasury Secretary Scott Bessent both announced talks had progressed to allow shipments to resume.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/5e55/live/0e092f10-9012-11f1-aabc-c3c7aa714117.jpg"
+    },
+    {
+      "title": "Talks With Iran to Reopen Strait of Hormuz Make Progress, Officials Say",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/08/04/world/middleeast/strait-of-hormuz-deal-progress.html",
+      "publishedAt": "2026-08-04T16:27:57.000Z",
+      "excerpt": "Qatar said that draft language of a deal was being circulated, while the U.S. Treasury secretary suggested an agreement may be imminent.",
+      "imageUrl": "https://static01.nyt.com/images/2026/09/03/multimedia/03int-iran-talks-A-hzfw/03int-iran-talks-A-hzfw-mediumSquareAt3X.jpg"
+    },
     {
       "title": "Studio Constance Copenhagen Spring 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/copenhagen-spring-2027/studio-constance",
-      "publishedAt": "2026-08-04T15:14:11.000Z",
+      "publishedAt": "2026-08-04T17:08:48.000Z",
       "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a71f94ea7cf989baa44cab3/master/pass/UMB00004.jpg"
+      "imageUrl": "https://assets.vogue.com/photos/6a720743af36e8c1556c17f1/master/pass/00001-studio-constance-spring-2027-ready-to-wear-copenhagen-credit-gorunway.jpg"
     },
     {
       "title": "The Most Unforgettable Beauty Pop-Ups of All Time",
@@ -21,20 +57,20 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2025%2F06%2F17%2Fbeauty-pop-ups-fi.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Mass funeral in Gaza for 112 Palestinians killed in 2023 Israeli strike",
+      "title": "Watch: Evacuations as Guatemala volcano erupts",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cn0n99npjejo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-08-04T15:07:52.000Z",
-      "excerpt": "The bodies - belonging to members of two extended families - have only recently been recovered from under rubble in Gaza City.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/0f64/live/3c5e9520-8fff-11f1-9dfb-fd4408d16f2f.jpg"
+      "link": "https://www.bbc.co.uk/news/videos/c9q91dnljpeo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-08-04T16:50:07.000Z",
+      "excerpt": "The Fuego volcano is located near Escuintla, Chimaltenango, and Sacatepéquez.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/fd76/live/e4b36b80-9016-11f1-b2ab-0dd01740f9f6.jpg"
     },
     {
       "title": "More Than 150 Migrants Rescued From Burning Boat in English Channel",
       "source": "NYT World",
       "sourceType": "world-news",
       "link": "https://www.nytimes.com/2026/08/04/world/europe/english-channel-migrants-rescue.html",
-      "publishedAt": "2026-08-04T15:07:33.000Z",
+      "publishedAt": "2026-08-04T15:07:34.000Z",
       "excerpt": "No deaths or injuries were reported. Many migrants try to reach Britain in small, often unseaworthy vessels.",
       "imageUrl": "https://static01.nyt.com/images/2026/08/04/multimedia/04int-uk-boat-01-hbvm/04int-uk-boat-01-hbvm-mediumSquareAt3X.jpg"
     },
@@ -43,7 +79,7 @@
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/copenhagen-spring-2027/aiayu",
-      "publishedAt": "2026-08-04T15:14:11.000Z",
+      "publishedAt": "2026-08-04T17:08:48.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a71e26484a191806e49bb3f/master/pass/00001-aiayu-spring-2027-ready-to-wear-copenhagen-credit-brand.jpg"
     },
@@ -57,58 +93,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F08%2F04%2Fadidas-hellstar-megaride-s2-sneaker-collab-release-date-where-to-buy-1.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Oil prices fall on hopes Strait of Hormuz could reopen",
+      "title": "Video shows Russian drone chasing Ukrainian street vendor in 'human safari' attack",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cpw9v0gnzxwo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-08-04T14:58:16.000Z",
-      "excerpt": "US Secretary of State Marco Rubio and Treasury Secretary Scott Bessent both announced talks had progressed to allow shipments to resume.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/5e55/live/0e092f10-9012-11f1-aabc-c3c7aa714117.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/cn4n03xg981o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-08-04T16:33:39.000Z",
+      "excerpt": "Ukraine said the video - showing a terrified civilian being hounded by a remotely-controlled drone - amounted to a war crime.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/8528/live/11898c20-9026-11f1-b2ab-0dd01740f9f6.jpg"
     },
     {
       "title": "Stressed by Heat, 3 Lions Die at Tokyo Zoo",
       "source": "NYT World",
       "sourceType": "world-news",
       "link": "https://www.nytimes.com/2026/08/04/world/asia/lions-die-japan-zoo-extreme-heat.html",
-      "publishedAt": "2026-08-04T14:41:58.000Z",
+      "publishedAt": "2026-08-04T14:41:59.000Z",
       "excerpt": "The female lions died within five days of each other despite zookeepers’ efforts to shelter them from Japan’s blistering summer temperatures.",
       "imageUrl": "https://static01.nyt.com/images/2026/08/04/multimedia/04xp-japan-lions-03-qzbh-promo/04xp-japan-lions-03-qzbh-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "MKDT Studio Copenhagen Spring 2027",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/copenhagen-spring-2027/mark-kenly-domino-tan",
-      "publishedAt": "2026-08-04T15:14:11.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a71fe4998f652db94fb77b5/master/pass/00001-mkdt-studio-spring-2027-ready-to-wear-copenhagen-credit-gorunway.jpg"
-    },
-    {
-      "title": "Susamusa's First Bikini Is Here",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/8/susamusa-swimwear-bikini-release-evil-eye-where-to-buy",
-      "publishedAt": "2026-08-04T14:29:42.000Z",
-      "excerpt": "After winning over the likes of Bella Hadid, Kendall Jenner and Olivia Dean, London label Susamusa is diving into swimwear. The brand unveils its first-ever bikini, bringing its s…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F08%2F04%2FSingle-Image-424.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "World's oldest president reshuffles army as his absence stokes unease",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/ckg9kd27lkpo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-08-04T14:53:28.000Z",
-      "excerpt": "Cameroon's president has been absent for two months while his team denies rumours about his health.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/5313/live/8c8226f0-8ff7-11f1-a7ab-8b30adf0800a.jpg"
-    },
-    {
-      "title": "A New Lethal Front in Ukraine: Its Beloved Gas Stations",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/08/04/world/europe/ukraine-gas-stations-russia.html",
-      "publishedAt": "2026-08-04T14:33:18.000Z",
-      "excerpt": "Russian drone attacks have hit hundreds of gas stations in apparent retaliation for Ukraine’s attacks on oil refineries.",
-      "imageUrl": "https://static01.nyt.com/images/2026/07/28/00int-ukraine-gas-stations-01-gkfj-cover/00int-ukraine-gas-stations-01-gkfj-cover-mediumSquareAt3X-v2.jpg"
     }
   ],
   "sources": {
