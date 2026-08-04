@@ -1,13 +1,13 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-08-03T23:58:52.852Z",
+  "generatedAt": "2026-08-04T02:27:25.458Z",
   "items": [
     {
       "title": "Freya Dalsjø Copenhagen Spring 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/copenhagen-spring-2027/freya-dalsjo",
-      "publishedAt": "2026-08-03T23:56:58.000Z",
+      "publishedAt": "2026-08-04T02:22:11.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a70c535bf0b43bb4d9bfb38/master/pass/00001-freya-dalsjo-spring-2027-ready-to-wear-copenhagen-credit-gorunway.jpg"
     },
@@ -30,20 +30,20 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/7271/live/db06f1c0-8f7f-11f1-b08e-77185111f813.jpg"
     },
     {
-      "title": "Falling Space Junk",
+      "title": "Drone Explodes on Russian Beach, Killing 7, Officials Say",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/08/03/world/falling-space-debris-iran-oman.html",
-      "publishedAt": "2026-08-03T21:50:53.000Z",
-      "excerpt": "The race to control the skies is sending a record amount of debris crashing back to Earth.",
-      "imageUrl": null
+      "link": "https://www.nytimes.com/2026/08/03/world/europe/drone-russian-beach-explosion.html",
+      "publishedAt": "2026-08-04T01:55:27.000Z",
+      "excerpt": "It was unclear what the drone was targeting and why it crashed in the crowded resort spot, but it has been a deadly summer for civilians caught up in the Russian-Ukrainian war.",
+      "imageUrl": "https://static01.nyt.com/images/2026/08/04/world/europe/_9x16_V/_9x16_V-mediumSquareAt3X.jpg"
     },
     {
       "title": "Self-Portrait Resort 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/resort-2027/self-portrait",
-      "publishedAt": "2026-08-03T23:56:58.000Z",
+      "publishedAt": "2026-08-04T02:22:11.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a6a0c8b2b1e041cc97631ec/master/pass/00001-self-portrait-resort-2027-credit-brand.jpg"
     },
@@ -66,20 +66,20 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/2925/live/e6ad2ad0-8f75-11f1-94d6-1138f63f65fc.jpg"
     },
     {
-      "title": "Man Is Jailed for Concealing Mother’s Body in Freezer After Her Death",
+      "title": "U.S. Sends Flight With Deportees to Venezuela for First Time Since Earthquakes",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/08/03/world/europe/mother-dead-body-freezer-phillips-uk.html",
-      "publishedAt": "2026-08-03T21:17:00.000Z",
-      "excerpt": "Christopher Phillips, 60, pleaded guilty to several crimes, including fraud, after the police found his mother’s body in a freezer in his home.",
-      "imageUrl": null
+      "link": "https://www.nytimes.com/2026/08/03/world/americas/venezuela-us-deportation-flights-resume.html",
+      "publishedAt": "2026-08-04T00:55:34.000Z",
+      "excerpt": "A plane with 147 Venezuelans landed on Monday in the South American country amid criticism over the deaths of deportees housed in a collapsed building during June’s quakes.",
+      "imageUrl": "https://static01.nyt.com/images/2026/08/03/multimedia/03int-venezuela-deportation-pgmz/03int-venezuela-deportation-pgmz-mediumSquareAt3X.jpg"
     },
     {
       "title": "Anne Sofie Madsen Copenhagen Spring 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/copenhagen-spring-2027/anne-sofie-madsen",
-      "publishedAt": "2026-08-03T23:56:58.000Z",
+      "publishedAt": "2026-08-04T02:22:11.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a70be16c9944acffc8379d1/master/pass/00001-anne-sofie-madsen-spring-2027-ready-to-wear-copenhagen-credit-gorunway.jpg"
     },
@@ -102,13 +102,13 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/d360/live/bb60c530-8f6b-11f1-9cfc-0bfd2f6018a1.jpg"
     },
     {
-      "title": "Singapore Bans Band Massive Attack for Displaying Palestinian Flag",
+      "title": "Falling Space Junk",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/08/03/world/asia/massive-attack-singapore-palestinian-flag.html",
-      "publishedAt": "2026-08-03T20:53:29.000Z",
-      "excerpt": "The British group was punished under a policy of racial harmony that has long been criticized as stifling free speech in the city-state.",
-      "imageUrl": "https://static01.nyt.com/images/2026/08/03/world/asia/Palestine-Flag-Massive-Attack-Cover-Image/Palestine-Flag-Massive-Attack-Cover-Image-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/08/03/world/falling-space-debris-iran-oman.html",
+      "publishedAt": "2026-08-03T21:50:53.000Z",
+      "excerpt": "The race to control the skies is sending a record amount of debris crashing back to Earth.",
+      "imageUrl": null
     }
   ],
   "sources": {
