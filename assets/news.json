@@ -1,15 +1,87 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-08-05T18:58:27.676Z",
+  "generatedAt": "2026-08-05T20:24:58.764Z",
   "items": [
     {
       "title": "Baum und Pferdgarten Copenhagen Spring 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/copenhagen-spring-2027/baum-und-pferdgarten",
-      "publishedAt": "2026-08-05T18:57:43.000Z",
+      "publishedAt": "2026-08-05T20:19:32.000Z",
       "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a73716736075525ce051251/master/pass/UMB00014.jpg"
+      "imageUrl": "https://assets.vogue.com/photos/6a7388f422d3b42596fff142/master/pass/00001-baum-und-pferdgarten-spring-2027-ready-to-wear-copenhagen-credit-gorunway.jpg"
+    },
+    {
+      "title": "Is Our Obsession With K-Beauty Just Another Short-Lived Trend?",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/8/k-beauty-formulas-skincare-cushion-foundation-beauty-trend-explainer",
+      "publishedAt": "2026-08-05T19:40:22.000Z",
+      "excerpt": "From lip stains and PDRN serums to cushion foundation, K-beauty's impact on the Western beauty landscape is undeniable. Thanks to the internet, Korean trends like glass skin and b…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F08%2F05%2Fk-beauty-fi.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Israel strikes south Lebanon after first evacuation warning in weeks",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/c998711dyjvo?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-08-05T20:03:36.000Z",
+      "excerpt": "Lebanon's health ministry says one person was killed in the strikes, which the Israeli military says were a response to a Hezbollah ceasefire violation.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/3da5/live/f0bb6c60-90f8-11f1-b2ab-0dd01740f9f6.jpg"
+    },
+    {
+      "title": "Houthis Threaten to Expand Red Sea Attacks, and Claim Strikes on Saudi Tankers",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/08/05/world/middleeast/houthis-claim-attack-saudi-arabia-tanker.html",
+      "publishedAt": "2026-08-05T19:46:49.000Z",
+      "excerpt": "Saudi Arabia has not commented on the claims by the Houthis, who are backed by Iran and have vowed to close “all access routes” to Saudi oil shipments.",
+      "imageUrl": "https://static01.nyt.com/images/2026/08/05/world/05int-Saudi-Houthis/05int-Saudi-Houthis-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "Henrik Vibskov Copenhagen Spring 2027",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/copenhagen-spring-2027/henrik-vibskov",
+      "publishedAt": "2026-08-05T20:19:32.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a736c88784f8a507bc7845a/master/pass/00001-henrik-vibskov-spring-2027-ready-to-wear-copenhagen-credit-gorunway.jpg"
+    },
+    {
+      "title": "Story mfg. and P.F Flyers Give the High-Top an Artisanal Makeover",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/8/story-mfg-pf-flyers-collaboration-high-top-sneakers-sustainable-footwear-brands-where-to-buy",
+      "publishedAt": "2026-08-05T19:11:38.000Z",
+      "excerpt": "Get ready to upgrade your sneaker rotation with the perfect slow-fashion drop. P.F Flyers is teaming up with British cult-favorite sustainable label Story mfg. for a dreamy, limit…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F08%2F05%2Fstory-mfg-pf-flyers-collaboration-high-top-sneakers-sustainable-footwear-brands-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "Drone carrying explosives found at German airport, police say",
+      "source": "BBC World",
+      "sourceType": "global-affairs",
+      "link": "https://www.bbc.co.uk/news/articles/cyvlg4q48l3o?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-08-05T20:01:51.000Z",
+      "excerpt": "The drone was found near Ukrainian cargo planes before another object collided with a cargo aircraft in mid-air.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/394f/live/f2659590-90da-11f1-9bd2-e326e95c9722.jpg"
+    },
+    {
+      "title": "Israel Strikes Lebanon After Accusing Hezbollah of Cease-Fire Violation",
+      "source": "NYT World",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/08/05/world/middleeast/israel-lebanon-hezbollah-cease-fire.html",
+      "publishedAt": "2026-08-05T19:45:17.000Z",
+      "excerpt": "At the same time, Israeli and Lebanese negotiators were holding talks in Rome aimed at fostering a long-term diplomatic settlement.",
+      "imageUrl": "https://static01.nyt.com/images/2026/08/05/multimedia/05int-israel-lebanon-1-lwtg/05int-israel-lebanon-1-lwtg-mediumSquareAt3X.jpg"
+    },
+    {
+      "title": "The Garment Copenhagen Spring 2027",
+      "source": "Vogue",
+      "sourceType": "fashion-authority",
+      "link": "https://www.vogue.com/fashion-shows/copenhagen-spring-2027/the-garment",
+      "publishedAt": "2026-08-05T20:19:32.000Z",
+      "excerpt": "",
+      "imageUrl": "https://assets.vogue.com/photos/6a7332658bc56d5f6e8bb5d3/master/pass/00001-the-garment-spring-2027-ready-to-wear-copenhagen-credit-gorunway.jpg"
     },
     {
       "title": "Athleta Goes En Pointe With the San Francisco Ballet",
@@ -21,94 +93,22 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F08%2F05%2Fathleta-san-francisco-ballet-apparel-partner-dance-workshops-bay-area-madeline-woo-info-ft.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "After deadly Kyiv strike, Ukraine warns interceptor shortage is costing lives",
+      "title": "Watch: 'Scariest night' as Ukraine fails to intercept Russian attack",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cyvlgq2gp2eo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-08-05T18:19:51.000Z",
-      "excerpt": "Without Patriot interceptors, Ukraine's skies are wide open and people are fully exposed to Russia's missile barrages.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/245a/live/bc7aebd0-90ec-11f1-9d9d-b9b73beaa905.jpg"
+      "link": "https://www.bbc.co.uk/news/videos/clyxdgx7m8no?at_medium=RSS&amp;at_campaign=rss",
+      "publishedAt": "2026-08-05T19:00:32.000Z",
+      "excerpt": "Kyiv's depleted air defences meant many of the missiles were not intercepted - like the one that hit Anastasiia's home.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/2a61/live/d355ecc0-90ff-11f1-b8ee-9b3c26ad07bb.jpg"
     },
     {
-      "title": "How China’s A.I. Is Surging Across Africa",
+      "title": "Finland Tries to Protect Children Against Deepfakes, With Russia in Mind",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/08/05/technology/ai-china-africa.html",
-      "publishedAt": "2026-08-05T18:53:31.000Z",
-      "excerpt": "In African tech hubs, developers are picking China’s cheap, freely available artificial intelligence models over more powerful U.S. ones.",
-      "imageUrl": null
-    },
-    {
-      "title": "Henrik Vibskov Copenhagen Spring 2027",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/copenhagen-spring-2027/henrik-vibskov",
-      "publishedAt": "2026-08-05T18:57:43.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a736c88784f8a507bc7845a/master/pass/00001-henrik-vibskov-spring-2027-ready-to-wear-copenhagen-credit-gorunway.jpg"
-    },
-    {
-      "title": "Havaianas Is Taking Its Flip Flop to New Heights, Literally",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/8/havaianas-kitten-heel-flip-flops-copenhagen-studio-constance-ss27-release-date-where-to-buy",
-      "publishedAt": "2026-08-05T15:27:41.000Z",
-      "excerpt": "Havaianas is stepping into a new era, literally. Debuting at Copenhagen Fashion Week, the Brazilian footwear brand unveiled its new Kitten Heel silhouette, marking a fashion-forwa…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F08%2F05%2FSplit-127.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Left-wing political outsider wins Democratic Senate primary in Michigan",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/ckgdkpz07kvo?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-08-05T16:20:14.000Z",
-      "excerpt": "Abdul El-Sayed, the son of Egyptian immigrants, would be the first Muslim US senator if elected in November.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/ffa0/live/6343d230-90dc-11f1-b8ee-9b3c26ad07bb.jpg"
-    },
-    {
-      "title": "Record-Breaking Heat Wave in South Korea Leads to Canceled Baseball Games",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/08/05/world/asia/south-korea-baseball-heat-wave.html",
-      "publishedAt": "2026-08-05T18:18:56.000Z",
-      "excerpt": "The country has been gripped by a record-setting heat wave that endangered both players and spectators.",
-      "imageUrl": "https://static01.nyt.com/images/2026/08/05/multimedia/05int-skorea-baseball-heat-hftv/05int-skorea-baseball-heat-hftv-mediumSquareAt3X.jpg"
-    },
-    {
-      "title": "The Garment Copenhagen Spring 2027",
-      "source": "Vogue",
-      "sourceType": "fashion-authority",
-      "link": "https://www.vogue.com/fashion-shows/copenhagen-spring-2027/the-garment",
-      "publishedAt": "2026-08-05T18:57:43.000Z",
-      "excerpt": "",
-      "imageUrl": "https://assets.vogue.com/photos/6a7332658bc56d5f6e8bb5d3/master/pass/00001-the-garment-spring-2027-ready-to-wear-copenhagen-credit-gorunway.jpg"
-    },
-    {
-      "title": "Miu Miu Is Bringing Back an Archival Favorite",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/8/miu-miu-bubble-shoe-sneaker-fw26-footwear-where-to-buy-release-date",
-      "publishedAt": "2026-08-05T10:44:40.000Z",
-      "excerpt": "Miu Miu is once again diving into the archives, and this time, it's bringing back the early 2000s. Introducing the Bubble shoe, a reimagined take on an original model that channel…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F08%2F03%2FSplit-125.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Drone carrying explosives found at German airport, police say",
-      "source": "BBC World",
-      "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cyvlg4q48l3o?at_medium=RSS&amp;at_campaign=rss",
-      "publishedAt": "2026-08-05T16:06:30.000Z",
-      "excerpt": "The drone was found near Ukrainian cargo planes before another object collided with a cargo aircraft in mid-air.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/394f/live/f2659590-90da-11f1-9bd2-e326e95c9722.jpg"
-    },
-    {
-      "title": "The War That’s Happening Above Russia and Ukraine",
-      "source": "NYT World",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/08/05/world/europe/russia-ukraine-air-war.html",
-      "publishedAt": "2026-08-05T17:28:32.000Z",
-      "excerpt": "The combatants are producing ever larger numbers of innovative aerial weapons, hoping for a breakthrough as ground combat is largely frozen.",
-      "imageUrl": "https://static01.nyt.com/images/2026/08/05/multimedia/2026-06-23-ukraine-strikes-russia-index/2026-06-23-ukraine-strikes-russia-index-mediumSquareAt3X-v6.jpg"
+      "link": "https://www.nytimes.com/2026/08/05/world/europe/finland-deepfakes-ai.html",
+      "publishedAt": "2026-08-05T18:59:01.000Z",
+      "excerpt": "Finland, wary of misinformation from Moscow and beyond, has a leg up on other nations in spotting fake news. But A.I. is a whole new challenge.",
+      "imageUrl": "https://static01.nyt.com/images/2026/07/24/multimedia/24finland-AI-01-fwqv/24finland-AI-01-fwqv-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
