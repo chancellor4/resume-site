@@ -1,24 +1,15 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-08-08T00:39:47.041Z",
+  "generatedAt": "2026-08-08T00:46:43.083Z",
   "items": [
     {
       "title": "Caro Editions Copenhagen Spring 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/copenhagen-spring-2027/caro-editions",
-      "publishedAt": "2026-08-08T00:34:52.000Z",
+      "publishedAt": "2026-08-08T00:44:33.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a74d17eaab436970b96aeb7/master/pass/00001-caro-editions-spring-2027-ready-to-wear-copenhagen-credit-brand.jpg"
-    },
-    {
-      "title": "Blazy or Bust: Luxury’s Zero Sum Game",
-      "source": "Business of Fashion",
-      "sourceType": "fashion-business",
-      "link": "https://www.businessoffashion.com/briefings/luxury/blazy-or-bust-luxurys-zero-sum-game/",
-      "publishedAt": "2026-08-07T19:00:00.000Z",
-      "excerpt": "Chanel’s surging sales underscore that the luxury industry’s challenges may be less about demand than desirability.",
-      "imageUrl": "https://img.businessoffashion.com/resizer/v2//AERLRXUTV5BHLEOKO3ALWFPBWU.png?auth=7d5999e2e24a22c38aead030e50c95fb5132272a5b7b5608098ff064edc4ad36&smart=true&width=1800&height=1013"
     },
     {
       "title": "adidas Turned the Handball Spezial Into a Loafer",
@@ -109,11 +100,20 @@
       "publishedAt": "2026-08-07T19:30:38.000Z",
       "excerpt": "The Office of Personnel Management (OPM) instructed agencies to make early-career employees account for at least one-third of all federal hires during 2027",
       "imageUrl": "https://blackenterprise-prod.b-cdn.net/wp-content/blogs.dir/1/files/2024/05/IMG_2567-1024x638.jpeg"
+    },
+    {
+      "title": "The Luxe Watch So Gorgeous, You Just Might Stop Checking Your Phone",
+      "source": "NYLON",
+      "sourceType": "youth-culture",
+      "link": "https://www.nylon.com/shopping/the-luxe-watch-so-gorgeous-you-just-might-stop-checking-your-phone",
+      "publishedAt": "2026-08-08T00:19:59.000Z",
+      "excerpt": "Updated with a lizard-embossed leather strap, this version of BREDA's Virgil watch is poised to become your next favorite functional accessory.",
+      "imageUrl": "https://imgix.bustle.com/uploads/image/2026/6/25/bf68c7cb/breda.jpg?w=1200&fit=max"
     }
   ],
   "sources": {
     "Vogue": "ok",
-    "BusinessOfFashion": "ok",
+    "BusinessOfFashion": "failed",
     "Hypebae": "ok",
     "BBCWorld": "ok",
     "NYTWorld": "ok",
