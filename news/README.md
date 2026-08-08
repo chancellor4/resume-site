@@ -1,7 +1,7 @@
 # Ambient News Surface — v1.1
 
 A calm, image-aware, build-time newsstand for the Fountain Clock
-homepage. Thirteen publisher feeds, one normalized shape, balanced by
+homepage. Fifteen publisher feeds, one normalized shape, balanced by
 publisher so no source dominates. Metadata-only, outbound links, no
 client-side feed fetching.
 
@@ -43,15 +43,19 @@ GitHub Actions cron. Effective freshness: ~30 min, best-effort.
 | Architectural Digest | `design` | `https://www.architecturaldigest.com/feed/rss` |
 | Texas Monthly | `regional-culture` | `https://www.texasmonthly.com/feed/` |
 | Positive News | `solutions-news` | `https://www.positive.news/feed/` |
+| Forbes | `business` | `https://www.forbes.com/business/feed/` |
+| Black Enterprise | `business` | `https://www.blackenterprise.com/feed/` |
 | NYLON | `youth-culture` | `https://www.nylon.com/rss` |
 | InStyle | `fashion-authority` | `https://feeds-api.dotdashmeredith.com/v1/rss/google/8e4da836-f458-4776-856b-0a481d6dc617` |
 | WWNO | `local-news` | `https://www.wwno.org/local-regional-news.rss` |
 
 All endpoints are publisher-owned or publisher-operated feeds. Eater's
-endpoint is Atom; the others are RSS. InStyle's feed is served by its
-publisher, Dotdash Meredith. WWNO's local/regional endpoint is used
-instead of its empty homepage RSS so the feed remains local to New
-Orleans and the Gulf region.
+endpoint is Atom; the others are RSS. Forbes' Business page advertises
+its publisher-owned feed in page metadata, and Black Enterprise serves
+its public site feed directly from its own domain. InStyle's feed is
+served by its publisher, Dotdash Meredith. WWNO's local/regional
+endpoint is used instead of its empty homepage RSS so the feed remains
+local to New Orleans and the Gulf region.
 
 The mix is round-robin across publishers in registry order and sorted
 by recency within each publisher. The homepage is capped at 12 cards;
@@ -79,7 +83,8 @@ type NewsItem = {
   title:       string;       // ≤ 280 chars
   source:      string;       // display label, e.g. "Business of Fashion"
   sourceType:
-    | 'fashion-authority' | 'fashion-business' | 'youth-culture'
+    | 'fashion-authority' | 'fashion-business' | 'business'
+    | 'youth-culture'
     | 'global-affairs'    | 'world-news'      | 'practical-life'
     | 'food-culture'      | 'design'          | 'regional-culture'
     | 'solutions-news'    | 'local-news';

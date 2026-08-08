@@ -16,7 +16,7 @@ import { XMLParser } from 'fast-xml-parser';
 import type { NewsItem, NewsSourceType } from './schema';
 import { normalizeRssFeed } from './normalize';
 
-/* The five v1.1 sources, mirrored from news/aggregate.mjs SOURCES. */
+/* The v1.1 sources, mirrored from news/aggregate.mjs SOURCES. */
 export const SOURCES: Array<{
   key:        string;
   source:     string;
@@ -34,6 +34,8 @@ export const SOURCES: Array<{
   { key: 'ArchitecturalDigest', source: 'Architectural Digest', sourceType: 'design',          url: 'https://www.architecturaldigest.com/feed/rss' },
   { key: 'TexasMonthly',      source: 'Texas Monthly',       sourceType: 'regional-culture',  url: 'https://www.texasmonthly.com/feed/' },
   { key: 'PositiveNews',      source: 'Positive News',       sourceType: 'solutions-news',    url: 'https://www.positive.news/feed/' },
+  { key: 'Forbes',            source: 'Forbes',              sourceType: 'business',          url: 'https://www.forbes.com/business/feed/' },
+  { key: 'BlackEnterprise',   source: 'Black Enterprise',    sourceType: 'business',          url: 'https://www.blackenterprise.com/feed/' },
   { key: 'NYLON',             source: 'NYLON',               sourceType: 'youth-culture',     url: 'https://www.nylon.com/rss' },
   { key: 'InStyle',           source: 'InStyle',             sourceType: 'fashion-authority', url: 'https://feeds-api.dotdashmeredith.com/v1/rss/google/8e4da836-f458-4776-856b-0a481d6dc617' },
   { key: 'WWNO',              source: 'WWNO',                sourceType: 'local-news',         url: 'https://www.wwno.org/local-regional-news.rss' },

@@ -39,6 +39,7 @@
   var ALLOWED_SOURCE_TYPES = {
     'fashion-authority': 1,
     'fashion-business':  1,
+    'business':          1,
     'youth-culture':     1,
     'global-affairs':    1,
     'world-news':        1,
@@ -53,6 +54,7 @@
   var SOURCE_TYPE_LABELS = {
     'fashion-authority': 'Fashion',
     'fashion-business':  'Business',
+    'business':          'Business',
     'youth-culture':     'Culture',
     'global-affairs':    'Global',
     'world-news':        'World',

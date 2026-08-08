@@ -2,7 +2,7 @@
 /*
   aggregate.mjs — Ambient News Surface (v1.1)
 
-  Fetches five RSS feeds server-side, normalizes them into a single
+  Fetches publisher RSS feeds server-side, normalizes them into a single
   NewsItem shape, interleaves by sourceType so no publisher dominates,
   caps the mix, and writes a snapshot the homepage reads at render time.
 
@@ -45,7 +45,7 @@ const FETCH_TIMEOUT_MS = 5000;   // spec: ~5s
 const EXCERPT_MAX      = 180;    // spec: ≤ ~180 chars
 
 /* ── Source registry ─────────────────────────────────────────────
-   One source of truth for the five feeds. sourceType drives the
+   One source of truth for the publisher feeds. sourceType drives the
    interleave; source is the human-readable display label. */
 const SOURCES = [
   {
@@ -108,6 +108,18 @@ const SOURCES = [
     source:     'Positive News',
     sourceType: 'solutions-news',
     url: process.env.POSITIVE_NEWS_URL_OVERRIDE || 'https://www.positive.news/feed/',
+  },
+  {
+    key:        'Forbes',
+    source:     'Forbes',
+    sourceType: 'business',
+    url: process.env.FORBES_URL_OVERRIDE || 'https://www.forbes.com/business/feed/',
+  },
+  {
+    key:        'BlackEnterprise',
+    source:     'Black Enterprise',
+    sourceType: 'business',
+    url: process.env.BLACK_ENTERPRISE_URL_OVERRIDE || 'https://www.blackenterprise.com/feed/',
   },
   {
     key:        'NYLON',
