@@ -21,6 +21,12 @@ export const NewsSourceType = z.enum([
   'youth-culture',      // Hypebae
   'global-affairs',     // BBC World
   'world-news',         // NYT World
+  'practical-life',
+  'food-culture',
+  'design',
+  'regional-culture',
+  'solutions-news',
+  'local-news',
 ]);
 export type NewsSourceType = z.infer<typeof NewsSourceType>;
 
@@ -49,11 +55,19 @@ export const NewsSnapshot = z.object({
   generatedAt: z.string().datetime(),
   items:       z.array(NewsItem).max(18),
   sources: z.object({
-    Vogue:             SourceHealth,
-    BusinessOfFashion: SourceHealth,
-    Hypebae:           SourceHealth,
-    BBCWorld:          SourceHealth,
-    NYTWorld:          SourceHealth,
+    Vogue:                SourceHealth,
+    BusinessOfFashion:    SourceHealth,
+    Hypebae:              SourceHealth,
+    BBCWorld:             SourceHealth,
+    NYTWorld:             SourceHealth,
+    NPRLifeKit:           SourceHealth,
+    Eater:                SourceHealth,
+    ArchitecturalDigest: SourceHealth,
+    TexasMonthly:         SourceHealth,
+    PositiveNews:         SourceHealth,
+    NYLON:                SourceHealth,
+    InStyle:              SourceHealth,
+    WWNO:                 SourceHealth,
   }),
 });
 export type NewsSnapshot = z.infer<typeof NewsSnapshot>;

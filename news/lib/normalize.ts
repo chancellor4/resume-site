@@ -27,6 +27,14 @@ function firstString(...candidates: unknown[]): string | null {
   return null;
 }
 
+function textValue(value: unknown): string | null {
+  if (typeof value === 'string') return value.trim() || null;
+  if (value && typeof value === 'object') {
+    return firstString((value as Record<string, unknown>)['#text']);
+  }
+  return null;
+}
+
 function clamp(s: string | null, max: number): string | null {
   if (!s) return null;
   return s.length <= max ? s : s.slice(0, max - 1).trimEnd() + '…';
@@ -36,6 +44,7 @@ function stripHtml(s: string | null): string | null {
   if (!s) return null;
   return s
     .replace(/<[^>]+>/g, '')
+    .replace(/\s*The post .+ appeared first on .+\.?$/i, '')
     .replace(/&nbsp;/g, ' ')
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
@@ -58,6 +67,9 @@ interface RssRaw {
     channel?: {
       item?: Array<Record<string, unknown>> | Record<string, unknown>;
     };
+  };
+  feed?: {
+    entry?: Array<Record<string, unknown>> | Record<string, unknown>;
   };
 }
 
@@ -108,7 +120,7 @@ function pickImage(e: Record<string, unknown>): string | null {
   }
 
   // First <img> inside content:encoded.
-  const ce = e['content:encoded'];
+  const ce = e['content:encoded'] ?? e.content;
   const ceText =
     typeof ce === 'string' ? ce :
     (ce && typeof ce === 'object' && typeof (ce as Record<string, unknown>)['#text'] === 'string')
@@ -127,17 +139,17 @@ export function normalizeRssFeed(
   raw: unknown,
 ): NewsItem[] {
   const r = raw as RssRaw;
-  const entries = toArray(r?.rss?.channel?.item);
+  const entries = toArray(r?.rss?.channel?.item ?? r?.feed?.entry);
 
   const items = entries.map((e) => {
-    const title   = firstString(e.title, (e.title as Record<string, unknown> | undefined)?.['#text']);
+    const title   = textValue(e.title);
     const link    = pickLink(e);
     const pub     = firstString(e.pubDate, e.published, e.updated, e['dc:date']);
     const summary = stripHtml(firstString(
-      e.description,
-      e.summary,
-      (e.content as Record<string, unknown> | undefined)?.['#text'],
-      e['content:encoded'],
+      textValue(e.description),
+      textValue(e.summary),
+      textValue(e.content),
+      textValue(e['content:encoded']),
     ));
 
     const candidate = {
@@ -163,17 +175,76 @@ export function sortByRecency(items: NewsItem[]): NewsItem[] {
   return [...items].sort((a, b) => +new Date(b.publishedAt) - +new Date(a.publishedAt));
 }
 
+function canonicalLink(link: string): string {
+  try {
+    const url = new URL(link);
+    url.hash = '';
+    for (const key of [...url.searchParams.keys()]) {
+      if (/^(utm_|at_|campaign$|cmpid$)/i.test(key)) url.searchParams.delete(key);
+    }
+    url.searchParams.sort();
+    return url.toString().replace(/\/$/, '');
+  } catch {
+    return link;
+  }
+}
+
+function titleTokens(title: string): Set<string> {
+  const stop = new Set(['the', 'and', 'for', 'from', 'with', 'that', 'this', 'after', 'into', 'over']);
+  const normalized = title
+    .normalize('NFKD')
+    .toLowerCase()
+    .replace(/defence/g, 'defense')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+
+  return new Set(normalized.split(/\s+/).filter(word => word.length > 2 && !stop.has(word)).map((word) => {
+    if (word.endsWith('ies') && word.length > 4) return word.slice(0, -3) + 'y';
+    if (word.endsWith('ed') && word.length > 4) return word.slice(0, -2);
+    if (word.endsWith('s') && !word.endsWith('ss') && word.length > 4) return word.slice(0, -1);
+    return word;
+  }));
+}
+
+function titleSimilarity(a: string, b: string): number {
+  const aa = titleTokens(a);
+  const bb = titleTokens(b);
+  if (aa.size < 3 || bb.size < 3) return 0;
+  let intersection = 0;
+  for (const token of aa) if (bb.has(token)) intersection++;
+  return intersection / (aa.size + bb.size - intersection);
+}
+
+export function deduplicateItems(items: NewsItem[]): NewsItem[] {
+  const kept: NewsItem[] = [];
+  const links = new Set<string>();
+  const windowMs = 36 * 60 * 60 * 1000;
+
+  for (const item of items) {
+    const link = canonicalLink(item.link);
+    if (links.has(link)) continue;
+    const duplicateTitle = kept.some(other =>
+      Math.abs(+new Date(item.publishedAt) - +new Date(other.publishedAt)) <= windowMs &&
+      titleSimilarity(item.title, other.title) >= 0.78
+    );
+    if (duplicateTitle) continue;
+    links.add(link);
+    kept.push(item);
+  }
+  return kept;
+}
+
 /* Round-robin by sourceType so the surface reads as a balanced
    worldview rather than five clumps. The order argument should match
    the SOURCES registry order so the rhythm is stable across rebuilds. */
-export function interleaveBySourceType(
+export function interleaveBySource(
   items: NewsItem[],
-  order: NewsSourceType[],
+  order: string[],
 ): NewsItem[] {
-  const buckets = new Map<NewsSourceType, NewsItem[]>();
+  const buckets = new Map<string, NewsItem[]>();
   for (const it of items) {
-    if (!buckets.has(it.sourceType)) buckets.set(it.sourceType, []);
-    buckets.get(it.sourceType)!.push(it);
+    if (!buckets.has(it.source)) buckets.set(it.source, []);
+    buckets.get(it.source)!.push(it);
   }
   for (const arr of buckets.values()) {
     arr.sort((a, b) => +new Date(b.publishedAt) - +new Date(a.publishedAt));

@@ -25,7 +25,7 @@ import {
   type SourceHealth,
 } from '../../news/lib/schema';
 import { fetchSource, SOURCES } from '../../news/lib/fetchers';
-import { interleaveBySourceType } from '../../news/lib/normalize';
+import { deduplicateItems, interleaveBySource } from '../../news/lib/normalize';
 
 export const runtime = 'nodejs';
 export const revalidate = 900; // 15 min — soft freshness window
@@ -84,8 +84,8 @@ export async function POST(req: Request) {
     );
   }
 
-  const order = SOURCES.map(s => s.sourceType);
-  const items = interleaveBySourceType(merged, order).slice(0, HOMEPAGE_ITEM_CAP);
+  const order = SOURCES.map(s => s.source);
+  const items = interleaveBySource(deduplicateItems(merged), order).slice(0, HOMEPAGE_ITEM_CAP);
 
   const snapshot = NewsSnapshot.parse({
     version:     '1.1',

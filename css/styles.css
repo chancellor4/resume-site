@@ -628,8 +628,18 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   border: 0;
 }
 
-.fc-eyebrow {
+.fountain-clock .hero-eyebrow.fc-eyebrow {
+  min-height: 1.4em;
+  max-width: 32rem;
   margin-bottom: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(0.98rem, 2.7vw, 1.12rem);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.005em;
+  text-transform: none;
+  color: #c94352;
 }
 
 .fc-face {
@@ -958,7 +968,7 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: var(--fc-space-2);
   padding-top: var(--fc-space-1);
   font-family: var(--font-mono);
@@ -971,8 +981,7 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
 
 .fc-phase,
 .fc-zone,
-.fc-asof,
-.fc-location {
+.fc-asof {
   display: inline-flex;
   align-items: center;
   min-height: 1.85rem;
@@ -981,10 +990,6 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   background: var(--chip-surface);
   border: 1px solid var(--chip-border);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.58);
-}
-
-.fc-location {
-  color: var(--ink-mid);
 }
 
 .fc-asof {
@@ -997,7 +1002,7 @@ body.is-background .nav-mode-btn:not(.nav-mode-btn-active) {
   flex-wrap: wrap;
   align-items: center;
   gap: var(--fc-space-2);
-  margin-left: auto;
+  margin-left: 0;
 }
 
 .fc-select-label {
@@ -1598,19 +1603,6 @@ html[data-weather="hot"] .fc-weather-glyph {
 
 html[data-weather="cold"] .fc-weather-glyph {
   color: color-mix(in srgb, var(--accent) 76%, #d8f4ff);
-}
-
-html[data-location="houston-texas"] .fc-location,
-html[data-location="new-orleans-louisiana"] .fc-location,
-html[data-location="baton-rouge-louisiana"] .fc-location {
-  color: color-mix(in srgb, var(--accent-warm) 62%, var(--ink-mid));
-}
-
-html[data-location="dallas-texas"] .fc-location,
-html[data-location="williamsburg-kentucky"] .fc-location,
-html[data-location="new-york-new-york"] .fc-location,
-html[data-location="los-angeles-california"] .fc-location {
-  color: color-mix(in srgb, var(--accent-contrast) 72%, var(--ink-mid));
 }
 
 /* ─── DND: keep the clock but strip phase/weather tinting ────── */

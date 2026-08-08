@@ -78,6 +78,55 @@ const SOURCES = [
     sourceType: 'world-news',
     url: process.env.NYT_WORLD_URL_OVERRIDE || 'https://rss.nytimes.com/services/xml/rss/nyt/World.xml',
   },
+  {
+    key:        'NPRLifeKit',
+    source:     'NPR Life Kit',
+    sourceType: 'practical-life',
+    url: process.env.NPR_LIFE_KIT_URL_OVERRIDE || 'https://feeds.npr.org/510338/podcast.xml',
+    timeoutMs:  12000,
+  },
+  {
+    key:        'Eater',
+    source:     'Eater',
+    sourceType: 'food-culture',
+    url: process.env.EATER_URL_OVERRIDE || 'https://www.eater.com/rss/index.xml',
+  },
+  {
+    key:        'ArchitecturalDigest',
+    source:     'Architectural Digest',
+    sourceType: 'design',
+    url: process.env.ARCHITECTURAL_DIGEST_URL_OVERRIDE || 'https://www.architecturaldigest.com/feed/rss',
+  },
+  {
+    key:        'TexasMonthly',
+    source:     'Texas Monthly',
+    sourceType: 'regional-culture',
+    url: process.env.TEXAS_MONTHLY_URL_OVERRIDE || 'https://www.texasmonthly.com/feed/',
+  },
+  {
+    key:        'PositiveNews',
+    source:     'Positive News',
+    sourceType: 'solutions-news',
+    url: process.env.POSITIVE_NEWS_URL_OVERRIDE || 'https://www.positive.news/feed/',
+  },
+  {
+    key:        'NYLON',
+    source:     'NYLON',
+    sourceType: 'youth-culture',
+    url: process.env.NYLON_URL_OVERRIDE || 'https://www.nylon.com/rss',
+  },
+  {
+    key:        'InStyle',
+    source:     'InStyle',
+    sourceType: 'fashion-authority',
+    url: process.env.INSTYLE_URL_OVERRIDE || 'https://feeds-api.dotdashmeredith.com/v1/rss/google/8e4da836-f458-4776-856b-0a481d6dc617',
+  },
+  {
+    key:        'WWNO',
+    source:     'WWNO',
+    sourceType: 'local-news',
+    url: process.env.WWNO_URL_OVERRIDE || 'https://www.wwno.org/local-regional-news.rss',
+  },
 ];
 
 const ALLOWED_SOURCE_TYPES = new Set(SOURCES.map(s => s.sourceType));
@@ -86,9 +135,9 @@ const ALLOWED_SOURCE_TYPES = new Set(SOURCES.map(s => s.sourceType));
 
 const log = (...a) => console.log('[news]', ...a);
 
-async function fetchWithTimeout(url, init = {}) {
+async function fetchWithTimeout(url, init = {}, timeoutMs = FETCH_TIMEOUT_MS) {
   const ctl = new AbortController();
-  const t = setTimeout(() => ctl.abort(), FETCH_TIMEOUT_MS);
+  const t = setTimeout(() => ctl.abort(), timeoutMs);
   try {
     return await fetch(url, {
       ...init,
@@ -115,16 +164,24 @@ function clamp(s, max) {
   return s.length <= max ? s : s.slice(0, max - 1).trimEnd() + '…';
 }
 
-function stripHtml(s) {
+function decodeXml(s) {
   if (!s) return null;
-  const out = s
-    .replace(/<[^>]+>/g, '')
+  return s
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(parseInt(n, 10)))
     .replace(/&nbsp;/g, ' ')
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
+    .replace(/&apos;|&#39;/g, "'");
+}
+
+function stripHtml(s) {
+  if (!s) return null;
+  const out = decodeXml(s)
+    .replace(/<[^>]+>/g, '')
+    .replace(/\s*The post .+ appeared first on .+\.?$/i, '')
     .replace(/\s+/g, ' ')
     .trim();
   return out || null;
@@ -199,8 +256,8 @@ function pickAttrPair(block, tag, attrA, attrB) {
   return { [attrA]: grab(attrA), [attrB]: grab(attrB) };
 }
 
-function parseRssItems(xml) {
-  const itemRe = /<item\b[\s\S]*?<\/item>/gi;
+function parseFeedItems(xml) {
+  const itemRe = /<(item|entry)\b[\s\S]*?<\/\1>/gi;
   const blocks = xml.match(itemRe) || [];
   return blocks.map((block) => {
     // Image extraction: media:content → media:thumbnail → enclosure[image/*] → first <img> in content:encoded
@@ -208,7 +265,7 @@ function parseRssItems(xml) {
     const mt        = pickAttrPair(block, 'media:thumbnail', 'url', 'type');
     const enclosure = pickAttrPair(block, 'enclosure',       'url', 'type');
 
-    const contentEncoded = pickTag(block, 'content:encoded');
+    const contentEncoded = pickTag(block, 'content:encoded') || pickTag(block, 'content');
     let firstContentImg = null;
     if (contentEncoded) {
       const m = contentEncoded.match(/<img\b[^>]*\bsrc=["']([^"']+)["']/i);
@@ -217,9 +274,9 @@ function parseRssItems(xml) {
 
     return {
       title:       pickTag(block, 'title'),
-      link:        pickTag(block, 'link'),
-      pubDate:     pickTag(block, 'pubDate') || pickTag(block, 'dc:date') || pickTag(block, 'published'),
-      description: pickTag(block, 'description') || contentEncoded,
+      link:        pickTag(block, 'link') || pickAttr(block, 'link', 'href'),
+      pubDate:     pickTag(block, 'pubDate') || pickTag(block, 'dc:date') || pickTag(block, 'published') || pickTag(block, 'updated'),
+      description: pickTag(block, 'description') || pickTag(block, 'summary') || contentEncoded || pickTag(block, 'content'),
 
       // Ordered image candidates per spec.
       imageCandidates: [
@@ -238,9 +295,10 @@ function parseRssItems(xml) {
 function pickImage(candidates) {
   for (const c of candidates) {
     if (!c || !c.url) continue;
-    if (!isHttpsUrl(c.url)) continue;
+    const url = decodeXml(c.url);
+    if (!isHttpsUrl(url)) continue;
     if (c.type && c.type !== 'image/*' && !c.type.startsWith('image/')) continue;
-    return c.url;
+    return url;
   }
   return null;
 }
@@ -248,17 +306,18 @@ function pickImage(candidates) {
 /* ── Per-source fetch + normalize ─────────────────────────────── */
 
 async function fetchSource(spec) {
-  const res = await fetchWithTimeout(spec.url);
+  const res = await fetchWithTimeout(spec.url, {}, spec.timeoutMs);
   if (!res.ok) throw new Error(`${spec.key} responded ${res.status}`);
   const xml = await res.text();
-  const raw = parseRssItems(xml);
+  if (!/<(?:rss|feed)\b/i.test(xml)) throw new Error(`${spec.key} returned a non-feed response`);
+  const raw = parseFeedItems(xml);
 
   const items = raw.map((e) => {
     const candidate = {
-      title:       (e.title || '').trim(),
+      title:       (decodeXml(e.title) || '').trim(),
       source:      spec.source,
       sourceType:  spec.sourceType,
-      link:        (e.link || '').trim(),
+      link:        (decodeXml(e.link) || '').trim(),
       publishedAt: toIso(e.pubDate) ?? '',
       excerpt:     clamp(stripHtml(e.description), EXCERPT_MAX) ?? '',
       imageUrl:    pickImage(e.imageCandidates),
@@ -271,19 +330,77 @@ async function fetchSource(spec) {
 
 /* ── Curation: interleave by sourceType ───────────────────────── */
 
-function interleaveBySourceType(items) {
+function canonicalLink(link) {
+  try {
+    const url = new URL(link);
+    url.hash = '';
+    for (const key of [...url.searchParams.keys()]) {
+      if (/^(utm_|at_|campaign$|cmpid$)/i.test(key)) url.searchParams.delete(key);
+    }
+    url.searchParams.sort();
+    return url.toString().replace(/\/$/, '');
+  } catch {
+    return link;
+  }
+}
+
+function titleTokens(title) {
+  const stop = new Set(['the', 'and', 'for', 'from', 'with', 'that', 'this', 'after', 'into', 'over']);
+  const normalized = title
+    .normalize('NFKD')
+    .toLowerCase()
+    .replace(/defence/g, 'defense')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+
+  return new Set(normalized.split(/\s+/).filter(word => word.length > 2 && !stop.has(word)).map((word) => {
+    if (word.endsWith('ies') && word.length > 4) return word.slice(0, -3) + 'y';
+    if (word.endsWith('ed') && word.length > 4) return word.slice(0, -2);
+    if (word.endsWith('s') && !word.endsWith('ss') && word.length > 4) return word.slice(0, -1);
+    return word;
+  }));
+}
+
+function titleSimilarity(a, b) {
+  const aa = titleTokens(a);
+  const bb = titleTokens(b);
+  if (aa.size < 3 || bb.size < 3) return 0;
+  let intersection = 0;
+  for (const token of aa) if (bb.has(token)) intersection++;
+  return intersection / (aa.size + bb.size - intersection);
+}
+
+function deduplicateItems(items) {
+  const kept = [];
+  const links = new Set();
+  const windowMs = 36 * 60 * 60 * 1000;
+
+  for (const item of items) {
+    const link = canonicalLink(item.link);
+    if (links.has(link)) continue;
+    const duplicateTitle = kept.some(other =>
+      Math.abs(+new Date(item.publishedAt) - +new Date(other.publishedAt)) <= windowMs &&
+      titleSimilarity(item.title, other.title) >= 0.78
+    );
+    if (duplicateTitle) continue;
+    links.add(link);
+    kept.push(item);
+  }
+  return kept;
+}
+
+function interleaveBySource(items, order = SOURCES.map(s => s.source)) {
   // Bucket by sourceType, sort each bucket by recency, then round-robin.
   const buckets = new Map();
   for (const it of items) {
-    if (!buckets.has(it.sourceType)) buckets.set(it.sourceType, []);
-    buckets.get(it.sourceType).push(it);
+    if (!buckets.has(it.source)) buckets.set(it.source, []);
+    buckets.get(it.source).push(it);
   }
   for (const arr of buckets.values()) {
     arr.sort((a, b) => +new Date(b.publishedAt) - +new Date(a.publishedAt));
   }
   // Round-robin in the order the SOURCES registry declares so the mix
   // reads with a stable rhythm rather than alphabetic noise.
-  const order = SOURCES.map(s => s.sourceType);
   const out = [];
   let drained = false;
   while (!drained) {
@@ -352,7 +469,7 @@ async function main() {
     return;
   }
 
-  const items = interleaveBySourceType(merged).slice(0, ITEM_CAP);
+  const items = interleaveBySource(deduplicateItems(merged)).slice(0, ITEM_CAP);
   const snapshot = {
     version:     '1.1',
     generatedAt: new Date().toISOString(),
@@ -364,7 +481,11 @@ async function main() {
   log(`wrote ${items.length} items → ${OUT} + ${OUT_JS}`);
 }
 
-main().catch((err) => {
-  // Never break the cron; just leave the previous snapshot in place.
-  console.error('[news] fatal:', err);
-});
+export { deduplicateItems, interleaveBySource, parseFeedItems };
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((err) => {
+    // Never break the cron; just leave the previous snapshot in place.
+    console.error('[news] fatal:', err);
+  });
+}

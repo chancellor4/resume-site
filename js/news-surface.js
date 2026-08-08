@@ -41,7 +41,13 @@
     'fashion-business':  1,
     'youth-culture':     1,
     'global-affairs':    1,
-    'world-news':        1
+    'world-news':        1,
+    'practical-life':    1,
+    'food-culture':      1,
+    'design':            1,
+    'regional-culture':  1,
+    'solutions-news':    1,
+    'local-news':        1
   };
 
   var SOURCE_TYPE_LABELS = {
@@ -49,7 +55,13 @@
     'fashion-business':  'Business',
     'youth-culture':     'Culture',
     'global-affairs':    'Global',
-    'world-news':        'World'
+    'world-news':        'World',
+    'practical-life':    'Life',
+    'food-culture':      'Food',
+    'design':            'Design',
+    'regional-culture':  'Regional',
+    'solutions-news':    'Solutions',
+    'local-news':        'Local'
   };
 
   /* ── State ───────────────────────────────────────────────── */

@@ -188,7 +188,6 @@
   var DEFAULT_LOCATION = LOCATIONS['houston-texas'] || LOCATIONS[Object.keys(LOCATIONS)[0]];
 
   var CACHE_KEY_PREFIX = 'fc:weather:';
-  var GREETING_TEXT    = 'Hi, welcome to my site';
   var PREFS_KEY        = 'fc:preferences:v2';
   var LOCATION_KEY     = 'fc:location';
   var DETAILS_KEY      = 'fc:details';
@@ -200,6 +199,7 @@
   var FETCH_TIMEOUT_MS = 8000;
   var RETRY_MIN_MS     = 1200;
   var RETRY_MAX_MS     = 2600;
+  var GREETING_TYPE_MS = 60;
 
   var OPEN_METEO_URL = 'https://api.open-meteo.com/v1/forecast';
 
@@ -730,6 +730,12 @@
     pendingKey: null,
     lastGood: null,
 
+    greeting: {
+      animatedThisSession: false,
+      currentText: null,
+      typeTimer: null
+    },
+
     /* Mini Card — single source of truth for mode/timer/stopwatch.
        The dominant .fc-time clock readout is never repurposed; the
        Mini Card stage hosts secondary timer/stopwatch readouts only. */
@@ -818,8 +824,108 @@
   }
 
   function prefersReducedMotion() {
+    var preference = document.documentElement.getAttribute('data-motion');
+    if (preference === 'reduced') return true;
+    if (preference === 'full') return false;
     try { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
     catch (e) { return false; }
+  }
+
+
+  var hourFormatters = {};
+  function localHour(date, tz) {
+    var key = tz || 'local';
+    try {
+      if (!hourFormatters[key]) {
+        var opts = { hour: 'numeric', hourCycle: 'h23' };
+        if (tz) opts.timeZone = tz;
+        hourFormatters[key] = new Intl.DateTimeFormat('en-US', opts);
+      }
+      var parts = hourFormatters[key].formatToParts(date);
+      for (var i = 0; i < parts.length; i++) {
+        if (parts[i].type === 'hour') return parseInt(parts[i].value, 10);
+      }
+    } catch (e) {}
+    return date.getHours();
+  }
+
+  function greetingText(date, location) {
+    var hour = localHour(date, location && location.tz);
+    var daypart = hour >= 5 && hour < 12
+      ? 'morning'
+      : (hour >= 12 && hour < 17 ? 'afternoon' : 'evening');
+    var city = location && location.label
+      ? location.label.split(',')[0].trim()
+      : 'Houston';
+    return 'Good ' + daypart + ', ' + city + '.';
+  }
+
+  function cancelGreetingTyping() {
+    if (state.greeting.typeTimer) {
+      clearTimeout(state.greeting.typeTimer);
+      state.greeting.typeTimer = null;
+    }
+  }
+
+  function typeGreeting(el, text) {
+    var index = 0;
+    state.greeting.animatedThisSession = true;
+    state.greeting.currentText = text;
+    setAttr(el, 'aria-label', text);
+    setAttr(el, 'data-fc-greeting-state', 'typing');
+    setText(el, '');
+
+    function typeNext() {
+      if (!state.mounted || !document.documentElement.contains(el)) {
+        cancelGreetingTyping();
+        return;
+      }
+      index += 1;
+      setText(el, text.slice(0, index));
+      if (index < text.length) {
+        state.greeting.typeTimer = setTimeout(typeNext, GREETING_TYPE_MS);
+        return;
+      }
+      state.greeting.typeTimer = null;
+      removeAttr(el, 'aria-label');
+      setAttr(el, 'data-fc-greeting-state', 'ready');
+    }
+
+    state.greeting.typeTimer = setTimeout(typeNext, GREETING_TYPE_MS);
+  }
+
+  function renderGreeting(now, root) {
+    var el = qs('[data-fc-greeting]', root);
+    if (!el) return;
+
+    var text = greetingText(now, state.location);
+    var changed = state.greeting.currentText !== text || el.textContent !== text;
+    state.reducedMotion = prefersReducedMotion();
+
+    if (!state.greeting.animatedThisSession) {
+      if (!state.reducedMotion) {
+        cancelGreetingTyping();
+        typeGreeting(el, text);
+        return;
+      }
+      state.greeting.animatedThisSession = true;
+    }
+
+    if (state.greeting.typeTimer) {
+      cancelGreetingTyping();
+    }
+
+    state.greeting.currentText = text;
+    removeAttr(el, 'aria-label');
+    setAttr(el, 'data-fc-greeting-state', 'ready');
+    setText(el, text);
+
+    if (changed && !state.reducedMotion && typeof el.animate === 'function') {
+      el.animate([
+        { opacity: 0.24 },
+        { opacity: 1 }
+      ], { duration: 320, easing: 'ease-out' });
+    }
   }
 
   function readDnd() {
@@ -849,7 +955,7 @@
 
     var now = new Date();
 
-    setText(qs('[data-fc-greeting]', root), GREETING_TEXT);
+    renderGreeting(now, root);
     setText(qs('[data-fc-time-hm]', root), formatHM(now, state.location.tz, state.preferences.hour24));
 
     var timeEl = qs('[data-fc-time]', root);
@@ -2580,6 +2686,7 @@
   function teardownTimers() {
     if (state.tickTimer)    { clearTimeout(state.tickTimer);    state.tickTimer = null; }
     if (state.refetchTimer) { clearInterval(state.refetchTimer); state.refetchTimer = null; }
+    cancelGreetingTyping();
   }
 
   function unmount() {

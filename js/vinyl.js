@@ -92,7 +92,7 @@
   /*    original save/restore and unversioned shelf.           */
 
   var FEATURE_ENHANCED_PERSISTENCE = true;
-  var SHELF_VERSION = 1;                               // bump to invalidate all cached shelves
+  var SHELF_VERSION = 2;                               // bump to invalidate all cached shelves
   var CONT_SCHEMA   = 1;                               // continuity payload schema version
 
   /* ── Feature gates (v1.4.0) ────────────────────────────── */
@@ -628,6 +628,93 @@
       buildEmbedUrl:   buildEmbedUrl
     };
   })();
+
+
+  var OEMBED_URL = 'https://soundcloud.com/oembed?format=json&url=';
+
+  function metadataText(value) {
+    return typeof value === 'string' ? value.trim() : '';
+  }
+
+  function soundTitle(sound) {
+    return metadataText(sound && sound.title);
+  }
+
+  function soundArtist(sound) {
+    var published = sound && sound.publisher_metadata;
+    return metadataText(published && published.artist) ||
+      metadataText(sound && sound.user && sound.user.username);
+  }
+
+  function oEmbedTitle(data) {
+    var title = metadataText(data && data.title);
+    var artist = metadataText(data && data.author_name);
+    var suffix = artist ? ' by ' + artist : '';
+    if (suffix && title.slice(-suffix.length) === suffix) {
+      title = title.slice(0, -suffix.length).trim();
+    }
+    return title;
+  }
+
+  function hydrateSound(sound, index) {
+    sound = sound || {};
+    if (soundTitle(sound) && soundArtist(sound)) {
+      return Promise.resolve({ sound: sound, complete: true });
+    }
+    if (!sound.id || typeof fetch !== 'function') {
+      return Promise.resolve({ sound: sound, complete: false });
+    }
+
+    var trackUrl = 'https://api.soundcloud.com/tracks/' + encodeURIComponent(sound.id);
+    return fetch(OEMBED_URL + encodeURIComponent(trackUrl))
+      .then(function (response) {
+        if (!response.ok) throw new Error('SoundCloud oEmbed ' + response.status);
+        return response.json();
+      })
+      .then(function (data) {
+        var hydrated = {};
+        Object.keys(sound).forEach(function (key) { hydrated[key] = sound[key]; });
+        if (!soundTitle(hydrated)) hydrated.title = oEmbedTitle(data);
+        if (!soundArtist(hydrated) && metadataText(data.author_name)) {
+          hydrated.user = { username: metadataText(data.author_name) };
+        }
+        return {
+          sound: hydrated,
+          complete: !!(soundTitle(hydrated) && soundArtist(hydrated))
+        };
+      })
+      .catch(function (error) {
+        vlog(1, 'catalog:metadata-unavailable', {
+          index: index,
+          id: sound.id,
+          error: error && error.message
+        });
+        return { sound: sound, complete: false };
+      });
+  }
+
+  function normalizeRecord(sound, index) {
+    var rec = {
+      title: soundTitle(sound) || 'Track ' + (index + 1),
+      artist: soundArtist(sound) || 'SoundCloud',
+      index: index
+    };
+    if (sound.id) rec.id = sound.id;
+    if (sound.permalink_url) rec.permalink = sound.permalink_url;
+    if (FEATURE_CRATE_V2 && sound.duration) rec.duration = sound.duration;
+    return rec;
+  }
+
+  function normalizeCatalog(sounds) {
+    return Promise.all(sounds.map(hydrateSound)).then(function (items) {
+      return {
+        records: items.map(function (item, index) {
+          return normalizeRecord(item.sound, index);
+        }),
+        complete: items.every(function (item) { return item.complete; })
+      };
+    });
+  }
 
   /* ══════════════════════════════════════════════════════════════
      Groove — waveform progress visualization
@@ -1609,29 +1696,19 @@
           transition('errored', 'catalog-empty');
           return;
         }
-        records = sounds.map(function (s, i) {
-          var artist = '';
-          if (s.user && s.user.username) artist = s.user.username;
-          else if (s.publisher_metadata && s.publisher_metadata.artist) artist = s.publisher_metadata.artist;
-          else if (s.publisher_metadata && s.publisher_metadata.label_name) artist = s.publisher_metadata.label_name;
-          var rec = {
-            title: s.title || 'Track ' + (i + 1),
-            index: i,
-            source: artist || 'SoundCloud'
-          };
-          if (s.id) rec.id = s.id;
-          if (s.permalink_url) rec.permalink = s.permalink_url;
-          if (artist) rec.artist = artist;
-          if (FEATURE_CRATE_V2 && s.duration) rec.duration = s.duration;
-          return rec;
+        normalizeCatalog(sounds).then(function (catalog) {
+          records = catalog.records;
+          vlog(2, 'catalog:fetched', {
+            tracks: records.length,
+            metadataComplete: catalog.complete
+          });
+          vmark('catalog:done');
+          if (catalog.complete) shelfWrite(records);
+          _ui.fillCrate();
+          _ui.reflectTitle();
+          transition('ready', 'catalog-fetched');
+          restoreState();
         });
-        vlog(2, 'catalog:fetched', { tracks: records.length });
-        vmark('catalog:done');
-        shelfWrite(records);
-        _ui.fillCrate();
-        _ui.reflectTitle();
-        transition('ready', 'catalog-fetched');
-        restoreState();
       });
     }
 

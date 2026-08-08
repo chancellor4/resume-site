@@ -1,9 +1,9 @@
 # Ambient News Surface — v1.1
 
 A calm, image-aware, build-time newsstand for the Fountain Clock
-homepage. Five RSS feeds, one normalized shape, balanced by
-`sourceType` so no publisher dominates. Metadata-only, outbound links,
-no client-side feed fetching.
+homepage. Thirteen publisher feeds, one normalized shape, balanced by
+publisher so no source dominates. Metadata-only, outbound links, no
+client-side feed fetching.
 
 ## Architecture at a glance
 
@@ -12,7 +12,8 @@ no client-side feed fetching.
    GitHub Actions ─▶ │  news/aggregate.mjs    │
    (every 30 min)    │  fetch → parse →       │
                   │  normalize → validate     │
-                  │  → interleave → cap 12    │
+                  │  → dedupe → interleave    │
+                  │  → cap 12                 │
                   └──────────┬───────────────┘
                              │ writes
                              ▼
@@ -28,20 +29,35 @@ The browser never hits publisher RSS. The "server-side fetch + cache"
 intent of the v1.1 spec is satisfied by a build-time aggregator on a
 GitHub Actions cron. Effective freshness: ~30 min, best-effort.
 
-## Five sources, five buckets
+## Sources
 
-| Source              | sourceType          | Feed |
-|---------------------|---------------------|------|
-| Vogue               | `fashion-authority` | `https://www.vogue.com/feed/rss` |
-| Business of Fashion | `fashion-business`  | `https://www.businessoffashion.com/feeds/news` |
-| Hypebae             | `youth-culture`     | `https://hypebae.com/feed` |
-| BBC World           | `global-affairs`    | `http://feeds.bbci.co.uk/news/world/rss.xml` |
-| NYT World           | `world-news`        | `https://rss.nytimes.com/services/xml/rss/nyt/World.xml` |
+| Source | sourceType | Publisher endpoint |
+|---|---|---|
+| Vogue | `fashion-authority` | `https://www.vogue.com/feed/rss` |
+| Business of Fashion | `fashion-business` | `https://www.businessoffashion.com/feeds/news` |
+| Hypebae | `youth-culture` | `https://hypebae.com/feed` |
+| BBC World | `global-affairs` | `http://feeds.bbci.co.uk/news/world/rss.xml` |
+| NYT World | `world-news` | `https://rss.nytimes.com/services/xml/rss/nyt/World.xml` |
+| NPR Life Kit | `practical-life` | `https://feeds.npr.org/510338/podcast.xml` |
+| Eater | `food-culture` | `https://www.eater.com/rss/index.xml` |
+| Architectural Digest | `design` | `https://www.architecturaldigest.com/feed/rss` |
+| Texas Monthly | `regional-culture` | `https://www.texasmonthly.com/feed/` |
+| Positive News | `solutions-news` | `https://www.positive.news/feed/` |
+| NYLON | `youth-culture` | `https://www.nylon.com/rss` |
+| InStyle | `fashion-authority` | `https://feeds-api.dotdashmeredith.com/v1/rss/google/8e4da836-f458-4776-856b-0a481d6dc617` |
+| WWNO | `local-news` | `https://www.wwno.org/local-regional-news.rss` |
 
-The mix is round-robin across `sourceType` in registry order, recency-
-sorted within each bucket. The first 5 items pull one from each
-bucket; subsequent items continue the rotation while any bucket has
-content left.
+All endpoints are publisher-owned or publisher-operated feeds. Eater's
+endpoint is Atom; the others are RSS. InStyle's feed is served by its
+publisher, Dotdash Meredith. WWNO's local/regional endpoint is used
+instead of its empty homepage RSS so the feed remains local to New
+Orleans and the Gulf region.
+
+The mix is round-robin across publishers in registry order and sorted
+by recency within each publisher. The homepage is capped at 12 cards;
+no source repeats before every preceding healthy source has had a turn.
+Canonical URLs are deduplicated after tracking parameters are removed;
+near-identical titles are deduplicated only within a 36-hour window.
 
 ## Files
 
@@ -64,7 +80,9 @@ type NewsItem = {
   source:      string;       // display label, e.g. "Business of Fashion"
   sourceType:
     | 'fashion-authority' | 'fashion-business' | 'youth-culture'
-    | 'global-affairs'    | 'world-news';
+    | 'global-affairs'    | 'world-news'      | 'practical-life'
+    | 'food-culture'      | 'design'          | 'regional-culture'
+    | 'solutions-news'    | 'local-news';
   link:        string;       // canonical publisher URL
   publishedAt: string;       // ISO 8601, UTC
   excerpt:     string;       // ≤ ~180 chars, plain text, no HTML
@@ -73,8 +91,8 @@ type NewsItem = {
 ```
 
 Image extraction order: `<media:content>` → `<media:thumbnail>` →
-`<enclosure type="image/*">` → first `<img>` in `content:encoded` →
-`null`. Non-https image URLs are coerced to `null` so the page never
+`<enclosure type="image/*">` → first `<img>` in `content:encoded` or
+Atom `content` → `null`. Non-https image URLs are coerced to `null` so the page never
 tries to render mixed content; the renderer falls back to a text-led
 card without layout shift.
 
@@ -94,7 +112,9 @@ node news/aggregate.mjs
 
 ## Failure isolation
 
-1. Each feed: ~5 s timeout, isolated try/catch. Marked `ok` / `empty` / `failed`.
+1. Each feed: 5 s default timeout, isolated try/catch. NPR Life Kit gets
+   12 s because its official podcast feed is substantially larger. Each
+   source is marked `ok` / `empty` / `failed`.
 2. At least one feed produced items → fresh snapshot is written.
 3. Every feed empty/failed → previous snapshot is preserved.
 4. The aggregator never exits non-zero, so the cron never breaks.
