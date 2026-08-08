@@ -18,6 +18,7 @@ import { z } from 'zod';
 export const NewsSourceType = z.enum([
   'fashion-authority',  // Vogue
   'fashion-business',   // Business of Fashion
+  'business',           // Forbes, Black Enterprise
   'youth-culture',      // Hypebae
   'global-affairs',     // BBC World
   'world-news',         // NYT World
@@ -65,6 +66,8 @@ export const NewsSnapshot = z.object({
     ArchitecturalDigest: SourceHealth,
     TexasMonthly:         SourceHealth,
     PositiveNews:         SourceHealth,
+    Forbes:               SourceHealth,
+    BlackEnterprise:      SourceHealth,
     NYLON:                SourceHealth,
     InStyle:              SourceHealth,
     WWNO:                 SourceHealth,
