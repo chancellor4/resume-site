@@ -1,13 +1,13 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-08-08T00:47:57.588Z",
+  "generatedAt": "2026-08-08T02:48:36.089Z",
   "items": [
     {
       "title": "Caro Editions Copenhagen Spring 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/copenhagen-spring-2027/caro-editions",
-      "publishedAt": "2026-08-08T00:43:16.000Z",
+      "publishedAt": "2026-08-08T02:44:38.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a74d17eaab436970b96aeb7/master/pass/00001-caro-editions-spring-2027-ready-to-wear-copenhagen-credit-brand.jpg"
     },
@@ -26,17 +26,17 @@
       "sourceType": "global-affairs",
       "link": "https://www.bbc.co.uk/news/articles/c5yv5l6yr5ko?at_medium=RSS&at_campaign=rss",
       "publishedAt": "2026-08-07T22:13:55.000Z",
-      "excerpt": "Italy introduced border controls following an influx of about 78,000 migrants from neighbouring Morocco into the Spanish exclave of Ceuta.",
+      "excerpt": "Italy introduced border controls following an influx of about 78,000 migrants from Morocco into the neighbouring Spanish exclave of Ceuta.",
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/be73/live/f8fae290-9024-11f1-a7ab-8b30adf0800a.jpg"
     },
     {
-      "title": "U.S. Squeezes Cuba Even as It Searches for a New Regime Leader",
+      "title": "C.I.A. Sets Up Secret Cuba Task Force as Trump Pressures Havana",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/08/07/us/politics/us-search-cuba-leader.html",
-      "publishedAt": "2026-08-07T22:35:20.000Z",
-      "excerpt": "Some officials warn that a more hard-line leader could emerge if the Trump administration moves forward with its plans.",
-      "imageUrl": "https://static01.nyt.com/images/2026/08/07/multimedia/07dc-cuba-intel-01-tfbm/07dc-cuba-intel-01-tfbm-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/08/05/us/politics/cia-cuba-task-force.html",
+      "publishedAt": "2026-08-08T01:24:17.000Z",
+      "excerpt": "The task force will allow the spy agency to quickly direct more financial, human and technical resources at the island, with the goal of creating fissures among the Cuban politica…",
+      "imageUrl": "https://static01.nyt.com/images/2026/08/05/multimedia/05dc-intel-qzbg/05dc-intel-qzbg-mediumSquareAt3X-v2.jpg"
     },
     {
       "title": "Tiny pep talks for everyday problems",
@@ -84,13 +84,13 @@
       "imageUrl": null
     },
     {
-      "title": "John Speraw Says Volleyball Is Poised For A Breakthrough Before LA28",
+      "title": "Bout Order For UFC 330: Makhachev Vs. Machado Garry Fight Card",
       "source": "Forbes",
       "sourceType": "business",
-      "link": "https://www.forbes.com/sites/timgenske/2026/08/07/john-speraw-says-volleyball-is-poised-for-a-breakthrough-before-la28/",
-      "publishedAt": "2026-08-08T00:00:17.000Z",
-      "excerpt": "John Speraw explains why women's sports, youth participation and commercial investment are converging at exactly the right moment before the Los Angeles Olympic Games.",
-      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6a75e855b7a3f4d236416002/0x0.jpg"
+      "link": "https://www.forbes.com/sites/trentreinsmith/2026/08/07/bout-order-for-ufc-330-makhachev-vs-machado-garry-fight-card/",
+      "publishedAt": "2026-08-08T02:00:38.000Z",
+      "excerpt": "Two title fights headline the upcoming UFC 330 fight card from Philadelphia. In the main event, Islam Makhachev faces Ian Machado Garry for Makhachev's welterweight title",
+      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6a3ad9bbad65d27b2cd99884/0x0.jpg"
     },
     {
       "title": "After Workforce Cuts, Trump Administration Launches New Push To Recruit Tech, Early-Career Talent",
