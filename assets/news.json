@@ -1,13 +1,13 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-08-11T05:45:46.818Z",
+  "generatedAt": "2026-08-11T06:44:47.441Z",
   "items": [
     {
       "title": "Stel Copenhagen Spring 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/copenhagen-spring-2027/stel",
-      "publishedAt": "2026-08-11T05:41:43.000Z",
+      "publishedAt": "2026-08-11T06:40:15.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a7052505b95ab70637915fd/master/pass/00001-stel-spring-2027-ready-to-wear-copenhagen-credit-brand.jpg"
     },
@@ -27,7 +27,7 @@
       "link": "https://www.bbc.co.uk/news/articles/c20e360lx0vo?at_medium=RSS&at_campaign=rss",
       "publishedAt": "2026-08-11T04:06:07.000Z",
       "excerpt": "More than 480 people were injured in the quakes, with more feared trapped under collapsed buildings.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/1b4c/live/491511d0-953c-11f1-a0b1-8d38ae2a7560.jpg"
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/8f2f/live/f1603a50-954a-11f1-a7ab-8b30adf0800a.jpg"
     },
     {
       "title": "In a Sweltering Summer, These Italians Want Romans to Curl",
@@ -84,13 +84,13 @@
       "imageUrl": null
     },
     {
-      "title": "Powerball Jackpot Nears $1 Billion—Here’s What The Winner Could Take Home",
+      "title": "Skilled Atlanta Braves Could Challenge Dodgers For World Series Title",
       "source": "Forbes",
       "sourceType": "business",
-      "link": "https://www.forbes.com/sites/siladityaray/2026/08/11/powerball-jackpot-nears-1-billion-heres-what-the-winner-could-take-home/",
-      "publishedAt": "2026-08-11T05:07:30.000Z",
-      "excerpt": "If the jackpot crosses $1 billion after the next draw, this will be the first to do so since the $1.8 billion prize claimed by a Powerball player from Arizona last year.",
-      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6912d5cc93e44ac3d3656798/0x0.jpg?width=960"
+      "link": "https://www.forbes.com/sites/berniepleskoff/2026/08/11/atlanta-braves-could-challenge-dodgers-for-world-series-title/",
+      "publishedAt": "2026-08-11T06:00:00.000Z",
+      "excerpt": "A healthy Ronald Acuna Jr., formidable hitting, and outstanding pitching could challenge the favored Los Angeles Dodgers as the National League entry for the World Series.",
+      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6a7a2e547b8db36f7ec5f21f/0x0.jpg?width=960"
     },
     {
       "title": "Wealthy Nigerians Could Lose Caribbean Visa And Passport Shortcut To Europe",
@@ -125,7 +125,7 @@
     "Forbes": "ok",
     "BlackEnterprise": "ok",
     "NYLON": "ok",
-    "InStyle": "ok",
+    "InStyle": "failed",
     "WWNO": "ok"
   }
 }
