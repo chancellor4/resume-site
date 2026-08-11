@@ -1,24 +1,15 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-08-10T23:56:51.750Z",
+  "generatedAt": "2026-08-11T01:11:53.834Z",
   "items": [
     {
       "title": "Stel Copenhagen Spring 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/copenhagen-spring-2027/stel",
-      "publishedAt": "2026-08-10T23:55:05.000Z",
+      "publishedAt": "2026-08-11T01:10:55.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a7052505b95ab70637915fd/master/pass/00001-stel-spring-2027-ready-to-wear-copenhagen-credit-brand.jpg"
-    },
-    {
-      "title": "Reebok and London-Based Studio IDEA Revamped the Club C 85",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/8/reebok-idea-club-c-85-sneaker-collaboration-glow-in-the-dark-where-to-buy",
-      "publishedAt": "2026-08-10T18:31:18.000Z",
-      "excerpt": "Reebok has officially linked up with London’s coolest publisher and design studio, IDEA, to give us the chicest retro style for our summer sneaker rotations before the season ends…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F08%2F10%2Freebok-idea-club-c-85-sneaker-collaboration-glow-in-the-dark-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
       "title": "Trump signs order to limit childhood vaccines and split MMR shots",
@@ -34,7 +25,7 @@
       "source": "NYT World",
       "sourceType": "world-news",
       "link": "https://www.nytimes.com/live/2026/08/10/world/colombia-earthquake-bogota-cali",
-      "publishedAt": "2026-08-10T23:50:37.000Z",
+      "publishedAt": "2026-08-11T00:21:33.000Z",
       "excerpt": "The quake shook major cities, including Bogotá, Cali and Medellín. At least 111 people have died, the president said, and the death toll appeared likely to rise as rescuers search…",
       "imageUrl": "https://static01.nyt.com/images/2026/08/11/multimedia/10colombia-quake-promo-430p/10colombia-quake-promo-430p-mediumSquareAt3X.jpg"
     },
@@ -84,13 +75,13 @@
       "imageUrl": null
     },
     {
-      "title": "Five Myths About The Paramount/Warner Bros. Discovery Merger",
+      "title": "Mexico Won’t Frac All Their Basins, Yet They Keep Importing U.S. Gas",
       "source": "Forbes",
       "sourceType": "business",
-      "link": "https://www.forbes.com/sites/rickellis/2026/08/10/five-myths-about-the-paramountwarner-bros-discovery-merger/",
-      "publishedAt": "2026-08-10T22:22:10.000Z",
-      "excerpt": "You shouldn't believe everything you read about the merger between Paramount/Skydance and Warner Bros. Discovery",
-      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6996a8942fe070a4f2ec9bd9/0x0.jpg"
+      "link": "https://www.forbes.com/sites/ianpalmer/2026/08/10/mexico-wont-frac-all-their-basins-yet-they-keep-importing-us-gas/",
+      "publishedAt": "2026-08-11T00:33:37.000Z",
+      "excerpt": "Mexico’s president wants to develop shale to replace gas imports from U.S. But she also wants to avoid fracking impacts on freshwater aquifers.",
+      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6a79bba434d1df33cdcbb4aa/0x0.jpg?width=960"
     },
     {
       "title": "Wealthy Nigerians Could Lose Caribbean Visa And Passport Shortcut To Europe",
@@ -109,12 +100,21 @@
       "publishedAt": "2026-08-10T18:24:54.000Z",
       "excerpt": "Aqua blue is one of the colors of the summer, as seen on singers like Charli xcx, Zara Larsson, and Madonna, plus on Alexa Chung via a statement ring.",
       "imageUrl": "https://imgix.bustle.com/uploads/getty/2026/8/10/421ac7c0/berlin-germany-july-18.jpg?w=1200&fit=max"
+    },
+    {
+      "title": "I Tried the $20 Hair Growth Hack Fans Call a Natural “Alternative to Minoxidil”—It’s Worth the Hype",
+      "source": "InStyle",
+      "sourceType": "fashion-authority",
+      "link": "https://www.instyle.com/california-naturals-hair-growth-serum-review-12035952",
+      "publishedAt": "2026-08-11T00:30:00.000Z",
+      "excerpt": "The non-greasy formula is a game-changer.",
+      "imageUrl": "https://www.instyle.com/thmb/fVvZ2V5ZsHA8bVVojBRTgtueILA=/filters:no_upscale():max_bytes(150000):strip_icc():format(jpeg)/GettyImages-1699044801-d5ed9c6915584d569ca3308e4f35e66d.jpg"
     }
   ],
   "sources": {
     "Vogue": "ok",
     "BusinessOfFashion": "failed",
-    "Hypebae": "ok",
+    "Hypebae": "failed",
     "BBCWorld": "ok",
     "NYTWorld": "ok",
     "NPRLifeKit": "ok",
