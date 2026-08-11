@@ -1,22 +1,31 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-08-11T01:11:53.834Z",
+  "generatedAt": "2026-08-11T03:14:16.364Z",
   "items": [
     {
       "title": "Stel Copenhagen Spring 2027",
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/copenhagen-spring-2027/stel",
-      "publishedAt": "2026-08-11T01:10:55.000Z",
+      "publishedAt": "2026-08-11T03:09:05.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a7052505b95ab70637915fd/master/pass/00001-stel-spring-2027-ready-to-wear-copenhagen-credit-brand.jpg"
+    },
+    {
+      "title": "Reebok and London-Based Studio IDEA Revamped the Club C 85",
+      "source": "Hypebae",
+      "sourceType": "youth-culture",
+      "link": "https://hypebae.com/2026/8/reebok-idea-club-c-85-sneaker-collaboration-glow-in-the-dark-where-to-buy",
+      "publishedAt": "2026-08-10T18:31:18.000Z",
+      "excerpt": "Reebok has officially linked up with London’s coolest publisher and design studio, IDEA, to give us the chicest retro style for our summer sneaker rotations before the season ends…",
+      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F08%2F10%2Freebok-idea-club-c-85-sneaker-collaboration-glow-in-the-dark-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
       "title": "Trump signs order to limit childhood vaccines and split MMR shots",
       "source": "BBC World",
       "sourceType": "global-affairs",
       "link": "https://www.bbc.co.uk/news/articles/ce3q5vl581wo?at_medium=RSS&at_campaign=rss",
-      "publishedAt": "2026-08-10T23:03:52.000Z",
+      "publishedAt": "2026-08-11T02:43:01.000Z",
       "excerpt": "The American Academy of Pediatrics calls the recommendation on measles, mumps and rubella shots \"dangerous\".",
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/e60c/live/ae01a660-94f8-11f1-9181-85140b8ce01b.jpg"
     },
@@ -75,13 +84,13 @@
       "imageUrl": null
     },
     {
-      "title": "Mexico Won’t Frac All Their Basins, Yet They Keep Importing U.S. Gas",
+      "title": "Mind Reading: Pop Artist Jordy Exited A Toxic Industry Relationship, Created A Soaring Album About Navigating Change",
       "source": "Forbes",
       "sourceType": "business",
-      "link": "https://www.forbes.com/sites/ianpalmer/2026/08/10/mexico-wont-frac-all-their-basins-yet-they-keep-importing-us-gas/",
-      "publishedAt": "2026-08-11T00:33:37.000Z",
-      "excerpt": "Mexico’s president wants to develop shale to replace gas imports from U.S. But she also wants to avoid fracking impacts on freshwater aquifers.",
-      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6a79bba434d1df33cdcbb4aa/0x0.jpg?width=960"
+      "link": "https://www.forbes.com/sites/cathyolson/2026/08/10/mind-reading-pop-artist-jordy-exited-a-toxic-work-relationship-created-a-soaring-album-about-navigating-change/",
+      "publishedAt": "2026-08-11T01:50:29.000Z",
+      "excerpt": "It’s difficult enough to exit a toxic personal relationship. When that relationship is also intertwined with your profession, it can be even more painful to unwind. Pop musician J…",
+      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6a7a5dfba99c8614a75f041b/0x0.jpg?width=960&precrop=961%2C567%2Cx235%2Cy209"
     },
     {
       "title": "Wealthy Nigerians Could Lose Caribbean Visa And Passport Shortcut To Europe",
@@ -100,21 +109,12 @@
       "publishedAt": "2026-08-10T18:24:54.000Z",
       "excerpt": "Aqua blue is one of the colors of the summer, as seen on singers like Charli xcx, Zara Larsson, and Madonna, plus on Alexa Chung via a statement ring.",
       "imageUrl": "https://imgix.bustle.com/uploads/getty/2026/8/10/421ac7c0/berlin-germany-july-18.jpg?w=1200&fit=max"
-    },
-    {
-      "title": "I Tried the $20 Hair Growth Hack Fans Call a Natural “Alternative to Minoxidil”—It’s Worth the Hype",
-      "source": "InStyle",
-      "sourceType": "fashion-authority",
-      "link": "https://www.instyle.com/california-naturals-hair-growth-serum-review-12035952",
-      "publishedAt": "2026-08-11T00:30:00.000Z",
-      "excerpt": "The non-greasy formula is a game-changer.",
-      "imageUrl": "https://www.instyle.com/thmb/fVvZ2V5ZsHA8bVVojBRTgtueILA=/filters:no_upscale():max_bytes(150000):strip_icc():format(jpeg)/GettyImages-1699044801-d5ed9c6915584d569ca3308e4f35e66d.jpg"
     }
   ],
   "sources": {
     "Vogue": "ok",
     "BusinessOfFashion": "failed",
-    "Hypebae": "failed",
+    "Hypebae": "ok",
     "BBCWorld": "ok",
     "NYTWorld": "ok",
     "NPRLifeKit": "ok",
