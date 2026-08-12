@@ -1,6 +1,6 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-08-11T23:28:20.285Z",
+  "generatedAt": "2026-08-12T00:06:33.347Z",
   "items": [
     {
       "title": "What Is “Ferritin Face”—And Do You Have It?",
@@ -12,31 +12,22 @@
       "imageUrl": "https://assets.vogue.com/photos/6a7b989fddb1d5807de4ba0b/master/pass/AdobeStock_205765057%20copy%20(1).jpg"
     },
     {
-      "title": "Timberland Relaunched Its '90s \"Concrete\" Colorway With a New Capsule",
-      "source": "Hypebae",
-      "sourceType": "youth-culture",
-      "link": "https://hypebae.com/2026/8/timberland-concrete-collection-stone-street-boots-where-to-buy",
-      "publishedAt": "2026-08-11T15:24:54.000Z",
-      "excerpt": "Timberland is making cool-toned neutrals a footwear staple this fall with the revival of its archival '90s \"Concrete\" colorway. Perfectly balancing cool and warm grey undertones,…",
-      "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F08%2F11%2Ftimberland-concrete-collection-stone-street-boots-where-to-buy-1.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
       "title": "Russia releases former US Marine reported in poor health",
       "source": "BBC World",
       "sourceType": "global-affairs",
       "link": "https://www.bbc.co.uk/news/articles/cvgj4m8e1ryo?at_medium=RSS&at_campaign=rss",
-      "publishedAt": "2026-08-11T23:21:57.000Z",
+      "publishedAt": "2026-08-11T23:33:45.000Z",
       "excerpt": "Robert Gilman, who was arrested in 2022, was left in \"life-threatening condition\" after being subjected to \"harsh and abusive treatment\", his family says.",
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/719e/live/5d95bd80-959b-11f1-a7ab-8b30adf0800a.jpg"
     },
     {
-      "title": "Searching for Survivors After Colombia’s Earthquake",
+      "title": "As Death Toll From Colombia Earthquake Rises to at Least 181, Rescuers Hunt for Survivors",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/video/world/americas/100000011085349/searching-for-survivors-after-colombias-earthquake.html",
-      "publishedAt": "2026-08-11T21:19:57.000Z",
-      "excerpt": "Our Colombia-based reporter Genevieve Glatsky witnesses the search for survivors after a five-story apartment building in the city of Cali collapsed in an earthquake.",
-      "imageUrl": null
+      "link": "https://www.nytimes.com/2026/08/11/world/americas/colombia-earthquake-survivors-search.html",
+      "publishedAt": "2026-08-11T23:48:47.000Z",
+      "excerpt": "“We heard them screaming,” said one rescuer in Cali, where emergency workers and volunteers are racing against time to find the living trapped in the rubble.",
+      "imageUrl": "https://static01.nyt.com/images/2026/08/11/multimedia/11int-colombia-quake-new1-hblg/11int-colombia-quake-new1-hblg-mediumSquareAt3X.jpg"
     },
     {
       "title": "Feeling short on time? Do a time audit",
@@ -84,13 +75,13 @@
       "imageUrl": null
     },
     {
-      "title": "Why The $8.5 Billion Yankees Are Raising $2.6 Billion From Apollo",
+      "title": "UFC 330: Early Fight Week Full Card Betting Odds",
       "source": "Forbes",
       "sourceType": "business",
-      "link": "https://www.forbes.com/sites/chuckmurr/2026/08/11/why-the-85-billion-yankees-are-raising-26-billion-from-apollo/",
-      "publishedAt": "2026-08-11T22:48:20.000Z",
-      "excerpt": "The New York Yankees, already the richest franchise in Major League Baseball, today announced a $2.6 billion financing agreement with Apollo Sports Capital.",
-      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6a7b592f2e6107d0f49d4a4e/0x0.jpg"
+      "link": "https://www.forbes.com/sites/trentreinsmith/2026/08/11/ufc-330-early-fight-week-full-card-betting-odds/",
+      "publishedAt": "2026-08-11T21:47:12.000Z",
+      "excerpt": "UFC 330 takes place on Saturday, August 15. We look at the early betting odds for the entire event, which is headlined by two title fights.",
+      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6a3ad9bbad65d27b2cd99884/0x0.jpg"
     },
     {
       "title": "How Black Women Can Navigate Career Pivots In A Tough Job Market",
@@ -109,12 +100,21 @@
       "publishedAt": "2026-08-11T17:49:47.000Z",
       "excerpt": "Singer María Isabel takes NYLON along for the NYC Dominican Day Parade, with pictures of her bag essentials, outfit, and experience on the float.",
       "imageUrl": "https://imgix.bustle.com/uploads/image/2026/8/11/d93c1fff/dsc05128.jpeg?w=1200&fit=max"
+    },
+    {
+      "title": "7 Halo Braid Ideas for an Ethereal Protective Hairstyle",
+      "source": "InStyle",
+      "sourceType": "fashion-authority",
+      "link": "https://www.instyle.com/halo-braid-ideas-12037824",
+      "publishedAt": "2026-08-11T22:30:00.000Z",
+      "excerpt": "Your crown awaits.",
+      "imageUrl": "https://www.instyle.com/thmb/rrNzZ-iQ_p1ktvKtDzDuvHUC_5E=/filters:no_upscale():max_bytes(150000):strip_icc():format(jpeg)/GettyImages-2284353562-fotor-2026081118735-30fa12bbff3f491dbf842501568a8fc6.png"
     }
   ],
   "sources": {
     "Vogue": "ok",
     "BusinessOfFashion": "failed",
-    "Hypebae": "ok",
+    "Hypebae": "failed",
     "BBCWorld": "ok",
     "NYTWorld": "ok",
     "NPRLifeKit": "ok",
