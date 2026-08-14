@@ -1,6 +1,6 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-08-14T22:45:33.667Z",
+  "generatedAt": "2026-08-14T23:10:51.572Z",
   "items": [
     {
       "title": "From Mousses to Sprays, Here’s Everything You Need to Add Volume to Fine Hair",
@@ -66,6 +66,15 @@
       "imageUrl": "https://media.architecturaldigest.com/photos/6a7f4af3294c62e4df3d69b1/master/pass/daniels_sunvalley_0457x.jpg"
     },
     {
+      "title": "We Can’t Look Away from the Bulldozers at Santa Elena Canyon",
+      "source": "Texas Monthly",
+      "sourceType": "regional-culture",
+      "link": "https://www.texasmonthly.com/travel/santa-elena-canyon-big-bend-bulldozers/",
+      "publishedAt": "2026-08-14T22:00:22.000Z",
+      "excerpt": "Construction equipment is disturbing the silence at the spiritual heart of Big Bend National Park. Here’s what that means to Texans.",
+      "imageUrl": "https://img.texasmonthly.com/2026/08/santa-elena-canyon-bulldozer.jpg?auto=compress&crop=faces&fit=scale&fm=pjpg&h=640&ixlib=php-3.3.1&q=45&w=1024&wpsize=large"
+    },
+    {
       "title": "What went right this week: the good news that matters",
       "source": "Positive News",
       "sourceType": "solutions-news",
@@ -75,13 +84,13 @@
       "imageUrl": null
     },
     {
-      "title": "Paramount Seeks Settlement With 12 States Blocking Its Merger With Warner Bros.",
+      "title": "NYT ‘Pips’ Hints, Answers And Walkthrough For Saturday, August 15",
       "source": "Forbes",
       "sourceType": "business",
-      "link": "https://www.forbes.com/sites/antoniopequenoiv/2026/08/14/paramount-seeks-settlement-with-12-states-blocking-its-merger-with-warner-bros/",
-      "publishedAt": "2026-08-14T21:30:54.000Z",
-      "excerpt": "Paramount accused attorneys general from 12 states of inflicting “harm without benefit to their own constituents.”",
-      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6a7f88ca31022c9997f82343/0x0.jpg?width=960"
+      "link": "https://www.forbes.com/sites/erikkain/2026/08/14/nyt-pips-answers-saturday-august-15/",
+      "publishedAt": "2026-08-14T22:46:44.000Z",
+      "excerpt": "Looking for help with today's New York Times Pips? We'll walk you through today's puzzle and help you match dominoes to tiles.",
+      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/68ab7aaa205e351d8e7e68df/0x0.jpg?width=960"
     },
     {
       "title": "The Iconoclast ‘The King Is Dead’ Dinner Experience Celebrates Women Chefs On Martha’s Vineyard",
@@ -100,15 +109,6 @@
       "publishedAt": "2026-08-14T15:58:50.000Z",
       "excerpt": "The best party photos of the week, including MAC's Lustreglass celebration, Old Navy's fall denim campaign cocktail, and more.",
       "imageUrl": "https://imgix.bustle.com/uploads/image/2026/8/14/4ae00fab/bfa_55245_8090695.jpg?w=1200&fit=max"
-    },
-    {
-      "title": "15 Stunning September Nail Ideas to Try, From Tortoiseshell to Skittle French Manicures",
-      "source": "InStyle",
-      "sourceType": "fashion-authority",
-      "link": "https://www.instyle.com/september-nail-ideas-12058318",
-      "publishedAt": "2026-08-14T21:00:00.000Z",
-      "excerpt": "Your summer manicure has officially overstayed its welcome.",
-      "imageUrl": "https://www.instyle.com/thmb/Jw3Cb3dm4Pbwg4xRMASjhHlFuXA=/filters:no_upscale():max_bytes(150000):strip_icc():format(jpeg)/655837839_18097018621973512_7120699260390750109_n1-91f3373261a64e939bec9985dbb1dfc8.jpeg"
     }
   ],
   "sources": {
@@ -120,7 +120,7 @@
     "NPRLifeKit": "ok",
     "Eater": "ok",
     "ArchitecturalDigest": "ok",
-    "TexasMonthly": "failed",
+    "TexasMonthly": "ok",
     "PositiveNews": "ok",
     "Forbes": "ok",
     "BlackEnterprise": "ok",
