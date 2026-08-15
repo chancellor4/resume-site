@@ -1,6 +1,6 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-08-15T03:59:42.145Z",
+  "generatedAt": "2026-08-15T04:32:10.140Z",
   "items": [
     {
       "title": "From Mousses to Sprays, Here’s Everything You Need to Add Volume to Fine Hair",
@@ -30,13 +30,13 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/1535/live/7141a7f0-9806-11f1-8f19-057f099340f6.jpg"
     },
     {
-      "title": "A Prominent Mexican Politician Says U.S. Revoked His Visa",
+      "title": "Entrenched, Embattled and Defiant, the Taliban Celebrate 5 Years in Power",
       "source": "NYT World",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/08/14/world/americas/mexico-visas-lopez-beltran.html",
-      "publishedAt": "2026-08-15T01:17:32.000Z",
-      "excerpt": "Andrés Manuel López Beltrán, a former president’s son, lashed out at the Trump administration after he said it canceled his visa, another flashpoint in the tense U.S.-Mexico relat…",
-      "imageUrl": "https://static01.nyt.com/images/2026/08/14/multimedia/14int-mexico-visa-hcvl/14int-mexico-visa-hcvl-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/08/15/world/asia/entrenched-embattled-and-defiant-the-taliban-celebrate-5-years-in-power.html",
+      "publishedAt": "2026-08-15T04:01:18.000Z",
+      "excerpt": "The Taliban have Afghanistan in a chokehold that spares no one. But threats are starting to crack their veneer of stability and control.",
+      "imageUrl": "https://static01.nyt.com/images/2026/08/15/multimedia/15int-afghanistan-anniversary-new-tmjv/15int-afghanistan-anniversary-new-tmjv-mediumSquareAt3X.jpg"
     },
     {
       "title": "If sex is painful, you have options",
@@ -125,7 +125,7 @@
     "Forbes": "ok",
     "BlackEnterprise": "ok",
     "NYLON": "ok",
-    "InStyle": "failed",
+    "InStyle": "ok",
     "WWNO": "ok"
   }
 }
