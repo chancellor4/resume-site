@@ -1,6 +1,6 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-08-15T04:32:10.140Z",
+  "generatedAt": "2026-08-15T05:15:05.246Z",
   "items": [
     {
       "title": "From Mousses to Sprays, Here’s Everything You Need to Add Volume to Fine Hair",
@@ -21,13 +21,13 @@
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F08%2F14%2Ffka-twigs-on-running-seoul-kinetic-sound-bath-capsule-collaboration-release-info-1.jpg?w=800&cbr=1&q=90&fit=max"
     },
     {
-      "title": "Dozens injured and thousands evacuated in Croatia wildfire",
+      "title": "Europe's scorched landscapes seen from space after summer heatwaves",
       "source": "BBC World",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/c9342wn2x27o?at_medium=RSS&at_campaign=rss",
-      "publishedAt": "2026-08-14T20:22:56.000Z",
-      "excerpt": "Officials say the blaze, near the port town of Omis, is one of the worst in Croatia's history.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/1535/live/7141a7f0-9806-11f1-8f19-057f099340f6.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/c4gxy0wqqd9o?at_medium=RSS&at_campaign=rss",
+      "publishedAt": "2026-08-15T05:01:13.000Z",
+      "excerpt": "BBC Verify examines the impact of drought and extreme heat on western European rivers, fields and mountains.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/0b95/live/1efcbb90-97f4-11f1-870d-5d08c49babb2.png"
     },
     {
       "title": "Entrenched, Embattled and Defiant, the Taliban Celebrate 5 Years in Power",
@@ -84,13 +84,13 @@
       "imageUrl": null
     },
     {
-      "title": "Netflix’s Best New Movie Has A 100% Rotten Tomatoes Review Score",
+      "title": "Here Are The MCU X-Men Cast Members Revealed At D23",
       "source": "Forbes",
       "sourceType": "business",
-      "link": "https://www.forbes.com/sites/paultassi/2026/08/14/netflixs-best-new-movie-has-a-100-rotten-tomatoes-review-score/",
-      "publishedAt": "2026-08-15T02:28:35.000Z",
-      "excerpt": "Netflix has a new original movie out with a 100% Rotten Tomatoes critic review score and an absolutely stellar cast.",
-      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6a7ddbd2ea09d03fed2bf2a9/0x0.jpg?width=960"
+      "link": "https://www.forbes.com/sites/paultassi/2026/08/15/here-are-the-mcu-x-men-cast-members-revealed-at-d23/",
+      "publishedAt": "2026-08-15T04:17:07.000Z",
+      "excerpt": "Disney has announced at least part of its MCU X-Men cast, which include big names, upcoming names and a lot of surprises. Here are the actors.",
+      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6a19955eb8d080e3006af4d8/0x0.jpg"
     },
     {
       "title": "The Iconoclast ‘The King Is Dead’ Dinner Experience Celebrates Women Chefs On Martha’s Vineyard",
@@ -125,7 +125,7 @@
     "Forbes": "ok",
     "BlackEnterprise": "ok",
     "NYLON": "ok",
-    "InStyle": "ok",
+    "InStyle": "failed",
     "WWNO": "ok"
   }
 }
