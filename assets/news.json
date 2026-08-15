@@ -1,6 +1,6 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-08-15T03:09:27.826Z",
+  "generatedAt": "2026-08-15T03:59:42.145Z",
   "items": [
     {
       "title": "From Mousses to Sprays, Here’s Everything You Need to Add Volume to Fine Hair",
@@ -84,13 +84,13 @@
       "imageUrl": null
     },
     {
-      "title": "7 New Releases To Watch This Weekend — In Streaming And Cinemas",
+      "title": "Netflix’s Best New Movie Has A 100% Rotten Tomatoes Review Score",
       "source": "Forbes",
       "sourceType": "business",
-      "link": "https://www.forbes.com/sites/hannahabraham/2026/08/14/7-new-releases-to-watch-this-weekend---in-streaming-and-cinemas/",
-      "publishedAt": "2026-08-15T01:00:00.000Z",
-      "excerpt": "Two new streaming series hit their stride, one new theatrical release is worth the trip and a prestige DC drama makes its debut on Sunday",
-      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6a7f4c86a6aa0b4613df410f/0x0.jpg?width=960&precrop=2154%2C1210%2Cx0%2Cy0"
+      "link": "https://www.forbes.com/sites/paultassi/2026/08/14/netflixs-best-new-movie-has-a-100-rotten-tomatoes-review-score/",
+      "publishedAt": "2026-08-15T02:28:35.000Z",
+      "excerpt": "Netflix has a new original movie out with a 100% Rotten Tomatoes critic review score and an absolutely stellar cast.",
+      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6a7ddbd2ea09d03fed2bf2a9/0x0.jpg?width=960"
     },
     {
       "title": "The Iconoclast ‘The King Is Dead’ Dinner Experience Celebrates Women Chefs On Martha’s Vineyard",
@@ -125,7 +125,7 @@
     "Forbes": "ok",
     "BlackEnterprise": "ok",
     "NYLON": "ok",
-    "InStyle": "ok",
+    "InStyle": "failed",
     "WWNO": "ok"
   }
 }
