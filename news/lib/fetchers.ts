@@ -24,21 +24,18 @@ export const SOURCES: Array<{
   url:        string;
   timeoutMs?: number;
 }> = [
-  { key: 'Vogue',             source: 'Vogue',               sourceType: 'fashion-authority', url: 'https://www.vogue.com/feed/rss' },
-  { key: 'BusinessOfFashion', source: 'Business of Fashion', sourceType: 'fashion-business',  url: 'https://www.businessoffashion.com/feeds/news' },
-  { key: 'Hypebae',           source: 'Hypebae',             sourceType: 'youth-culture',     url: 'https://hypebae.com/feed' },
-  { key: 'BBCWorld',          source: 'BBC World',           sourceType: 'global-affairs',    url: 'http://feeds.bbci.co.uk/news/world/rss.xml' },
-  { key: 'NYTWorld',          source: 'NYT World',           sourceType: 'world-news',        url: 'https://rss.nytimes.com/services/xml/rss/nyt/World.xml' },
-  { key: 'NPRLifeKit',        source: 'NPR Life Kit',        sourceType: 'practical-life',    url: 'https://feeds.npr.org/510338/podcast.xml', timeoutMs: 12000 },
-  { key: 'Eater',             source: 'Eater',               sourceType: 'food-culture',      url: 'https://www.eater.com/rss/index.xml' },
-  { key: 'ArchitecturalDigest', source: 'Architectural Digest', sourceType: 'design',          url: 'https://www.architecturaldigest.com/feed/rss' },
-  { key: 'TexasMonthly',      source: 'Texas Monthly',       sourceType: 'regional-culture',  url: 'https://www.texasmonthly.com/feed/' },
-  { key: 'PositiveNews',      source: 'Positive News',       sourceType: 'solutions-news',    url: 'https://www.positive.news/feed/' },
-  { key: 'Forbes',            source: 'Forbes',              sourceType: 'business',          url: 'https://www.forbes.com/business/feed/' },
-  { key: 'BlackEnterprise',   source: 'Black Enterprise',    sourceType: 'business',          url: 'https://www.blackenterprise.com/feed/' },
+  { key: 'NewYorkTimes',      source: 'New York Times',      sourceType: 'world-news',        url: 'https://rss.nytimes.com/services/xml/rss/nyt/World.xml' },
   { key: 'NYLON',             source: 'NYLON',               sourceType: 'youth-culture',     url: 'https://www.nylon.com/rss' },
+  { key: 'Eater',             source: 'Eater',               sourceType: 'food-culture',      url: 'https://www.eater.com/rss/index.xml' },
+  { key: 'TexasMonthly',      source: 'Texas Monthly',       sourceType: 'regional-culture',  url: 'https://www.texasmonthly.com/feed/' },
+  { key: 'NPR',               source: 'NPR',                 sourceType: 'practical-life',    url: 'https://feeds.npr.org/510338/podcast.xml', timeoutMs: 12000 },
+  { key: 'PositiveNews',      source: 'Positive News',       sourceType: 'solutions-news',    url: 'https://www.positive.news/feed/' },
+  { key: 'Vogue',             source: 'Vogue',               sourceType: 'fashion-authority', url: 'https://www.vogue.com/feed/rss' },
+  { key: 'ArchitecturalDigest', source: 'Architectural Digest', sourceType: 'design',          url: 'https://www.architecturaldigest.com/feed/rss' },
+  { key: 'BBC',               source: 'BBC',                 sourceType: 'global-affairs',    url: 'http://feeds.bbci.co.uk/news/world/rss.xml' },
+  { key: 'Forbes',            source: 'Forbes',              sourceType: 'business',          url: 'https://www.forbes.com/business/feed/' },
   { key: 'InStyle',           source: 'InStyle',             sourceType: 'fashion-authority', url: 'https://feeds-api.dotdashmeredith.com/v1/rss/google/8e4da836-f458-4776-856b-0a481d6dc617' },
-  { key: 'WWNO',              source: 'WWNO',                sourceType: 'local-news',         url: 'https://www.wwno.org/local-regional-news.rss' },
+  { key: 'Hypebae',           source: 'Hypebae',             sourceType: 'youth-culture',     url: 'https://hypebae.com/feed' },
 ];
 
 const FETCH_TIMEOUT_MS = 5000;
