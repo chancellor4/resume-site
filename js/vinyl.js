@@ -58,10 +58,24 @@
 
   /* ── Configuration ───────────────────────────────────────── */
 
-  var CRATE_URL      = 'https://soundcloud.com/chance-222067461/sets/website-music';
+  var PLAYLISTS      = [
+    {
+      id: 'lofi-radio',
+      title: 'lofi radio',
+      url: 'https://soundcloud.com/chance-222067461/sets/website-music'
+    },
+    {
+      id: 'drizzy-drake-slowed-1-1-0-nsfw',
+      title: 'Drizzy Drake slowed 1.1.0 / after hours',
+      url: 'https://soundcloud.com/chance-222067461/sets/drizzy-drake-slowed-1-1-0'
+    }
+  ];
+  var DEFAULT_PLAYLIST_ID = PLAYLISTS[0].id;
   var DEFAULT_VOLUME = 40;
   var VOLUME_KEY     = 'fc:volume';
   var SHELF_KEY      = 'ce-vinyl-shelf';
+  var PLAYLIST_KEY   = 'ce-vinyl-playlist';
+  var PLAYLIST_STATES_KEY = 'ce-vinyl-playlist-states';
   var SHELF_TTL      = 30 * 60 * 1000;              // 30 min
   var SDK_URL        = 'https://w.soundcloud.com/player/api.js';
   var SILENCE_MS     = 10000;                        // "Unavailable" timeout
@@ -93,7 +107,7 @@
 
   var FEATURE_ENHANCED_PERSISTENCE = true;
   var SHELF_VERSION = 2;                               // bump to invalidate all cached shelves
-  var CONT_SCHEMA   = 1;                               // continuity payload schema version
+  var CONT_SCHEMA   = 2;                               // continuity payload schema version
 
   /* ── Feature gates (v1.4.0) ────────────────────────────── */
   /*    Explicit lifecycle state machine. Governs loading,     */
@@ -257,9 +271,15 @@
        Schema: { v?: number, ts: number, data: TrackMeta[] }
        Returns: TrackMeta[] | null */
 
-    function shelfRead() {
+    function playlistStorageKey(base, playlistId) {
+      return !playlistId || playlistId === DEFAULT_PLAYLIST_ID
+        ? base
+        : base + ':' + playlistId;
+    }
+
+    function shelfRead(playlistId) {
       try {
-        var raw = sessionStorage.getItem(SHELF_KEY);
+        var raw = sessionStorage.getItem(playlistStorageKey(SHELF_KEY, playlistId));
         if (!raw) return null;
         var obj = JSON.parse(raw);
         /* Reject cache if shelf schema version doesn't match */
@@ -272,16 +292,16 @@
       } catch (e) { return null; }
     }
 
-    function shelfWrite(data) {
+    function shelfWrite(data, playlistId) {
       try {
         var payload = { ts: Date.now(), data: data };
         if (FEATURE_ENHANCED_PERSISTENCE) payload.v = SHELF_VERSION;
-        sessionStorage.setItem(SHELF_KEY, JSON.stringify(payload));
+        sessionStorage.setItem(playlistStorageKey(SHELF_KEY, playlistId), JSON.stringify(payload));
       } catch (e) { /* quota exceeded or private mode — safe to ignore */ }
     }
 
-    function shelfClear() {
-      try { sessionStorage.removeItem(SHELF_KEY); } catch (e) {}
+    function shelfClear(playlistId) {
+      try { sessionStorage.removeItem(playlistStorageKey(SHELF_KEY, playlistId)); } catch (e) {}
     }
 
     function queueStorage() {
@@ -294,11 +314,11 @@
       return null;
     }
 
-    function queueRead() {
+    function queueRead(playlistId) {
       var storage = queueStorage();
       if (!storage) return null;
       try {
-        var raw = storage.getItem(QUEUE_KEY);
+        var raw = storage.getItem(playlistStorageKey(QUEUE_KEY, playlistId));
         if (!raw) return null;
         var obj = JSON.parse(raw);
         if (!obj || obj.v !== QUEUE_VERSION || typeof obj.bucket !== 'number' || !obj.ids || !obj.ids.length) return null;
@@ -307,12 +327,38 @@
       } catch (e) { return null; }
     }
 
-    function queueWrite(payload) {
+    function queueWrite(payload, playlistId) {
       var storage = queueStorage();
       if (!storage) return;
       try {
-        storage.setItem(QUEUE_KEY, JSON.stringify(payload));
+        storage.setItem(playlistStorageKey(QUEUE_KEY, playlistId), JSON.stringify(payload));
       } catch (e) {}
+    }
+
+    function playlistRead() {
+      try {
+        var id = localStorage.getItem(PLAYLIST_KEY);
+        for (var i = 0; i < PLAYLISTS.length; i++) {
+          if (PLAYLISTS[i].id === id) return id;
+        }
+      } catch (e) {}
+      return DEFAULT_PLAYLIST_ID;
+    }
+
+    function playlistWrite(id) {
+      try { localStorage.setItem(PLAYLIST_KEY, id); } catch (e) {}
+    }
+
+    function playlistStatesRead() {
+      try {
+        var raw = sessionStorage.getItem(PLAYLIST_STATES_KEY);
+        var states = raw ? JSON.parse(raw) : null;
+        return states && typeof states === 'object' ? states : {};
+      } catch (e) { return {}; }
+    }
+
+    function playlistStatesWrite(states) {
+      try { sessionStorage.setItem(PLAYLIST_STATES_KEY, JSON.stringify(states || {})); } catch (e) {}
     }
 
     function volumeRead() {
@@ -331,7 +377,7 @@
     /* ── Continuity: cross-page playback state ───────────────
        Key:  CONT_KEY ('ce-vinyl-cont')
        TTL:  CONT_TTL (30 s)
-       Schema: { v?: number, ts: number, side: number,
+       Schema: { v?: number, ts: number, playlist?: string, side: number,
                  spinning: bool, pos: number, vol?: number,
                  hushed?: bool }
        continuityRestore is consume-on-read: deletes after returning.
@@ -438,6 +484,10 @@
       volumeWrite:       volumeWrite,
       queueRead:         queueRead,
       queueWrite:        queueWrite,
+      playlistRead:      playlistRead,
+      playlistWrite:     playlistWrite,
+      playlistStatesRead: playlistStatesRead,
+      playlistStatesWrite: playlistStatesWrite,
       continuitySave:    continuitySave,
       continuityRestore: continuityRestore,
       continuityPeek:    continuityPeek,
@@ -557,6 +607,23 @@
       widget.skip(index);
     }
 
+    function load(url, onReady) {
+      if (!widget || typeof widget.load !== 'function') return false;
+      widget.load(url, {
+        auto_play: false,
+        show_artwork: false,
+        visual: false,
+        buying: false,
+        sharing: false,
+        download: false,
+        show_playcount: false,
+        show_comments: false,
+        color: '#7b5e7b',
+        callback: onReady
+      });
+      return true;
+    }
+
     /* ── Volume ──────────────────────────────────────────────── */
 
     function setVolume(level) {
@@ -621,6 +688,7 @@
       pause:           pause,
       seekTo:          seekTo,
       skip:            skip,
+      load:            load,
       setVolume:       setVolume,
       getSounds:       getSounds,
       getCurrentIndex: getCurrentIndex,
@@ -1296,8 +1364,10 @@
       return Math.floor(Date.now() / QUEUE_REFRESH_MS);
     }
 
-    function queueIdForBucket(bucket) {
-      return 'abstraction.fm:' + bucket;
+    function queueIdForBucket(bucket, playlistId) {
+      return 'abstraction.fm:' +
+        (playlistId && playlistId !== DEFAULT_PLAYLIST_ID ? playlistId + ':' : '') +
+        bucket;
     }
 
     function mapRecords(records) {
@@ -1317,9 +1387,9 @@
       return true;
     }
 
-    function deterministicIds(records, bucket) {
+    function deterministicIds(records, bucket, playlistId) {
       var pool = records.slice();
-      var rng = mulberry32(hashString(queueIdForBucket(bucket)));
+      var rng = mulberry32(hashString(queueIdForBucket(bucket, playlistId)));
       for (var i = pool.length - 1; i > 0; i--) {
         var j = Math.floor(rng() * (i + 1));
         var tmp = pool[i];
@@ -1348,13 +1418,13 @@
       return [current].concat(resolved).slice(0, Math.min(QUEUE_LIMIT, records.length));
     }
 
-    function resolve(records, currentSide) {
+    function resolve(records, currentSide, playlistId) {
       if (!FEATURE_QUEUE_V6 || !records || !records.length) return records || [];
       var bucket = bucketForNow();
-      var cached = store.queueRead();
+      var cached = store.queueRead(playlistId);
       var ids = cached && cached.bucket === bucket && idsUsable(cached.ids, records)
         ? cached.ids
-        : deterministicIds(records, bucket);
+        : deterministicIds(records, bucket, playlistId);
 
       if (!ids || !ids.length) ids = records.slice(0, QUEUE_LIMIT).map(recordKey);
 
@@ -1363,26 +1433,26 @@
           v: QUEUE_VERSION,
           ts: Date.now(),
           bucket: bucket,
-          id: queueIdForBucket(bucket),
+          id: queueIdForBucket(bucket, playlistId),
           ids: ids
-        });
+        }, playlistId);
       }
 
       return includeCurrent(materialize(ids, records), records, currentSide);
     }
 
-    function position(records, currentSide) {
-      var q = resolve(records, currentSide);
+    function position(records, currentSide, playlistId) {
+      var q = resolve(records, currentSide, playlistId);
       for (var i = 0; i < q.length; i++) {
         if (q[i].index === currentSide) return i;
       }
       return -1;
     }
 
-    function next(records, currentSide) {
-      var q = resolve(records, currentSide);
+    function next(records, currentSide, playlistId) {
+      var q = resolve(records, currentSide, playlistId);
       if (!q.length) return null;
-      var pos = position(records, currentSide);
+      var pos = position(records, currentSide, playlistId);
       if (pos < 0) return q[0];
       return q[(pos + 1) % q.length] || null;
     }
@@ -1444,14 +1514,39 @@
     var lastPosition  = 0;
     var phase         = 'dormant';
     var scrubbing     = false;                    // true during groove drag
+    var activePlaylistIndex = 0;
+    var playlistStates = store.playlistStatesRead();
+    var playlistSwitching = false;
+    var playlistCataloging = false;
+    var resumeAfterSwitch = false;
+    var playlistLoadTimer = null;
+
+    (function restoreActivePlaylist() {
+      var storedId = store.playlistRead();
+      for (var i = 0; i < PLAYLISTS.length; i++) {
+        if (PLAYLISTS[i].id === storedId) {
+          activePlaylistIndex = i;
+          break;
+        }
+      }
+      var cont = store.continuityPeek();
+      if (cont && cont.playlist) {
+        for (var j = 0; j < PLAYLISTS.length; j++) {
+          if (PLAYLISTS[j].id === cont.playlist) {
+            activePlaylistIndex = j;
+            break;
+          }
+        }
+      }
+    })();
 
     var LEGAL_MOVES = {
       dormant:  ['loading'],
       loading:  ['ready', 'errored'],
-      ready:    ['playing', 'errored'],
-      playing:  ['paused', 'ready', 'errored'],
-      paused:   ['playing', 'ready', 'errored'],
-      errored:  []
+      ready:    ['playing', 'loading', 'errored'],
+      playing:  ['paused', 'ready', 'loading', 'errored'],
+      paused:   ['playing', 'ready', 'loading', 'errored'],
+      errored:  ['loading']
     };
 
     function wire(deps) {
@@ -1479,12 +1574,26 @@
       return !FEATURE_STATE_MACHINE || phase === 'ready' || phase === 'playing' || phase === 'paused';
     }
 
+    function activePlaylist() {
+      return PLAYLISTS[activePlaylistIndex] || PLAYLISTS[0];
+    }
+
+    function rememberPlaylistPosition() {
+      var playlist = activePlaylist();
+      playlistStates[playlist.id] = {
+        side: currentSide,
+        pos: lastPosition || 0,
+        ts: Date.now()
+      };
+      store.playlistStatesWrite(playlistStates);
+    }
+
     function shelfRead() {
-      return store.shelfRead();
+      return store.shelfRead(activePlaylist().id);
     }
 
     function shelfWrite(data) {
-      store.shelfWrite(data);
+      store.shelfWrite(data, activePlaylist().id);
     }
 
     function saveState() {
@@ -1493,6 +1602,7 @@
         side: currentSide,
         spinning: spinning,
         pos: lastPosition || 0,
+        playlist: activePlaylist().id,
         ts: Date.now()
       };
       if (FEATURE_ENHANCED_PERSISTENCE) {
@@ -1500,6 +1610,7 @@
         payload.vol = _ui.getDialValue();
         payload.hushed = hushed;
       }
+      rememberPlaylistPosition();
       store.continuitySave(payload);
       vlog(3, 'continuity:saved', { side: payload.side, pos: payload.pos, vol: payload.vol, hushed: payload.hushed });
     }
@@ -1508,13 +1619,13 @@
       var state = store.continuityRestore();
       if (!state) return;
 
-      if (typeof state.side === 'number' && state.side !== currentSide) {
+      if (typeof state.side === 'number' && records[state.side] && state.side !== currentSide) {
         currentSide = state.side;
         adapter.skip(state.side);
       }
       if (state.pos > 0) adapter.seekTo(state.pos);
 
-      if (FEATURE_ENHANCED_PERSISTENCE && state.v >= CONT_SCHEMA) {
+      if (FEATURE_ENHANCED_PERSISTENCE && state.v >= 1) {
         if (typeof state.vol === 'number') {
           adapter.setVolume(state.hushed ? 0 : state.vol);
           _ui.setDialValue(state.hushed ? 0 : state.vol);
@@ -1576,7 +1687,7 @@
     function warmSource() {
       var source = _ui.getSource();
       if (source.src && source.src !== 'about:blank') return;
-      source.src = adapter.buildEmbedUrl(CRATE_URL);
+      source.src = adapter.buildEmbedUrl(activePlaylist().url);
     }
 
     function safePlay() {
@@ -1586,6 +1697,74 @@
         if (FEATURE_GROOVE_IMMERSIVE) groove.stopFlow();
         _ui.reflectSpin();
       });
+    }
+
+    function finishPlaylistLoad() {
+      if (!playlistSwitching || playlistCataloging) return;
+      if (playlistLoadTimer) {
+        clearTimeout(playlistLoadTimer);
+        playlistLoadTimer = null;
+      }
+      playlistCataloging = true;
+      sourceReady = true;
+      adapter.setVolume(hushed ? 0 : savedVolume);
+      _ui.setDialValue(hushed ? 0 : savedVolume);
+      catalogRecords({
+        restoreContinuity: false,
+        onReady: function () {
+          playlistSwitching = false;
+          playlistCataloging = false;
+          if (resumeAfterSwitch) safePlay();
+          else adapter.pause();
+          resumeAfterSwitch = false;
+          _ui.reflectPlaylistControls();
+        }
+      });
+    }
+
+    function switchPlaylist(direction) {
+      if (PLAYLISTS.length < 2 || playlistSwitching || !adapter.isInit()) return false;
+
+      rememberPlaylistPosition();
+      resumeAfterSwitch = spinning;
+      activePlaylistIndex = (activePlaylistIndex + direction + PLAYLISTS.length) % PLAYLISTS.length;
+      store.playlistWrite(activePlaylist().id);
+
+      playlistSwitching = true;
+      playlistCataloging = false;
+      sourceReady = false;
+      spinning = false;
+      records = [];
+      currentSide = 0;
+      lastPosition = 0;
+      if (FEATURE_GROOVE_IMMERSIVE) groove.stopFlow();
+      if (FEATURE_GROOVE) groove.clear();
+      transition('loading', 'playlist-switch');
+      _ui.reflectSpin();
+      _ui.setTitle('Loading\u2026');
+      _ui.fillCrate();
+
+      if (!adapter.load(activePlaylist().url, finishPlaylistLoad)) {
+        playlistSwitching = false;
+        transition('errored', 'playlist-load-unavailable');
+        _ui.setTitle('Unavailable');
+        _ui.reflectPlaylistControls();
+        return false;
+      }
+
+      playlistLoadTimer = setTimeout(function () {
+        if (!playlistSwitching) return;
+        playlistLoadTimer = null;
+        playlistSwitching = false;
+        playlistCataloging = false;
+        resumeAfterSwitch = false;
+        transition('errored', 'playlist-ready-timeout');
+        _ui.setTitle('Unavailable');
+        _ui.fillCrate();
+      }, SILENCE_MS);
+
+      vlog(2, 'playlist:switch', { playlist: activePlaylist().id, resume: resumeAfterSwitch });
+      return true;
     }
 
     function dropNeedle() {
@@ -1600,6 +1779,11 @@
       needleDropped = true;
 
       adapter.on('ready', function () {
+        if (playlistSwitching) {
+          finishPlaylistLoad();
+          return;
+        }
+        if (sourceReady) return;
         sourceReady = true;
         vlog(2, 'widget:ready');
         vmark('widget:ready');
@@ -1617,6 +1801,11 @@
       });
 
       adapter.on('pause', function () {
+        if (playlistSwitching) {
+          spinning = false;
+          _ui.reflectSpin();
+          return;
+        }
         if (FEATURE_STATE_MACHINE && !transition('paused', 'pause-event')) return;
         spinning = false;
         _ui.reflectSpin();
@@ -1660,6 +1849,13 @@
       });
 
       adapter.on('error', function () {
+        if (playlistLoadTimer) {
+          clearTimeout(playlistLoadTimer);
+          playlistLoadTimer = null;
+        }
+        playlistSwitching = false;
+        playlistCataloging = false;
+        resumeAfterSwitch = false;
         transition('errored', 'widget-error');
         spinning = false;
         _ui.reflectSpin();
@@ -1677,15 +1873,33 @@
       }, SILENCE_MS);
     }
 
-    function catalogRecords() {
+    function catalogRecords(options) {
+      options = options || {};
+
+      function presentCatalog(reason) {
+        if (options.restoreContinuity === false) {
+          var snapshot = playlistStates[activePlaylist().id];
+          if (snapshot && typeof snapshot.side === 'number' && records[snapshot.side]) {
+            currentSide = snapshot.side;
+            adapter.skip(currentSide);
+            if (snapshot.pos > 0) {
+              lastPosition = snapshot.pos;
+              adapter.seekTo(snapshot.pos);
+            }
+          }
+        }
+        _ui.fillCrate();
+        _ui.reflectTitle();
+        transition('ready', reason);
+        if (options.restoreContinuity !== false) restoreState();
+        if (options.onReady) options.onReady();
+      }
+
       var cached = shelfRead();
       if (cached && cached.length) {
         records = cached;
         vlog(3, 'catalog:shelf-hit', { tracks: cached.length });
-        _ui.fillCrate();
-        _ui.reflectTitle();
-        transition('ready', 'catalog-shelf');
-        restoreState();
+        presentCatalog('catalog-shelf');
         return;
       }
 
@@ -1694,6 +1908,11 @@
           vlog(1, 'catalog:empty');
           _ui.setTitle('Empty playlist');
           transition('errored', 'catalog-empty');
+          playlistSwitching = false;
+          playlistCataloging = false;
+          resumeAfterSwitch = false;
+          _ui.fillCrate();
+          _ui.reflectPlaylistControls();
           return;
         }
         normalizeCatalog(sounds).then(function (catalog) {
@@ -1704,10 +1923,7 @@
           });
           vmark('catalog:done');
           if (catalog.complete) shelfWrite(records);
-          _ui.fillCrate();
-          _ui.reflectTitle();
-          transition('ready', 'catalog-fetched');
-          restoreState();
+          presentCatalog('catalog-fetched');
         });
       });
     }
@@ -1759,7 +1975,7 @@
 
     function advanceQueue(reason) {
       if (!FEATURE_QUEUE_V6 || !records.length) return false;
-      var next = queue.next(records, currentSide);
+      var next = queue.next(records, currentSide, activePlaylist().id);
       if (!next) return false;
       if (next.index === currentSide && records.length < 2) return false;
       currentSide = next.index;
@@ -1834,8 +2050,13 @@
       isHushed: function () { return hushed; },
       getSavedVolume: function () { return savedVolume; },
       getRecords: function () { return records; },
-      getQueue: function () { return queue.resolve(records, currentSide); },
-      getQueuePosition: function () { return queue.position(records, currentSide); },
+      getQueue: function () { return queue.resolve(records, currentSide, activePlaylist().id); },
+      getQueuePosition: function () { return queue.position(records, currentSide, activePlaylist().id); },
+      getPlaylists: function () { return PLAYLISTS.slice(); },
+      getActivePlaylist: activePlaylist,
+      getActivePlaylistIndex: function () { return activePlaylistIndex; },
+      isPlaylistSwitching: function () { return playlistSwitching; },
+      canSwitchPlaylist: function () { return PLAYLISTS.length > 1 && adapter.isInit() && !playlistSwitching; },
       getCurrentSide: function () { return currentSide; },
       getCurrentRecord: function () { return records[currentSide]; },
       getLastPosition: function () { return lastPosition; },
@@ -1849,6 +2070,7 @@
       skip: function (index) { return selectSide(index, false); },
       select: selectSide,
       advanceQueue: advanceQueue,
+      switchPlaylist: switchPlaylist,
       mute: mute,
       unmute: unmute,
       setVolume: setVolume,
@@ -2246,16 +2468,46 @@
 
     var el    = {};
     var glyph = {};
+    var playlistTitleMotionRaf = 0;
 
     function wire(deps) {
       _ctrl = deps.ctrl;
       _sync = deps.sync;
     }
 
+    function reducedMotion() {
+      if (document.documentElement.getAttribute('data-motion') === 'reduced') return true;
+      try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+      catch (e) { return false; }
+    }
+
+    function resetPlaylistTitleMotion() {
+      if (playlistTitleMotionRaf) cancelAnimationFrame(playlistTitleMotionRaf);
+      playlistTitleMotionRaf = 0;
+      if (!el.playlistTitle || !el.playlistTitleTrack) return;
+      el.playlistTitle.classList.remove('vinyl-station-name--overflowing');
+      el.playlistTitleTrack.style.removeProperty('--vinyl-playlist-loop-distance');
+      el.playlistTitleTrack.style.removeProperty('--vinyl-playlist-loop-duration');
+    }
+
+    function reflectPlaylistTitleMotion() {
+      resetPlaylistTitleMotion();
+      if (!_ctrl || !_ctrl.isSpinning() || reducedMotion() || !el.playlistTitleText) return;
+      playlistTitleMotionRaf = requestAnimationFrame(function () {
+        playlistTitleMotionRaf = 0;
+        var distance = Math.ceil(el.playlistTitleText.scrollWidth + 24);
+        if (el.playlistTitleText.scrollWidth <= el.playlistTitle.clientWidth + 1) return;
+        el.playlistTitleTrack.style.setProperty('--vinyl-playlist-loop-distance', '-' + distance + 'px');
+        el.playlistTitleTrack.style.setProperty('--vinyl-playlist-loop-duration', Math.max(14, distance / 10) + 's');
+        el.playlistTitle.classList.add('vinyl-station-name--overflowing');
+      });
+    }
+
     function mount(stageEl) {
       el.stage  = stageEl;
       el.source = $('vinylSource');
       el.title  = $('vinylTitle');
+      el.marquee = el.stage.querySelector('.vinyl-marquee');
       el.spin   = $('vinylSpin');
       el.hush   = $('vinylHush');
       el.dial   = $('vinylDial');
@@ -2283,6 +2535,7 @@
       el.hush.addEventListener('click', onHush);
       el.dial.addEventListener('input', onDial);
       el.latch.addEventListener('click', function () { toggleCrate(); });
+      window.addEventListener('resize', reflectPlaylistTitleMotion, { passive: true });
 
       document.addEventListener('click', function (e) {
         if (!el.crate.hidden && !el.stage.contains(e.target)) toggleCrate(false);
@@ -2300,7 +2553,7 @@
       obs.observe(document.documentElement, { attributes: true });
 
       if (FEATURE_CRATE_V2) {
-        var marquee = el.stage.querySelector('.vinyl-marquee');
+        var marquee = el.marquee;
         if (marquee) {
           el.upnext = document.createElement('span');
           el.upnext.className = 'vinyl-upnext';
@@ -2477,6 +2730,7 @@
       el.spin.setAttribute('aria-label', s ? 'Pause' : 'Play');
       el.spin.title = s ? 'Pause' : 'Play';
       el.stage.classList.toggle('vinyl--spinning', s);
+      reflectPlaylistTitleMotion();
       reflectStationStatus();
     }
 
@@ -2561,7 +2815,9 @@
     }
 
     function fillCrate() {
+      resetPlaylistTitleMotion();
       el.crate.innerHTML = '';
+      el.crate.scrollTop = 0;
       var queueUi = FEATURE_QUEUE_V6 && FEATURE_CRATE_V2;
       var currentPos = queueUi ? _ctrl.getQueuePosition() : -1;
       var recs = queueUi ? displayQueue(_ctrl.getQueue(), currentPos) : _ctrl.getRecords();
@@ -2587,21 +2843,69 @@
         stationCopy.className = 'vinyl-station-copy';
         var stationName = document.createElement('span');
         stationName.className = 'vinyl-station-name';
-        stationName.textContent = 'lofi radio';
+        var stationNameTrack = document.createElement('span');
+        stationNameTrack.className = 'vinyl-station-name-track';
+        var stationNameText = document.createElement('span');
+        stationNameText.className = 'vinyl-station-name-text';
+        var stationNameClone = document.createElement('span');
+        stationNameClone.className = 'vinyl-station-name-text';
+        stationNameClone.setAttribute('aria-hidden', 'true');
+        stationNameTrack.appendChild(stationNameText);
+        stationNameTrack.appendChild(stationNameClone);
+        stationName.appendChild(stationNameTrack);
         var stationLabel = document.createElement('span');
         stationLabel.className = 'vinyl-station-label';
-        stationLabel.textContent = 'queue rotation';
+        stationLabel.setAttribute('aria-hidden', 'true');
+        stationLabel.textContent = '\u00a0';
         var stationSignal = document.createElement('span');
         stationSignal.className = 'vinyl-station-signal';
         stationCopy.appendChild(stationName);
         stationCopy.appendChild(stationLabel);
+
+        var playlistNav = document.createElement('span');
+        playlistNav.className = 'vinyl-playlist-nav';
+        playlistNav.setAttribute('role', 'group');
+        playlistNav.setAttribute('aria-label', 'Switch playlist');
+        var playlistPrev = document.createElement('button');
+        playlistPrev.className = 'vinyl-playlist-arrow';
+        playlistPrev.type = 'button';
+        playlistPrev.textContent = '\u2190';
+        playlistPrev.addEventListener('click', function (e) {
+          e.stopPropagation();
+          _ctrl.switchPlaylist(-1);
+        });
+        var playlistNext = document.createElement('button');
+        playlistNext.className = 'vinyl-playlist-arrow';
+        playlistNext.type = 'button';
+        playlistNext.textContent = '\u2192';
+        playlistNext.addEventListener('click', function (e) {
+          e.stopPropagation();
+          _ctrl.switchPlaylist(1);
+        });
+        playlistNav.appendChild(playlistPrev);
+        playlistNav.appendChild(playlistNext);
+
+        var activePlaylist = _ctrl.getActivePlaylist();
+        stationNameText.textContent = activePlaylist.title;
+        stationNameClone.textContent = activePlaylist.title;
+        stationName.title = activePlaylist.title;
+        stationCopy.setAttribute('aria-label', 'Active playlist: ' + activePlaylist.title);
+        stationCopy.setAttribute('data-vinyl-playlist-active', 'true');
         strip.appendChild(stationStatus);
         strip.appendChild(stationCopy);
+        strip.appendChild(playlistNav);
         strip.appendChild(stationSignal);
         el.stationStatus = stationStatus;
         el.stationSignal = stationSignal;
+        el.playlistPrev = playlistPrev;
+        el.playlistNext = playlistNext;
+        el.playlistTitle = stationName;
+        el.playlistTitleTrack = stationNameTrack;
+        el.playlistTitleText = stationNameText;
         reflectStationStatus();
+        reflectPlaylistControls();
         el.crate.appendChild(strip);
+        reflectPlaylistTitleMotion();
       }
 
       if (!recs.length) {
@@ -2670,6 +2974,7 @@
       el.crate.hidden = !show;
       el.latch.setAttribute('aria-expanded', String(show));
       el.latch.setAttribute('aria-label', show ? 'Hide playlist' : 'Show playlist');
+      if (show) reflectPlaylistTitleMotion();
     }
 
     function onSpin() {
@@ -2723,6 +3028,21 @@
       el.stationSignal.textContent = state.signal;
     }
 
+    function reflectPlaylistControls() {
+      if (!el.playlistPrev || !el.playlistNext) return;
+      var playlists = _ctrl.getPlaylists();
+      var index = _ctrl.getActivePlaylistIndex();
+      var enabled = _ctrl.canSwitchPlaylist();
+      var previous = playlists[(index - 1 + playlists.length) % playlists.length];
+      var next = playlists[(index + 1) % playlists.length];
+      el.playlistPrev.disabled = !enabled;
+      el.playlistNext.disabled = !enabled;
+      el.playlistPrev.setAttribute('aria-label', 'Previous playlist: ' + previous.title);
+      el.playlistNext.setAttribute('aria-label', 'Next playlist: ' + next.title);
+      el.playlistPrev.title = 'Previous playlist';
+      el.playlistNext.title = 'Next playlist';
+    }
+
     function raiseStage() {
       el.stage.removeAttribute('aria-hidden');
       el.stage.removeAttribute('inert');
@@ -2766,6 +3086,7 @@
       reflectNowPlaying: reflectNowPlaying,
       reflectRemoteState: reflectRemoteState,
       reflectStationStatus: reflectStationStatus,
+      reflectPlaylistControls: reflectPlaylistControls,
       fillCrate: fillCrate,
       toggleCrate: toggleCrate,
       raiseStage: raiseStage,

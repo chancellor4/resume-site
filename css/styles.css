@@ -3716,6 +3716,7 @@ html[data-mode="dnd"] .vinyl.vinyl--spinning .vinyl-sleeve::after {
   z-index: 910;
   scrollbar-width: thin;
   scrollbar-color: rgba(192, 178, 190, 0.35) transparent;
+  scrollbar-gutter: stable;
 }
 
 .vinyl-crate li {
@@ -3749,7 +3750,7 @@ html[data-mode="dnd"] .vinyl.vinyl--spinning .vinyl-sleeve::after {
   top: 0;
   z-index: 1;
   display: grid;
-  grid-template-columns: 24px minmax(0, 1fr) auto;
+  grid-template-columns: 24px minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 8px;
   min-height: 40px;
@@ -3821,6 +3822,13 @@ html[data-mode="dnd"] .vinyl.vinyl--spinning .vinyl-sleeve::after {
 .vinyl-crate-strip > * {
   position: relative;
   z-index: 1;
+}
+
+.vinyl-crate-strip button {
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-text-fill-color: currentColor;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .vinyl-station-status {
@@ -3982,13 +3990,92 @@ html[data-mode="dnd"] .vinyl.vinyl--spinning .vinyl-sleeve::after {
   min-width: 0;
 }
 
+.vinyl-station-copy[data-vinyl-playlist-active="true"] {
+  padding-left: 6px;
+  border-left: 1px solid rgba(248, 231, 28, 0.42);
+}
+
 .vinyl-station-name {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: clip;
   color: var(--vinyl-star-text);
   text-shadow: 0 1px 2px rgba(23, 20, 47, 0.42);
   font-size: 0.62rem;
   font-weight: 650;
   line-height: 1.05;
   letter-spacing: 0.01em;
+}
+
+.vinyl-station-name-track {
+  display: flex;
+  width: max-content;
+  gap: 24px;
+  transform: translateX(0);
+}
+
+.vinyl-station-name-text {
+  flex: none;
+  white-space: nowrap;
+}
+
+.vinyl-station-name-text[aria-hidden="true"] {
+  display: none;
+}
+
+.vinyl-station-name--overflowing .vinyl-station-name-track {
+  animation: vinyl-playlist-title-loop var(--vinyl-playlist-loop-duration, 16s) linear 0.8s infinite;
+  will-change: transform;
+}
+
+.vinyl-station-name--overflowing .vinyl-station-name-text[aria-hidden="true"] {
+  display: block;
+}
+
+@keyframes vinyl-playlist-title-loop {
+  to { transform: translateX(var(--vinyl-playlist-loop-distance, 0)); }
+}
+
+.vinyl-playlist-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.vinyl-playlist-arrow {
+  display: inline-grid;
+  place-items: center;
+  width: 17px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.68);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color 180ms var(--ease-out),
+    background-color 180ms var(--ease-out),
+    opacity 180ms var(--ease-out);
+}
+
+.vinyl-playlist-arrow:hover:not(:disabled) {
+  color: var(--strip-yellow, #ffe05a);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.vinyl-playlist-arrow:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(248, 231, 28, 0.62);
+}
+
+.vinyl-playlist-arrow:disabled {
+  opacity: 0.32;
+  cursor: default;
 }
 
 .vinyl-station-label {
@@ -4032,51 +4119,42 @@ html[data-mode="dnd"] .vinyl.vinyl--spinning .vinyl-sleeve::after {
     inset 0 1px 0 rgba(255, 250, 238, 0.2);
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   v6.1 — Title strip energized
-   Deep navy composition. Pink fires only when audio is happening.
-   Yellow fires only when time is moving. Same markup, same states,
-   same a11y. Gated by FEATURE_TITLE_STRIP_V1 in js/vinyl.js — when
-   off, the v6.0 carnival palette above renders unchanged.
-   ═══════════════════════════════════════════════════════════════ */
-
 .vinyl-crate-strip--energized {
-  --strip-navy-base: #0A1535;
-  --strip-navy-top:  #13234F;
-  --strip-pink:      #FF3D8A;
-  --strip-yellow:    #F8E71C;
+  --strip-aubergine: #2B1F2E;
+  --strip-ivory: #FFF8F2;
+  --strip-lavender: #CDBBD3;
+  --strip-rose: #D96882;
+  --strip-blue: #9FD4DF;
 
-  background: linear-gradient(180deg, var(--strip-navy-top), var(--strip-navy-base));
-  border: 0.5px solid rgba(255, 255, 255, 0.06);
-  border-bottom-color: rgba(0, 0, 0, 0.4);
+  background:
+    radial-gradient(circle at 12% -45%, rgba(217, 104, 130, 0.2), transparent 54%),
+    radial-gradient(circle at 92% 145%, rgba(159, 212, 223, 0.14), transparent 48%),
+    linear-gradient(155deg, #392A3D, var(--strip-aubergine) 68%);
+  border: 0.5px solid rgba(205, 187, 211, 0.28);
+  border-bottom-color: rgba(20, 13, 22, 0.62);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.35),
-    0 7px 18px rgba(7, 14, 38, 0.45);
+    inset 0 1px 0 rgba(255, 248, 242, 0.12),
+    inset 0 -1px 0 rgba(20, 13, 22, 0.4),
+    0 7px 18px rgba(43, 31, 46, 0.32);
 }
 
-/* Replace the multi-color carnival glow with a single quiet
-   navy haze. The festival speckle from ::before/::after is
-   stripped — pink and yellow now earn their place per state. */
 .vinyl-crate-strip--energized::before {
   background: radial-gradient(ellipse at 50% 110%,
-    rgba(20, 36, 88, 0.7) 0 32%, transparent 60%);
+    rgba(205, 187, 211, 0.11) 0 32%, transparent 64%);
   mix-blend-mode: normal;
   opacity: 1;
 }
 
-/* Yellow streak — a hairline near the bottom edge that only lights
-   up when audio is happening or warming up. Time is moving. */
 .vinyl-crate-strip--energized::after {
   inset: auto 0 5px;
   height: 1px;
   background: linear-gradient(90deg,
     transparent 0%,
-    var(--strip-yellow) 30%,
-    var(--strip-yellow) 70%,
+    var(--strip-blue) 30%,
+    var(--strip-blue) 70%,
     transparent 100%);
   opacity: 0;
-  filter: drop-shadow(0 0 4px rgba(248, 231, 28, 0.55));
+  filter: drop-shadow(0 0 4px rgba(159, 212, 223, 0.5));
   transition: opacity 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
@@ -4085,12 +4163,10 @@ html[data-mode="dnd"] .vinyl.vinyl--spinning .vinyl-sleeve::after {
   opacity: 0.85;
 }
 
-/* Loading: yellow streak loops without progress — motion without
-   confirmation that audio is actually happening. */
 .vinyl-crate-strip--energized:has(.vinyl-station-status[data-vinyl-station-state="loading"])::after {
   opacity: 0.6;
   background: linear-gradient(90deg,
-    transparent 0%, var(--strip-yellow) 50%, transparent 100%);
+    transparent 0%, var(--strip-blue) 50%, transparent 100%);
   background-size: 40% 100%;
   background-repeat: no-repeat;
   animation: vinyl-strip-streak 1400ms cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
@@ -4101,101 +4177,128 @@ html[data-mode="dnd"] .vinyl.vinyl--spinning .vinyl-sleeve::after {
   100% { background-position: 140% 0; }
 }
 
-/* Station orb — quiet navy by default, bold pink burst when
-   audio is happening. Pink is the contract: if you see it,
-   sound is being produced (here or in another tab). */
 .vinyl-crate-strip--energized .vinyl-station-status {
-  background: radial-gradient(circle at 50% 55%, #1a2e6e 0 60%, #0e1a47 100%);
-  border-color: rgba(255, 255, 255, 0.18);
-  color: rgba(255, 255, 255, 0.78);
+  background: radial-gradient(circle at 44% 36%, #49384E 0 18%, var(--strip-aubergine) 72%);
+  border-color: rgba(205, 187, 211, 0.32);
+  color: var(--strip-lavender);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
-    0 1px 3px rgba(7, 14, 38, 0.6);
+    inset 0 1px 0 rgba(255, 248, 242, 0.13),
+    inset 0 -1px 0 rgba(20, 13, 22, 0.36),
+    0 1px 3px rgba(20, 13, 22, 0.44);
 }
 
 .vinyl-crate-strip--energized .vinyl-station-orb {
   background:
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.55) 0 16%, transparent 22%),
-    radial-gradient(circle, #4a5b8c 0 60%, #1a2e6e 100%);
-  opacity: 0.5;
+    radial-gradient(circle at 50% 50%, rgba(255, 248, 242, 0.62) 0 16%, transparent 22%),
+    radial-gradient(circle, #75647B 0 58%, var(--strip-aubergine) 100%);
+  opacity: 0.58;
   box-shadow: none;
 }
 
 .vinyl-crate-strip--energized .vinyl-station-status[data-vinyl-station-state="playing"],
 .vinyl-crate-strip--energized .vinyl-station-status[data-vinyl-station-state="remote-playing"] {
-  border-color: rgba(255, 61, 138, 0.7);
-  background: radial-gradient(circle at 50% 50%, rgba(255, 61, 138, 0.32) 0 30%, #0e1a47 100%);
+  border-color: rgba(217, 104, 130, 0.72);
+  background: radial-gradient(circle at 50% 50%, rgba(217, 104, 130, 0.32) 0 30%, var(--strip-aubergine) 100%);
   box-shadow:
-    0 0 0 2px rgba(255, 61, 138, 0.2),
-    0 0 16px rgba(255, 61, 138, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    0 0 0 2px rgba(217, 104, 130, 0.18),
+    0 0 14px rgba(217, 104, 130, 0.34),
+    inset 0 1px 0 rgba(255, 248, 242, 0.18);
 }
 
 .vinyl-crate-strip--energized .vinyl-station-status[data-vinyl-station-state="playing"] .vinyl-station-orb,
 .vinyl-crate-strip--energized .vinyl-station-status[data-vinyl-station-state="remote-playing"] .vinyl-station-orb {
   background:
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.95) 0 22%, transparent 28%),
-    radial-gradient(circle, var(--strip-pink) 0 60%, #b51e5b 100%);
+    radial-gradient(circle at 50% 50%, rgba(255, 248, 242, 0.96) 0 22%, transparent 28%),
+    radial-gradient(circle, var(--strip-rose) 0 60%, #9E4058 100%);
   opacity: 1;
   box-shadow:
-    0 0 8px rgba(255, 61, 138, 0.6),
-    0 0 16px rgba(255, 61, 138, 0.4);
+    0 0 8px rgba(217, 104, 130, 0.56),
+    0 0 14px rgba(217, 104, 130, 0.32);
 }
 
-/* Errored: pink dimmed to 40% — the system tried, the system failed. */
 .vinyl-crate-strip--energized .vinyl-station-status[data-vinyl-station-state="errored"] .vinyl-station-orb {
-  background: radial-gradient(circle, rgba(255, 61, 138, 0.4) 0 60%, #1a1530 100%);
+  background: radial-gradient(circle, rgba(217, 104, 130, 0.4) 0 60%, var(--strip-aubergine) 100%);
   opacity: 0.4;
   box-shadow: none;
   animation: none;
 }
 
-/* Loading: orb fades — the strip is alive (yellow streak loops),
-   but pink stays dark until audio actually starts. */
 .vinyl-crate-strip--energized .vinyl-station-status[data-vinyl-station-state="loading"] .vinyl-station-orb {
   opacity: 0.4;
   filter: none;
 }
 
-/* Copy: clean white on navy. Drop the festival drop-shadow. */
 .vinyl-crate-strip--energized .vinyl-station-name {
-  color: #fff;
+  color: var(--strip-ivory);
+  font-family: var(--font-serif);
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0.005em;
+  text-transform: none;
   text-shadow: none;
-  letter-spacing: 0.02em;
 }
 
 .vinyl-crate-strip--energized .vinyl-station-label {
-  color: rgba(255, 255, 255, 0.58);
+  color: var(--strip-lavender);
   text-shadow: none;
 }
 
-/* Signal pill — quiet by default, electric yellow when playing. */
+.vinyl-crate-strip--energized .vinyl-station-copy[data-vinyl-playlist-active="true"] {
+  padding-left: 7px;
+  border-left-color: rgba(205, 187, 211, 0.48);
+}
+
+.vinyl-crate-strip--energized .vinyl-playlist-nav {
+  gap: 0;
+}
+
+.vinyl-crate-strip--energized .vinyl-playlist-arrow {
+  width: 24px;
+  height: 24px;
+  color: var(--strip-lavender);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.vinyl-crate-strip--energized .vinyl-playlist-arrow:hover:not(:disabled) {
+  color: var(--strip-ivory);
+  background: rgba(217, 104, 130, 0.16);
+}
+
+.vinyl-crate-strip--energized .vinyl-playlist-arrow:focus-visible {
+  background: rgba(159, 212, 223, 0.1);
+  box-shadow: 0 0 0 2px var(--strip-blue);
+}
+
 .vinyl-crate-strip--energized .vinyl-station-signal {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.6);
+  padding: 4px 6px 3px;
+  background: rgba(205, 187, 211, 0.07);
+  border-color: rgba(205, 187, 211, 0.22);
+  color: var(--strip-lavender);
+  font-size: 0.46rem;
+  font-weight: 700;
+  letter-spacing: 0.075em;
   text-shadow: none;
   box-shadow: none;
 }
 
 .vinyl-crate-strip--energized .vinyl-station-status[data-vinyl-station-state="playing"] ~ .vinyl-station-signal,
 .vinyl-crate-strip--energized .vinyl-station-status[data-vinyl-station-state="remote-playing"] ~ .vinyl-station-signal {
-  background: rgba(248, 231, 28, 0.12);
-  border-color: rgba(248, 231, 28, 0.45);
-  color: var(--strip-yellow);
+  background: rgba(217, 104, 130, 0.16);
+  border-color: rgba(217, 104, 130, 0.58);
+  color: var(--strip-ivory);
   box-shadow:
-    0 0 8px rgba(248, 231, 28, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    0 0 8px rgba(217, 104, 130, 0.24),
+    inset 0 1px 0 rgba(255, 248, 242, 0.08);
 }
 
-/* Focus ring tuned to the energized palette — yellow halo
-   on navy passes AA visibility against any state. */
 .vinyl-crate-strip--energized .vinyl-station-status:focus-visible {
   box-shadow:
-    0 0 0 2px var(--strip-navy-base),
-    0 0 0 5px rgba(248, 231, 28, 0.7),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    0 0 0 2px var(--strip-aubergine),
+    0 0 0 5px rgba(159, 212, 223, 0.72),
+    inset 0 1px 0 rgba(255, 248, 242, 0.16);
 }
 
 /* Reduced motion: kill the streak loop, preserve the cue
@@ -4263,7 +4366,7 @@ html[data-mode="dnd"] .vinyl.vinyl--spinning .vinyl-sleeve::after {
   cursor: default;
 }
 
-.vinyl-crate li:hover {
+.vinyl-crate li:not(.vinyl-crate-strip):hover {
   background:
     linear-gradient(90deg, rgba(255, 224, 90, 0.04), rgba(244, 167, 191, 0.045) 46%, rgba(11, 159, 209, 0.04)),
     rgba(23, 20, 47, 0.012);
@@ -4352,6 +4455,15 @@ html[data-mode="dnd"] .vinyl.vinyl--spinning .vinyl-sleeve::after {
 */
 
 @media (prefers-reduced-motion: reduce) {
+  .vinyl-station-name--overflowing .vinyl-station-name-track {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .vinyl-station-name--overflowing .vinyl-station-name-text[aria-hidden="true"] {
+    display: none;
+  }
+
   .vinyl-btn:hover,
   .vinyl-btn:active,
   .vinyl-station-status:not(:disabled):hover,
@@ -4368,6 +4480,15 @@ html[data-mode="dnd"] .vinyl.vinyl--spinning .vinyl-sleeve::after {
   .vinyl.vinyl--spinning .vinyl-groove-wrap {
     box-shadow: none !important;
   }
+}
+
+html[data-motion="reduced"] .vinyl-station-name--overflowing .vinyl-station-name-track {
+  animation: none !important;
+  transform: none !important;
+}
+
+html[data-motion="reduced"] .vinyl-station-name--overflowing .vinyl-station-name-text[aria-hidden="true"] {
+  display: none;
 }
 
 /* ─── VINYL: SMOOTH THEME TRANSITION ───────────────────────── */

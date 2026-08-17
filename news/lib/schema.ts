@@ -12,16 +12,13 @@
 
 import { z } from 'zod';
 
-/* The five sourceType buckets the homepage interleaves across. The
-   `source` field carries the human-readable display label
-   (e.g. "Business of Fashion") and is free-form text. */
 export const NewsSourceType = z.enum([
   'fashion-authority',  // Vogue
-  'fashion-business',   // Business of Fashion
-  'business',           // Forbes, Black Enterprise
+  'fashion-business',
+  'business',
   'youth-culture',      // Hypebae
-  'global-affairs',     // BBC World
-  'world-news',         // NYT World
+  'global-affairs',
+  'world-news',
   'practical-life',
   'food-culture',
   'design',
@@ -56,21 +53,18 @@ export const NewsSnapshot = z.object({
   generatedAt: z.string().datetime(),
   items:       z.array(NewsItem).max(18),
   sources: z.object({
-    Vogue:                SourceHealth,
-    BusinessOfFashion:    SourceHealth,
-    Hypebae:              SourceHealth,
-    BBCWorld:             SourceHealth,
-    NYTWorld:             SourceHealth,
-    NPRLifeKit:           SourceHealth,
-    Eater:                SourceHealth,
-    ArchitecturalDigest: SourceHealth,
-    TexasMonthly:         SourceHealth,
-    PositiveNews:         SourceHealth,
-    Forbes:               SourceHealth,
-    BlackEnterprise:      SourceHealth,
+    NewYorkTimes:         SourceHealth,
     NYLON:                SourceHealth,
+    Eater:                SourceHealth,
+    TexasMonthly:         SourceHealth,
+    NPR:                  SourceHealth,
+    PositiveNews:         SourceHealth,
+    Vogue:                SourceHealth,
+    ArchitecturalDigest: SourceHealth,
+    BBC:                  SourceHealth,
+    Forbes:               SourceHealth,
     InStyle:              SourceHealth,
-    WWNO:                 SourceHealth,
+    Hypebae:              SourceHealth,
   }),
 });
 export type NewsSnapshot = z.infer<typeof NewsSnapshot>;

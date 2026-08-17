@@ -1,7 +1,7 @@
 # Ambient News Surface — v1.1
 
 A calm, image-aware, build-time newsstand for the Fountain Clock
-homepage. Fifteen publisher feeds, one normalized shape, balanced by
+homepage. Twelve publisher feeds, one normalized shape, balanced by
 publisher so no source dominates. Metadata-only, outbound links, no
 client-side feed fetching.
 
@@ -33,29 +33,23 @@ GitHub Actions cron. Effective freshness: ~30 min, best-effort.
 
 | Source | sourceType | Publisher endpoint |
 |---|---|---|
-| Vogue | `fashion-authority` | `https://www.vogue.com/feed/rss` |
-| Business of Fashion | `fashion-business` | `https://www.businessoffashion.com/feeds/news` |
-| Hypebae | `youth-culture` | `https://hypebae.com/feed` |
-| BBC World | `global-affairs` | `http://feeds.bbci.co.uk/news/world/rss.xml` |
-| NYT World | `world-news` | `https://rss.nytimes.com/services/xml/rss/nyt/World.xml` |
-| NPR Life Kit | `practical-life` | `https://feeds.npr.org/510338/podcast.xml` |
-| Eater | `food-culture` | `https://www.eater.com/rss/index.xml` |
-| Architectural Digest | `design` | `https://www.architecturaldigest.com/feed/rss` |
-| Texas Monthly | `regional-culture` | `https://www.texasmonthly.com/feed/` |
-| Positive News | `solutions-news` | `https://www.positive.news/feed/` |
-| Forbes | `business` | `https://www.forbes.com/business/feed/` |
-| Black Enterprise | `business` | `https://www.blackenterprise.com/feed/` |
+| New York Times | `world-news` | `https://rss.nytimes.com/services/xml/rss/nyt/World.xml` |
 | NYLON | `youth-culture` | `https://www.nylon.com/rss` |
+| Eater | `food-culture` | `https://www.eater.com/rss/index.xml` |
+| Texas Monthly | `regional-culture` | `https://www.texasmonthly.com/feed/` |
+| NPR | `practical-life` | `https://feeds.npr.org/510338/podcast.xml` |
+| Positive News | `solutions-news` | `https://www.positive.news/feed/` |
+| Vogue | `fashion-authority` | `https://www.vogue.com/feed/rss` |
+| Architectural Digest | `design` | `https://www.architecturaldigest.com/feed/rss` |
+| BBC | `global-affairs` | `http://feeds.bbci.co.uk/news/world/rss.xml` |
+| Forbes | `business` | `https://www.forbes.com/business/feed/` |
 | InStyle | `fashion-authority` | `https://feeds-api.dotdashmeredith.com/v1/rss/google/8e4da836-f458-4776-856b-0a481d6dc617` |
-| WWNO | `local-news` | `https://www.wwno.org/local-regional-news.rss` |
+| Hypebae | `youth-culture` | `https://hypebae.com/feed` |
 
 All endpoints are publisher-owned or publisher-operated feeds. Eater's
 endpoint is Atom; the others are RSS. Forbes' Business page advertises
-its publisher-owned feed in page metadata, and Black Enterprise serves
-its public site feed directly from its own domain. InStyle's feed is
-served by its publisher, Dotdash Meredith. WWNO's local/regional
-endpoint is used instead of its empty homepage RSS so the feed remains
-local to New Orleans and the Gulf region.
+its publisher-owned feed in page metadata. InStyle's feed is served by
+its publisher, Dotdash Meredith.
 
 The mix is round-robin across publishers in registry order and sorted
 by recency within each publisher. The homepage is capped at 12 cards;
@@ -81,7 +75,7 @@ near-identical titles are deduplicated only within a 36-hour window.
 ```ts
 type NewsItem = {
   title:       string;       // ≤ 280 chars
-  source:      string;       // display label, e.g. "Business of Fashion"
+  source:      string;       // display label, e.g. "New York Times"
   sourceType:
     | 'fashion-authority' | 'fashion-business' | 'business'
     | 'youth-culture'
@@ -117,7 +111,7 @@ node news/aggregate.mjs
 
 ## Failure isolation
 
-1. Each feed: 5 s default timeout, isolated try/catch. NPR Life Kit gets
+1. Each feed: 5 s default timeout, isolated try/catch. NPR gets
    12 s because its official podcast feed is substantially larger. Each
    source is marked `ok` / `empty` / `failed`.
 2. At least one feed produced items → fresh snapshot is written.
