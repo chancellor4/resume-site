@@ -1,15 +1,15 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-08-21T17:52:35.578Z",
+  "generatedAt": "2026-08-21T18:20:41.540Z",
   "items": [
     {
-      "title": "Germany Identifies a Plot After Finding a Weapons Cache, but Names No Culprit",
+      "title": "In China’s Biggest Car Recall, Tesla and 8 Others Will Address Door Safety",
       "source": "New York Times",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/08/21/world/europe/germany-foreign-plot-hidden-guns.html",
-      "publishedAt": "2026-08-21T17:28:45.000Z",
-      "excerpt": "Officials were careful not to point a finger, after revealing what they said was a plan for a political attack, at a time when a series of destabilizing actions have been blamed o…",
-      "imageUrl": "https://static01.nyt.com/images/2026/08/21/multimedia/21int-germany-guns-qthk/21int-germany-guns-qthk-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/08/21/business/china-car-recall-doors.html",
+      "publishedAt": "2026-08-21T18:05:34.000Z",
+      "excerpt": "China’s regulator ordered changes after vehicle occupants sometimes had difficulty exiting electric cars, an issue that has led to lawsuits against Tesla in the United States.",
+      "imageUrl": "https://static01.nyt.com/images/2026/08/21/multimedia/21biz-China-Car-Doors-01-jvgz/21biz-China-Car-Doors-01-jvgz-mediumSquareAt3X.jpg"
     },
     {
       "title": "15 Fragrances To End Late Summer On A Fruity, Sexy, Sticky Note",
@@ -61,7 +61,7 @@
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/spring-2026-ready-to-wear/romance-was-born",
-      "publishedAt": "2026-08-21T17:48:09.000Z",
+      "publishedAt": "2026-08-21T18:20:02.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6a84448f58678dc7f22b1052/master/pass/00001-romance-was-born-spring-2026-ready-to-wear-credit-brand.jpg"
     },
@@ -84,13 +84,22 @@
       "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/ef32/live/454712a0-9d7b-11f1-b109-879e35c24276.jpg"
     },
     {
-      "title": "The Partner Paradox: Why America's Strongest Allies Are Ceding The Field",
+      "title": "‘Lanterns’ Season 1 Release Schedule Looks Bright After Big Series Premiere",
       "source": "Forbes",
       "sourceType": "business",
-      "link": "https://www.forbes.com/sites/kamranbokhari/2026/08/21/the-partner-paradox-why-americas-strongest-allies-are-ceding-the-field/",
-      "publishedAt": "2026-08-21T16:51:03.000Z",
-      "excerpt": "France’s declining influence in the South Caucasus highlights the limits of European power as the United States is rolling out its new global geostrategy.",
-      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6a88814230c1c208974275b9/0x0.jpg"
+      "link": "https://www.forbes.com/sites/timlammers/2026/08/21/lanterns-season-1-release-schedule-looks-bright-after-big-series-premiere/",
+      "publishedAt": "2026-08-21T17:18:18.000Z",
+      "excerpt": "\"Lanterns,\" HBO and HBO Max’s new DC series starring Kyle Chandler and Aaron Pierre, is getting off on the right foot in its first season thanks to big numbers for its series prem…",
+      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6a8884b987e61dbba5b5a5ce/0x0.jpg?width=960"
+    },
+    {
+      "title": "Inside Prince Harry and Meghan Markle’s $14.6 Million Montecito Mansion, Which They’re Leaving for the U.K.",
+      "source": "InStyle",
+      "sourceType": "fashion-authority",
+      "link": "https://www.instyle.com/meghan-markle-harry-montecito-home-details-12064530",
+      "publishedAt": "2026-08-21T16:40:37.000Z",
+      "excerpt": "The couple will reportedly maintain the 14,500-square-foot home as their U.S. residence.",
+      "imageUrl": "https://www.instyle.com/thmb/0fSdMCU9KmsfkvcJbzDRq6_TlUw=/filters:no_upscale():max_bytes(150000):strip_icc():format(jpeg)/GettyImages-22618395042-14565c4742624b588f0482da56fa91a4.jpg"
     },
     {
       "title": "ALO and JISOO Reunite for the Brand's Newest Campaign",
@@ -100,15 +109,6 @@
       "publishedAt": "2026-08-21T15:28:55.000Z",
       "excerpt": "K-pop icon JISOO is once again partnering with ALO, proving that effortless style and mindful living go hand in hand. Returning as the global ambassador for the brand's Fall campa…",
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F08%2F21%2Falo-jisoo-fall-campaign-pink-marshmallow-pilates-activewear-info-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "Palestinian Teenager Killed After Israeli Settlers Enter West Bank Village",
-      "source": "New York Times",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/08/21/world/middleeast/palestinian-teenager-killed-israeli-settlers-west-bank.html",
-      "publishedAt": "2026-08-21T16:24:10.000Z",
-      "excerpt": "Palestinian and Israeli authorities offered divergent accounts of the incident, which came as settler violence has surged across the Israeli-occupied territory.",
-      "imageUrl": "https://static01.nyt.com/images/2026/08/21/multimedia/21WestBank-attack-01-cwhm/21WestBank-attack-01-cwhm-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
@@ -122,7 +122,7 @@
     "ArchitecturalDigest": "ok",
     "BBC": "ok",
     "Forbes": "ok",
-    "InStyle": "failed",
+    "InStyle": "ok",
     "Hypebae": "ok"
   }
 }
