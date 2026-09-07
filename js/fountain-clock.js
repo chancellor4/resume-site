@@ -278,6 +278,7 @@
       location: DEFAULT_LOCATION.key,
       DND: false,
       detailsOpen: false,
+      collapsed: true,
       volume: 40,
       hour24: false
     };
@@ -293,6 +294,7 @@
           }
           if (typeof parsed.DND === 'boolean') prefs.DND = parsed.DND;
           if (typeof parsed.detailsOpen === 'boolean') prefs.detailsOpen = parsed.detailsOpen;
+          if (typeof parsed.collapsed === 'boolean') prefs.collapsed = parsed.collapsed;
           if (typeof parsed.volume === 'number') prefs.volume = Math.max(0, Math.min(100, parsed.volume));
           if (typeof parsed.hour24 === 'boolean') prefs.hour24 = parsed.hour24;
         }
@@ -462,6 +464,39 @@
     return solar.isDay ? 'day' : 'night';
   }
 
+  
+
+  function resolveSolar(now) {
+    var solar = solarTimes(state.location.lat, state.location.lon, now);
+    var daily = state.weather && state.weather.daily;
+    if (!daily) return solar;
+
+    var rise = daily.sunrise instanceof Date ? daily.sunrise : null;
+    var set  = daily.sunset  instanceof Date ? daily.sunset  : null;
+    if (!rise || !set || isNaN(rise.getTime()) || isNaN(set.getTime())) return solar;
+
+    
+    var tz = state.location.tz;
+    if (formatDateISO(rise, tz) !== formatDateISO(now, tz)) return solar;
+
+    var riseMs = rise.getTime();
+    var setMs  = set.getTime();
+    if (setMs <= riseMs) return solar;
+
+    var nowMs = now.getTime();
+    var frac, isDay = false;
+    if (nowMs <= riseMs) {
+      frac = 0;
+    } else if (nowMs >= setMs) {
+      frac = 1;
+    } else {
+      frac = (nowMs - riseMs) / (setMs - riseMs);
+      isDay = true;
+    }
+
+    return { sunrise: rise, sunset: set, dayFraction: frac, isDay: isDay };
+  }
+
   /* ── Formatters (cached) ─────────────────────────────────── */
 
   var hmFormatters = {};
@@ -530,6 +565,23 @@
     }
   }
 
+  
+  function parseApiTime(value, offsetSeconds) {
+    if (!value) return null;
+    var text = String(value);
+    var m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/.exec(text);
+    if (!m) {
+      
+      var absolute = new Date(text);
+      return isNaN(absolute.getTime()) ? null : absolute;
+    }
+    var offset = (typeof offsetSeconds === 'number' && isFinite(offsetSeconds))
+      ? offsetSeconds : 0;
+    var utcMs = Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +(m[6] || 0));
+    var parsed = new Date(utcMs - offset * 1000);
+    return isNaN(parsed.getTime()) ? null : parsed;
+  }
+
   function roundTemp(t) {
     if (t === null || t === undefined || isNaN(t)) return '—';
     return Math.round(t) + '°';
@@ -596,20 +648,22 @@
     var temps = hourly.temperature_2m || [];
     var codes = hourly.weather_code || [];
     var days  = hourly.is_day || [];
+    var offset = raw.utc_offset_seconds;
 
     /* Find first hourly slot strictly after "now". */
     var nowMs = Date.now();
     var startIdx = 0;
     for (var i = 0; i < times.length; i++) {
-      if (new Date(times[i]).getTime() > nowMs) { startIdx = i; break; }
+      var t = parseApiTime(times[i], offset);
+      if (t && t.getTime() > nowMs) { startIdx = i; break; }
     }
 
     var forecast = [];
     for (var j = 0; j < 3; j++) {
       var idx = startIdx + j * 2;
       if (idx >= times.length) break;
-      var slotTime = new Date(times[idx]);
-      if (isNaN(slotTime.getTime())) continue;
+      var slotTime = parseApiTime(times[idx], offset);
+      if (!slotTime) continue;
       forecast.push({
         time: slotTime,
         temp: temps[idx],
@@ -630,8 +684,8 @@
       daily: {
         high: daily.temperature_2m_max && daily.temperature_2m_max[0],
         low: daily.temperature_2m_min && daily.temperature_2m_min[0],
-        sunrise: daily.sunrise && daily.sunrise[0] ? new Date(daily.sunrise[0]) : null,
-        sunset: daily.sunset && daily.sunset[0] ? new Date(daily.sunset[0]) : null
+        sunrise: daily.sunrise ? parseApiTime(daily.sunrise[0], offset) : null,
+        sunset: daily.sunset ? parseApiTime(daily.sunset[0], offset) : null
       },
       forecast: forecast,
       source: 'Open-Meteo',
@@ -722,6 +776,7 @@
       location: DEFAULT_LOCATION.key,
       DND: false,
       detailsOpen: false,
+      collapsed: true,
       volume: 40,
       hour24: false
     },
@@ -732,6 +787,7 @@
 
     greeting: {
       animatedThisSession: false,
+      element: null,
       currentText: null,
       typeTimer: null
     },
@@ -865,67 +921,71 @@
       clearTimeout(state.greeting.typeTimer);
       state.greeting.typeTimer = null;
     }
+    state.greeting.element = null;
   }
 
-  function typeGreeting(el, text) {
+  function typeGreeting(el, visual, text) {
     var index = 0;
     state.greeting.animatedThisSession = true;
     state.greeting.currentText = text;
-    setAttr(el, 'aria-label', text);
+    state.greeting.element = el;
     setAttr(el, 'data-fc-greeting-state', 'typing');
-    setText(el, '');
 
     function typeNext() {
       if (!state.mounted || !document.documentElement.contains(el)) {
         cancelGreetingTyping();
         return;
       }
-      index += 1;
-      setText(el, text.slice(0, index));
+      /* Honor a motion change immediately, even between clock renders. */
+      index = prefersReducedMotion() || document.hidden ? text.length : index + 1;
+      setText(visual, text.slice(0, index));
       if (index < text.length) {
         state.greeting.typeTimer = setTimeout(typeNext, GREETING_TYPE_MS);
         return;
       }
       state.greeting.typeTimer = null;
-      removeAttr(el, 'aria-label');
+      state.greeting.element = null;
       setAttr(el, 'data-fc-greeting-state', 'ready');
     }
 
-    state.greeting.typeTimer = setTimeout(typeNext, GREETING_TYPE_MS);
+    /* First character paints with the clock; there is no blank lead-in. */
+    typeNext();
   }
 
   function renderGreeting(now, root) {
     var el = qs('[data-fc-greeting]', root);
     if (!el) return;
-
+    var visual = qs('[data-fc-greeting-visual]', el);
+    var full = qs('[data-fc-greeting-full]', el);
     var text = greetingText(now, state.location);
-    var changed = state.greeting.currentText !== text || el.textContent !== text;
     state.reducedMotion = prefersReducedMotion();
 
-    if (!state.greeting.animatedThisSession) {
-      if (!state.reducedMotion) {
-        cancelGreetingTyping();
-        typeGreeting(el, text);
-        return;
-      }
-      state.greeting.animatedThisSession = true;
-    }
-
-    if (state.greeting.typeTimer) {
+    /* Full accessible name is stable; partial letters are decorative. */
+    setAttr(el, 'aria-label', text);
+    setText(full, text);
+    if (!visual || !full) {
       cancelGreetingTyping();
+      setText(el, text);
+      return;
     }
 
+    /* Weather, theme, and repeated mounts must not truncate a live reveal. */
+    if (state.greeting.typeTimer && state.greeting.element === el &&
+        state.greeting.currentText === text && !state.reducedMotion && !document.hidden) {
+      return;
+    }
+
+    cancelGreetingTyping();
+    if (!state.greeting.animatedThisSession && !state.reducedMotion && !document.hidden) {
+      typeGreeting(el, visual, text);
+      return;
+    }
+
+    /* Changed greetings and SPA returns settle once, without replay or fades. */
+    state.greeting.animatedThisSession = true;
     state.greeting.currentText = text;
-    removeAttr(el, 'aria-label');
+    setText(visual, text);
     setAttr(el, 'data-fc-greeting-state', 'ready');
-    setText(el, text);
-
-    if (changed && !state.reducedMotion && typeof el.animate === 'function') {
-      el.animate([
-        { opacity: 0.24 },
-        { opacity: 1 }
-      ], { duration: 320, easing: 'ease-out' });
-    }
   }
 
   function readDnd() {
@@ -966,7 +1026,7 @@
     if (dateEl) setAttr(dateEl, 'datetime', formatDateISO(now, state.location.tz));
     setText(qs('[data-fc-zone]', root), formatZoneLabel(state.location.tz));
 
-    var solar = solarTimes(state.location.lat, state.location.lon, now);
+    var solar = resolveSolar(now);
     var phase = classifyPhase(solar, now);
     state.sun = solar;
     state.timeOfDay = clockPhase(phase);
@@ -1048,14 +1108,10 @@
         '</div>' +
       '</div>' +
       '<div class="fc-weather-details" id="fcWeatherDetails" data-fc-weather-details>' +
-        '<span data-fc-weather-feels-detail>Feels like —</span>' +
         '<span data-fc-weather-highlow>High / low —</span>' +
         '<span data-fc-weather-wind>Wind —</span>' +
         '<span data-fc-weather-humidity>Humidity —</span>' +
-        '<time data-fc-weather-sunrise datetime="">Sunrise —</time>' +
-        '<time data-fc-weather-sunset datetime="">Sunset —</time>' +
-        '<time data-fc-weather-updated datetime="">Updated —</time>' +
-        '<span data-fc-weather-source>Source —</span>' +
+        '<span class="fc-weather-provenance" data-fc-weather-source>Source —</span>' +
       '</div>' +
       '<ol class="fc-forecast" data-fc-forecast>' +
         '<li class="fc-forecast-slot" data-fc-forecast-slot>' +
@@ -1118,13 +1174,9 @@
     var tempEl  = qs('[data-fc-weather-temp]',  surface);
     var condEl  = qs('[data-fc-weather-cond]',  surface);
     var feelsEl = qs('[data-fc-weather-feels]', surface);
-    var feelsDetailEl = qs('[data-fc-weather-feels-detail]', surface);
     var highLowEl = qs('[data-fc-weather-highlow]', surface);
     var humidityEl = qs('[data-fc-weather-humidity]', surface);
     var windEl = qs('[data-fc-weather-wind]', surface);
-    var sunriseEl = qs('[data-fc-weather-sunrise]', surface);
-    var sunsetEl = qs('[data-fc-weather-sunset]', surface);
-    var updatedEl = qs('[data-fc-weather-updated]', surface);
     var sourceEl = qs('[data-fc-weather-source]', surface);
     var slots   = qsa('[data-fc-forecast-slot]', surface);
 
@@ -1134,25 +1186,18 @@
       setText(tempEl,  '—');
       setText(condEl,  copy.cond);
       setText(feelsEl, copy.feels);
-      setText(feelsDetailEl, 'Feels like —');
       setText(highLowEl, 'High / low —');
       setText(humidityEl, 'Humidity —');
       setText(windEl, 'Wind —');
-      setText(sunriseEl, 'Sunrise —');
-      setText(sunsetEl, 'Sunset —');
-      setText(updatedEl, 'Updated —');
-      removeAttr(sunriseEl, 'datetime');
-      removeAttr(sunsetEl, 'datetime');
-      removeAttr(updatedEl, 'datetime');
-      setText(sourceEl, state.weatherError ? 'Fallback clock only' : 'Source pending');
+      setText(sourceEl, state.weatherError ? 'Source — clock only' : 'Source — Open-Meteo');
       setText(qs('[data-fc-weather-line]', root), state.weatherError ? 'Weather quiet, clock steady' : 'Weather warming up');
 
-    for (var i = 0; i < slots.length; i++) {
-      var s = slots[i];
-      s.hidden = false;
-      setText(qs('[data-fc-forecast-time]', s), state.detailsOpen ? 'Soon' : '');
-      setText(qs('[data-fc-forecast-temp]', s), '');
-      clearGlyph(qs('[data-fc-forecast-glyph]', s));
+      for (var i = 0; i < slots.length; i++) {
+        var s = slots[i];
+        s.hidden = false;
+        setText(qs('[data-fc-forecast-time]', s), '');
+        setText(qs('[data-fc-forecast-temp]', s), '');
+        clearGlyph(qs('[data-fc-forecast-glyph]', s));
       }
 
       /* When we have no weather, suppress mood tint to stay calm. */
@@ -1164,24 +1209,16 @@
     var info = weatherInfo(w.code);
     var mood = weatherMood(info, w);
     var daily = state.weather.daily || {};
-    var sunrise = daily.sunrise || (state.sun && state.sun.sunrise);
-    var sunset = daily.sunset || (state.sun && state.sun.sunset);
 
     setGlyph(iconEl, mood, w.isDay);
     setText(tempEl,  roundTemp(w.temp));
     setText(condEl,  info.label);
     setText(feelsEl, 'Feels ' + roundTemp(w.feels));
-    setText(feelsDetailEl, 'Feels like ' + roundTemp(w.feels));
     setText(highLowEl, 'High ' + roundTemp(daily.high) + ' / Low ' + roundTemp(daily.low));
     setText(humidityEl, 'Humidity ' + (isNaN(w.humidity) ? '—' : Math.round(w.humidity) + '%'));
     setText(windEl, 'Wind ' + (isNaN(w.wind) ? '—' : Math.round(w.wind) + ' mph'));
-    setText(sunriseEl, 'Sunrise ' + (sunrise ? formatHM(new Date(sunrise), state.location.tz, state.preferences.hour24) : '—'));
-    setText(sunsetEl, 'Sunset ' + (sunset ? formatHM(new Date(sunset), state.location.tz, state.preferences.hour24) : '—'));
-    setText(updatedEl, 'Updated ' + formatHM(new Date(state.weather.fetchedAt), state.location.tz, state.preferences.hour24));
-    setAttr(sunriseEl, 'datetime', sunrise ? new Date(sunrise).toISOString() : '');
-    setAttr(sunsetEl, 'datetime', sunset ? new Date(sunset).toISOString() : '');
-    setAttr(updatedEl, 'datetime', new Date(state.weather.fetchedAt).toISOString());
-    setText(sourceEl, (state.weather.fallback ? 'Fallback' : 'Source') + ' ' + (state.weather.source || 'Open-Meteo'));
+    setText(sourceEl, 'Source — ' + (state.weather.fallback ? 'fallback, ' : '') +
+      (state.weather.source || 'Open-Meteo'));
     setText(qs('[data-fc-weather-line]', root), roundTemp(w.temp) + ' and ' + info.label.toLowerCase());
 
     for (var k = 0; k < slots.length; k++) {
@@ -1220,10 +1257,28 @@
     select.__fcPresetSignature = CITY_PRESETS.length + ':' + DEFAULT_LOCATION.key;
   }
 
+  
+  function renderCollapsed() {
+    var root = rootEl();
+    if (!root) return;
+    var content = qs('[data-fc-content]', root);
+    var button = qs('[data-fc-collapse-toggle]', root);
+    if (!content || !button) return;
+    var collapsed = !!state.preferences.collapsed;
+    button.hidden = false;
+    if (collapsed && content.contains(document.activeElement)) button.focus();
+    content.hidden = collapsed;
+    setAttr(root, 'data-fc-collapsed', collapsed ? 'true' : 'false');
+    setAttr(button, 'aria-expanded', collapsed ? 'false' : 'true');
+    setAttr(button, 'aria-label', collapsed ? 'Expand clock' : 'Minimize clock');
+    setText(qs('[data-fc-collapse-icon]', button), collapsed ? '+' : '−');
+  }
+
   function renderStatus() {
     var root = rootEl();
     if (!root) return;
 
+    renderCollapsed();
     setAttr(root, 'data-fc-details', state.detailsOpen ? 'open' : 'closed');
 
     syncHomeTitle();
@@ -1234,13 +1289,18 @@
 
     var asOf = qs('[data-fc-asof]', root);
     if (asOf) {
+      asOf.hidden = false;
       if (state.weather && state.weather.fetchedAt) {
-        asOf.hidden = false;
-        var prefixAs = weatherIsStale() ? 'Stale cache ' : 'As of ';
-        setText(asOf, prefixAs + formatHM(new Date(state.weather.fetchedAt), state.location.tz, state.preferences.hour24));
+        var stale = weatherIsStale();
+        var at = formatHM(new Date(state.weather.fetchedAt), state.location.tz, state.preferences.hour24);
+        setAttr(asOf, 'data-fc-fresh', stale ? 'stale' : 'fresh');
+        setText(asOf, stale ? 'Stale · last updated ' + at : 'Updated ' + at);
+      } else if (state.weatherError) {
+        setAttr(asOf, 'data-fc-fresh', 'error');
+        setText(asOf, 'Weather unavailable');
       } else {
-        asOf.hidden = false;
-        setText(asOf, state.weatherError ? 'Weather fallback' : 'Weather warming up');
+        setAttr(asOf, 'data-fc-fresh', 'pending');
+        setText(asOf, 'Weather warming up');
       }
     }
 
@@ -1253,7 +1313,7 @@
     var detailsBtn = qs('[data-fc-details-toggle]', root);
     if (detailsBtn) {
       setAttr(detailsBtn, 'aria-expanded', state.detailsOpen ? 'true' : 'false');
-      setText(detailsBtn, state.detailsOpen ? 'Less' : 'Details');
+      setText(detailsBtn, state.detailsOpen ? 'Hide weather details' : 'Weather details');
     }
 
     var timeFormatBtn = qs('[data-fc-time-format]', root);
@@ -2108,6 +2168,7 @@
       }
       if (dialEl) {
         dialEl.hidden = (m.mode !== 'timer');
+        setAttr(dialEl, 'aria-disabled', m.isRunning ? 'true' : 'false');
         if (!dialEl.hidden) dialSyncFromState();
       }
     }
@@ -2446,6 +2507,7 @@
       state.weather = cached.data;
       state.weatherError = null;
       rememberGoodState();
+      renderClock();
       renderWeather();
       renderStatus();
     }
@@ -2473,6 +2535,7 @@
         state.weatherError = null;
         writeCache(loc.lat, loc.lon, data);
         rememberGoodState();
+        renderClock();
         renderWeather();
         renderStatus();
       })
@@ -2591,6 +2654,12 @@
     root.addEventListener('click', function (event) {
       var t = event.target;
       if (!t || !t.closest) return;
+      if (t.closest('[data-fc-collapse-toggle]')) {
+        writePreferences({ collapsed: !state.preferences.collapsed });
+        renderCollapsed();
+        if (!state.preferences.collapsed) MiniCard.onVisibilityChange();
+        return;
+      }
       if (t.closest('[data-fc-details-toggle]')) {
         setDetailsOpen(!state.detailsOpen);
         return;
@@ -2599,15 +2668,7 @@
         setHour24(!state.preferences.hour24);
         return;
       }
-      /* Mini Card lives inside .fc-face. Its own handler stopped
-         propagation, but in case anything bubbles, swallow here so the
-         face-click-to-open-details affordance doesn't double-fire. */
-      if (t.closest('[data-fc-mini-card]')) return;
-      if (t.closest('[data-fc-face]') || t.closest('[data-fc-weather]') ||
-          t.closest('[data-fc-sun]')) {
-        setDetailsOpen(!state.detailsOpen);
-        return;
-      }
+      
       if (t.closest('[data-fc-refresh]')) { loadWeather(true); return; }
     });
 

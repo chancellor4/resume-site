@@ -182,7 +182,7 @@
   /*    Pure visual addition — no behavioral or state changes. */
   /*    Flip to false to hide the waveform entirely.           */
 
-  var FEATURE_GROOVE     = true;
+  var FEATURE_GROOVE     = false; 
   var GROOVE_BARS        = 48;                   // number of waveform bars
   var GROOVE_BAR_GAP     = 1;                    // px gap between bars
   var GROOVE_MIN_HEIGHT  = 0.15;                 // minimum bar height (fraction of canvas)
@@ -193,7 +193,7 @@
   /*    the waveform progress bar. Layers on FEATURE_GROOVE.  */
   /*    Flip to false to restore passive-only waveform.       */
 
-  var FEATURE_GROOVE_SEEK = true;
+  var FEATURE_GROOVE_SEEK = false;
 
   /* ── Feature gates (v5.2.0) ────────────────────────────── */
   /*    Immersive groove: continuous progress interpolation,   */
@@ -204,7 +204,7 @@
   /*    driven by rAF with deterministic, time-based math.    */
   /*    Flip to false to restore discrete-update waveform.    */
 
-  var FEATURE_GROOVE_IMMERSIVE = true;
+  var FEATURE_GROOVE_IMMERSIVE = false;
   var GROOVE_LERP_SPEED        = 5;         // interpolation stiffness (gentler = calmer)
   var GROOVE_PULSE_RADIUS      = 3;         // bars affected on each side of playhead
   var GROOVE_PULSE_INTENSITY   = 0.06;      // max amplitude modulation [0..1] — barely visible
@@ -2490,6 +2490,11 @@
       el.playlistTitleTrack.style.removeProperty('--vinyl-playlist-loop-duration');
     }
 
+    
+    function titleLoopDuration(distance) {
+      return Math.max(14, distance / 10) + 's';
+    }
+
     function reflectPlaylistTitleMotion() {
       resetPlaylistTitleMotion();
       if (!_ctrl || !_ctrl.isSpinning() || reducedMotion() || !el.playlistTitleText) return;
@@ -2498,15 +2503,58 @@
         var distance = Math.ceil(el.playlistTitleText.scrollWidth + 24);
         if (el.playlistTitleText.scrollWidth <= el.playlistTitle.clientWidth + 1) return;
         el.playlistTitleTrack.style.setProperty('--vinyl-playlist-loop-distance', '-' + distance + 'px');
-        el.playlistTitleTrack.style.setProperty('--vinyl-playlist-loop-duration', Math.max(14, distance / 10) + 's');
+        el.playlistTitleTrack.style.setProperty('--vinyl-playlist-loop-duration', titleLoopDuration(distance));
         el.playlistTitle.classList.add('vinyl-station-name--overflowing');
       });
+    }
+
+    
+    function reflectSongSequence() {
+      
+      el.titleClone.innerHTML = el.titleSequence.innerHTML;
+      el.title.title = el.titleText.textContent + el.artist.textContent +
+        (el.upnext.hidden ? '' : el.upnext.textContent);
+    }
+
+    function setSongTitle(text, artist) {
+      el.titleText.textContent = text;
+      el.artist.textContent = artist ? ' — ' + artist : '';
+      el.upnext.textContent = '';
+      el.upnext.hidden = true;
+      reflectSongSequence();
     }
 
     function mount(stageEl) {
       el.stage  = stageEl;
       el.source = $('vinylSource');
       el.title  = $('vinylTitle');
+      var initialTitle = el.title.textContent;
+      el.titleTrack = document.createElement('span');
+      el.titleTrack.className = 'vinyl-title-track';
+      el.titleSequence = document.createElement('span');
+      el.titleText = document.createElement('span');
+      el.artist = document.createElement('span');
+      el.artist.className = 'vinyl-artist';
+      el.upnext = document.createElement('span');
+      el.upnext.className = 'vinyl-upnext';
+      el.titleSequence.appendChild(el.titleText);
+      el.titleSequence.appendChild(el.artist);
+      el.titleSequence.appendChild(el.upnext);
+      el.titleClone = document.createElement('span');
+      el.titleClone.setAttribute('aria-hidden', 'true');
+      el.titleTrack.appendChild(el.titleSequence);
+      el.titleTrack.appendChild(el.titleClone);
+      el.title.textContent = '';
+      el.title.appendChild(el.titleTrack);
+      setSongTitle(initialTitle);
+      
+      
+      
+      var songMotionObserver = new ResizeObserver(function (entries) {
+        el.titleTrack.style.setProperty('--vinyl-song-loop-duration',
+          titleLoopDuration(entries[0].contentRect.width / 2));
+      });
+      songMotionObserver.observe(el.titleTrack);
       el.marquee = el.stage.querySelector('.vinyl-marquee');
       el.spin   = $('vinylSpin');
       el.hush   = $('vinylHush');
@@ -2555,10 +2603,6 @@
       if (FEATURE_CRATE_V2) {
         var marquee = el.marquee;
         if (marquee) {
-          el.upnext = document.createElement('span');
-          el.upnext.className = 'vinyl-upnext';
-          el.upnext.hidden = true;
-          marquee.appendChild(el.upnext);
           marquee.style.cursor = 'pointer';
           marquee.addEventListener('click', function (e) {
             e.stopPropagation();
@@ -2745,7 +2789,7 @@
     function reflectTitle() {
       var rec = _ctrl.getCurrentRecord();
       if (rec) {
-        el.title.textContent = rec.title;
+        setSongTitle(rec.title, rec.artist || rec.source);
         if (FEATURE_GROOVE) groove.seed(rec.title);
       }
       reflectNowPlaying();
@@ -2779,7 +2823,10 @@
 
     function reflectNowPlaying() {
       if (!FEATURE_CRATE_V2 || !el.upnext) return;
-      if (!_ctrl.isSpinning() && _sync.getRemoteState() && _sync.getRemoteState().title && !_sync.isOwner()) return;
+      if (!_ctrl.isSpinning() && _sync.getRemoteState() && _sync.getRemoteState().title && !_sync.isOwner()) {
+        reflectRemoteState();
+        return;
+      }
       var side = _ctrl.getCurrentSide();
       var recs = (FEATURE_QUEUE_V6 && FEATURE_CRATE_V2) ? _ctrl.getQueue() : _ctrl.getRecords();
       var nextRec = null;
@@ -2792,11 +2839,13 @@
         if (next < recs.length) nextRec = recs[next];
       }
       if (nextRec) {
-        el.upnext.textContent = 'Up next \u2014 ' + nextRec.title;
+        el.upnext.textContent = ' · Up next \u2014 ' + nextRec.title +
+          (nextRec.artist ? ' — ' + nextRec.artist : '');
         el.upnext.hidden = false;
       } else {
         el.upnext.hidden = true;
       }
+      reflectSongSequence();
     }
 
     function reflectRemoteState() {
@@ -2806,8 +2855,9 @@
         var prefix = (FEATURE_OWNERSHIP_V3 && rs.spinning === false)
           ? 'Paused elsewhere'
           : 'Playing elsewhere';
-        el.upnext.textContent = prefix + ' \u2014 ' + rs.title;
+        el.upnext.textContent = ' · ' + prefix + ' \u2014 ' + rs.title;
         el.upnext.hidden = false;
+        reflectSongSequence();
       } else if (!rs && !_ctrl.isSpinning()) {
         reflectNowPlaying();
       }
@@ -3091,8 +3141,8 @@
       toggleCrate: toggleCrate,
       raiseStage: raiseStage,
       lowerStage: lowerStage,
-      setTitle: function (text) { el.title.textContent = text; },
-      getTitle: function () { return el.title.textContent; },
+      setTitle: setSongTitle,
+      getTitle: function () { return el.titleText.textContent; },
       getDialValue: function () { return parseInt(el.dial.value, 10) || 0; },
       setDialValue: function (v) { el.dial.value = v; },
       getSource: function () { return el.source; },
