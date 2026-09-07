@@ -271,48 +271,63 @@
     <div class="site-wrap">
 
       <!-- Ambient time + weather layer (see js/fountain-clock.js) -->
-      <section class="fountain-clock" data-fountain-clock data-fc-details="closed" aria-label="Fountain Clock: local time and weather">
-        <h1 class="hero-eyebrow fc-eyebrow" data-fc-greeting>Good morning, Houston.</h1>
+      <section class="fountain-clock" data-fountain-clock data-fc-version="4.0.2" data-fc-details="closed" data-fc-collapsed="true" aria-label="Fountain Clock: local time and weather">
+        <div class="fc-header">
+          <h1 class="hero-eyebrow fc-eyebrow" data-fc-greeting aria-label="Good morning, Houston.">
+            <span class="fc-greeting-full" data-fc-greeting-full aria-hidden="true">Good morning, Houston.</span>
+            <span class="fc-greeting-visual" data-fc-greeting-visual aria-hidden="true"></span>
+          </h1>
+          <noscript><style>.fc-greeting-full { visibility: visible; }</style></noscript>
+          <button type="button" class="fc-toggle-btn fc-collapse-toggle" data-fc-collapse-toggle
+                  aria-expanded="false" aria-controls="fcClockContent" aria-label="Expand clock" hidden>
+            <span data-fc-collapse-icon aria-hidden="true">+</span>
+          </button>
+        </div>
 
-        <div class="fc-face" data-fc-face>
+        <time class="fc-date" data-fc-date datetime="">Today</time>
+        <div class="fc-journal-row">
           <time class="fc-time" data-fc-time datetime="" aria-label="Current local time">
             <span class="fc-time-hm" data-fc-time-hm>—</span>
           </time>
-          <p class="fc-meta" aria-label="Date and current weather">
-            <time class="fc-date" data-fc-date datetime="">Today</time>
-            <span class="fc-meta-sep" aria-hidden="true">·</span>
+          <p class="fc-meta" aria-label="Current weather">
             <span class="fc-weather-line" data-fc-weather-line>Weather staying useful</span>
           </p>
         </div>
 
-        <div class="fc-sun" data-fc-sun>
-          <div class="fc-sun-rail" aria-hidden="true">
-            <span class="fc-sun-dot"></span>
+        <div class="fc-content" id="fcClockContent" data-fc-content hidden>
+          <div class="fc-face" data-fc-face></div>
+
+          <div class="fc-sun" data-fc-sun>
+            <div class="fc-sun-rail" aria-hidden="true">
+              <span class="fc-sun-dot"></span>
+            </div>
+            <p class="fc-sun-labels">
+              <span class="fc-sun-label">
+                <span class="fc-sr-only">Sunrise </span><time data-fc-sunrise>—</time>
+              </span>
+              <span class="fc-sun-label">
+                <span class="fc-sr-only">Sunset </span><time data-fc-sunset>—</time>
+              </span>
+            </p>
           </div>
-          <p class="fc-sun-labels">
-            <span class="fc-sun-label">
-              <span class="fc-sr-only">Sunrise </span><time data-fc-sunrise>—</time>
+
+          <div class="fc-status">
+            <span class="fc-asof" data-fc-asof data-fc-fresh="pending">Weather warming up</span>
+            <span class="fc-status-actions" role="group" aria-label="Clock preferences">
+              <select class="fc-select" id="fcLocationSelect" data-fc-location-select aria-label="Choose clock location"></select>
+              <button type="button" class="fc-toggle-btn" data-fc-time-format aria-pressed="false" aria-label="Use 24-hour time">12h</button>
+              <button type="button" class="fc-link-btn" data-fc-details-toggle aria-expanded="false" aria-controls="fcWeatherDetails">Weather details</button>
             </span>
-            <span class="fc-sun-label">
-              <span class="fc-sr-only">Sunset </span><time data-fc-sunset>—</time>
-            </span>
-          </p>
+          </div>
+
+          <div class="fc-weather"
+               data-fc-weather
+               data-fc-state="loading"
+               aria-live="polite"
+               aria-busy="true"
+               aria-label="Current conditions and forecast"></div>
         </div>
 
-        <div class="fc-weather"
-             data-fc-weather
-             data-fc-state="loading"
-             aria-live="polite"
-             aria-busy="true"
-             aria-label="Current conditions and forecast"></div>
-
-        <div class="fc-status">
-          <span class="fc-status-actions" role="group" aria-label="Clock preferences">
-            <select class="fc-select" id="fcLocationSelect" data-fc-location-select aria-label="Choose clock location"></select>
-            <button type="button" class="fc-toggle-btn" data-fc-time-format aria-pressed="false" aria-label="Use 24-hour time">12h</button>
-            <button type="button" class="fc-link-btn" data-fc-details-toggle aria-expanded="false" aria-controls="fcWeatherDetails">Details</button>
-          </span>
-        </div>
       </section>
     </div>
   </header>
@@ -364,8 +379,6 @@
       <div class="vinyl-marquee">
         <span class="vinyl-title" id="vinylTitle">Loading&#8230;</span>
       </div>
-
-      <div class="vinyl-groove-wrap" aria-hidden="true"></div>
 
       <div class="vinyl-deck">
         <button class="vinyl-btn" id="vinylSpin" type="button" aria-label="Play" title="Play">
