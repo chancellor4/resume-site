@@ -1,0 +1,875 @@
+
+
+body[data-page="playground"] {
+  /* Reading */
+  --pg-body-size: 1.0625rem;     /* 17px — the article's measure is tuned to it */
+  --pg-body-lh: 1.8;
+  --pg-measure: 68ch;
+
+  /* Metadata: small mono needs more contrast than the site's muted ink
+     gives, so mix toward the main ink; every palette clears AA. */
+  --pg-meta-ink: color-mix(in srgb, var(--ink-muted) 55%, var(--ink));
+  --pg-meta-size: 0.8125rem;     /* 13px Courier Prime */
+  --pg-meta-ls: 0.02em;
+
+  /* Rhythm */
+  --pg-post-pad: clamp(1.75rem, 1rem + 2.5vw, 2.5rem);
+  --pg-rail: 14rem;
+  --pg-rail-gap: 3.5rem;
+
+  /* Trim — a 2px bevel (shadow edge over a lit edge) with one cool sheen */
+  --pg-chrome-edge: color-mix(in srgb, var(--ink-muted) 45%, transparent);
+  --pg-chrome:
+    linear-gradient(90deg, transparent 6%, color-mix(in srgb, var(--accent-soft) 75%, #fff) 22%, transparent 40%),
+    linear-gradient(180deg, var(--pg-chrome-edge) 0 1px, rgba(255, 255, 255, 0.85) 1px 2px);
+}
+
+/* ─── Column ───────────────────────────────────────────────── */
+
+.pg {
+  max-width: var(--max-w);
+}
+
+/* The shell swaps <main> and routes focus to its h1; keep the programmatic
+   focus ring off the room's headings as the site does elsewhere. */
+.pg h1[tabindex="-1"]:focus,
+.pg .pg-state-heading[tabindex="-1"]:focus {
+  outline: none;
+}
+
+/* One focus language for the room: a square outline in the link ink. */
+.pg a:focus-visible,
+.pg button:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+  border-radius: 0;
+}
+
+/* ─── Metadata (dates, labels, tags, status) ───────────────── */
+
+.pg-item-date,
+.pg-date,
+.pg-kicker,
+.pg-signal,
+.pg-status,
+.pg-item-foot,
+.pg-tags,
+.pg-updated,
+.pg-neighbour-label,
+.pg-neighbour-date,
+.pg-all,
+.pg-end,
+.pg-button,
+.pg-photo-missing,
+.pg-room .hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--pg-meta-size);
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: var(--pg-meta-ls);
+  text-transform: lowercase;
+  color: var(--pg-meta-ink);
+}
+
+.pg-tag::before {
+  content: '#' / '';
+}
+
+/* ─── Masthead (index) ─────────────────────────────────────── */
+
+.pg-room {
+  padding-top: var(--sp-md);
+  padding-bottom: var(--sp-sm);
+}
+
+.pg-room .hero-eyebrow {
+  margin-bottom: var(--sp-sm);
+}
+
+.pg-room h1 {
+  font-size: clamp(2.5rem, 1.6rem + 3.6vw, 3.25rem);
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin-bottom: var(--sp-md);
+}
+
+.pg-lede {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--ink-mid);
+  max-width: 40ch;
+}
+
+/* Signal: the archive's state in words, with an LED beside it. */
+.pg-signal {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-top: var(--sp-lg);
+}
+
+.pg-signal-led {
+  flex: none;
+  margin-top: 0.5em;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--pg-chrome-edge);
+  transition: background-color var(--ease), box-shadow var(--ease);
+}
+
+.pg-signal[data-signal="connecting"] .pg-signal-led {
+  animation: pg-pulse 1.6s var(--ease-breathe) infinite;
+}
+
+.pg-signal[data-signal="online"] .pg-signal-led {
+  background: radial-gradient(circle at 35% 35%, #fff 0 12%, var(--accent) 60%);
+  box-shadow:
+    0 0 0 0.18rem color-mix(in srgb, var(--accent-soft) 32%, transparent),
+    0 0 0.7rem color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.pg-signal[data-signal="offline"] .pg-signal-led {
+  background: var(--accent-warm);
+  box-shadow: 0 0 0 0.18rem color-mix(in srgb, var(--accent-warm) 24%, transparent);
+}
+
+/* ─── Index ─────────────────────────────────────────────────── */
+
+.pg-index {
+  position: relative;
+}
+
+.pg-status {
+  min-height: 1.5em;
+  margin: var(--sp-lg) 0 0;
+}
+
+.pg-status:empty {
+  margin: 0;
+  min-height: 0;
+}
+
+/* A terminal caret while the archive is being read. */
+.pg-status--busy:not(:empty)::after,
+.pg-button[disabled]::after {
+  content: '';
+  display: inline-block;
+  width: 0.55em;
+  height: 1.05em;
+  margin-left: 0.35em;
+  vertical-align: -0.18em;
+  background: var(--accent);
+  animation: pg-blink 1.1s steps(1, end) infinite;
+}
+
+/* Year dividers: "2026 ───────── ◇" — the label, a chrome rule, a node. */
+.pg-year {
+  margin-top: var(--sp-2xl);
+}
+
+.pg-years > .pg-year:first-child {
+  margin-top: var(--sp-xl);
+}
+
+.pg-year-label,
+.pg-end {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.pg-year-label {
+  font-family: var(--font-mono);
+  font-size: var(--pg-meta-size);
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  color: var(--ink);
+}
+
+.pg-year-label::after,
+.pg-end::after {
+  content: '';
+  flex: 1 1 auto;
+  height: 2px;
+  background: var(--pg-chrome);
+}
+
+.pg-year-label::before,
+.pg-end::before {
+  content: '';
+  order: 2;
+  flex: none;
+  width: 0.4rem;
+  height: 0.4rem;
+  border: 1px solid var(--pg-chrome-edge);
+  transform: rotate(45deg);
+}
+
+.pg-end {
+  margin-top: var(--sp-xl);
+}
+
+.pg-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pg-item + .pg-item {
+  border-top: 1px solid var(--border-lt);
+}
+
+/* A post. The whole post is the link; it never lifts or boxes itself. */
+.pg-item-link {
+  position: relative;
+  display: block;
+  padding: var(--pg-post-pad) 0;
+  color: inherit;
+  border-bottom: none;
+}
+
+/* Hover tick: a 2px accent rule in the post's left gutter. */
+.pg-item-link::before {
+  content: '';
+  position: absolute;
+  left: -0.9rem;
+  top: calc(var(--pg-post-pad) + 0.2rem);
+  bottom: var(--pg-post-pad);
+  width: 2px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform var(--ease);
+}
+
+.pg-item-link:hover {
+  border-bottom: none;
+}
+
+.pg-item-link:hover::before {
+  transform: scaleY(1);
+}
+
+.pg-item-link:focus-visible {
+  outline-offset: 2px;
+}
+
+.pg-item-date {
+  display: block;
+  margin-bottom: 0.6rem;
+}
+
+.pg-item-title {
+  font-size: clamp(1.4rem, 1.05rem + 1.2vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.22;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-wrap: pretty;
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  transition: color var(--ease), text-decoration-color var(--ease);
+}
+
+.pg-item-title--untitled {
+  font-weight: 600;
+  font-style: italic;
+  color: var(--pg-meta-ink);
+}
+
+.pg-item-excerpt {
+  max-width: var(--pg-measure);
+  margin-top: 0.7rem;
+  font-size: var(--pg-body-size);
+  line-height: 1.7;
+  color: var(--ink-mid);
+  overflow-wrap: anywhere;
+}
+
+.pg-item-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1.25rem;
+  margin-top: 0.9rem;
+}
+
+.pg-item-more {
+  order: -1;
+  color: var(--amber);
+  white-space: nowrap;
+}
+
+.pg-item-more::after {
+  content: '\00a0→';
+  display: inline-block;
+  transition: transform var(--ease);
+}
+
+.pg-item-link:hover .pg-item-title,
+.pg-item-link:focus-visible .pg-item-title {
+  color: var(--amber);
+  text-decoration-color: var(--amber-lt);
+}
+
+.pg-item-link:hover .pg-item-more::after {
+  transform: translateX(0.2em);
+}
+
+.pg-item-link:active .pg-item-title {
+  color: var(--ink-mid);
+  text-decoration-color: var(--amber);
+}
+
+.pg-more {
+  padding-top: var(--sp-xl);
+  border-top: 1px solid var(--border-lt);
+}
+
+.pg-more .pg-button {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.pg-more .pg-button:not([disabled])::after {
+  content: '→' / '';
+}
+
+/* ─── Buttons: sharp, bevelled, pressed in ink ─────────────── */
+
+.pg-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 48px;
+  padding: 0.7rem 1.1rem;
+  font-size: 0.875rem;
+  color: var(--ink);
+  text-decoration: none;
+  background: color-mix(in srgb, var(--surface-solid) 70%, transparent);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition: color var(--ease), border-color var(--ease), background-color var(--ease);
+}
+
+.pg-button:hover {
+  color: var(--amber);
+  border-color: var(--amber);
+  background-color: color-mix(in srgb, var(--accent-soft) 16%, var(--surface-solid));
+}
+
+.pg-button:active {
+  color: var(--page-bg);
+  border-color: var(--ink);
+  background-color: var(--ink);
+  box-shadow: none;
+}
+
+.pg-button[disabled] {
+  cursor: progress;
+  color: var(--pg-meta-ink);
+  border-color: var(--border-lt);
+  background-color: transparent;
+}
+
+/* ─── States: empty · missing · unavailable ────────────────── */
+
+.pg-state {
+  padding: var(--sp-2xl) 0 var(--sp-xl);
+  max-width: 46ch;
+}
+
+/* A terminal line above the heading, decorative (the heading says it). */
+.pg-state::before {
+  display: block;
+  margin-bottom: var(--sp-md);
+  font-family: var(--font-mono);
+  font-size: var(--pg-meta-size);
+  letter-spacing: var(--pg-meta-ls);
+  color: var(--amber);
+}
+
+.pg-state[data-state="empty"]::before       { content: '> 0 entries' / ''; }
+.pg-state[data-state="missing"]::before     { content: '> 404 · not found' / ''; }
+.pg-state[data-state="unavailable"]::before { content: '> no signal' / ''; }
+
+.pg-state-heading {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-bottom: var(--sp-sm);
+}
+
+.pg-state-heading + .pg-button {
+  margin-top: var(--sp-md);
+}
+
+.pg-state-text {
+  font-size: var(--pg-body-size);
+  line-height: 1.7;
+  color: var(--ink-mid);
+  margin-bottom: var(--sp-lg);
+}
+
+.pg-noscript {
+  padding: var(--sp-xl) 0;
+  font-size: 1rem;
+  color: var(--pg-meta-ink);
+}
+
+/* ─── Article ───────────────────────────────────────────────── */
+
+.pg-article {
+  max-width: var(--pg-measure);
+}
+
+.pg-article-head {
+  position: relative;
+  margin-bottom: var(--sp-xl);
+  padding-bottom: var(--sp-xl);
+}
+
+/* The one metallic rule on this screen. */
+.pg-article-head::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 4.5rem;
+  height: 2px;
+  background: var(--pg-chrome);
+}
+
+.pg-kicker {
+  margin-bottom: var(--sp-lg);
+}
+
+.pg-kicker a,
+.pg-all {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--amber);
+  border-bottom: none;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+  transition: color var(--ease), text-decoration-color var(--ease);
+}
+
+.pg-kicker a::before {
+  content: '←\00a0' / '';
+}
+
+.pg-all::before {
+  content: '↑\00a0' / '';
+}
+
+.pg-kicker a:hover,
+.pg-all:hover {
+  color: var(--ink);
+  border-bottom: none;
+  text-decoration-color: var(--amber-lt);
+}
+
+.pg-kicker a:active,
+.pg-all:active {
+  color: var(--ink-mid);
+}
+
+.pg-date {
+  display: block;
+  margin-bottom: var(--sp-sm);
+}
+
+.pg-article h1 {
+  font-size: clamp(2rem, 1.2rem + 3.2vw, 2.85rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  margin-bottom: var(--sp-md);
+}
+
+.pg-article h1.pg-title--long {
+  font-size: clamp(1.6rem, 1.15rem + 1.8vw, 2.1rem);
+  line-height: 1.2;
+}
+
+.pg-article h1 time {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+
+.pg-byline {
+  font-size: 1rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--pg-meta-ink);
+}
+
+.pg-prose p {
+  font-size: var(--pg-body-size);
+  line-height: var(--pg-body-lh);
+  color: var(--ink-mid);
+  margin-bottom: 1.3em;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+/* The first paragraph reads as a standfirst. */
+.pg-prose p:first-child {
+  font-size: 1.1875rem;
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+.pg-prose p:last-child {
+  margin-bottom: 0;
+}
+
+.pg-wordless {
+  font-style: italic;
+  color: var(--pg-meta-ink);
+}
+
+/* ─── Photographs: image-forward, bleeding past the measure ── */
+
+.pg-photos {
+  display: grid;
+  gap: var(--sp-2xl);
+  margin-top: var(--sp-2xl);
+  counter-reset: pg-fig;
+}
+
+.pg-figure {
+  --pg-bleed: var(--side);
+  margin: 0 calc(var(--pg-bleed) * -1);
+  counter-increment: pg-fig;
+}
+
+.pg-figure-frame {
+  display: block;
+  width: 100%;
+  background: var(--surface-3);
+  overflow: hidden;
+  transition: background-color var(--ease);
+}
+
+.pg-figure[data-photo="ready"] .pg-figure-frame {
+  background: transparent;
+}
+
+/* Portraits are height-capped so a tall frame never fills the viewport. */
+.pg-figure--tall .pg-figure-frame {
+  width: min(100%, calc(78vh * var(--pg-ratio, 0.75)));
+  margin: 0 auto;
+}
+
+.pg-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  color: var(--pg-meta-ink);         /* alt text while loading */
+  font-size: 0.9rem;
+}
+
+/* Withdrawn: a hatched archival placeholder at the photo's own ratio. */
+.pg-photo-missing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 6rem;
+  padding: var(--sp-md);
+  text-align: center;
+  border: 1px dashed var(--border);
+  background:
+    repeating-linear-gradient(135deg, transparent 0 9px, var(--border-lt) 9px 10px),
+    var(--surface-3);
+}
+
+.pg-caption {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  margin-top: 0.7rem;
+  padding: 0 var(--pg-bleed);
+  font-size: 0.9375rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--pg-meta-ink);
+}
+
+.pg-caption::before {
+  content: 'fig. ' counter(pg-fig, decimal-leading-zero) / '';
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--pg-meta-size);
+  font-style: normal;
+  letter-spacing: var(--pg-meta-ls);
+}
+
+/* ─── Article footer ────────────────────────────────────────── */
+
+.pg-article-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--sp-xs) var(--sp-lg);
+  margin-top: var(--sp-2xl);
+  padding-top: var(--sp-md);
+  border-top: 1px solid var(--border-lt);
+}
+
+.pg-tags,
+.pg-updated {
+  margin: 0;
+}
+
+.pg-updated {
+  margin-left: auto;
+}
+
+/* ─── Continuity: newer ← → older ──────────────────────────── */
+
+.pg-continue {
+  margin-top: var(--sp-3xl);
+  max-width: var(--pg-measure);
+}
+
+.pg-neighbours {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-lt);
+}
+
+.pg-neighbour {
+  display: block;
+  grid-column: 1;
+  padding: var(--sp-lg) var(--sp-lg) var(--sp-lg) 0;
+  color: inherit;
+  border-bottom: none;
+}
+
+.pg-neighbour--earlier {
+  grid-column: 2;
+  padding: var(--sp-lg) 0 var(--sp-lg) var(--sp-lg);
+  text-align: right;
+}
+
+.pg-neighbour--later + .pg-neighbour--earlier {
+  border-left: 1px solid var(--border-lt);
+}
+
+.pg-neighbour:hover {
+  border-bottom: none;
+}
+
+.pg-neighbour-label {
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.pg-neighbour--later .pg-neighbour-label::before {
+  content: '←\00a0' / '';
+}
+
+.pg-neighbour--earlier .pg-neighbour-label::after {
+  content: '\00a0→' / '';
+}
+
+.pg-neighbour-title {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  transition: color var(--ease), text-decoration-color var(--ease);
+}
+
+.pg-neighbour-date {
+  display: block;
+  margin-top: 0.35rem;
+}
+
+.pg-neighbour:hover .pg-neighbour-title,
+.pg-neighbour:focus-visible .pg-neighbour-title {
+  color: var(--amber);
+  text-decoration-color: var(--amber-lt);
+}
+
+.pg-neighbour:active .pg-neighbour-title {
+  color: var(--ink-mid);
+}
+
+.pg-all {
+  margin-top: var(--sp-md);
+}
+
+/* ─── Motion: one quiet fade, a caret, an LED — all optional ── */
+
+@keyframes pg-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pg-blink {
+  50% { opacity: 0; }
+}
+
+@keyframes pg-pulse {
+  50% { opacity: 0.3; }
+}
+
+.pg-enter {
+  animation: pg-fade var(--t-calm) var(--ease-out) both;
+}
+
+html[data-motion="reduced"] .pg-status--busy::after,
+html[data-motion="reduced"] .pg-button[disabled]::after,
+html[data-motion="reduced"] .pg-signal-led {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion="full"]) .pg-status--busy::after,
+  html:not([data-motion="full"]) .pg-button[disabled]::after,
+  html:not([data-motion="full"]) .pg-signal-led {
+    animation: none;
+  }
+}
+
+/* ─── Narrow viewports ──────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .pg-neighbours {
+    grid-template-columns: 1fr;
+  }
+
+  .pg-neighbour,
+  .pg-neighbour--earlier,
+  .pg-neighbour--later + .pg-neighbour--earlier {
+    grid-column: 1;
+    padding: var(--sp-lg) 0;
+    text-align: left;
+    border-left: none;
+  }
+
+  .pg-neighbour + .pg-neighbour {
+    border-top: 1px solid var(--border-lt);
+  }
+
+  .pg-continue {
+    margin-top: var(--sp-2xl);
+  }
+}
+
+/* ─── Wide: the masthead becomes a sidebar in the left margin ─
+   The post column stays on the nav's axis; the rail hangs beside it. */
+
+@media (min-width: 1100px) {
+  .pg-figure {
+    --pg-bleed: 5rem;
+  }
+}
+
+@media (min-width: 1240px) {
+  main[data-view="index"] .pg {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) min(var(--max-w), 100%) minmax(0, 1fr);
+    align-items: start;
+    max-width: none;
+    padding: 0;
+  }
+
+  main[data-view="index"] .pg-index {
+    grid-column: 2;
+    grid-row: 1;
+    padding: 0 var(--side);
+  }
+
+  main[data-view="index"] .pg-room {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: end;
+    position: sticky;
+    top: 7.5rem;
+    width: var(--pg-rail);
+    margin-right: calc(var(--pg-rail-gap) - var(--side));
+    padding: var(--sp-xl) 0 0;
+    border-bottom: 0;
+  }
+
+  main[data-view="index"] .pg-room h1 {
+    font-size: 2.5rem;
+  }
+
+  main[data-view="index"] .pg-years > .pg-year:first-child {
+    margin-top: var(--sp-xl);
+  }
+
+  /* Article: the way back and the date hang in the same margin. */
+  .pg-article-head .pg-kicker,
+  .pg-article-head .pg-date {
+    position: absolute;
+    right: calc(100% + var(--pg-rail-gap));
+    width: var(--pg-rail);
+    margin: 0;
+    text-align: right;
+  }
+
+  .pg-article-head .pg-kicker {
+    top: -0.5rem;
+  }
+
+  .pg-article-head .pg-date {
+    top: 3rem;
+  }
+}
+
+/* ─── Print ─────────────────────────────────────────────────── */
+
+@media print {
+  .pg-kicker,
+  .pg-continue,
+  .pg-more,
+  .pg-status,
+  .pg-signal,
+  .pg-end,
+  .pg-item-more {
+    display: none;
+  }
+
+  .pg-prose p {
+    color: #000;
+  }
+}
