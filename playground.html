@@ -7,14 +7,14 @@
   <meta name="color-scheme" content="light" />
 
   <!-- SEO -->
-  <title>Playground — Chancellor Edwards (Chance Edwards)</title>
-  <meta name="description" content="Playground — software and experiments by Chancellor Edwards (Chance Edwards). A contained proof-of-skill room. Open a project, try a demo." />
+  <title>Blogging — Chancellor Edwards (Chance Edwards)</title>
+  <meta name="description" content="Playground — essays and notes by Chancellor Edwards (Chance Edwards), kept in the order they were written." />
   <meta name="author" content="Chancellor Edwards" />
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 
   <!-- Open Graph -->
   <meta property="og:title" content="Playground — Chancellor Edwards (Chance Edwards)" />
-  <meta property="og:description" content="A contained proof-of-skill room. Open a project, try a demo." />
+  <meta property="og:description" content="Playground — essays and notes by Chancellor Edwards (Chance Edwards), kept in the order they were written." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://chancelloredwards.dev/playground.html" />
   <meta property="og:site_name" content="Chancellor Edwards" />
@@ -22,14 +22,14 @@
   <meta property="og:image" content="https://chancelloredwards.dev/assets/social-card.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Playground — projects and experiments by Chancellor Edwards" />
+  <meta property="og:image:alt" content="Playground — writing by Chancellor Edwards" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Playground — Chancellor Edwards (Chance Edwards)" />
-  <meta name="twitter:description" content="A contained proof-of-skill room. Open a project, try a demo." />
+  <meta name="twitter:description" content="Playground — essays and notes by Chancellor Edwards (Chance Edwards), kept in the order they were written." />
   <meta name="twitter:image" content="https://chancelloredwards.dev/assets/social-card.png" />
-  <meta name="twitter:image:alt" content="Playground — projects and experiments by Chancellor Edwards" />
+  <meta name="twitter:image:alt" content="Playground — writing by Chancellor Edwards" />
 
   <!-- Canonical -->
   <link rel="canonical" href="https://chancelloredwards.dev/playground.html" />
@@ -49,7 +49,7 @@
     "@type": "WebPage",
     "@id": "https://chancelloredwards.dev/playground.html#webpage",
     "name": "Playground",
-    "description": "A contained proof-of-skill room. Open a project, try a demo.",
+    "description": "Playground — essays and notes by Chancellor Edwards (Chance Edwards), kept in the order they were written.",
     "url": "https://chancelloredwards.dev/playground.html",
     "isPartOf": { "@id": "https://chancelloredwards.dev/#website" },
     "about": { "@id": "https://chancelloredwards.dev/#person" },
@@ -71,6 +71,8 @@
 
   <link rel="stylesheet" href="css/tokens.css" />
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/playground.css" />
+  <noscript><style>.pg-signal { display: none; }</style></noscript>
 </head>
 <body data-page="playground">
 
@@ -92,7 +94,7 @@
           </li>
           <li>
             <a href="playground.html" class="nav-active" aria-current="page">
-              <span class="nav-link-label">Playground</span>
+              <span class="nav-link-label">Blogging</span>
             </a>
           </li>
           <li><a href="notes.html"><span class="nav-link-label">Notes</span></a></li>
@@ -110,172 +112,28 @@
     </div>
   </nav>
 
-  <!-- ─── HEADER ───────────────────────────────────────────────── -->
-  <header class="projects-header">
-    <div class="site-wrap">
-      <p class="hero-eyebrow">Proof of skill</p>
-      <h1>Playground</h1>
-      <p>
-        A small, contained room for software I've built — a current snapshot, quietly refreshed in the background.
-        Open a project, read along, try a demo. Nothing demands your attention.
-      </p>
-    </div>
-  </header>
+  <!-- The SPA shell swaps <header> and <main> on navigation. The room keeps
+       its page header inside <main> so one view can replace the other. -->
+  <header hidden></header>
 
-  <!-- ─── MAIN ──────────────────────────────────────────────────── -->
-  <main>
-    <div class="site-wrap">
-
-      <!-- ── Stats Overview ──────────────────────────────────────── -->
-      <section class="resume-section" aria-labelledby="sec-stats">
-        <div class="section-header">
-          <h2 id="sec-stats">Overview</h2>
-          <div class="section-rule" aria-hidden="true"></div>
-        </div>
-        <p class="playground-section-intro">
-          Snapshot-first, quietly refreshed. The room renders from a committed project snapshot first, then checks GitHub in the background for anything newer.
-        </p>
-
-        <!-- Stats Grid -->
-        <div class="gh-stats-grid" id="gh-stats-grid">
-          <div class="gh-stat-card">
-            <span class="gh-stat-value" id="stat-repos">1</span>
-            <span class="gh-stat-label">Repositories</span>
-          </div>
-          <div class="gh-stat-card">
-            <span class="gh-stat-value" id="stat-stars">0</span>
-            <span class="gh-stat-label">Stars Earned</span>
-          </div>
-          <div class="gh-stat-card">
-            <span class="gh-stat-value" id="stat-forks">0</span>
-            <span class="gh-stat-label">Forks</span>
-          </div>
-          <div class="gh-stat-card">
-            <span class="gh-stat-value" id="stat-languages">1</span>
-            <span class="gh-stat-label">Languages</span>
-          </div>
-        </div>
-
-        <!-- Language Breakdown Bar -->
-        <div class="gh-lang-bar-wrap" id="gh-lang-bar-wrap">
-          <div class="gh-lang-bar" id="gh-lang-bar" role="img" aria-label="Language breakdown">
-            <div class="gh-lang-segment" style="width:100%;background:#a06428" title="HTML 100.0%"></div>
-          </div>
-          <div class="gh-lang-legend" id="gh-lang-legend">
-            <span class="gh-lang-legend-item"><span class="gh-lang-dot" style="background:#a06428"></span>HTML <span class="gh-lang-pct">100.0%</span></span>
-          </div>
-        </div>
+  <!-- ─── MAIN · the writing room ─────────────────────────────────
+       Rendered by js/playground.js from the archive's public read API.
+       data-archive-origin is the API origin; an empty value means same-origin.
+       The static markup below is the index header, present for first paint,
+       no-JS readers and the shell's post-navigation heading focus. -->
+  <main data-archive-origin="https://journal-app-api-is52rxqtkq-uc.a.run.app" data-view="index">
+    <div class="site-wrap pg">
+      <section class="pg-room" aria-labelledby="pg-title">
+        <p class="hero-eyebrow">Writing</p>
+        <h1 id="pg-title">Blogging</h1>
+        <p class="pg-lede">My Life!</p>
+        <p class="pg-signal" data-signal="connecting"><span class="pg-signal-led" aria-hidden="true"></span><span class="pg-signal-text">archive · connecting</span></p>
       </section>
-
-      <!-- ── Repositories ────────────────────────────────────────── -->
-      <section class="resume-section" aria-labelledby="sec-repos">
-        <div class="section-header">
-          <h2 id="sec-repos">Repositories</h2>
-          <div class="section-rule" aria-hidden="true"></div>
-        </div>
-        <p class="playground-section-intro">
-          Each card keeps one clear path forward: source first, live demo when a stable deployment exists.
-        </p>
-
-        <!-- Filter + Sort Controls -->
-        <div class="gh-controls" id="gh-controls" hidden>
-          <div class="gh-filter-pills" id="gh-filter-pills" role="radiogroup" aria-label="Filter by language">
-            <button class="gh-pill gh-pill-active" data-lang="all" aria-pressed="true">All</button>
-          </div>
-          <div class="gh-sort-wrap">
-            <label for="gh-sort" class="gh-sort-label">Sort</label>
-            <select id="gh-sort" class="gh-sort-select">
-              <option value="updated">Recently updated</option>
-              <option value="stars">Most stars</option>
-              <option value="name">Name A–Z</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Loading state (JS may briefly reveal this while refreshing) -->
-        <div class="gh-repo-list" id="gh-loading" aria-live="polite" hidden>
-          <article class="gh-empty-card">
-            <h3>Refreshing repository snapshot</h3>
-            <p>The Playground loads from a local snapshot first, then quietly checks GitHub for anything newer.</p>
-          </article>
-        </div>
-
-        <!-- Repo List (static fallback + enhanced by projects-cache.js) -->
-        <div class="gh-repo-list" id="gh-repo-list" aria-label="Repository list">
-          <article class="gh-repo-card">
-            <a href="https://github.com/chancellor4/chancelloredwards-site" class="gh-repo-card-link" target="_blank" rel="noopener noreferrer" aria-label="Open chancelloredwards-site"></a>
-            <div class="gh-repo-card-header">
-              <a href="https://github.com/chancellor4/chancelloredwards-site" class="gh-repo-name" target="_blank" rel="noopener noreferrer">chancelloredwards-site</a>
-              <span class="gh-repo-visibility">Public</span>
-            </div>
-            <p class="gh-repo-desc">Personal site — calm, private, ambient portfolio architecture with snapshot-first Playground rendering.</p>
-            <div class="gh-topics">
-              <span class="gh-topic">portfolio</span>
-              <span class="gh-topic">static-site</span>
-              <span class="gh-topic">ambient</span>
-              <span class="gh-topic">frontend</span>
-            </div>
-            <div class="gh-repo-actions">
-              <a href="https://github.com/chancellor4/chancelloredwards-site" class="gh-repo-action gh-repo-action-primary" target="_blank" rel="noopener noreferrer">Source ↗</a>
-              <a href="https://chancelloredwards.dev" class="gh-repo-action" target="_blank" rel="noopener noreferrer">Live ↗</a>
-            </div>
-            <div class="gh-repo-footer">
-              <span class="gh-repo-lang"><span class="gh-lang-dot" style="background:#a06428"></span>HTML</span>
-              <span class="gh-repo-updated">Updated recently</span>
-            </div>
-          </article>
-        </div>
-
-        <!-- View All Link -->
-        <div class="gh-view-all" id="gh-view-all" hidden>
-          <a href="https://github.com/chancellor4?tab=repositories" class="btn-outline" target="_blank" rel="noopener noreferrer">
-            View all repositories on GitHub →
-          </a>
-        </div>
+      <section class="pg-index" aria-label="All pieces">
+        <noscript>
+          <p class="pg-noscript">The pieces are read from the archive with JavaScript, which is off here.</p>
+        </noscript>
       </section>
-
-      <!-- ── Experiments Lane (short-lived demos) ────────────────── -->
-      <section class="resume-section experiments-lane" aria-labelledby="sec-experiments">
-        <div class="section-header">
-          <h2 id="sec-experiments">Experiments</h2>
-          <div class="section-rule" aria-hidden="true"></div>
-        </div>
-        <p class="experiments-note">
-          A quiet lane for short-lived demos — small things that don't warrant a full repo.
-          When there's something here, it'll appear softly; no notifications, no fanfare.
-        </p>
-      </section>
-
-      <!-- ── Data Freshness ──────────────────────────────────────── -->
-      <div class="gh-freshness" id="gh-freshness" hidden>
-        <span id="gh-freshness-text"></span>
-        <button class="gh-refresh-btn" id="gh-refresh-btn" aria-label="Refresh live data">Refresh</button>
-      </div>
-
-      <!-- Inline snapshot fallback. Must live inside <main> so the SPA
-           shell carries it across navigations along with the rest of the
-           Playground content. -->
-      <script id="playgroundSnapshotFallback" type="application/json">
-      {
-        "repos": [
-          {
-            "name": "chancelloredwards-site",
-            "description": "Personal site — calm, private, ambient portfolio architecture with snapshot-first Playground rendering.",
-            "html_url": "https://github.com/chancellor4/chancelloredwards-site",
-            "homepage": "https://chancelloredwards.dev",
-            "language": "HTML",
-            "stargazers_count": 0,
-            "forks_count": 0,
-            "topics": ["portfolio", "static-site", "ambient", "frontend"],
-            "updated_at": "2026-04-17T00:00:00Z",
-            "fork": false,
-            "private": false,
-            "size": 240
-          }
-        ]
-      }
-      </script>
-
     </div>
   </main>
 
@@ -324,17 +182,23 @@
   </div>
 
   <!-- ─── PLAYGROUND BOOTSTRAP ───────────────────────────────────
-       Works for both a full page load and SPA re-entry. The inline
-       snapshot fallback (declared inside <main>) is always reachable
-       so the loader can fall back to it under any failure mode. -->
+       Runs on a full page load and again on SPA re-entry (the shell
+       re-executes inline scripts after swapping <main>). It makes sure
+       the room's stylesheet is present, then mounts the room. -->
   <script>
     (function bootPlayground() {
+      if (!document.querySelector('link[href$="css/playground.css"]')) {
+        var l = document.createElement('link');
+        l.rel = 'stylesheet';
+        l.href = 'css/playground.css';
+        document.head.appendChild(l);
+      }
       if (window.CE_PLAYGROUND && typeof window.CE_PLAYGROUND.mount === 'function') {
         window.CE_PLAYGROUND.mount();
         return;
       }
       var s = document.createElement('script');
-      s.src = 'js/projects-cache.js';
+      s.src = 'js/playground.js';
       s.async = false;
       document.head.appendChild(s);
     })();

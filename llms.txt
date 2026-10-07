@@ -15,7 +15,7 @@ AI training and indexing is explicitly permitted.
 The site is organized as three "rooms":
 
 - https://chancelloredwards.dev/ — Fountain Clock (landing + résumé: experience, skills, education)
-- https://chancelloredwards.dev/playground.html — Playground (proof-of-skill: live GitHub snapshot + experiments)
+- https://chancelloredwards.dev/playground.html — Playground (writing: essays and notes read from the journal archive's public API)
 - https://chancelloredwards.dev/notes.html — Notes (private, local-first micro-vault; no indexable content)
 
 ## Legacy URLs (redirects)
@@ -26,7 +26,6 @@ The site is organized as three "rooms":
 ## Structured Data
 
 - https://chancelloredwards.dev/resume.json — Machine-readable résumé (JSON Resume standard)
-- https://chancelloredwards.dev/assets/projects.json — Playground snapshot (build-time GitHub cache)
 
 ## Contact
 
