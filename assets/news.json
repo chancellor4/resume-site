@@ -1,15 +1,15 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-10-23T02:25:35.661Z",
+  "generatedAt": "2026-10-23T07:46:27.609Z",
   "items": [
     {
-      "title": "Serbian Election Underscores the Region’s Long Political Limbo",
+      "title": "Powerful Earthquake in Tibet Kills at Least 16",
       "source": "New York Times",
       "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/10/22/world/europe/serbia-elections-nationalist-politics.html",
-      "publishedAt": "2026-10-22T22:44:35.000Z",
-      "excerpt": "Aleksandar Vucic, Serbia’s dominant political figure since 2012, may extend his grip, using the Balkans’ unresolved nationalist resentments.",
-      "imageUrl": "https://static01.nyt.com/images/2026/10/20/multimedia/00int-serbia-nationalism-01-cbtq/00int-serbia-nationalism-01-cbtq-mediumSquareAt3X.jpg"
+      "link": "https://www.nytimes.com/2026/10/22/world/asia/earthquake-tibet-china.html",
+      "publishedAt": "2026-10-23T07:40:46.000Z",
+      "excerpt": "Dozens were injured and more than 300 homes were toppled by the 7.0-magnitude quake, which sent residents fleeing into the cold night air, state media said.",
+      "imageUrl": "https://static01.nyt.com/images/2026/10/23/multimedia/23int-china-tibet-quake-pvlf/23int-china-tibet-quake-pvlf-mediumSquareAt3X.jpg"
     },
     {
       "title": "Triple Stack Pancakes & NYC Bucket Listing With Santos Bravos",
@@ -48,12 +48,12 @@
       "imageUrl": "https://npr.brightspotcdn.com/dims3/default/strip/false/crop/5333x3000+0+0/resize/1280/quality/66/format/jpg/?url=http%3A%2F%2Fnpr-brightspot.s3.amazonaws.com%2F53%2F6c%2Fd7b4b2914a5db536dd8ae6df984d%2F261c0f76-3482-4222-93d2-a95d18c05ba5.jpg"
     },
     {
-      "title": "The farmer growing a future under Ghana’s trees",
+      "title": "What went right this week: the good news that matters",
       "source": "Positive News",
       "sourceType": "solutions-news",
-      "link": "https://www.positive.news/society/the-farmer-growing-a-future-under-ghanas-trees/",
-      "publishedAt": "2026-10-22T08:44:40.000Z",
-      "excerpt": "Cocoa farmer Susana Afrifa Ankrah is helping show how protecting forests can sustain livelihoods and build resilience to a changing climate",
+      "link": "https://www.positive.news/society/good-news-stories-from-week-43-of-2026/",
+      "publishedAt": "2026-10-23T05:00:52.000Z",
+      "excerpt": "Rewilding gave low-lying islands hope, a basic income trial showed promise, and a Bangladeshi factory won an award, plus more",
       "imageUrl": null
     },
     {
@@ -61,36 +61,45 @@
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/pre-fall-2027-menswear/rag-bone",
-      "publishedAt": "2026-10-23T02:25:04.000Z",
+      "publishedAt": "2026-10-23T07:41:35.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6ada24358102d9d32796aa44/master/pass/00001-rag-and-bone-pre-fall-2027-mesnwear-credit-brand.jpg"
     },
     {
-      "title": "Frank Lloyd Wright’s Taliesin West Reopens After a Freak Accident Caused a Visitor's Death",
+      "title": "6 Best Linen Sheets of 2026, Tested and Approved by AD Editors",
       "source": "Architectural Digest",
       "sourceType": "design",
-      "link": "https://www.architecturaldigest.com/story/frank-lloyd-wrights-taliesin-west-reopens-after-a-freak-accident-caused-a-visitors-death",
-      "publishedAt": "2026-10-22T20:07:43.000Z",
-      "excerpt": "The victim was killed by falling roof debris at the UNESCO World Heritage site, which served as Wright’s winter home and studio",
-      "imageUrl": "https://media.architecturaldigest.com/photos/6ad786fb4482ded822f0e555/master/pass/898243386"
+      "link": "https://www.architecturaldigest.com/story/best-linen-sheet-set",
+      "publishedAt": "2026-10-23T03:53:26.000Z",
+      "excerpt": "Contrary to popular belief, this summer-centric fabric is just as good when the temperature drops as a breathable and textured bedding layer",
+      "imageUrl": "https://media.architecturaldigest.com/photos/65e9b18487d11398a0b34f11/master/pass/20230512_CleverTayWash_12.jpeg"
     },
     {
-      "title": "Trump ordered to answer questions under oath in BBC lawsuit",
+      "title": "Why a student protest movement is challenging 12 years of Vučić rule in Serbia",
       "source": "BBC",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/cmy0ryjx7741o?at_medium=RSS&at_campaign=rss",
-      "publishedAt": "2026-10-23T01:38:44.000Z",
-      "excerpt": "Trump is suing the BBC over an episode of Panorama that edited together two different sections of a speech he gave in 2021.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/6bf5/live/f171dec0-ce3b-11f1-a86f-f78305ec9987.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/cmq8n3v94ql3o?at_medium=RSS&at_campaign=rss",
+      "publishedAt": "2026-10-23T06:26:25.000Z",
+      "excerpt": "After two years of student protests, Serbians vote on Sunday in elections that could bring down the ruling party.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/a379/live/0b1863f0-ce1c-11f1-906e-e3128518d85d.jpg"
     },
     {
-      "title": "Jared Kushner Blasts ‘Outrageous’ Vanity Fair Over Report On Alleged Undisclosed Foreign Bank Accounts",
+      "title": "Elon Musk Pours Another $77 Million Into His Super PAC—Bringing Midterm Donations To Nearly $450 Million",
       "source": "Forbes",
       "sourceType": "business",
-      "link": "https://www.forbes.com/sites/antoniopequenoiv/2026/10/22/jared-kushner-blasts-outrageous-vanity-fair-over-report-on-alleged-undisclosed-foreign-bank-accounts/",
-      "publishedAt": "2026-10-23T01:10:03.000Z",
-      "excerpt": "The report claims Kushner’s phone was hacked and showed transfers from multi-million-dollar slush funds created by Saudi Arabia and the United Arab Emirates.",
-      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6adab33f21497c933da1fc11/0x0.jpg?width=960&precrop=2996%2C1995%2Cx0%2Cy0"
+      "link": "https://www.forbes.com/sites/siladityaray/2026/10/23/elon-musk-pours-another-77-million-into-his-super-pac-bringing-midterm-donations-to-nearly-450-million/",
+      "publishedAt": "2026-10-23T06:20:10.000Z",
+      "excerpt": "The latest disclosure comes just weeks after reports that he had contributed $366 million to back Republican election efforts.",
+      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6adaf976f999f8b55bc48239/0x0.jpg?width=960&precrop=3126%2C1759%2Cx0%2Cy31"
+    },
+    {
+      "title": "My Mom, 61, Calls This Martha Stewart-Used Firming Mask a “Miracle” for Plumping Mature Skin",
+      "source": "InStyle",
+      "sourceType": "fashion-authority",
+      "link": "https://www.instyle.com/martha-stewart-mom-mario-badescu-mask-12177206",
+      "publishedAt": "2026-10-23T05:30:00.000Z",
+      "excerpt": "It also softens wrinkles and soothes redness.",
+      "imageUrl": "https://www.instyle.com/thmb/pMOrGYBl__7PS-rgvJ-a0-LCmGI=/filters:no_upscale():max_bytes(150000):strip_icc():format(jpeg)/102226-firming-mask-1c613dbe56a841ba8ce807d8bd19c4d7.jpg"
     },
     {
       "title": "Stray Kids and BAPE Team Up for a Special-Edition Capsule",
@@ -100,15 +109,6 @@
       "publishedAt": "2026-10-22T19:16:59.000Z",
       "excerpt": "A BATHING APE has officially joined forces with global music powerhouses Stray Kids for an exclusive Gift With Purchase collection. Bridging street culture with K-pop fandom, the…",
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F10%2F22%2Fstray-kids-bape-skzoo-baby-milo-collab-seoul-gift-info-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
-    },
-    {
-      "title": "What Is PHP? Why Are Government and Business Websites Going Offline?",
-      "source": "New York Times",
-      "sourceType": "world-news",
-      "link": "https://www.nytimes.com/2026/10/22/technology/what-is-php-vulnerability-risks.html",
-      "publishedAt": "2026-10-22T21:31:29.000Z",
-      "excerpt": "A critical security flaw in the programming language underpinning much of the web has prompted a global rush to patch vulnerable systems.",
-      "imageUrl": "https://static01.nyt.com/images/2026/10/22/multimedia/22xp-PHP-fjtz/22xp-PHP-fjtz-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
@@ -122,7 +122,7 @@
     "ArchitecturalDigest": "ok",
     "BBC": "ok",
     "Forbes": "ok",
-    "InStyle": "failed",
+    "InStyle": "ok",
     "Hypebae": "ok"
   }
 }
