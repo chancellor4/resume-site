@@ -1,6 +1,6 @@
 {
   "version": "1.1",
-  "generatedAt": "2026-10-22T23:45:03.578Z",
+  "generatedAt": "2026-10-23T02:25:35.661Z",
   "items": [
     {
       "title": "Serbian Election Underscores the Region’s Long Political Limbo",
@@ -61,7 +61,7 @@
       "source": "Vogue",
       "sourceType": "fashion-authority",
       "link": "https://www.vogue.com/fashion-shows/pre-fall-2027-menswear/rag-bone",
-      "publishedAt": "2026-10-22T23:40:44.000Z",
+      "publishedAt": "2026-10-23T02:25:04.000Z",
       "excerpt": "",
       "imageUrl": "https://assets.vogue.com/photos/6ada24358102d9d32796aa44/master/pass/00001-rag-and-bone-pre-fall-2027-mesnwear-credit-brand.jpg"
     },
@@ -75,31 +75,22 @@
       "imageUrl": "https://media.architecturaldigest.com/photos/6ad786fb4482ded822f0e555/master/pass/898243386"
     },
     {
-      "title": "Powerful earthquake hits Tibet killing 16 people, reports say",
+      "title": "Trump ordered to answer questions under oath in BBC lawsuit",
       "source": "BBC",
       "sourceType": "global-affairs",
-      "link": "https://www.bbc.co.uk/news/articles/ck5ynd1z6e83o?at_medium=RSS&at_campaign=rss",
-      "publishedAt": "2026-10-22T23:22:45.000Z",
-      "excerpt": "The quake hit a mountainous, sparsely-populated region in north-eastern Tibet.",
-      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/d9bb/live/35523df0-ce6f-11f1-a64c-550be9e3c66b.jpg"
+      "link": "https://www.bbc.co.uk/news/articles/cmy0ryjx7741o?at_medium=RSS&at_campaign=rss",
+      "publishedAt": "2026-10-23T01:38:44.000Z",
+      "excerpt": "Trump is suing the BBC over an episode of Panorama that edited together two different sections of a speech he gave in 2021.",
+      "imageUrl": "https://ichef.bbci.co.uk/ace/standard/240/cpsprodpb/6bf5/live/f171dec0-ce3b-11f1-a86f-f78305ec9987.jpg"
     },
     {
-      "title": "Former Reebok Leaders Launch Unsung, A Training Shoe Brand Built For Team Athletes",
+      "title": "Jared Kushner Blasts ‘Outrageous’ Vanity Fair Over Report On Alleged Undisclosed Foreign Bank Accounts",
       "source": "Forbes",
       "sourceType": "business",
-      "link": "https://www.forbes.com/sites/kimberly-wilson/2026/10/22/former-reebok-leaders-launch-unsung-a-training-shoe-brand-built-for-team-athletes/",
-      "publishedAt": "2026-10-22T22:50:16.000Z",
-      "excerpt": "Unsung, a new Boston sneaker brand from former Reebok leaders with Patrice Bergeron as an advisor, debuts the Snapback Trainer for hockey and lacrosse athletes.",
-      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6ada91e07c4bf51a35c70301/0x0.jpg"
-    },
-    {
-      "title": "The 11 Best Scalp Scrubs for All Skin and Hair Types, Tested & Reviewed",
-      "source": "InStyle",
-      "sourceType": "fashion-authority",
-      "link": "https://www.instyle.com/best-scalp-scrubs-7497033",
-      "publishedAt": "2026-10-22T18:49:45.000Z",
-      "excerpt": "Because healthy hair starts with a healthy scalp.",
-      "imageUrl": "https://www.instyle.com/thmb/yf_lu6fBb7mX4_hinLV1MwUEwGc=/filters:no_upscale():max_bytes(150000):strip_icc():format(jpeg)/ins-scalp-scrubs-for-all-skin-and-hair-types-tout-d47be8a2bd2e4c259e0e0f2c3484e48d.jpg"
+      "link": "https://www.forbes.com/sites/antoniopequenoiv/2026/10/22/jared-kushner-blasts-outrageous-vanity-fair-over-report-on-alleged-undisclosed-foreign-bank-accounts/",
+      "publishedAt": "2026-10-23T01:10:03.000Z",
+      "excerpt": "The report claims Kushner’s phone was hacked and showed transfers from multi-million-dollar slush funds created by Saudi Arabia and the United Arab Emirates.",
+      "imageUrl": "https://imageio.forbes.com/specials-images/imageserve/6adab33f21497c933da1fc11/0x0.jpg?width=960&precrop=2996%2C1995%2Cx0%2Cy0"
     },
     {
       "title": "Stray Kids and BAPE Team Up for a Special-Edition Capsule",
@@ -109,6 +100,15 @@
       "publishedAt": "2026-10-22T19:16:59.000Z",
       "excerpt": "A BATHING APE has officially joined forces with global music powerhouses Stray Kids for an exclusive Gift With Purchase collection. Bridging street culture with K-pop fandom, the…",
       "imageUrl": "https://image-cdn.hypb.st/https%3A%2F%2Fbae.hypebeast.com%2Ffiles%2F2026%2F10%2F22%2Fstray-kids-bape-skzoo-baby-milo-collab-seoul-gift-info-where-to-buy-ft.jpg?w=800&cbr=1&q=90&fit=max"
+    },
+    {
+      "title": "What Is PHP? Why Are Government and Business Websites Going Offline?",
+      "source": "New York Times",
+      "sourceType": "world-news",
+      "link": "https://www.nytimes.com/2026/10/22/technology/what-is-php-vulnerability-risks.html",
+      "publishedAt": "2026-10-22T21:31:29.000Z",
+      "excerpt": "A critical security flaw in the programming language underpinning much of the web has prompted a global rush to patch vulnerable systems.",
+      "imageUrl": "https://static01.nyt.com/images/2026/10/22/multimedia/22xp-PHP-fjtz/22xp-PHP-fjtz-mediumSquareAt3X.jpg"
     }
   ],
   "sources": {
@@ -122,7 +122,7 @@
     "ArchitecturalDigest": "ok",
     "BBC": "ok",
     "Forbes": "ok",
-    "InStyle": "ok",
+    "InStyle": "failed",
     "Hypebae": "ok"
   }
 }
